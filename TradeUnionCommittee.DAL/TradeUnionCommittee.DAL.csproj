@@ -8,4 +8,9 @@
     <ProjectReference Include="..\TradeUnionCommittee.Common\TradeUnionCommittee.Common.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Interfaces\Directory\" />
+    <Folder Include="Repositories\Directory\" />
+  </ItemGroup>
+
 </Project>
