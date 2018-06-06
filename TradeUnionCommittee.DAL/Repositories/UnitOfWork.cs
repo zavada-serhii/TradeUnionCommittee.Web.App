@@ -1,6 +1,6 @@
 ﻿using System;
-using TradeUnionCommittee.Common.EF;
-using TradeUnionCommittee.Common.Entities;
+using TradeUnionCommittee.DAL.EF;
+using TradeUnionCommittee.DAL.Entities;
 using TradeUnionCommittee.DAL.Interfaces;
 using TradeUnionCommittee.DAL.Repositories.Directory;
 
@@ -12,9 +12,9 @@ namespace TradeUnionCommittee.DAL.Repositories
         private readonly TradeUnionCommitteeEmployeesCoreContext _context;
         private PositionRepository _positionRepository;
 
-        public UnitOfWork()
+        public UnitOfWork(string connectionString)
         {
-            _context = new TradeUnionCommitteeEmployeesCoreContext();
+            _context = new TradeUnionCommitteeEmployeesCoreContext(connectionString);
         }
 
         //------------------------------------------------------------------------------------------------------------------------------------------
@@ -23,7 +23,7 @@ namespace TradeUnionCommittee.DAL.Repositories
 
         //------------------------------------------------------------------------------------------------------------------------------------------
 
-        public virtual void Dispose(bool disposing)
+        private void Dispose(bool disposing)
         {
             if (!_disposed)
             {

@@ -3,13 +3,19 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27703.2026
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TradeUnionCommittee.DAL", "TradeUnionCommittee.DAL\TradeUnionCommittee.DAL.csproj", "{DC964038-2559-473B-8CFA-69DC7FCE46BE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TradeUnionCommittee.DAL", "TradeUnionCommittee.DAL\TradeUnionCommittee.DAL.csproj", "{DC964038-2559-473B-8CFA-69DC7FCE46BE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TradeUnionCommittee.Common", "TradeUnionCommittee.Common\TradeUnionCommittee.Common.csproj", "{C1714A6E-228D-441C-83FD-63CA4E77F70F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TradeUnionCommittee.Common", "TradeUnionCommittee.Common\TradeUnionCommittee.Common.csproj", "{C1714A6E-228D-441C-83FD-63CA4E77F70F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TradeUnionCommittee.BLL", "TradeUnionCommittee.BLL\TradeUnionCommittee.BLL.csproj", "{A0BD33A7-B907-4E1E-BB1D-11564309408F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TradeUnionCommittee.BLL", "TradeUnionCommittee.BLL\TradeUnionCommittee.BLL.csproj", "{A0BD33A7-B907-4E1E-BB1D-11564309408F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TradeUnionCommittee.DAL.Tests", "TradeUnionCommittee.DAL.Tests\TradeUnionCommittee.DAL.Tests.csproj", "{E8258457-B01F-4648-B23A-4442BA010A0F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TradeUnionCommittee.DAL.Tests", "TradeUnionCommittee.DAL.Tests\TradeUnionCommittee.DAL.Tests.csproj", "{E8258457-B01F-4648-B23A-4442BA010A0F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TradeUnionCommittee.BLL.Tests", "TradeUnionCommittee.BLL.Tests\TradeUnionCommittee.BLL.Tests.csproj", "{7F64543B-5F35-4BEE-856F-61185B6EFA62}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TradeUnionCommittee.GUI", "TradeUnionCommittee.GUI\TradeUnionCommittee.GUI.csproj", "{5401A9D8-84C9-4A1C-82DD-F9BCAE469E48}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TradeUnionCommittee.GUI.Tests", "TradeUnionCommittee.GUI.Tests\TradeUnionCommittee.GUI.Tests.csproj", "{F3D4DC7A-6AF0-4C7D-A5A6-D36CB57BB53F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +39,18 @@ Global
 		{E8258457-B01F-4648-B23A-4442BA010A0F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E8258457-B01F-4648-B23A-4442BA010A0F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E8258457-B01F-4648-B23A-4442BA010A0F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7F64543B-5F35-4BEE-856F-61185B6EFA62}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7F64543B-5F35-4BEE-856F-61185B6EFA62}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7F64543B-5F35-4BEE-856F-61185B6EFA62}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7F64543B-5F35-4BEE-856F-61185B6EFA62}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5401A9D8-84C9-4A1C-82DD-F9BCAE469E48}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5401A9D8-84C9-4A1C-82DD-F9BCAE469E48}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5401A9D8-84C9-4A1C-82DD-F9BCAE469E48}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5401A9D8-84C9-4A1C-82DD-F9BCAE469E48}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F3D4DC7A-6AF0-4C7D-A5A6-D36CB57BB53F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F3D4DC7A-6AF0-4C7D-A5A6-D36CB57BB53F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F3D4DC7A-6AF0-4C7D-A5A6-D36CB57BB53F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F3D4DC7A-6AF0-4C7D-A5A6-D36CB57BB53F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

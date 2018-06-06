@@ -1,5 +1,5 @@
 ﻿using System;
-using TradeUnionCommittee.Common.Entities;
+using TradeUnionCommittee.DAL.Entities;
 
 namespace TradeUnionCommittee.DAL.Interfaces
 {

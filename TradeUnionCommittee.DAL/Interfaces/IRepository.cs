@@ -6,9 +6,9 @@ namespace TradeUnionCommittee.DAL.Interfaces
     public interface IRepository<T> where T : class
     {
         ActualResult<IEnumerable<T>> GetAll();
-        ActualResult<T> Get(int id);
+        ActualResult<T> Get(long id);
         ActualResult Create(T item);
         ActualResult Edit(T item);
-        ActualResult Remove(int id);
+        ActualResult Remove(long id);
     }
 }

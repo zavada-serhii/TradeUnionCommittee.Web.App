@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using TradeUnionCommittee.Common.ActualResults;
-using TradeUnionCommittee.Common.EF;
+using TradeUnionCommittee.DAL.EF;
 using TradeUnionCommittee.DAL.Interfaces;
 
 namespace TradeUnionCommittee.DAL.Repositories
@@ -32,7 +32,7 @@ namespace TradeUnionCommittee.DAL.Repositories
             return result;
         }
 
-        public ActualResult<T> Get(int id)
+        public ActualResult<T> Get(long id)
         {
             var result = new ActualResult<T>();
             try
@@ -79,7 +79,7 @@ namespace TradeUnionCommittee.DAL.Repositories
             return result;
         }
 
-        public ActualResult Remove(int id)
+        public ActualResult Remove(long id)
         {
             var result = new ActualResult();
             try

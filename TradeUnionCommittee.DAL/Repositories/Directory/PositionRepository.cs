@@ -1,5 +1,5 @@
-﻿using TradeUnionCommittee.Common.EF;
-using TradeUnionCommittee.Common.Entities;
+﻿using TradeUnionCommittee.DAL.EF;
+using TradeUnionCommittee.DAL.Entities;
 
 namespace TradeUnionCommittee.DAL.Repositories.Directory
 {

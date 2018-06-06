@@ -5,11 +5,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Interfaces\Directory\**" />
+    <EmbeddedResource Remove="Interfaces\Directory\**" />
+    <None Remove="Interfaces\Directory\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\TradeUnionCommittee.Common\TradeUnionCommittee.Common.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Interfaces\Directory\" />
     <Folder Include="Repositories\Directory\" />
   </ItemGroup>
 
