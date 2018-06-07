@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using TradeUnionCommittee.BLL.Infrastructure;
+using TradeUnionCommittee.BLL.Interfaces.Directory;
+using TradeUnionCommittee.BLL.Services.Directory;
 
 namespace TradeUnionCommittee.GUI
 {
@@ -19,7 +21,10 @@ namespace TradeUnionCommittee.GUI
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
-            services.AddTransient(s => new ServiceModule(Configuration.GetConnectionString("DefaultConnection")));
+
+            new ServiceModule(Configuration.GetConnectionString("DefaultConnection"), services);
+
+            DependencyInjectionService(services);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -43,6 +48,11 @@ namespace TradeUnionCommittee.GUI
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
+        }
+
+        private void DependencyInjectionService(IServiceCollection services)
+        {
+            services.AddScoped<IPositionService, PositionService>();
         }
     }
 }

@@ -1,0 +1,46 @@
+﻿@model TradeUnionCommittee.Common.ActualResults.ActualResult<IEnumerable<TradeUnionCommittee.BLL.DTO.DirectoryDTO>>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "_Layout";
+}
+
+
+
+<div class="row">
+    <a asp-controller="Home" asp-action="Directory" class="back-link">Повернутися до списку довідників</a>
+    <hr />
+    <div class="form-group">
+        <a asp-action="Create" class="btn btn-success">Додати посаду</a>
+    </div>
+</div>
+
+<div class="row main-block">
+
+    <table class="table">
+        <thead>
+        <tr>
+            <th>
+                Посади
+            </th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var item in Model.Result)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+
+                <td class="text-right">
+                    <a asp-action="Edit" asp-route-id="@item.Id">Редагувати</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id">Видалити</a>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+
+</div>

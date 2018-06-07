@@ -1,21 +1,14 @@
-﻿using Ninject.Modules;
+﻿using Microsoft.Extensions.DependencyInjection;
 using TradeUnionCommittee.DAL.Interfaces;
 using TradeUnionCommittee.DAL.Repositories;
 
 namespace TradeUnionCommittee.BLL.Infrastructure
 {
-    public class ServiceModule : NinjectModule
+    public sealed class ServiceModule
     {
-        private readonly string _connectionString;
-
-        public ServiceModule(string connectionString)
+        public ServiceModule(string connectionString, IServiceCollection services)
         {
-            _connectionString = connectionString;
-        }
-
-        public override void Load()
-        {
-            Bind<IUnitOfWork>().To<UnitOfWork>().WithConstructorArgument(_connectionString);
+            services.AddScoped<IUnitOfWork, UnitOfWork>(o => new UnitOfWork(connectionString));
         }
     }
 }

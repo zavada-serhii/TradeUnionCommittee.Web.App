@@ -1,5 +1,3 @@
-using System;
-
 namespace TradeUnionCommittee.GUI.Models
 {
     public class ErrorViewModel
