@@ -65,7 +65,7 @@ namespace TradeUnionCommittee.GUI.Controllers.Directory
             {
                 if (vm.Id != null)
                 {
-                    var result = await _services.Edit(new DirectoryDTO {Id = vm.Id.Value, Name = vm.Name});
+                    var result = await _services.Update(new DirectoryDTO {Id = vm.Id.Value, Name = vm.Name});
                     return result.IsValid ? RedirectToAction("Index") : new ErrorController().OutPutError("Position", "Index", result.ErrorsList);
                 }
                 return BadRequest();
@@ -93,7 +93,7 @@ namespace TradeUnionCommittee.GUI.Controllers.Directory
         [HttpPost, ActionName("Delete")]
         public async Task<IActionResult> DeleteConfirmed(long id)
         {
-            var result = await _services.Remove(id);
+            var result = await _services.Delete(id);
             return result.IsValid ? RedirectToAction("Index") : new ErrorController().OutPutError("Position", "Index", result.ErrorsList);
         }
 

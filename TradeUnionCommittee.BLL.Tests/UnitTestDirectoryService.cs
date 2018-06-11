@@ -34,14 +34,14 @@ namespace TradeUnionCommittee.BLL.Tests
         [TestMethod]
         public void TestEditPositionService()
         {
-            var result = _service.Edit(new DirectoryDTO {Id = 8, Name = "Test1" });
+            var result = _service.Update(new DirectoryDTO {Id = 8, Name = "Test1" });
             Assert.AreEqual(result.IsValid, true);
         }
 
         [TestMethod]
         public void TestRemovePositionService()
         {
-            var result = _service.Remove(8);
+            var result = _service.Delete(8);
             Assert.AreEqual(result.IsValid, true);
         }
     }

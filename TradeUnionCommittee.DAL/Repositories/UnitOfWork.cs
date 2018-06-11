@@ -8,7 +8,6 @@ namespace TradeUnionCommittee.DAL.Repositories
 {
     public class UnitOfWork : IUnitOfWork
     {
-        private bool _disposed;
         private readonly TradeUnionCommitteeEmployeesCoreContext _context;
         private PositionRepository _positionRepository;
 
@@ -23,16 +22,23 @@ namespace TradeUnionCommittee.DAL.Repositories
 
         //------------------------------------------------------------------------------------------------------------------------------------------
 
+        public void Save()
+        {
+            _context.SaveChanges();
+        }
+
+        //------------------------------------------------------------------------------------------------------------------------------------------
+
+        private bool _disposed;
+
         private void Dispose(bool disposing)
         {
-            if (!_disposed)
+            if (_disposed) return;
+            if (disposing)
             {
-                if (disposing)
-                {
-                    _context.Dispose();
-                }
-                _disposed = true;
+                _context.Dispose();
             }
+            _disposed = true;
         }
 
         public void Dispose()

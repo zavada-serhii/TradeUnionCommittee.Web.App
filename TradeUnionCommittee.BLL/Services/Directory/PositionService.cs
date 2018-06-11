@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.DTO;
 using TradeUnionCommittee.BLL.Interfaces.Directory;
@@ -58,11 +59,12 @@ namespace TradeUnionCommittee.BLL.Services.Directory
                 {
                     return new ActualResult { IsValid = false, ErrorsList = position.ErrorsList };
                 }
+                _database.Save();
                 return position;
             });
         }
 
-        public async Task<ActualResult> Edit(DirectoryDTO item)
+        public async Task<ActualResult> Update(DirectoryDTO item)
         {
             return await Task.Run(() =>
             {
@@ -70,16 +72,17 @@ namespace TradeUnionCommittee.BLL.Services.Directory
                 {
                     return new ActualResult { IsValid = false, ErrorsList = new List<Error> { new Error(DateTime.Now, "DirectoryDTO can not be null!") } };
                 }
-                var position = _database.PositionRepository.Edit(new Position { Id = item.Id, Name = item.Name });
+                var position = _database.PositionRepository.Update(new Position { Id = item.Id, Name = item.Name });
                 if (position.IsValid == false && position.ErrorsList.Count > 0)
                 {
                     return new ActualResult { IsValid = false, ErrorsList = position.ErrorsList };
                 }
+                _database.Save();
                 return position;
             });
         }
 
-        public async Task<ActualResult> Remove(long? id)
+        public async Task<ActualResult> Delete(long? id)
         {
             return await Task.Run(() =>
             {
@@ -87,12 +90,24 @@ namespace TradeUnionCommittee.BLL.Services.Directory
                 {
                     return new ActualResult { IsValid = false, ErrorsList = new List<Error> { new Error(DateTime.Now, "Id can not be null!") } };
                 }
-                var position = _database.PositionRepository.Remove(id.Value);
+                var position = _database.PositionRepository.Delete(id.Value);
                 if (position.IsValid == false && position.ErrorsList.Count > 0)
                 {
                     return new ActualResult<DirectoryDTO> { IsValid = false, ErrorsList = position.ErrorsList };
                 }
+                _database.Save();
                 return position;
+            });
+        }
+
+        public async Task<ActualResult<bool>> CheckName(string name)
+        {
+            return await Task.Run(() =>
+            {
+                var res = _database.PositionRepository.Find(p => p.Name == name);
+                return res.Result.Any() ?
+                    new ActualResult<bool> { IsValid = false, ErrorsList = new List<Error> { new Error(DateTime.Now, $"Name {name} already in use!") } } :
+                    new ActualResult<bool> { IsValid = true };
             });
         }
 

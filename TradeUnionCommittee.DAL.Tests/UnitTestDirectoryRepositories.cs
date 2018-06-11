@@ -22,7 +22,7 @@ namespace TradeUnionCommittee.DAL.Tests
         [TestMethod]
         public void TestEditPositionRepository()
         {
-            var result = _work.PositionRepository.Edit(new Position
+            var result = _work.PositionRepository.Update(new Position
             {
                 Id = 5,
                 Name = "Преподаватель"
@@ -33,7 +33,7 @@ namespace TradeUnionCommittee.DAL.Tests
         [TestMethod]
         public void TestRemovePositionRepository()
         {
-            var result = _work.PositionRepository.Remove(5);
+            var result = _work.PositionRepository.Delete(5);
 
             Assert.AreEqual(result.IsValid, true);
         }
@@ -41,7 +41,7 @@ namespace TradeUnionCommittee.DAL.Tests
         [TestMethod]
         public void TestGetPositionRepository()
         {
-            var result = _work.PositionRepository.Get(1);
+            var result = _work.PositionRepository.FindById(1);
 
             Assert.AreEqual(result.IsValid, true);
         }

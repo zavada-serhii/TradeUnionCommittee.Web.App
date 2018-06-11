@@ -6,5 +6,6 @@ namespace TradeUnionCommittee.DAL.Interfaces
     public interface IUnitOfWork : IDisposable
     {
         IRepository<Position> PositionRepository { get; }
+        void Save();
     }
 }

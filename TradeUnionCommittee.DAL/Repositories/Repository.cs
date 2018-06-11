@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using TradeUnionCommittee.Common.ActualResults;
 using TradeUnionCommittee.DAL.EF;
 using TradeUnionCommittee.DAL.Interfaces;
@@ -47,13 +48,27 @@ namespace TradeUnionCommittee.DAL.Repositories
             return result;
         }
 
+        public ActualResult<IEnumerable<T>> Find(Func<T, bool> predicate)
+        {
+            var result = new ActualResult<IEnumerable<T>>();
+            try
+            {
+                result.Result = _db.Set<T>().Where(predicate).ToList();
+            }
+            catch (Exception e)
+            {
+                result.IsValid = false;
+                result.ErrorsList.Add(new Error(DateTime.Now, e.Message));
+            }
+            return result;
+        }
+
         public ActualResult Create(T item)
         {
             var result = new ActualResult();
             try
             {
                 _db.Set<T>().Add(item);
-                _db.SaveChanges();
             }
             catch (Exception e)
             {
@@ -63,13 +78,12 @@ namespace TradeUnionCommittee.DAL.Repositories
             return result;
         }
 
-        public ActualResult Edit(T item)
+        public ActualResult Update(T item)
         {
             var result = new ActualResult();
             try
             {
                 _db.Entry(item).State = EntityState.Modified;
-                _db.SaveChanges();
             }
             catch (Exception e)
             {
@@ -79,7 +93,7 @@ namespace TradeUnionCommittee.DAL.Repositories
             return result;
         }
 
-        public ActualResult Remove(long id)
+        public ActualResult Delete(long id)
         {
             var result = new ActualResult();
             try
@@ -88,7 +102,6 @@ namespace TradeUnionCommittee.DAL.Repositories
                 if (res != null)
                 {
                     _db.Set<T>().Remove(res);
-                    _db.SaveChanges();
                 }
             }
             catch (Exception e)
@@ -97,6 +110,43 @@ namespace TradeUnionCommittee.DAL.Repositories
                 result.ErrorsList.Add(new Error(DateTime.Now, e.Message));
             }
             return result;
+        }
+
+        public ActualResult<IEnumerable<T>> GetWithInclude(params Expression<Func<T, object>>[] includeProperties)
+        {
+            var result = new ActualResult<IEnumerable<T>>();
+            try
+            {
+                result.Result = Include(includeProperties).ToList();
+            }
+            catch (Exception e)
+            {
+                result.IsValid = false;
+                result.ErrorsList.Add(new Error(DateTime.Now, e.Message));
+            }
+            return result;
+        }
+
+        public ActualResult<IEnumerable<T>> GetWithInclude(Func<T, bool> predicate, params Expression<Func<T, object>>[] includeProperties)
+        {
+            var result = new ActualResult<IEnumerable<T>>();
+            try
+            {
+                var query = Include(includeProperties);
+                result.Result = query.Where(predicate).ToList();
+            }
+            catch (Exception e)
+            {
+                result.IsValid = false;
+                result.ErrorsList.Add(new Error(DateTime.Now, e.Message));
+            }
+            return result;
+        }
+
+        private IQueryable<T> Include(params Expression<Func<T, object>>[] includeProperties)
+        {
+            var query = _db.Set<T>().AsNoTracking();
+            return includeProperties.Aggregate(query, (current, includeProperty) => current.Include(includeProperty));
         }
     }
 }
