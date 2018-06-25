@@ -7,7 +7,7 @@ namespace TradeUnionCommittee.DAL.Tests
     [TestClass]
     public class UnitTestDirectoryRepositories
     {
-        private readonly UnitOfWork _work = new UnitOfWork("Host=127.0.0.1;Port=5432;Database=TradeUnionCommitteeEmployeesCore;Username=postgres;Password=postgres");
+        private readonly UnitOfWork _work = new UnitOfWork("Host=127.0.0.1;Port=5432;Database=TradeUnionCommitteeEmployeesCore;Username=AdminTradeUnionCommitteeEmployees;Password=admin");
 
         [TestMethod]
         public void TestCreatePositionRepository()
@@ -41,7 +41,7 @@ namespace TradeUnionCommittee.DAL.Tests
         [TestMethod]
         public void TestGetPositionRepository()
         {
-            var result = _work.PositionRepository.FindById(1);
+            var result = _work.PositionRepository.Get(1);
 
             Assert.AreEqual(result.IsValid, true);
         }
