@@ -1,0 +1,1 @@
+Scaffold-DbContext "Host=127.0.0.1;Port=5432;Database=TradeUnionCommitteeEmployeesCore;Username=postgres;Password=postgres" Npgsql.EntityFrameworkCore.PostgreSQL -o Entities

@@ -12,6 +12,6 @@ namespace TradeUnionCommittee.DAL.Entities
         public DateTime DateVisit { get; set; }
 
         public Cultural IdCulturalNavigation { get; set; }
-        public GrandChildren IdGrandchildrenNavigation { get; set; }
+        public GrandChildren IdGrandChildrenNavigation { get; set; }
     }
 }

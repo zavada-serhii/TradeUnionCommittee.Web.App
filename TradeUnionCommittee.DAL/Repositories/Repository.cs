@@ -9,7 +9,7 @@ using TradeUnionCommittee.DAL.Interfaces;
 
 namespace TradeUnionCommittee.DAL.Repositories
 {
-    public abstract class Repository<T> : IRepository<T> where T : class , new()
+    public abstract class Repository<T> : IRepository<T> where T : class, new()
     {
         private readonly TradeUnionCommitteeEmployeesCoreContext _db;
 

@@ -10,6 +10,6 @@ namespace TradeUnionCommittee.DAL.Entities
         public DateTime DateEvent { get; set; }
 
         public Activities IdActivitiesNavigation { get; set; }
-        public GrandChildren IdGrandchildrenNavigation { get; set; }
+        public GrandChildren IdGrandChildrenNavigation { get; set; }
     }
 }
