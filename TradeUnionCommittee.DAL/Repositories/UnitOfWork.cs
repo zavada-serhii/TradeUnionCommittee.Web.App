@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Threading.Tasks;
+using TradeUnionCommittee.Common.ActualResults;
 using TradeUnionCommittee.DAL.EF;
 using TradeUnionCommittee.DAL.Entities;
 using TradeUnionCommittee.DAL.Interfaces;
@@ -129,9 +131,19 @@ namespace TradeUnionCommittee.DAL.Repositories
 
         //------------------------------------------------------------------------------------------------------------------------------------------
 
-        public void Save()
+        public async Task<ActualResult<int>> SaveAsync()
         {
-            _context.SaveChanges();
+            var result  = new ActualResult<int>();
+            try
+            {
+                result.Result = await _context.SaveChangesAsync();
+            }
+            catch (Exception e)
+            {
+                result.IsValid = false;
+                result.ErrorsList.Add(new Error(DateTime.Now, e.Message));
+            }
+            return result;
         }
 
         //------------------------------------------------------------------------------------------------------------------------------------------

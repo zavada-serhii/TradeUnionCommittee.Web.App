@@ -59,7 +59,7 @@ namespace TradeUnionCommittee.BLL.Services.Directory
                 {
                     return new ActualResult { IsValid = false, ErrorsList = position.ErrorsList };
                 }
-                _database.Save();
+                _database.SaveAsync();
                 return position;
             });
         }
@@ -77,7 +77,7 @@ namespace TradeUnionCommittee.BLL.Services.Directory
                 {
                     return new ActualResult { IsValid = false, ErrorsList = position.ErrorsList };
                 }
-                _database.Save();
+                _database.SaveAsync();
                 return position;
             });
         }
@@ -95,7 +95,7 @@ namespace TradeUnionCommittee.BLL.Services.Directory
                 {
                     return new ActualResult<DirectoryDTO> { IsValid = false, ErrorsList = position.ErrorsList };
                 }
-                _database.Save();
+                _database.SaveAsync();
                 return position;
             });
         }

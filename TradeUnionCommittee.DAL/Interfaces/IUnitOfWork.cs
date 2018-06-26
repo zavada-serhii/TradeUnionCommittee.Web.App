@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Threading.Tasks;
+using TradeUnionCommittee.Common.ActualResults;
 using TradeUnionCommittee.DAL.Entities;
 
 namespace TradeUnionCommittee.DAL.Interfaces
@@ -60,6 +62,6 @@ namespace TradeUnionCommittee.DAL.Interfaces
 
         //------------------------------------------------------------------------------------------------------------------------------------------
 
-        void Save();
+        Task<ActualResult<int>> SaveAsync();
     }
 }
