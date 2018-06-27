@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.DTO;
 using TradeUnionCommittee.BLL.Interfaces.Directory;
@@ -20,12 +21,12 @@ namespace TradeUnionCommittee.GUI.Controllers.Directory
         public async Task<IActionResult> Index()
         {
             var result = await _services.GetAll();
-
             return View(result);
         }
 
         //------------------------------------------------------------------------------------------------------------------------------------------
 
+        [HttpGet]
         public IActionResult Create()
         {
             return View();
@@ -44,38 +45,29 @@ namespace TradeUnionCommittee.GUI.Controllers.Directory
 
         //------------------------------------------------------------------------------------------------------------------------------------------
 
-        public async Task<IActionResult> Edit(long? id)
+        [HttpGet]
+        public async Task<IActionResult> Update(long id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
             var result = await _services.Get(id);
-
             if (!result.IsValid) return NotFound();
-
-            return View(result.Result);
+            var mapper = new MapperConfiguration(cfg => cfg.CreateMap<DirectoryDTO, DirectoryViewModel>()).CreateMapper();
+            return View(mapper.Map<DirectoryDTO, DirectoryViewModel>(result.Result));
         }
 
         [HttpPost]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name")] DirectoryViewModel vm)
+        public async Task<IActionResult> Update([Bind("Id,Name")] DirectoryViewModel vm)
         {
-            if (ModelState.IsValid)
+            if (ModelState.IsValid && vm.Id != null)
             {
-                if (vm.Id != null)
-                {
-                    var result = await _services.Update(new DirectoryDTO {Id = vm.Id.Value, Name = vm.Name});
-                    return result.IsValid ? RedirectToAction("Index") : new ErrorController().OutPutError("Position", "Index", result.ErrorsList);
-                }
-                return BadRequest();
+                var result = await _services.Update(new DirectoryDTO {Id = vm.Id.Value, Name = vm.Name});
+                return result.IsValid ? RedirectToAction("Index") : new ErrorController().OutPutError("Position", "Index", result.ErrorsList);
             }
-
-            return View();
+            return BadRequest();
         }
 
         //------------------------------------------------------------------------------------------------------------------------------------------
 
+        [HttpGet]
         public async Task<IActionResult> Delete(long? id)
         {
             if (id == null)
@@ -83,18 +75,27 @@ namespace TradeUnionCommittee.GUI.Controllers.Directory
                 return NotFound();
             }
 
-            var result = await _services.Get(id);
+            var result = await _services.Get(id.Value);
 
             if (!result.IsValid) return NotFound();
 
             return View(result.Result);
         }
 
-        [HttpPost, ActionName("Delete")]
-        public async Task<IActionResult> DeleteConfirmed(long id)
+        [HttpPost]
+        public async Task<IActionResult> Delete(long id)
         {
             var result = await _services.Delete(id);
             return result.IsValid ? RedirectToAction("Index") : new ErrorController().OutPutError("Position", "Index", result.ErrorsList);
+        }
+
+        //------------------------------------------------------------------------------------------------------------------------------------------
+
+        [AcceptVerbs("Get", "Post")]
+        public async Task<IActionResult> CheckName(string name)
+        {
+            var result = await _services.CheckName(name);
+            return Json(result.Result);
         }
 
         //------------------------------------------------------------------------------------------------------------------------------------------

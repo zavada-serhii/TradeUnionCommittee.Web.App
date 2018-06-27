@@ -39,6 +39,12 @@ namespace TradeUnionCommittee.DAL.Repositories
             try
             {
                 result.Result = _db.Set<T>().Find(id);
+
+                if (result.Result == null)
+                {
+                    result.IsValid = false;
+                    result.ErrorsList.Add(new Error(DateTime.Now, "Data has been deleted or changed!"));
+                }
             }
             catch (Exception e)
             {

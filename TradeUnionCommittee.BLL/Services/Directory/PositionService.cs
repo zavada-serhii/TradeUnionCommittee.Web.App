@@ -29,16 +29,12 @@ namespace TradeUnionCommittee.BLL.Services.Directory
             });
         }
 
-        public async Task<ActualResult<DirectoryDTO>> Get(long? id)
+        public async Task<ActualResult<DirectoryDTO>> Get(long id)
         {
             return await Task.Run(() =>
             {
-                if (id == null)
-                {
-                    return new ActualResult<DirectoryDTO> { IsValid = false, ErrorsList = new List<Error> { new Error(DateTime.Now, "Id can not be null!") } };
-                }
-                var position = _database.PositionRepository.Get(id.Value);
-                if (position.IsValid == false && position.ErrorsList.Count > 0)
+                var position = _database.PositionRepository.Get(id);
+                if ((position.IsValid == false && position.ErrorsList.Count > 0) || position.Result == null)
                 {
                     return new ActualResult<DirectoryDTO> { IsValid = false, ErrorsList = position.ErrorsList };
                 }
@@ -48,54 +44,42 @@ namespace TradeUnionCommittee.BLL.Services.Directory
 
         public async Task<ActualResult> Create(DirectoryDTO item)
         {
-            return await Task.Run(() =>
+            return await Task.Run(async () =>
             {
-                if (item == null)
-                {
-                    return new ActualResult { IsValid = false, ErrorsList = new List<Error> { new Error(DateTime.Now, "DirectoryDTO can not be null!") } };
-                }
                 var position = _database.PositionRepository.Create(new Position { Name = item.Name });
                 if (position.IsValid == false && position.ErrorsList.Count > 0)
                 {
                     return new ActualResult { IsValid = false, ErrorsList = position.ErrorsList };
                 }
-                _database.SaveAsync();
+                await _database.SaveAsync();
                 return position;
             });
         }
 
         public async Task<ActualResult> Update(DirectoryDTO item)
         {
-            return await Task.Run(() =>
+            return await Task.Run(async () =>
             {
-                if (item == null)
-                {
-                    return new ActualResult { IsValid = false, ErrorsList = new List<Error> { new Error(DateTime.Now, "DirectoryDTO can not be null!") } };
-                }
                 var position = _database.PositionRepository.Update(new Position { Id = item.Id, Name = item.Name });
                 if (position.IsValid == false && position.ErrorsList.Count > 0)
                 {
                     return new ActualResult { IsValid = false, ErrorsList = position.ErrorsList };
                 }
-                _database.SaveAsync();
+                await _database.SaveAsync();
                 return position;
             });
         }
 
-        public async Task<ActualResult> Delete(long? id)
+        public async Task<ActualResult> Delete(long id)
         {
-            return await Task.Run(() =>
+            return await Task.Run(async () =>
             {
-                if (id == null)
-                {
-                    return new ActualResult { IsValid = false, ErrorsList = new List<Error> { new Error(DateTime.Now, "Id can not be null!") } };
-                }
-                var position = _database.PositionRepository.Delete(id.Value);
+                var position = _database.PositionRepository.Delete(id);
                 if (position.IsValid == false && position.ErrorsList.Count > 0)
                 {
                     return new ActualResult<DirectoryDTO> { IsValid = false, ErrorsList = position.ErrorsList };
                 }
-                _database.SaveAsync();
+                await _database.SaveAsync();
                 return position;
             });
         }
@@ -106,8 +90,8 @@ namespace TradeUnionCommittee.BLL.Services.Directory
             {
                 var res = _database.PositionRepository.Find(p => p.Name == name);
                 return res.Result.Any() ?
-                    new ActualResult<bool> { IsValid = false, ErrorsList = new List<Error> { new Error(DateTime.Now, $"Name {name} already in use!") } } :
-                    new ActualResult<bool> { IsValid = true };
+                    new ActualResult<bool> { IsValid = false, Result = false, ErrorsList = new List<Error> { new Error(DateTime.Now, $"Name {name} already in use!") } } :
+                    new ActualResult<bool> { IsValid = true, Result = true};
             });
         }
 
