@@ -15,6 +15,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TradeUnionCommittee.BLL.Tes
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TradeUnionCommittee.Web.GUI", "TradeUnionCommittee.Web.GUI\TradeUnionCommittee.Web.GUI.csproj", "{058DC0B6-F6E0-4103-B5AF-F28FB63F98D4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TradeUnionCommittee.Api", "TradeUnionCommittee.Api\TradeUnionCommittee.Api.csproj", "{6B40D6B3-78A9-4EE8-B6FD-88DA97DE5905}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TradeUnionCommittee.Service", "TradeUnionCommittee.Service\TradeUnionCommittee.Service.csproj", "{D4EB1575-1CC0-42C9-9292-CA137203EF98}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,6 +49,14 @@ Global
 		{058DC0B6-F6E0-4103-B5AF-F28FB63F98D4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{058DC0B6-F6E0-4103-B5AF-F28FB63F98D4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{058DC0B6-F6E0-4103-B5AF-F28FB63F98D4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6B40D6B3-78A9-4EE8-B6FD-88DA97DE5905}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6B40D6B3-78A9-4EE8-B6FD-88DA97DE5905}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6B40D6B3-78A9-4EE8-B6FD-88DA97DE5905}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6B40D6B3-78A9-4EE8-B6FD-88DA97DE5905}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D4EB1575-1CC0-42C9-9292-CA137203EF98}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D4EB1575-1CC0-42C9-9292-CA137203EF98}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D4EB1575-1CC0-42C9-9292-CA137203EF98}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D4EB1575-1CC0-42C9-9292-CA137203EF98}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
