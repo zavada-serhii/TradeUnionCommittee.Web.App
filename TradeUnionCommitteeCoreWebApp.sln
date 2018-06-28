@@ -11,11 +11,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TradeUnionCommittee.BLL", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TradeUnionCommittee.DAL.Tests", "TradeUnionCommittee.DAL.Tests\TradeUnionCommittee.DAL.Tests.csproj", "{E8258457-B01F-4648-B23A-4442BA010A0F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TradeUnionCommittee.BLL.Tests", "TradeUnionCommittee.BLL.Tests\TradeUnionCommittee.BLL.Tests.csproj", "{7F64543B-5F35-4BEE-856F-61185B6EFA62}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TradeUnionCommittee.BLL.Tests", "TradeUnionCommittee.BLL.Tests\TradeUnionCommittee.BLL.Tests.csproj", "{7F64543B-5F35-4BEE-856F-61185B6EFA62}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TradeUnionCommittee.GUI", "TradeUnionCommittee.GUI\TradeUnionCommittee.GUI.csproj", "{5401A9D8-84C9-4A1C-82DD-F9BCAE469E48}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TradeUnionCommittee.Web.GUI", "TradeUnionCommittee.Web.GUI\TradeUnionCommittee.Web.GUI.csproj", "{058DC0B6-F6E0-4103-B5AF-F28FB63F98D4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TradeUnionCommittee.GUI.Tests", "TradeUnionCommittee.GUI.Tests\TradeUnionCommittee.GUI.Tests.csproj", "{F3D4DC7A-6AF0-4C7D-A5A6-D36CB57BB53F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TradeUnionCommittee.Api", "TradeUnionCommittee.Api\TradeUnionCommittee.Api.csproj", "{6B40D6B3-78A9-4EE8-B6FD-88DA97DE5905}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TradeUnionCommittee.Service", "TradeUnionCommittee.Service\TradeUnionCommittee.Service.csproj", "{D4EB1575-1CC0-42C9-9292-CA137203EF98}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -43,14 +45,18 @@ Global
 		{7F64543B-5F35-4BEE-856F-61185B6EFA62}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7F64543B-5F35-4BEE-856F-61185B6EFA62}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7F64543B-5F35-4BEE-856F-61185B6EFA62}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5401A9D8-84C9-4A1C-82DD-F9BCAE469E48}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5401A9D8-84C9-4A1C-82DD-F9BCAE469E48}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5401A9D8-84C9-4A1C-82DD-F9BCAE469E48}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5401A9D8-84C9-4A1C-82DD-F9BCAE469E48}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F3D4DC7A-6AF0-4C7D-A5A6-D36CB57BB53F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F3D4DC7A-6AF0-4C7D-A5A6-D36CB57BB53F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F3D4DC7A-6AF0-4C7D-A5A6-D36CB57BB53F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F3D4DC7A-6AF0-4C7D-A5A6-D36CB57BB53F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{058DC0B6-F6E0-4103-B5AF-F28FB63F98D4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{058DC0B6-F6E0-4103-B5AF-F28FB63F98D4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{058DC0B6-F6E0-4103-B5AF-F28FB63F98D4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{058DC0B6-F6E0-4103-B5AF-F28FB63F98D4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6B40D6B3-78A9-4EE8-B6FD-88DA97DE5905}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6B40D6B3-78A9-4EE8-B6FD-88DA97DE5905}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6B40D6B3-78A9-4EE8-B6FD-88DA97DE5905}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6B40D6B3-78A9-4EE8-B6FD-88DA97DE5905}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D4EB1575-1CC0-42C9-9292-CA137203EF98}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D4EB1575-1CC0-42C9-9292-CA137203EF98}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D4EB1575-1CC0-42C9-9292-CA137203EF98}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D4EB1575-1CC0-42C9-9292-CA137203EF98}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
