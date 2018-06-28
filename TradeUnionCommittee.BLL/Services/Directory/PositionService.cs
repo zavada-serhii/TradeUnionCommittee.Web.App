@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -34,7 +33,7 @@ namespace TradeUnionCommittee.BLL.Services.Directory
             return await Task.Run(() =>
             {
                 var position = _database.PositionRepository.Get(id);
-                if ((position.IsValid == false && position.ErrorsList.Count > 0) || position.Result == null)
+                if (position.IsValid == false && position.ErrorsList.Count > 0 || position.Result == null)
                 {
                     return new ActualResult<DirectoryDTO> { IsValid = false, ErrorsList = position.ErrorsList };
                 }
@@ -84,14 +83,14 @@ namespace TradeUnionCommittee.BLL.Services.Directory
             });
         }
 
-        public async Task<ActualResult<bool>> CheckName(string name)
+        public async Task<ActualResult> CheckName(string name)
         {
             return await Task.Run(() =>
             {
                 var res = _database.PositionRepository.Find(p => p.Name == name);
                 return res.Result.Any() ?
-                    new ActualResult<bool> { IsValid = false, Result = false, ErrorsList = new List<Error> { new Error(DateTime.Now, $"Name {name} already in use!") } } :
-                    new ActualResult<bool> { IsValid = true, Result = true};
+                    new ActualResult { IsValid = false} :
+                    new ActualResult { IsValid = true};
             });
         }
 

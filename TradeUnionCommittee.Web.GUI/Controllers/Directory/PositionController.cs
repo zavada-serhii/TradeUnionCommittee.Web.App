@@ -1,0 +1,109 @@
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
+using TradeUnionCommittee.BLL.DTO;
+using TradeUnionCommittee.BLL.Interfaces.Directory;
+using TradeUnionCommittee.Web.GUI.Models.ViewModels;
+using TradeUnionCommittee.Web.GUI.Oops;
+
+namespace TradeUnionCommittee.Web.GUI.Controllers.Directory
+{
+    public class PositionController : Controller
+    {
+        private readonly IPositionService _services;
+        private readonly IOops _oops;
+
+        public PositionController(IPositionService services, IOops oops)
+        {
+            _services = services;
+            _oops = oops;
+        }
+
+        //------------------------------------------------------------------------------------------------------------------------------------------
+
+        public async Task<IActionResult> Index()
+        {
+            var result = await _services.GetAll();
+            return result.IsValid ? View(result) : _oops.OutPutError("Home", "Directory", result.ErrorsList);
+        }
+
+        //------------------------------------------------------------------------------------------------------------------------------------------
+
+        [HttpGet]
+        public IActionResult Create()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Create([Bind("Name")] DirectoryViewModel vm)
+        {
+            var result = await _services.Create(new DirectoryDTO {Name = vm.Name});
+            return result.IsValid
+                ? RedirectToAction("Index")
+                : _oops.OutPutError("Position", "Index", result.ErrorsList);
+        }
+
+        //------------------------------------------------------------------------------------------------------------------------------------------
+
+        [HttpGet]
+        public async Task<IActionResult> Update(long? id)
+        {
+            if (id == null) return NotFound();
+            var result = await _services.Get(id.Value);
+            if (result.IsValid)
+            {
+                var mapper = new MapperConfiguration(cfg => cfg.CreateMap<DirectoryDTO, DirectoryViewModel>()).CreateMapper();
+                return View(mapper.Map<DirectoryDTO, DirectoryViewModel>(result.Result));
+            }
+            return _oops.OutPutError("Position", "Index", result.ErrorsList);
+        }
+
+        [HttpPost, ActionName("Update")]
+        public async Task<IActionResult> UpdateConfirmed([Bind("Id,Name")] DirectoryViewModel vm)
+        {
+            if (vm.Id == null) return NotFound();
+            var result = await _services.Update(new DirectoryDTO {Id = vm.Id.Value, Name = vm.Name});
+            return result.IsValid
+                ? RedirectToAction("Index")
+                : _oops.OutPutError("Position", "Index", result.ErrorsList);
+        }
+
+        //------------------------------------------------------------------------------------------------------------------------------------------
+
+        [HttpGet]
+        public async Task<IActionResult> Delete(long? id)
+        {
+            if (id == null) return NotFound();
+            var result = await _services.Get(id.Value);
+            return result.IsValid ? View(result.Result) : _oops.OutPutError("Position", "Index", result.ErrorsList);
+        }
+
+        [HttpPost, ActionName("Delete")]
+        public async Task<IActionResult> DeleteConfirmed(long? id)
+        {
+            if (id == null) return NotFound();
+            var result = await _services.Delete(id.Value);
+            return result.IsValid
+                ? RedirectToAction("Index")
+                : _oops.OutPutError("Position", "Index", result.ErrorsList);
+        }
+
+        //------------------------------------------------------------------------------------------------------------------------------------------
+
+        [AcceptVerbs("Get", "Post")]
+        public async Task<IActionResult> CheckName(string name)
+        {
+            var result = await _services.CheckName(name);
+            return Json(result.IsValid);
+        }
+
+        //------------------------------------------------------------------------------------------------------------------------------------------
+
+        protected override void Dispose(bool disposing)
+        {
+            _services.Dispose();
+            base.Dispose(disposing);
+        }
+    }
+}

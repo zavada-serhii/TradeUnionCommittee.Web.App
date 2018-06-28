@@ -1,0 +1,407 @@
+﻿@using TradeUnionCommittee.Web.GUI.Models.ViewModels;
+@model AddEmployeeViewModel
+@{
+    ViewData["Title"] = "Додати нового члена профспілки";
+}
+
+<section class="add-user container-fluid">
+    <div class="row justify-content-center">
+        <div class="col-md-12 add-user_block">
+            <div class="row align-items-center">
+                <div class="col-md-10">
+                    <h2>Додати нового члена профспілки</h2>
+                    <small class="text-muted">Поля, позначені червоною зірочкою обов`язкові</small>
+                </div>
+            </div>
+            <hr>
+            <form asp-action="">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="row">
+                    <div class="form-group col-md-4">
+                        <label asp-for="FirstName" class="control-label required">Прiзвище</label>
+                        <input asp-for="FirstName" type="text" class="form-control" placeholder="Іванов">
+                        <span asp-validation-for="FirstName" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label asp-for="SecondName" class="control-label required">Iм'я</label>
+                        <input asp-for="SecondName" type="text" class="form-control" placeholder="Іван">
+                        <span asp-validation-for="SecondName" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group col-md-4">
+                        <label asp-for="Patronymic">По батьковi</label>
+                        <input asp-for="Patronymic" type="text" class="form-control" placeholder="Іванович">
+                    </div>
+                </div>
+
+                <hr>
+
+                <div class="row">
+                    <div class="form-group col-md-5">
+                        <label class="control-label required">Стать</label>
+                        <div class="">
+                            @foreach (var item in Model.CollectionSex)
+                            {
+                                <label class="custom-control custom-radio">
+                                    <input asp-for="Sex" value="@item.Key" type="radio" class="custom-control-input">
+                                    <span class="custom-control-indicator"></span>
+                                    <span class="custom-control-description">@item.Value</span>
+                                </label>
+                            }
+                            <span asp-validation-for="Sex" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <hr>
+
+                <div class="row">
+                    <div class="form-group col-lg-6 col-xl-4">
+                        <label asp-for="BasicProfission" class="control-label required">Професія за дипломом</label>
+                        <input asp-for="BasicProfission" type="text" class="form-control" placeholder="Математик, Програміст">
+                        <span asp-validation-for="BasicProfission" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-lg-6 col-xl-4">
+                        <label asp-for="BirthDate" class="control-label required">Дата народження</label>
+                        <input asp-for="BirthDate" type="date" class="form-control">
+                        <span asp-validation-for="BirthDate" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group col-lg-6 col-xl-4">
+                        <label asp-for="StartYearWork" class="control-label required">Рік початку роботи в ОНУ</label>
+                        <input asp-for="StartYearWork" id="year" type="text" class="form-control" placeholder="1990">
+                        <span asp-validation-for="StartYearWork" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-lg-6 col-xl-4">
+                        <label asp-for="StartDateTradeUnion" class="control-label required">Дата вступу в ППО</label>
+                        <input asp-for="StartDateTradeUnion" type="date" class="form-control">
+                        <span asp-validation-for="StartDateTradeUnion" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group col-lg-6 col-xl-4">
+                        <label asp-for="IdentificationСode">Iдентифiкацiйний код</label>
+                        <input asp-for="IdentificationСode" id="ident-code" type="text" class="form-control" placeholder="111111111111">
+                        <span asp-validation-for="IdentificationСode" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-lg-6 col-xl-4">
+                        <label asp-for="MechnikovCard">Номер Mechnikov Card</label>
+                        <input asp-for="MechnikovCard" id="Mechnikov-code" type="text" class="form-control" placeholder="1-111111-111111">
+                        <span asp-validation-for="MechnikovCard" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group col-lg-6 col-xl-4">
+                        <label asp-for="MobilePhone">Мобiльний номер</label>
+                        <input asp-for="MobilePhone" id="mobile-phone" type="text" class="form-control" placeholder="+38(050)777-77-77">
+                    </div>
+                    <div class="form-group col-lg-6 col-xl-4">
+                        <label asp-for="CityPhone">Мicкий номер</label>
+                        <input asp-for="CityPhone" id="home-phone" type="text" class="form-control" placeholder="777-77-7">
+                    </div>
+                    <div class="form-group col-lg-6 col-xl-4">
+                        <label asp-for="CityPhoneAdditional">Мicкий номер</label>
+                        <input asp-for="CityPhoneAdditional" id="home-phone1" type="text" class="form-control" placeholder="777-77-77">
+                    </div>
+                </div>
+
+                <hr>
+
+                <fieldset class="form-group">
+                    <legend class="control-legend required">Освiта</legend>
+                    <div class="row">
+                        <div class="form-group col-lg-4 col-xl-3">
+                            <label asp-for="LevelEducation" class="control-label required">Рiвень освiти</label><br>
+                            <select asp-for="LevelEducation" id="editable-select-LevelEducation" class="custom-select" style="width: 100%" asp-items="@ViewBag.LevelEducation"></select>
+                            <span asp-validation-for="LevelEducation" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group col-lg-4 col-xl-3">
+                            <label asp-for="NameInstitution" class="control-label required">Місце навчання</label><br>
+                            <select asp-for="NameInstitution" id="editable-select-Study" class="custom-select" asp-items="@ViewBag.Study"></select>
+                            <span asp-validation-for="NameInstitution" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group col-lg-4 col-xl-3">
+                            <label asp-for="YearReceiving">Рік отримання</label>
+                            <input asp-for="YearReceiving" id="year-education" type="text" class="form-control" placeholder="1990">
+                            <span asp-validation-for="YearReceiving" class="text-danger"></span>
+                        </div>
+                    </div>
+                </fieldset>
+
+                <hr>
+
+                <fieldset class="form-group">
+                    <legend class="control-legend required">Посада</legend>
+                    <div class="row">
+
+                        <div class="form-group col-lg-4 col-xl-3">
+                            <label asp-for="Position" class="control-label required">Посада</label><br>
+                            <select asp-for="Position" asp-items="@ViewBag.Position" class="custom-select"></select>
+                            <span asp-validation-for="Position" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group col-lg-4 col-xl-3">
+                            <label asp-for="StartDatePosition">Дата початку роботи на посадi</label>
+                            <input asp-for="StartDatePosition" type="date" class="form-control">
+                        </div>
+
+                        <div class="form-group col-lg-4 col-xl-3">
+                            <label asp-for="MainSubdivision" class="control-label required">Структурний пiдроздiл</label><br>
+                            <select asp-for="MainSubdivision" asp-items="@ViewBag.MainSubdivision" id="selectMain" class="custom-select"></select>
+                            <span asp-validation-for="MainSubdivision" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group col-lg-4 col-xl-3">
+                            <label asp-for="SubordinateSubdivision">Кафедра</label><br>
+                            <select asp-for="SubordinateSubdivision" id="subordinateSubdivision" class="custom-select" style="width: 100%"></select>
+                        </div>
+
+                    </div>
+                    <hr>
+                </fieldset>
+
+
+
+                <fieldset class="form-group">
+                    <legend class="control-legend required">Вид проживания</legend>
+
+                    @foreach (var item in Model.CollectionAccommodation)
+                    {
+                        <label class="custom-control custom-radio">
+                            <input asp-for="TypeAccommodation" value="@item.Key" id="@item.Key" type="radio" name="TypeAccommodation" class="custom-control-input  expanded-radio">
+                            <span class="custom-control-indicator"></span>
+                            <span class="custom-control-description">@item.Value</span>
+                        </label>
+                    }
+
+                    <span asp-validation-for="TypeAccommodation" class="text-danger"></span>
+
+                </fieldset>
+
+                <hr>
+
+                <fieldset class="form-group appartment privateHouse invisible">
+                    <legend>Приватне житло</legend>
+                    <div class="row">
+                        <div class="form-group col-md-3">
+                            <label asp-for="CityPrivateHouse" class="control-label required">Мiсто</label>
+                            <input asp-for="CityPrivateHouse" type="text" class="form-control">
+                            <span asp-validation-for="CityPrivateHouse" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group col-md-3">
+                            <label asp-for="StreetPrivateHouse" class="control-label required">Вулиця</label>
+                            <input asp-for="StreetPrivateHouse" type="text" class="form-control">
+                            <span asp-validation-for="StreetPrivateHouse" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group col-md-3">
+                            <label asp-for="NumberHousePrivateHouse">Номер дому</label>
+                            <input asp-for="NumberHousePrivateHouse" type="text" class="form-control">
+                        </div>
+
+                        <div class="form-group col-md-3">
+                            <label asp-for="NumberApartmentPrivateHouse">Номер квартири</label>
+                            <input asp-for="NumberApartmentPrivateHouse" type="text" class="form-control">
+                        </div>
+                    </div>
+                    <hr>
+                </fieldset>
+
+
+
+                <fieldset class="form-group appartment fromUniversity invisible">
+                    <legend>Вiд унiверситету</legend>
+                    <div class="row">
+
+                        <div class="form-group col-md-3">
+                            <label asp-for="CityHouseUniversity" class="control-label required">Мiсто</label>
+                            <input asp-for="CityHouseUniversity" type="text" class="form-control">
+                            <span asp-validation-for="CityHouseUniversity" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group col-md-3">
+                            <label asp-for="StreetHouseUniversity" class="control-label required">Вулиця</label>
+                            <input asp-for="StreetHouseUniversity" type="text" class="form-control">
+                            <span asp-validation-for="StreetHouseUniversity" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group col-md-3">
+                            <label asp-for="NumberHouseUniversity">Номер дому</label>
+                            <input asp-for="NumberHouseUniversity" type="text" class="form-control">
+                        </div>
+
+                        <div class="form-group col-md-3">
+                            <label asp-for="NumberApartmentHouseUniversity">Номер квартири</label>
+                            <input asp-for="NumberApartmentHouseUniversity" type="text" class="form-control">
+                        </div>
+
+                        <div class="form-group col-md-3">
+                            <label asp-for="DateReceivingHouseFromUniversity" class="control-label required">Дата розподiлу</label>
+                            <input asp-for="DateReceivingHouseFromUniversity" type="date" class="form-control">
+                            <span asp-validation-for="DateReceivingHouseFromUniversity" class="text-danger"></span>
+                        </div>
+
+                    </div>
+                    <hr>
+                </fieldset>
+
+
+
+                <fieldset class="form-group appartment dormitory invisible">
+                    <legend>Гуртожиток</legend>
+                    <div class="row">
+
+                        <div class="form-group col-lg-4 col-xl-3">
+                            <label asp-for="IdDormitory" class="control-label required">Номер гуртожитку</label>
+                            <select asp-for="IdDormitory" asp-items="@ViewBag.Dormitory" class="custom-select" style="width: 100%"></select>
+                            <span asp-validation-for="IdDormitory" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group col-lg-4 col-xl-3">
+                            <label asp-for="NumberRoomDormitory" class="control-label required">Номер кiмнати</label>
+                            <input asp-for="NumberRoomDormitory" type="text" class="form-control">
+                            <span asp-validation-for="NumberRoomDormitory" class="text-danger"></span>
+                        </div>
+
+                    </div>
+                    <hr>
+                </fieldset>
+
+
+
+                <fieldset class="form-group appartment departmental invisible">
+                    <legend>Вiдомче</legend>
+                    <div class="row">
+
+                        <div class="form-group col-lg-4 col-xl-3">
+                            <label asp-for="IdDepartmental" class="control-label required">Адреса вiдомчого</label>
+                            <select asp-for="IdDepartmental" asp-items="@ViewBag.Departmental" class="custom-select"></select>
+                            <span asp-validation-for="IdDepartmental" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group col-lg-4 col-xl-3">
+                            <label asp-for="NumberRoomDepartmental" class="control-label required">Номер кiмнати</label>
+                            <input asp-for="NumberRoomDepartmental" type="text" class="form-control">
+                            <span asp-validation-for="NumberRoomDepartmental" class="text-danger"></span>
+                        </div>
+
+                    </div>
+                    <hr>
+                </fieldset>
+
+
+
+                <fieldset class="form-group">
+                    <legend>Додаткова інформація</legend>
+
+                    <label class="custom-control custom-checkbox">
+                        <input asp-for="Scientifick" type="checkbox" id="Scientifick" class="custom-control-input dinamic">
+                        <span class="custom-control-indicator"></span>
+                        <span class="custom-control-description">Кваліфікація</span>
+                    </label>
+
+                    <label class="custom-control custom-checkbox">
+                        <input asp-for="SocialActivity" type="checkbox" id="SocialActivity" class="custom-control-input dinamic">
+                        <span class="custom-control-indicator"></span>
+                        <span class="custom-control-description">Громадська посада</span>
+                    </label>
+
+                    <label class="custom-control custom-checkbox">
+                        <input asp-for="Privileges" type="checkbox" id="Privileges" class="custom-control-input dinamic">
+                        <span class="custom-control-indicator"></span>
+                        <span class="custom-control-description">Пiльга</span>
+                    </label>
+
+                </fieldset>
+
+                <hr>
+
+                <fieldset class="form-group award Scientifick invisible">
+                    <legend>Кваліфікація</legend>
+                    <div class="row">
+
+                        <div class="form-group col-lg-4 col-xl-3">
+                            <label asp-for="ScientifickDegree" class="control-label required">Учений ступiнь</label>
+                            <select asp-for="ScientifickDegree" id="editable-select-ScientifickDegree" asp-items="@ViewBag.AcademicDegree" class="custom-select"></select>
+                            <span asp-validation-for="ScientifickDegree" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group col-lg-4 col-xl-3">
+                            <label asp-for="ScientifickTitle" class="control-label required">Наукове звання</label>
+                            <select asp-for="ScientifickTitle" id="editable-select-ScientifickTitle" asp-items="@ViewBag.ScientificTitle" class="custom-select" style="width: 100%"></select>
+                            <span asp-validation-for="ScientifickTitle" class="text-danger"></span>
+                        </div>
+
+                    </div>
+                    <hr>
+                </fieldset>
+
+
+
+                <fieldset class="form-group award SocialActivity invisible">
+                    <legend>Громадська посада</legend>
+                    <div class="row">
+
+                        <div class="form-group col-lg-4 col-xl-4">
+                            <label asp-for="IdSocialActivity" class="control-label required">Назва посади</label><br />
+                            <select asp-for="IdSocialActivity" asp-items="@ViewBag.SocialActivity" class="custom-select" style="width: 100%"></select>
+                            <span asp-validation-for="IdSocialActivity" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-lg-12 col-xl-12">
+                            <label asp-for="NoteSocialActivity">Примітка</label>
+                            <textarea asp-for="NoteSocialActivity" class="form-control" rows="4" class="textarea"></textarea>
+                        </div>
+                    </div>
+                    <hr>
+                </fieldset>
+
+
+
+                <fieldset class="form-group award Privileges invisible">
+                    <legend>Пільга</legend>
+                    <div class="row">
+
+                        <div class="form-group col-lg-4 col-xl-4">
+                            <label asp-for="IdPrivileges" class="control-label required">Назва пільги</label><br />
+                            <select asp-for="IdPrivileges" asp-items="@ViewBag.Privilegies" class="custom-select" style="width: 100%"></select>
+                            <span asp-validation-for="IdPrivileges" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-lg-12 col-xl-12">
+                            <label asp-for="NotePrivileges">Примітка</label>
+                            <textarea asp-for="NotePrivileges" class="form-control" rows="4" class="textarea"></textarea>
+                        </div>
+                    </div>
+                    <hr>
+                </fieldset>
+
+
+
+                <fieldset class="form-group">
+                    <legend>Примітка</legend>
+                    <textarea asp-for="Note" cols="128" rows="3" class="form-control"></textarea>
+                </fieldset>
+
+                <hr>
+
+                <div class="clearfix">
+                    <input type="submit" value="Додати члена профспілки" class="btn btn-success float-right" />
+                </div>
+
+                @*---------------------------------------------------------------------------------------------------------*@
+
+            </form>
+
+        </div>
+    </div>
+</section>

@@ -6,6 +6,6 @@ namespace TradeUnionCommittee.BLL.Interfaces.Directory
 {
     public interface IPositionService : IService<DirectoryDTO>
     {
-        Task<ActualResult<bool>> CheckName(string name);
+        Task<ActualResult> CheckName(string name);
     }
 }
