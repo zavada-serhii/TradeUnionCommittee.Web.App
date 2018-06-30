@@ -76,7 +76,7 @@ namespace TradeUnionCommittee.BLL.Services.Directory
                 var position = _database.PositionRepository.Delete(id);
                 if (position.IsValid == false && position.ErrorsList.Count > 0)
                 {
-                    return new ActualResult<DirectoryDTO> { IsValid = false, ErrorsList = position.ErrorsList };
+                    return new ActualResult { IsValid = false, ErrorsList = position.ErrorsList };
                 }
                 await _database.SaveAsync();
                 return position;

@@ -1,11 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using Microsoft.AspNetCore.Authorization;
 using TradeUnionCommittee.Web.GUI.Models;
 
 namespace TradeUnionCommittee.Web.GUI.Controllers
 {
     public class HomeController : Controller
     {
+        [Authorize(Roles = "Admin")]
         public IActionResult Index()
         {
             return View();

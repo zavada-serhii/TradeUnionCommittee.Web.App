@@ -4,6 +4,7 @@ using TradeUnionCommittee.Common.ActualResults;
 using TradeUnionCommittee.DAL.EF;
 using TradeUnionCommittee.DAL.Entities;
 using TradeUnionCommittee.DAL.Interfaces;
+using TradeUnionCommittee.DAL.Repositories.Authorization;
 using TradeUnionCommittee.DAL.Repositories.Directories;
 using TradeUnionCommittee.DAL.Repositories.Lists;
 using TradeUnionCommittee.DAL.Repositories.Main;
@@ -76,6 +77,11 @@ namespace TradeUnionCommittee.DAL.Repositories
 
         //------------------------------------------------------------------------------------------------------------------------------------------
 
+        private RolesRepository _rolesRepository;
+        private UsersRepository _usersRepository;
+
+        //------------------------------------------------------------------------------------------------------------------------------------------
+
         public IRepository<Employee> EmployeeRepository => _employeeRepository ?? (_employeeRepository = new EmployeeRepository(_context));
         public IRepository<Education> EducationRepository => _educationRepository ?? (_educationRepository = new EducationRepository(_context));
         public IRepository<Scientific> ScientificRepository => _scientificRepository ?? (_scientificRepository = new ScientificRepository(_context));
@@ -128,6 +134,11 @@ namespace TradeUnionCommittee.DAL.Repositories
         public IRepository<EventFamily> EventFamilyRepository => _eventFamilyRepository ?? (_eventFamilyRepository = new EventFamilyRepository(_context));
         public IRepository<CulturalFamily> CulturalFamilyRepository => _culturalFamilyRepository ?? (_culturalFamilyRepository = new CulturalFamilyRepository(_context));
         public IRepository<ActivityFamily> ActivityFamilyRepository => _activityFamilyRepository ?? (_activityFamilyRepository = new ActivityFamilyRepository(_context));
+
+        //------------------------------------------------------------------------------------------------------------------------------------------
+
+        public IRepository<Roles> RolesRepository => _rolesRepository ?? (_rolesRepository = new RolesRepository(_context));
+        public IRepository<Users> UsersRepository => _usersRepository ?? (_usersRepository = new UsersRepository(_context));
 
         //------------------------------------------------------------------------------------------------------------------------------------------
 

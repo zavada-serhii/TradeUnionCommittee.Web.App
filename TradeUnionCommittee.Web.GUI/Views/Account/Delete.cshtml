@@ -1,0 +1,36 @@
+﻿@model TradeUnionCommittee.BLL.DTO.AccountsDTO
+@{
+    ViewData["Title"] = "Delete";
+}
+
+<div class="row align-items-center">
+    <div class="col-md-6">
+        <h2>Видалення</h2>
+
+        <h3>Ви впевнені, що хочете видалити користувача?</h3>
+    </div>
+    <div class="col-md-6 text-right">
+        <form asp-action="Delete">
+            <input type="submit" value="Видалити" class="btn btn-danger" />
+        </form>
+    </div>
+</div>
+
+<div>
+    <hr />
+    <input type="hidden" asp-for="Id" />
+
+    <dl class="row">
+        <dt class="col-md-3">
+            <h6>Email</h6>
+        </dt>
+        <dd class="col-md-5">
+            <p class="lead" style="font-size: 15px;">@Html.DisplayFor(model => model.Email)</p>
+        </dd>
+    </dl>
+
+    <div class="form-actions no-color">
+        <a asp-action="Index">Повернутися до списку користувачів</a>
+    </div>
+
+</div>
