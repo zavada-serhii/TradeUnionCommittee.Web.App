@@ -1,8 +1,8 @@
 ﻿namespace TradeUnionCommittee.BLL.DTO
 {
-    public class AccountsDTO
+    public class AccountDTO
     {
-        public long Id { get; set; }
+        public long IdUser { get; set; }
         public string Email { get; set; }
         public string Password { get; set; }
         public long IdRole { get; set; }

@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.DTO;
@@ -8,6 +7,7 @@ using TradeUnionCommittee.BLL.Interfaces.Account;
 using TradeUnionCommittee.Common.ActualResults;
 using TradeUnionCommittee.DAL.Entities;
 using TradeUnionCommittee.DAL.Interfaces;
+using TradeUnionCommittee.Encryption;
 
 namespace TradeUnionCommittee.BLL.Services.Account
 {
@@ -20,11 +20,11 @@ namespace TradeUnionCommittee.BLL.Services.Account
             _database = database;
         }
 
-        public async Task<ActualResult<IEnumerable<AccountsDTO>>> GetAll()
+        public async Task<ActualResult<IEnumerable<AccountDTO>>> GetAll()
         {
             return await Task.Run(() =>
             {
-                var actualResults = new ActualResult<IEnumerable<AccountsDTO>>();
+                var actualResults = new ActualResult<IEnumerable<AccountDTO>>();
 
                 var roles =  _database.RolesRepository.GetAll();
                 var users = _database.UsersRepository.GetAll();
@@ -32,9 +32,9 @@ namespace TradeUnionCommittee.BLL.Services.Account
                 actualResults.Result = (from r in roles.Result
                     join u in users.Result
                     on r.Id equals u.IdRole
-                    select new AccountsDTO
+                    select new AccountDTO
                     {
-                        Id = u.Id,
+                        IdUser = u.Id,
                         Email = u.Email,
                         Role = r.Name
                     }).ToList();
@@ -43,20 +43,20 @@ namespace TradeUnionCommittee.BLL.Services.Account
             });
         }
 
-        public async Task<ActualResult<AccountsDTO>> Get(long id)
+        public async Task<ActualResult<AccountDTO>> Get(long id)
         {
             return await Task.Run(() =>
             {
                 var user = _database.UsersRepository.Get(id);
                 if (user.IsValid == false && user.ErrorsList.Count > 0 || user.Result == null)
                 {
-                    return new ActualResult<AccountsDTO> { IsValid = false, ErrorsList = user.ErrorsList };
+                    return new ActualResult<AccountDTO> { IsValid = false, ErrorsList = user.ErrorsList };
                 }
-                return new ActualResult<AccountsDTO>
+                return new ActualResult<AccountDTO>
                 {
-                    Result = new AccountsDTO
+                    Result = new AccountDTO
                     {
-                        Id = user.Result.Id,
+                        IdUser = user.Result.Id,
                         Email = user.Result.Email,
                         IdRole = user.Result.IdRole
                     }
@@ -64,14 +64,14 @@ namespace TradeUnionCommittee.BLL.Services.Account
             });
         }
 
-        public async Task<ActualResult> Create(AccountsDTO item)
+        public async Task<ActualResult> Create(AccountDTO item)
         {
             return await Task.Run(async() =>
             {
                 var users = _database.UsersRepository.Create(new Users
                 {
                     Email = item.Email,
-                    Password = item.Password,
+                    Password = HashingPassword.HashPassword(item.Password),
                     IdRole = item.IdRole
                 });
 
@@ -84,13 +84,13 @@ namespace TradeUnionCommittee.BLL.Services.Account
             });
         }
 
-        public async Task<ActualResult> Update(AccountsDTO item)
+        public async Task<ActualResult> Update(AccountDTO item)
         {
             return await Task.Run(async () =>
             {
                 var user = _database.UsersRepository.Update(new Users
                 {
-                    Id = item.Id,
+                    Id = item.IdUser,
                     Email = item.Email,
                     IdRole = item.IdRole,
                     Password = "UpdatePersonalInfo"
@@ -135,36 +135,6 @@ namespace TradeUnionCommittee.BLL.Services.Account
             {
                 var mapper = new MapperConfiguration(cfg => cfg.CreateMap<Roles, RolesDTO>()).CreateMapper();
                 return mapper.Map<ActualResult<Roles>, ActualResult<RolesDTO>>(_database.RolesRepository.Get(id));
-            });
-        }
-
-        //------------------------------------------------------------------------------------------------------------------------------------------
-
-        public async Task<ActualResult<AccountsDTO>> Login(string login, string password)
-        {
-            return await Task.Run(() =>
-            {
-                var actualResults = new ActualResult<AccountsDTO>();
-
-                var roles = _database.RolesRepository.GetAll();
-                var users = _database.UsersRepository.Find(x => x.Email == login && x.Password == password);
-
-                var res = from r in roles.Result
-                    join u in users.Result
-                    on r.Id equals u.IdRole
-                    select  new
-                    {
-                        Email = u.Email,
-                        Role = r.Name
-                    };
-
-                foreach (var re in res)
-                {
-                    actualResults.Result.Email = re.Email;
-                    actualResults.Result.Role = re.Role;
-                }
-
-                return actualResults;
             });
         }
 

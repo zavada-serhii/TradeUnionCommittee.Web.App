@@ -1,18 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
-using Microsoft.AspNetCore.Authorization;
-using TradeUnionCommittee.Web.GUI.Models;
+using TradeUnionCommittee.Web.GUI.Models.ViewModels;
 
 namespace TradeUnionCommittee.Web.GUI.Controllers
 {
     public class HomeController : Controller
     {
-        [Authorize(Roles = "Admin")]
-        public IActionResult Index()
-        {
-            return View();
-        }
-
+        [Authorize(Roles = "Admin,Accountant,Deputy")]
         public IActionResult Directory()
         {
             return View();

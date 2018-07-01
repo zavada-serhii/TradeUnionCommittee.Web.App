@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using TradeUnionCommittee.Common.ActualResults;
 using TradeUnionCommittee.DAL.Entities;
+using TradeUnionCommittee.DAL.Interfaces.Login;
 
 namespace TradeUnionCommittee.DAL.Interfaces
 {
@@ -62,6 +63,7 @@ namespace TradeUnionCommittee.DAL.Interfaces
 
         //------------------------------------------------------------------------------------------------------------------------------------------
 
+        ILoginRepository LoginRepository { get; }
         IRepository<Roles> RolesRepository { get; }
         IRepository<Users> UsersRepository { get; }
 

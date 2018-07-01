@@ -1,10 +1,10 @@
-﻿@model TradeUnionCommittee.Common.ActualResults.ActualResult<IEnumerable<TradeUnionCommittee.BLL.DTO.AccountsDTO>>
+﻿@model TradeUnionCommittee.Common.ActualResults.ActualResult<IEnumerable<TradeUnionCommittee.BLL.DTO.AccountDTO>>
 @{
     ViewData["Title"] = "Index";
 }
 
 <div class="row">
-    <a asp-controller="Home" asp-action="Index" class="back-link">Повернутися на головну</a>
+    
     <hr />
     <div class="form-group">
         <a asp-action="Create" class="btn btn-success">Додати користувача</a>
@@ -38,8 +38,8 @@
                 </td>
 
                 <td class="text-right">
-            <a asp-action="Update" asp-route-id="@item.Id">Редагувати</a> |
-            <a asp-action="Delete" asp-route-id="@item.Id">Видалити</a>
+            <a asp-action="Update" asp-route-id="@item.IdUser">Редагувати</a> |
+            <a asp-action="Delete" asp-route-id="@item.IdUser">Видалити</a>
         </td>
             </tr>
         }

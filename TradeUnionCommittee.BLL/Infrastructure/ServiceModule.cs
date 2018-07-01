@@ -9,6 +9,7 @@ namespace TradeUnionCommittee.BLL.Infrastructure
         public ServiceModule(string connectionString, IServiceCollection services)
         {
             services.AddScoped<IUnitOfWork, UnitOfWork>(o => new UnitOfWork(connectionString));
+            
         }
     }
 }

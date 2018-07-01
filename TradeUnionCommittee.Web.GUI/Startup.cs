@@ -1,5 +1,4 @@
-﻿using FluentValidation;
-using FluentValidation.AspNetCore;
+﻿using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -10,10 +9,10 @@ using Microsoft.Extensions.DependencyInjection;
 using TradeUnionCommittee.BLL.Infrastructure;
 using TradeUnionCommittee.BLL.Interfaces.Account;
 using TradeUnionCommittee.BLL.Interfaces.Directory;
+using TradeUnionCommittee.BLL.Interfaces.Login;
 using TradeUnionCommittee.BLL.Services.Account;
 using TradeUnionCommittee.BLL.Services.Directory;
-using TradeUnionCommittee.Web.GUI.Models.FluentValidators;
-using TradeUnionCommittee.Web.GUI.Models.ViewModels;
+using TradeUnionCommittee.BLL.Services.Login;
 using TradeUnionCommittee.Web.GUI.Oops;
 
 namespace TradeUnionCommittee.Web.GUI
@@ -40,8 +39,9 @@ namespace TradeUnionCommittee.Web.GUI
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(options =>
                 {
-                    options.LoginPath = new PathString("/Account/Login");
-                    options.AccessDeniedPath = new PathString("/Account/AccessDenied");
+                    options.LoginPath = new PathString("/Login/Login");
+                    options.LogoutPath = new PathString("/Login/Login");
+                    options.AccessDeniedPath = new PathString("/Login/AccessDenied");
                 });
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1).AddFluentValidation();
@@ -49,7 +49,6 @@ namespace TradeUnionCommittee.Web.GUI
             new ServiceModule(Configuration.GetConnectionString("DefaultConnection"), services);
 
             DependencyInjectionService(services);
-            DependencyInjectionValidator(services);
             DependencyInjectionOops(services);
         }
 
@@ -59,6 +58,7 @@ namespace TradeUnionCommittee.Web.GUI
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                app.UseDatabaseErrorPage();
             }
             else
             {
@@ -75,7 +75,7 @@ namespace TradeUnionCommittee.Web.GUI
             {
                 routes.MapRoute(
                     name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
+                    template: "{controller=Login}/{action=Login}/{id?}");
             });
         }
 
@@ -84,13 +84,6 @@ namespace TradeUnionCommittee.Web.GUI
             services.AddScoped<ILoginService, LoginService>();
             services.AddScoped<IAccountService, AccountService>();
             services.AddScoped<IPositionService, PositionService>();
-        }
-
-        private void DependencyInjectionValidator(IServiceCollection services)
-        {
-            services.AddScoped<IValidator<LoginViewModel>, LoginValidator>();
-            services.AddScoped<IValidator<RegisterViewModel>, RegisterValidator>();
-            services.AddScoped<IValidator<DirectoryViewModel>, DirectoryValidator>();
         }
 
         private void DependencyInjectionOops(IServiceCollection services)

@@ -5,12 +5,10 @@ using TradeUnionCommittee.Common.ActualResults;
 
 namespace TradeUnionCommittee.BLL.Interfaces.Account
 {
-    public interface IAccountService : IService<AccountsDTO>
+    public interface IAccountService : IService<AccountDTO>
     {
         Task<ActualResult<IEnumerable<RolesDTO>>> GetRoles();
 
         Task<ActualResult<RolesDTO>> GetRoleId(long id);
-
-        Task<ActualResult<AccountsDTO>> Login(string login, string password);
     }
 }

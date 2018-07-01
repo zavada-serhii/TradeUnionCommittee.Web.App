@@ -1,10 +1,8 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Collections.Generic;
-using System.Security.Claims;
 using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.DTO;
 using TradeUnionCommittee.BLL.Interfaces.Account;
@@ -17,62 +15,28 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Account
     public class AccountController : Controller
     {
         private readonly IAccountService _accountService;
-        private readonly ILoginService _loginService;
         private readonly IOops _oops;
 
-        public AccountController(IAccountService accountService, ILoginService loginService, IOops oops)
+        public AccountController(IAccountService accountService, IOops oops)
         {
             _accountService = accountService;
-            _loginService = loginService;
             _oops = oops;
         }
 
         //------------------------------------------------------------------------------------------------------------------------------------------
 
         [HttpGet]
-        public IActionResult AccessDenied()
-        {
-            return View();
-        }
-
-        //------------------------------------------------------------------------------------------------------------------------------------------
-
-        [HttpGet]
-        public IActionResult Login()
-        {
-            return View();
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Login(LoginViewModel model)
-        {
-            if (ModelState.IsValid)
-            {
-                var result = await _loginService.Login(model.Email, model.Password);
-
-                if (result.IsValid)
-                {
-                    await Authenticate(result.Result.Email, result.Result.Role); // аутентификация
-
-                    return RedirectToAction("Index", "Home");
-                }
-                ModelState.AddModelError("", "Некорректные логин и(или) пароль");
-            }
-            return View(model);
-        }
-
-        //------------------------------------------------------------------------------------------------------------------------------------------
-
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Index()
         {
             var result = await _accountService.GetAll();
-            return result.IsValid ? View(result) : _oops.OutPutError("Home", "Index", result.ErrorsList);
+            return result.IsValid ? View(result) : _oops.OutPutError("Home", "Directory", result.ErrorsList);
         }
 
         //------------------------------------------------------------------------------------------------------------------------------------------
 
         [HttpGet]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create()
         {
             var roles =  await _accountService.GetRoles();
@@ -81,9 +45,10 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Account
         }
 
         [HttpPost, ActionName("Create")]
-        public async Task<IActionResult> CreateConfirmed(RegisterViewModel vm)
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> CreateConfirmed(AccountViewModel vm)
         {
-            var result = await _accountService.Create(new AccountsDTO { Email = vm.Email, Password = vm.Password, IdRole = vm.IdRole });
+            var result = await _accountService.Create(new AccountDTO { Email = vm.Email, Password = vm.Password, IdRole = vm.IdRole });
             if (result.IsValid)
             {
                 return RedirectToAction("Index");
@@ -94,6 +59,7 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Account
         //------------------------------------------------------------------------------------------------------------------------------------------
 
         [HttpGet]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Update(long? id)
         {
             if (id == null) return NotFound();
@@ -103,18 +69,19 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Account
                 var roles = await _accountService.GetRoles();
                 ViewBag.Role = new SelectList(roles.Result, "Id", "Name");
 
-                var mapper = new MapperConfiguration(cfg => cfg.CreateMap<AccountsDTO, RegisterViewModel>()).CreateMapper();
-                return View(mapper.Map<AccountsDTO, RegisterViewModel>(result.Result));
+                var mapper = new MapperConfiguration(cfg => cfg.CreateMap<AccountDTO, AccountViewModel>()).CreateMapper();
+                return View(mapper.Map<AccountDTO, AccountViewModel>(result.Result));
             }
             return _oops.OutPutError("Account", "Index", result.ErrorsList);
         }
 
 
         [HttpPost, ActionName("Update")]
-        public async Task<IActionResult> UpdateConfirmed(RegisterViewModel vm)
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> UpdateConfirmed(AccountViewModel vm)
         {
-            if (vm.Id == null) return NotFound();
-            var result = await _accountService.Update(new AccountsDTO { Id = vm.Id.Value, Email = vm.Email, IdRole = vm.IdRole});
+            if (vm.IdUser == null) return NotFound();
+            var result = await _accountService.Update(new AccountDTO {IdUser = vm.IdUser.Value, Email = vm.Email, IdRole = vm.IdRole});
             return result.IsValid
                 ? RedirectToAction("Index")
                 : _oops.OutPutError("Account", "Index", result.ErrorsList);
@@ -124,6 +91,7 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Account
         //------------------------------------------------------------------------------------------------------------------------------------------
 
         [HttpGet]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(long? id)
         {
             if (id == null) return NotFound();
@@ -132,6 +100,7 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Account
         }
 
         [HttpPost, ActionName("Delete")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteConfirmed(long? id)
         {
             if (id == null) return NotFound();
@@ -143,23 +112,7 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Account
 
         //------------------------------------------------------------------------------------------------------------------------------------------
 
-        private async Task Authenticate(string email, string role)
-        {
-            // создаем один claim
-            var claims = new List<Claim>
-            {
-                new Claim(ClaimsIdentity.DefaultNameClaimType, email),
-                new Claim(ClaimsIdentity.DefaultRoleClaimType, role)
-            };
-            // создаем объект ClaimsIdentity
-            ClaimsIdentity id = new ClaimsIdentity(claims, "ApplicationCookie", ClaimsIdentity.DefaultNameClaimType,
-                ClaimsIdentity.DefaultRoleClaimType);
-            // установка аутентификационных куки
-            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(id));
-        }
-
-        //------------------------------------------------------------------------------------------------------------------------------------------
-
+        [Authorize(Roles = "Admin")]
         protected override void Dispose(bool disposing)
         {
             _accountService.Dispose();

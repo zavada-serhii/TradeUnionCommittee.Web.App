@@ -79,12 +79,29 @@
 <div class="login">
     <h1>Авторизація</h1>
     <form method="post" asp-action="Login">
-        <input type="text" asp-for="Email" placeholder="Логін"/>
-        <input type="password" asp-for="Password" placeholder="Пароль" />
+
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        
+        <div style="align-content: center">
+            <input type="text" asp-for="Email" placeholder="Логін"/>
+            <span asp-validation-for="Email" class="text-danger" style="color: red"></span>
+        </div>
+
+        <div style="align-content: center">
+            <input type="password" asp-for="Password" placeholder="Пароль" required/>
+            <span asp-validation-for="Password" class="text-danger" style="color: red"></span>
+        </div>
+
+        <hr/>
+
+        <div style="text-align: center; color: red;" >@ViewBag.IncorectLoginPassword</div>
+
         <button type="submit" class="btn btn-primary btn-block btn-large">Увійти</button>
     </form>
 </div>
-
+    
+<script src="~/lib/jquery/dist/jquery.js"></script>
+<script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
+<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
 </body>
-
 </html>

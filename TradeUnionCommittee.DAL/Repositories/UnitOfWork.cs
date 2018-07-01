@@ -4,9 +4,11 @@ using TradeUnionCommittee.Common.ActualResults;
 using TradeUnionCommittee.DAL.EF;
 using TradeUnionCommittee.DAL.Entities;
 using TradeUnionCommittee.DAL.Interfaces;
-using TradeUnionCommittee.DAL.Repositories.Authorization;
+using TradeUnionCommittee.DAL.Interfaces.Login;
+using TradeUnionCommittee.DAL.Repositories.Account;
 using TradeUnionCommittee.DAL.Repositories.Directories;
 using TradeUnionCommittee.DAL.Repositories.Lists;
+using TradeUnionCommittee.DAL.Repositories.Login;
 using TradeUnionCommittee.DAL.Repositories.Main;
 
 namespace TradeUnionCommittee.DAL.Repositories
@@ -77,6 +79,7 @@ namespace TradeUnionCommittee.DAL.Repositories
 
         //------------------------------------------------------------------------------------------------------------------------------------------
 
+        private LoginRepository _loginRepository;
         private RolesRepository _rolesRepository;
         private UsersRepository _usersRepository;
 
@@ -137,9 +140,10 @@ namespace TradeUnionCommittee.DAL.Repositories
 
         //------------------------------------------------------------------------------------------------------------------------------------------
 
+        public ILoginRepository LoginRepository => _loginRepository ?? (_loginRepository = new LoginRepository(_context));
         public IRepository<Roles> RolesRepository => _rolesRepository ?? (_rolesRepository = new RolesRepository(_context));
         public IRepository<Users> UsersRepository => _usersRepository ?? (_usersRepository = new UsersRepository(_context));
-
+        
         //------------------------------------------------------------------------------------------------------------------------------------------
 
         public async Task<ActualResult<int>> SaveAsync()

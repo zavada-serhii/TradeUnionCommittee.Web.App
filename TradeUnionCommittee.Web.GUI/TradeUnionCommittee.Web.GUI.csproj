@@ -16,4 +16,8 @@
     <ProjectReference Include="..\TradeUnionCommittee.Common\TradeUnionCommittee.Common.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Models\FluentValidation\" />
+  </ItemGroup>
+
 </Project>

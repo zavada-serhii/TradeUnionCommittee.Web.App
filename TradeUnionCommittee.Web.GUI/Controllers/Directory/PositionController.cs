@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using TradeUnionCommittee.BLL.DTO;
 using TradeUnionCommittee.BLL.Interfaces.Directory;
 using TradeUnionCommittee.Web.GUI.Models.ViewModels;
@@ -21,6 +22,8 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Directory
 
         //------------------------------------------------------------------------------------------------------------------------------------------
 
+        [HttpGet]
+        [Authorize(Roles = "Admin,Accountant,Deputy")]
         public async Task<IActionResult> Index()
         {
             var result = await _services.GetAll();
@@ -30,12 +33,14 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Directory
         //------------------------------------------------------------------------------------------------------------------------------------------
 
         [HttpGet]
+        [Authorize(Roles = "Admin,Accountant,Deputy")]
         public IActionResult Create()
         {
             return View();
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin,Accountant,Deputy")]
         public async Task<IActionResult> Create([Bind("Name")] DirectoryViewModel vm)
         {
             var result = await _services.Create(new DirectoryDTO {Name = vm.Name});
@@ -47,6 +52,7 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Directory
         //------------------------------------------------------------------------------------------------------------------------------------------
 
         [HttpGet]
+        [Authorize(Roles = "Admin,Accountant,Deputy")]
         public async Task<IActionResult> Update(long? id)
         {
             if (id == null) return NotFound();
@@ -60,6 +66,7 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Directory
         }
 
         [HttpPost, ActionName("Update")]
+        [Authorize(Roles = "Admin,Accountant,Deputy")]
         public async Task<IActionResult> UpdateConfirmed([Bind("Id,Name")] DirectoryViewModel vm)
         {
             if (vm.Id == null) return NotFound();
@@ -72,6 +79,7 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Directory
         //------------------------------------------------------------------------------------------------------------------------------------------
 
         [HttpGet]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(long? id)
         {
             if (id == null) return NotFound();
@@ -80,6 +88,7 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Directory
         }
 
         [HttpPost, ActionName("Delete")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteConfirmed(long? id)
         {
             if (id == null) return NotFound();
@@ -92,6 +101,7 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Directory
         //------------------------------------------------------------------------------------------------------------------------------------------
 
         [AcceptVerbs("Get", "Post")]
+        [Authorize(Roles = "Admin,Accountant,Deputy")]
         public async Task<IActionResult> CheckName(string name)
         {
             var result = await _services.CheckName(name);
@@ -100,6 +110,7 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Directory
 
         //------------------------------------------------------------------------------------------------------------------------------------------
 
+        [Authorize(Roles = "Admin,Accountant,Deputy")]
         protected override void Dispose(bool disposing)
         {
             _services.Dispose();
