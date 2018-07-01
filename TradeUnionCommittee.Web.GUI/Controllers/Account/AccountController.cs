@@ -46,6 +46,7 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Account
 
         [HttpPost, ActionName("Create")]
         [Authorize(Roles = "Admin")]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateConfirmed(AccountViewModel vm)
         {
             var result = await _accountService.Create(new AccountDTO { Email = vm.Email, Password = vm.Password, IdRole = vm.IdRole });
@@ -77,6 +78,7 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Account
 
 
         [HttpPost, ActionName("Update")]
+        [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdateConfirmed(AccountViewModel vm)
         {
@@ -105,6 +107,7 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Account
 
         [HttpPost, ActionName("UpdatePassword")]
         [Authorize(Roles = "Admin")]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> UpdateConfirmedConfirmed(AccountViewModel vm)
         {
             if (vm.IdUser == null) return NotFound();
@@ -132,6 +135,7 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Account
 
         [HttpPost, ActionName("Delete")]
         [Authorize(Roles = "Admin")]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(long? id)
         {
             if (id == null) return NotFound();
@@ -143,7 +147,6 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Account
 
         //------------------------------------------------------------------------------------------------------------------------------------------
 
-        [Authorize(Roles = "Admin")]
         protected override void Dispose(bool disposing)
         {
             _accountService.Dispose();

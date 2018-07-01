@@ -41,6 +41,7 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Directory
 
         [HttpPost]
         [Authorize(Roles = "Admin,Accountant,Deputy")]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Name")] DirectoryViewModel vm)
         {
             var result = await _services.Create(new DirectoryDTO {Name = vm.Name});
@@ -67,6 +68,7 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Directory
 
         [HttpPost, ActionName("Update")]
         [Authorize(Roles = "Admin,Accountant,Deputy")]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> UpdateConfirmed([Bind("Id,Name")] DirectoryViewModel vm)
         {
             if (vm.Id == null) return NotFound();
@@ -89,6 +91,7 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Directory
 
         [HttpPost, ActionName("Delete")]
         [Authorize(Roles = "Admin")]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(long? id)
         {
             if (id == null) return NotFound();
@@ -110,7 +113,6 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Directory
 
         //------------------------------------------------------------------------------------------------------------------------------------------
 
-        [Authorize(Roles = "Admin,Accountant,Deputy")]
         protected override void Dispose(bool disposing)
         {
             _services.Dispose();

@@ -10,12 +10,14 @@ namespace TradeUnionCommittee.Web.GUI.Controllers
 {
     public class HomeController : Controller
     {
+        [HttpGet]
         [Authorize(Roles = "Admin,Accountant,Deputy")]
         public IActionResult Directory()
         {
             return View();
         }
        
+        [HttpGet]
         [Authorize(Roles = "Admin,Accountant,Deputy")]
         public async Task<IActionResult> SignOut()
         {
