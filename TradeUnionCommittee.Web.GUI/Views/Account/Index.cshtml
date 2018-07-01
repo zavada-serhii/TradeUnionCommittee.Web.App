@@ -38,9 +38,10 @@
                 </td>
 
                 <td class="text-right">
-            <a asp-action="Update" asp-route-id="@item.IdUser">Редагувати</a> |
-            <a asp-action="Delete" asp-route-id="@item.IdUser">Видалити</a>
-        </td>
+                    <a asp-action="Update" asp-route-id="@item.IdUser">Редагувати</a> |
+                    <a asp-action="UpdatePassword" asp-route-id="@item.IdUser">Редагувати пароль</a> |
+                    <a asp-action="Delete" asp-route-id="@item.IdUser">Видалити</a>
+                </td>
             </tr>
         }
         </tbody>

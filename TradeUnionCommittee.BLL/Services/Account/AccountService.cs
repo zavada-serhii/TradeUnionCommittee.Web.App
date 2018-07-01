@@ -84,23 +84,36 @@ namespace TradeUnionCommittee.BLL.Services.Account
             });
         }
 
+        /// <summary>
+        /// Properties KeyUpdate
+        /// If value 1 - Update personal data (Email, Role),
+        /// If value 2 - Update password
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns></returns>
         public async Task<ActualResult> Update(AccountDTO item)
         {
-            return await Task.Run(async () =>
+            return await Task.Run(() =>
             {
-                var user = _database.UsersRepository.Update(new Users
+                var result = new ActualResult();
+                switch (item.KeyUpdate)
                 {
-                    Id = item.IdUser,
-                    Email = item.Email,
-                    IdRole = item.IdRole,
-                    Password = "UpdatePersonalInfo"
-                });
-                if (user.IsValid == false && user.ErrorsList.Count > 0)
-                {
-                    return new ActualResult { IsValid = false, ErrorsList = user.ErrorsList };
+                    case 1:
+                        result = _database.UserRepository.UpdatePersonalData(item.IdUser, item.Email, item.IdRole);
+                        break;
+
+                    case 2:
+                        result = _database.UserRepository.UpdatePassword(item.IdUser, HashingPassword.HashPassword(item.Password));
+                        break;
+                    default:
+                        result.IsValid = false;
+                        break;
                 }
-                await _database.SaveAsync();
-                return user;
+                if (result.IsValid == false && result.ErrorsList.Count > 0)
+                {
+                    return new ActualResult { IsValid = false, ErrorsList = result.ErrorsList };
+                }
+                return result;
             });
         }
 

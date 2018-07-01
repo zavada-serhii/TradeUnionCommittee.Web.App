@@ -14,30 +14,3 @@ CREATE TABLE "Users"(
 );
 ALTER TABLE "Users"
 OWNER TO AdminTradeUnionCommitteeEmployees;
-
------------------------------------------------------------------------------------------------------------------------------------------------
-
-CREATE OR REPLACE FUNCTION "UpdatePersonalInfoFunction"()
-RETURNS TRIGGER AS 
-$BODY$
-DECLARE
-
-BEGIN
-
-IF NEW."Password" = 'UpdatePersonalInfo' THEN
-NEW."Password" = OLD."Password";
-RETURN NEW;
-ELSE 
-RETURN NEW;
-END IF;
-
-END;
-$BODY$
-  LANGUAGE plpgsql VOLATILE
-  COST 100;
-ALTER FUNCTION "UpdatePersonalInfoFunction"()
-  OWNER TO AdminTradeUnionCommitteeEmployees;
-
-CREATE TRIGGER "UpdatePersonalInfoTrigger"
-BEFORE UPDATE ON "Users"
-FOR EACH ROW EXECUTE PROCEDURE "UpdatePersonalInfoFunction"();

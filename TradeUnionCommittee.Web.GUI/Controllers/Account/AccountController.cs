@@ -81,12 +81,43 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Account
         public async Task<IActionResult> UpdateConfirmed(AccountViewModel vm)
         {
             if (vm.IdUser == null) return NotFound();
-            var result = await _accountService.Update(new AccountDTO {IdUser = vm.IdUser.Value, Email = vm.Email, IdRole = vm.IdRole});
+            var result = await _accountService.Update(new AccountDTO
+            {
+                KeyUpdate = 1,
+                IdUser = vm.IdUser.Value,
+                Email = vm.Email,
+                IdRole = vm.IdRole
+            });
             return result.IsValid
                 ? RedirectToAction("Index")
                 : _oops.OutPutError("Account", "Index", result.ErrorsList);
         }
 
+        //------------------------------------------------------------------------------------------------------------------------------------------
+
+        [HttpGet]
+        [Authorize(Roles = "Admin")]
+        public IActionResult UpdatePassword(long? id)
+        {
+            var model = new AccountViewModel {IdUser = id};
+            return View(model);
+        }
+
+        [HttpPost, ActionName("UpdatePassword")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> UpdateConfirmedConfirmed(AccountViewModel vm)
+        {
+            if (vm.IdUser == null) return NotFound();
+            var result = await _accountService.Update(new AccountDTO
+            {
+                KeyUpdate = 2,
+                IdUser = vm.IdUser.Value,
+                Password = vm.Password
+            });
+            return result.IsValid
+                ? RedirectToAction("Index")
+                : _oops.OutPutError("Account", "Index", result.ErrorsList);
+        }
 
         //------------------------------------------------------------------------------------------------------------------------------------------
 
