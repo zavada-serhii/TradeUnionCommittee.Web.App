@@ -1,6 +1,3 @@
-CREATE ROLE AdminTradeUnionCommitteeEmployees LOGIN PASSWORD 'admin'				
-NOSUPERUSER NOINHERIT NOCREATEDB NOCREATEROLE NOREPLICATION;
-
 CREATE DATABASE "TradeUnionCommitteeEmployeesCore"
 WITH OWNER = AdminTradeUnionCommitteeEmployees
 ENCODING = 'UTF8'
