@@ -1,5 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.Interfaces.Login;
 using TradeUnionCommittee.Common.ActualResults;
 using TradeUnionCommittee.DAL.Interfaces;
@@ -28,7 +27,7 @@ namespace TradeUnionCommittee.BLL.Services.Login
                 else
                 {
                     result.IsValid = false;
-                    result.ErrorsList.Add(new Error(DateTime.Now, "Не правильний логін або пароль!"));
+                    result.ErrorsList.Add("Не правильний логін або пароль!");
                     return result;
                 }
                 return result;

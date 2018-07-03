@@ -27,7 +27,7 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Directory
         public async Task<IActionResult> Index()
         {
             var result = await _services.GetAll();
-            return result.IsValid ? View(result) : _oops.OutPutError("Home", "Directory", result.ErrorsList);
+            return View(result);
         }
 
         //------------------------------------------------------------------------------------------------------------------------------------------
@@ -44,10 +44,14 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Directory
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Name")] DirectoryViewModel vm)
         {
-            var result = await _services.Create(new DirectoryDTO {Name = vm.Name});
-            return result.IsValid
-                ? RedirectToAction("Index")
-                : _oops.OutPutError("Position", "Index", result.ErrorsList);
+            if (ModelState.IsValid)
+            {
+                var result = await _services.Create(new DirectoryDTO { Name = vm.Name });
+                return result.IsValid
+                    ? RedirectToAction("Index")
+                    : _oops.OutPutError("Position", "Index", result.ErrorsList);
+            }
+            return View(vm);
         }
 
         //------------------------------------------------------------------------------------------------------------------------------------------
@@ -71,11 +75,15 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Directory
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> UpdateConfirmed([Bind("Id,Name")] DirectoryViewModel vm)
         {
-            if (vm.Id == null) return NotFound();
-            var result = await _services.Update(new DirectoryDTO {Id = vm.Id.Value, Name = vm.Name});
-            return result.IsValid
-                ? RedirectToAction("Index")
-                : _oops.OutPutError("Position", "Index", result.ErrorsList);
+            if (ModelState.IsValid)
+            {
+                if (vm.Id == null) return NotFound();
+                var result = await _services.Update(new DirectoryDTO { Id = vm.Id.Value, Name = vm.Name });
+                return result.IsValid
+                    ? RedirectToAction("Index")
+                    : _oops.OutPutError("Position", "Index", result.ErrorsList);
+            }
+            return View(vm);
         }
 
         //------------------------------------------------------------------------------------------------------------------------------------------
@@ -86,7 +94,9 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Directory
         {
             if (id == null) return NotFound();
             var result = await _services.Get(id.Value);
-            return result.IsValid ? View(result.Result) : _oops.OutPutError("Position", "Index", result.ErrorsList);
+            return result.IsValid 
+                ? View(result.Result) 
+                : _oops.OutPutError("Position", "Index", result.ErrorsList);
         }
 
         [HttpPost, ActionName("Delete")]

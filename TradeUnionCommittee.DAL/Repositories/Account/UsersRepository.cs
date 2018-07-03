@@ -32,7 +32,7 @@ namespace TradeUnionCommittee.DAL.Repositories.Account
             catch (Exception e)
             {
                 result.IsValid = false;
-                result.ErrorsList.Add(new Error(DateTime.Now, e.Message));
+                result.ErrorsList.Add(e.Message);
             }
             return result;
         }
@@ -52,7 +52,7 @@ namespace TradeUnionCommittee.DAL.Repositories.Account
             catch (Exception e)
             {
                 result.IsValid = false;
-                result.ErrorsList.Add(new Error(DateTime.Now, e.Message));
+                result.ErrorsList.Add(e.Message);
             }
             return result;
         }

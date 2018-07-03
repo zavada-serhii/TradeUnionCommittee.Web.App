@@ -158,7 +158,7 @@ namespace TradeUnionCommittee.DAL.Repositories
             catch (Exception e)
             {
                 result.IsValid = false;
-                result.ErrorsList.Add(new Error(DateTime.Now, e.Message));
+                result.ErrorsList.Add(e.Message);
             }
             return result;
         }

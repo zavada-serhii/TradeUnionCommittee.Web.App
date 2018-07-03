@@ -31,14 +31,18 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Login
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginViewModel model)
         {
-            var role = await _loginService.Login(model.Email, model.Password);
-            if (role.IsValid)
+            if (ModelState.IsValid)
             {
-                await Authenticate(model.Email, role.Result); // аутентификация
-                return RedirectToAction("Directory", "Home");
+                var role = await _loginService.Login(model.Email, model.Password);
+                if (role.IsValid)
+                {
+                    await Authenticate(model.Email, role.Result); // аутентификация
+                    return RedirectToAction("Directory", "Home");
+                }
+                ViewBag.IncorectLoginPassword = "Неправильний логін або пароль";
+                return View();
             }
-            ViewBag.IncorectLoginPassword = "Неправильний логін або пароль";
-            return View();
+            return View(model);
         }
 
         //------------------------------------------------------------------------------------------------------------------------------------------
@@ -59,7 +63,6 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Login
         }
 
         //------------------------------------------------------------------------------------------------------------------------------------------
-
 
         [HttpGet]
         public IActionResult AccessDenied()

@@ -4,22 +4,22 @@ namespace TradeUnionCommittee.Common.ActualResults
 {
     public class ActualResult
     {
-        public List<Error> ErrorsList { get; set; }
+        public List<string> ErrorsList { get; set; }
         public bool IsValid { get; set; }
 
         public ActualResult()
         {
             IsValid = true;
-            ErrorsList = new List<Error>();
+            ErrorsList = new List<string>();
         }
 
-        public ActualResult(Error error)
+        public ActualResult(string error)
         {
             IsValid = false;
-            ErrorsList = new List<Error> { error };
+            ErrorsList = new List<string> { error };
         }
 
-        public ActualResult(List<Error> errors)
+        public ActualResult(List<string> errors)
         {
             IsValid = false;
             ErrorsList = errors;
@@ -34,12 +34,12 @@ namespace TradeUnionCommittee.Common.ActualResults
         {
         }
 
-        public ActualResult(Error error) : base(error)
+        public ActualResult(string error) : base(error)
         {
 
         }
 
-        public ActualResult(List<Error> errors) : base(errors)
+        public ActualResult(List<string> errors) : base(errors)
         {
 
         }

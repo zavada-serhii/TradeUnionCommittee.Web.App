@@ -2,11 +2,9 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.DTO;
 using TradeUnionCommittee.BLL.Interfaces.Account;
-using TradeUnionCommittee.Common.ActualResults;
 using TradeUnionCommittee.Web.GUI.Models.ViewModels;
 using TradeUnionCommittee.Web.GUI.Oops;
 
@@ -30,7 +28,7 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Account
         public async Task<IActionResult> Index()
         {
             var result = await _accountService.GetAll();
-            return result.IsValid ? View(result) : _oops.OutPutError("Home", "Directory", result.ErrorsList);
+            return View(result);
         }
 
         //------------------------------------------------------------------------------------------------------------------------------------------
@@ -49,12 +47,16 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Account
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateConfirmed(AccountViewModel vm)
         {
-            var result = await _accountService.Create(new AccountDTO { Email = vm.Email, Password = vm.Password, IdRole = vm.IdRole });
-            if (result.IsValid)
+            if (ModelState.IsValid)
             {
-                return RedirectToAction("Index");
+                var result = await _accountService.Create(new AccountDTO { Email = vm.Email, Password = vm.Password, IdRole = vm.IdRole });
+                if (result.IsValid)
+                {
+                    return RedirectToAction("Index");
+                }
+                return _oops.OutPutError("Account", "Index", result.ErrorsList);
             }
-            return _oops.OutPutError("Account", "Index", new List<Error>());
+            return View(vm);
         }
 
         //------------------------------------------------------------------------------------------------------------------------------------------
@@ -82,17 +84,21 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Account
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdateConfirmed(AccountViewModel vm)
         {
-            if (vm.IdUser == null) return NotFound();
-            var result = await _accountService.Update(new AccountDTO
+            if (ModelState.IsValid)
             {
-                KeyUpdate = 1,
-                IdUser = vm.IdUser.Value,
-                Email = vm.Email,
-                IdRole = vm.IdRole
-            });
-            return result.IsValid
-                ? RedirectToAction("Index")
-                : _oops.OutPutError("Account", "Index", result.ErrorsList);
+                if (vm.IdUser == null) return NotFound();
+                var result = await _accountService.Update(new AccountDTO
+                {
+                    KeyUpdate = 1,
+                    IdUser = vm.IdUser.Value,
+                    Email = vm.Email,
+                    IdRole = vm.IdRole
+                });
+                return result.IsValid
+                    ? RedirectToAction("Index")
+                    : _oops.OutPutError("Account", "Index", result.ErrorsList);
+            }
+            return View(vm);
         }
 
         //------------------------------------------------------------------------------------------------------------------------------------------
@@ -101,6 +107,7 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Account
         [Authorize(Roles = "Admin")]
         public IActionResult UpdatePassword(long? id)
         {
+            if (id == null) return NotFound();
             var model = new AccountViewModel {IdUser = id};
             return View(model);
         }
@@ -108,18 +115,22 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Account
         [HttpPost, ActionName("UpdatePassword")]
         [Authorize(Roles = "Admin")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> UpdateConfirmedConfirmed(AccountViewModel vm)
+        public async Task<IActionResult> UpdatePasswordConfirmed(AccountViewModel vm)
         {
-            if (vm.IdUser == null) return NotFound();
-            var result = await _accountService.Update(new AccountDTO
+            if (ModelState.IsValid)
             {
-                KeyUpdate = 2,
-                IdUser = vm.IdUser.Value,
-                Password = vm.Password
-            });
-            return result.IsValid
-                ? RedirectToAction("Index")
-                : _oops.OutPutError("Account", "Index", result.ErrorsList);
+                if (vm.IdUser == null) return NotFound();
+                var result = await _accountService.Update(new AccountDTO
+                {
+                    KeyUpdate = 2,
+                    IdUser = vm.IdUser.Value,
+                    Password = vm.Password
+                });
+                return result.IsValid
+                    ? RedirectToAction("Index")
+                    : _oops.OutPutError("Account", "Index", result.ErrorsList);
+            }
+            return View(vm);
         }
 
         //------------------------------------------------------------------------------------------------------------------------------------------

@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using TradeUnionCommittee.Web.GUI.Models.ViewModels;
 
-namespace TradeUnionCommittee.Web.GUI.Controllers
+namespace TradeUnionCommittee.Web.GUI.Controllers.AddEmployee
 {
     public class AddEmployeeController : Controller
     {

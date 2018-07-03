@@ -28,7 +28,7 @@ namespace TradeUnionCommittee.DAL.Repositories
             catch (Exception e)
             {
                 result.IsValid = false;
-                result.ErrorsList.Add(new Error(DateTime.Now, e.Message));
+                result.ErrorsList.Add(e.Message);
             }
             return result;
         }
@@ -43,13 +43,13 @@ namespace TradeUnionCommittee.DAL.Repositories
                 if (result.Result == null)
                 {
                     result.IsValid = false;
-                    result.ErrorsList.Add(new Error(DateTime.Now, "Data has been deleted or changed!"));
+                    result.ErrorsList.Add("Data has been deleted or changed!");
                 }
             }
             catch (Exception e)
             {
                 result.IsValid = false;
-                result.ErrorsList.Add(new Error(DateTime.Now, e.Message));
+                result.ErrorsList.Add(e.Message);
             }
             return result;
         }
@@ -64,7 +64,7 @@ namespace TradeUnionCommittee.DAL.Repositories
             catch (Exception e)
             {
                 result.IsValid = false;
-                result.ErrorsList.Add(new Error(DateTime.Now, e.Message));
+                result.ErrorsList.Add(e.Message);
             }
             return result;
         }
@@ -79,7 +79,7 @@ namespace TradeUnionCommittee.DAL.Repositories
             catch (Exception e)
             {
                 result.IsValid = false;
-                result.ErrorsList.Add(new Error(DateTime.Now, e.Message));
+                result.ErrorsList.Add(e.Message);
             }
             return result;
         }
@@ -94,7 +94,7 @@ namespace TradeUnionCommittee.DAL.Repositories
             catch (Exception e)
             {
                 result.IsValid = false;
-                result.ErrorsList.Add(new Error(DateTime.Now, e.Message));
+                result.ErrorsList.Add(e.Message);
             }
             return result;
         }
@@ -113,7 +113,7 @@ namespace TradeUnionCommittee.DAL.Repositories
             catch (Exception e)
             {
                 result.IsValid = false;
-                result.ErrorsList.Add(new Error(DateTime.Now, e.Message));
+                result.ErrorsList.Add(e.Message);
             }
             return result;
         }
@@ -128,7 +128,7 @@ namespace TradeUnionCommittee.DAL.Repositories
             catch (Exception e)
             {
                 result.IsValid = false;
-                result.ErrorsList.Add(new Error(DateTime.Now, e.Message));
+                result.ErrorsList.Add(e.Message);
             }
             return result;
         }
@@ -144,7 +144,7 @@ namespace TradeUnionCommittee.DAL.Repositories
             catch (Exception e)
             {
                 result.IsValid = false;
-                result.ErrorsList.Add(new Error(DateTime.Now, e.Message));
+                result.ErrorsList.Add(e.Message);
             }
             return result;
         }
