@@ -5,6 +5,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Models\FluentValidation\**" />
+    <Content Remove="Models\FluentValidation\**" />
+    <EmbeddedResource Remove="Models\FluentValidation\**" />
+    <None Remove="Models\FluentValidation\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="AutoMapper" Version="7.0.1" />
     <PackageReference Include="FluentValidation.AspNetCore" Version="7.6.103" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
@@ -14,10 +21,6 @@
   <ItemGroup>
     <ProjectReference Include="..\TradeUnionCommittee.BLL\TradeUnionCommittee.BLL.csproj" />
     <ProjectReference Include="..\TradeUnionCommittee.Common\TradeUnionCommittee.Common.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Models\FluentValidation\" />
   </ItemGroup>
 
 </Project>

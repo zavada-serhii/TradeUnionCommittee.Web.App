@@ -4,8 +4,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using TradeUnionCommittee.BLL.DTO;
 using TradeUnionCommittee.BLL.Interfaces.Directory;
-using TradeUnionCommittee.Web.GUI.Models.ViewModels;
-using TradeUnionCommittee.Web.GUI.Oops;
+using TradeUnionCommittee.Web.GUI.AdditionalSettings.Oops;
+using TradeUnionCommittee.Web.GUI.Models;
 
 namespace TradeUnionCommittee.Web.GUI.Controllers.Directory
 {

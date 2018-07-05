@@ -5,8 +5,8 @@ using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.Interfaces.Login;
-using TradeUnionCommittee.Web.GUI.Models.ViewModels;
-using TradeUnionCommittee.Web.GUI.Oops;
+using TradeUnionCommittee.Web.GUI.AdditionalSettings.Oops;
+using TradeUnionCommittee.Web.GUI.Models;
 
 namespace TradeUnionCommittee.Web.GUI.Controllers.Login
 {

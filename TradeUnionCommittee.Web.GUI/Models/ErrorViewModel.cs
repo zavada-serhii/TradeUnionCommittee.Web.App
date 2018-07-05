@@ -1,4 +1,4 @@
-namespace TradeUnionCommittee.Web.GUI.Models.ViewModels
+namespace TradeUnionCommittee.Web.GUI.Models
 {
     public class ErrorViewModel
     {

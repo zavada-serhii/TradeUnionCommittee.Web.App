@@ -13,8 +13,8 @@ using TradeUnionCommittee.BLL.Interfaces.Login;
 using TradeUnionCommittee.BLL.Services.Account;
 using TradeUnionCommittee.BLL.Services.Directory;
 using TradeUnionCommittee.BLL.Services.Login;
+using TradeUnionCommittee.Web.GUI.AdditionalSettings.Oops;
 using TradeUnionCommittee.Web.GUI.DropDownLists;
-using TradeUnionCommittee.Web.GUI.Oops;
 
 namespace TradeUnionCommittee.Web.GUI
 {
@@ -92,7 +92,7 @@ namespace TradeUnionCommittee.Web.GUI
 
         private void DependencyInjectionSystem(IServiceCollection services)
         {
-            services.AddScoped<IOops, Oops.Oops>();
+            services.AddScoped<IOops, Oops>();
             services.AddScoped<IDropDownList, DropDownList>();
         }
     }

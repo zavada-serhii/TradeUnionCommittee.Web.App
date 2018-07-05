@@ -4,9 +4,9 @@ using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.DTO;
 using TradeUnionCommittee.BLL.Interfaces.Account;
+using TradeUnionCommittee.Web.GUI.AdditionalSettings.Oops;
 using TradeUnionCommittee.Web.GUI.DropDownLists;
-using TradeUnionCommittee.Web.GUI.Models.ViewModels;
-using TradeUnionCommittee.Web.GUI.Oops;
+using TradeUnionCommittee.Web.GUI.Models;
 
 namespace TradeUnionCommittee.Web.GUI.Controllers.Account
 {

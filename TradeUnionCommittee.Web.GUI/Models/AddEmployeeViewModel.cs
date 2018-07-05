@@ -1,8 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Mvc;
 
-namespace TradeUnionCommittee.Web.GUI.Models.ViewModels
+namespace TradeUnionCommittee.Web.GUI.Models
 {
     public class AddEmployeeViewModel
     {

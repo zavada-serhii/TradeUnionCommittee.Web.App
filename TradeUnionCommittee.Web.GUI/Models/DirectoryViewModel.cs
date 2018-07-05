@@ -1,7 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc;
 
-namespace TradeUnionCommittee.Web.GUI.Models.ViewModels
+namespace TradeUnionCommittee.Web.GUI.Models
 {
     public class DirectoryViewModel
     {
