@@ -18,7 +18,7 @@ namespace TradeUnionCommittee.DAL.Repositories
             _db = db;
         }
 
-        public ActualResult<IEnumerable<T>> GetAll()
+        public virtual ActualResult<IEnumerable<T>> GetAll()
         {
             var result = new ActualResult<IEnumerable<T>>();
             try
@@ -33,7 +33,7 @@ namespace TradeUnionCommittee.DAL.Repositories
             return result;
         }
 
-        public ActualResult<T> Get(long id)
+        public virtual ActualResult<T> Get(long id)
         {
             var result = new ActualResult<T>();
             try
@@ -54,7 +54,7 @@ namespace TradeUnionCommittee.DAL.Repositories
             return result;
         }
 
-        public ActualResult<IEnumerable<T>> Find(Func<T, bool> predicate)
+        public virtual ActualResult<IEnumerable<T>> Find(Func<T, bool> predicate)
         {
             var result = new ActualResult<IEnumerable<T>>();
             try
@@ -69,7 +69,7 @@ namespace TradeUnionCommittee.DAL.Repositories
             return result;
         }
 
-        public ActualResult Create(T item)
+        public virtual ActualResult Create(T item)
         {
             var result = new ActualResult();
             try
@@ -84,7 +84,7 @@ namespace TradeUnionCommittee.DAL.Repositories
             return result;
         }
 
-        public ActualResult Update(T item)
+        public virtual ActualResult Update(T item)
         {
             var result = new ActualResult();
             try
@@ -99,7 +99,7 @@ namespace TradeUnionCommittee.DAL.Repositories
             return result;
         }
 
-        public ActualResult Delete(long id)
+        public virtual ActualResult Delete(long id)
         {
             var result = new ActualResult();
             try
@@ -118,7 +118,7 @@ namespace TradeUnionCommittee.DAL.Repositories
             return result;
         }
 
-        public ActualResult<IEnumerable<T>> GetWithInclude(params Expression<Func<T, object>>[] includeProperties)
+        public virtual ActualResult<IEnumerable<T>> GetWithInclude(params Expression<Func<T, object>>[] includeProperties)
         {
             var result = new ActualResult<IEnumerable<T>>();
             try
@@ -133,7 +133,7 @@ namespace TradeUnionCommittee.DAL.Repositories
             return result;
         }
 
-        public ActualResult<IEnumerable<T>> GetWithInclude(Func<T, bool> predicate, params Expression<Func<T, object>>[] includeProperties)
+        public virtual ActualResult<IEnumerable<T>> GetWithInclude(Func<T, bool> predicate, params Expression<Func<T, object>>[] includeProperties)
         {
             var result = new ActualResult<IEnumerable<T>>();
             try

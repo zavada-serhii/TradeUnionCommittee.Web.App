@@ -137,5 +137,15 @@ namespace TradeUnionCommittee.DAL.Tests
             await Work.SaveAsync();
             Assert.AreEqual(res.IsValid, true);
         }
+
+        //------------------------------------------------------------------------------------------------------------------------------------------
+
+        [TestMethod]
+        public async Task TestMethodSubdivisionsRepository()
+        {
+            var res = Work.SubdivisionsRepository.Update(new Subdivisions {Id = 10, IdSubordinate = 1});
+            await Work.SaveAsync();
+            Assert.AreEqual(res.IsValid, true);
+        }
     }
 }
