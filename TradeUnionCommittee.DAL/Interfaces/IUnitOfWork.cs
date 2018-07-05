@@ -2,8 +2,8 @@
 using System.Threading.Tasks;
 using TradeUnionCommittee.Common.ActualResults;
 using TradeUnionCommittee.DAL.Entities;
-using TradeUnionCommittee.DAL.Interfaces.Account;
 using TradeUnionCommittee.DAL.Interfaces.Login;
+using TradeUnionCommittee.DAL.Interfaces.User;
 
 namespace TradeUnionCommittee.DAL.Interfaces
 {

@@ -3,7 +3,7 @@ using System.Linq;
 using TradeUnionCommittee.Common.ActualResults;
 using TradeUnionCommittee.DAL.EF;
 using TradeUnionCommittee.DAL.Entities;
-using TradeUnionCommittee.DAL.Interfaces.Account;
+using TradeUnionCommittee.DAL.Interfaces.User;
 
 namespace TradeUnionCommittee.DAL.Repositories.Account
 {

@@ -1,7 +1,6 @@
-﻿using System.Threading.Tasks;
-using TradeUnionCommittee.Common.ActualResults;
+﻿using TradeUnionCommittee.Common.ActualResults;
 
-namespace TradeUnionCommittee.DAL.Interfaces.Account
+namespace TradeUnionCommittee.DAL.Interfaces.User
 {
     public interface IUserRepository
     {
