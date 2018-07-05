@@ -1,11 +1,39 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Threading.Tasks;
+using TradeUnionCommittee.BLL.Interfaces.Account;
+using TradeUnionCommittee.BLL.Interfaces.Directory;
 
 namespace TradeUnionCommittee.Web.GUI.DropDownLists
 {
     public class DropDownList : IDropDownList
     {
+        private readonly IAccountService _accountService;
+        private readonly ISubdivisionsService _subdivisionsService;
+        private readonly IPositionService _positionService;
+        private readonly IDormitoryService _dormitoryService;
+        private readonly IDepartmentalService _departmentalService;
+
+
+        public DropDownList(IAccountService accountService,
+                            ISubdivisionsService subdivisionsService,
+                            IPositionService positionService,
+                            IDormitoryService dormitoryService,
+                            IDepartmentalService departmentalService)
+        {
+            _accountService = accountService;
+            _subdivisionsService = subdivisionsService;
+            _positionService = positionService;
+            _dormitoryService = dormitoryService;
+            _departmentalService = departmentalService;
+        }
+
+        public async Task<SelectList> GetRoles()
+        {
+            var roles = await _accountService.GetRoles();
+            return roles.IsValid ? new SelectList(roles.Result, "Id", "Name") : null;
+        }
+
         public Task<SelectList> GetLevelEducation()
         {
             throw new NotImplementedException();
@@ -16,24 +44,28 @@ namespace TradeUnionCommittee.Web.GUI.DropDownLists
             throw new NotImplementedException();
         }
 
-        public Task<SelectList> GetMainSubdivision()
+        public async Task<SelectList> GetMainSubdivision()
         {
-            throw new NotImplementedException();
+            var subdivision = await _subdivisionsService.GetAll();
+            return subdivision.IsValid ? new SelectList(subdivision.Result, "Id", "DeptName") : null;
         }
 
-        public Task<SelectList> GetPosition()
+        public async Task<SelectList> GetPosition()
         {
-            throw new NotImplementedException();
+            var position = await _positionService.GetAll();
+            return position.IsValid ? new SelectList(position.Result, "Id", "Name") : null;
         }
 
-        public Task<SelectList> GetDormitory()
+        public async Task<SelectList> GetDormitory()
         {
-            throw new NotImplementedException();
+            var dormitory = await _dormitoryService.GetAll();
+            return dormitory.IsValid ? new SelectList(dormitory.Result, "Id", "NumberDormitory") : null;
         }
 
-        public Task<SelectList> GetDepartmental()
+        public async Task<SelectList> GetDepartmental()
         {
-            throw new NotImplementedException();
+            var departmental = await _departmentalService.GetAllShortcut();
+            return departmental.IsValid ? new SelectList(departmental.Result, "Key", "Value") : null;
         }
 
         public Task<SelectList> GetScientificTitle()

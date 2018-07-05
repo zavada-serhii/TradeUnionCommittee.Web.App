@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.DTO;
 using TradeUnionCommittee.BLL.Interfaces.Account;
+using TradeUnionCommittee.Web.GUI.DropDownLists;
 using TradeUnionCommittee.Web.GUI.Models.ViewModels;
 using TradeUnionCommittee.Web.GUI.Oops;
 
@@ -13,11 +13,13 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Account
     public class AccountController : Controller
     {
         private readonly IAccountService _accountService;
+        private readonly IDropDownList _dropDownList;
         private readonly IOops _oops;
 
-        public AccountController(IAccountService accountService, IOops oops)
+        public AccountController(IAccountService accountService, IDropDownList dropDownList, IOops oops)
         {
             _accountService = accountService;
+            _dropDownList = dropDownList;
             _oops = oops;
         }
 
@@ -37,8 +39,7 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Account
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create()
         {
-            var roles =  await _accountService.GetRoles();
-            ViewBag.Role = new SelectList(roles.Result, "Id", "Name");
+            ViewBag.Role = await _dropDownList.GetDormitory();
             return View();
         }
 
@@ -69,8 +70,7 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Account
             var result = await _accountService.Get(id.Value);
             if (result.IsValid)
             {
-                var roles = await _accountService.GetRoles();
-                ViewBag.Role = new SelectList(roles.Result, "Id", "Name");
+                ViewBag.Role = await _dropDownList.GetDormitory();
 
                 var mapper = new MapperConfiguration(cfg => cfg.CreateMap<AccountDTO, AccountViewModel>()).CreateMapper();
                 return View(mapper.Map<AccountDTO, AccountViewModel>(result.Result));

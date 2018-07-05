@@ -5,6 +5,7 @@ namespace TradeUnionCommittee.Web.GUI.DropDownLists
 {
     public interface IDropDownList
     {
+        Task<SelectList> GetRoles();
         Task<SelectList> GetLevelEducation();
         Task<SelectList> GetStudy();
         Task<SelectList> GetMainSubdivision();

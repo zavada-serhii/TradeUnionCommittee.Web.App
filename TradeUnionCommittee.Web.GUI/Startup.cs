@@ -13,6 +13,7 @@ using TradeUnionCommittee.BLL.Interfaces.Login;
 using TradeUnionCommittee.BLL.Services.Account;
 using TradeUnionCommittee.BLL.Services.Directory;
 using TradeUnionCommittee.BLL.Services.Login;
+using TradeUnionCommittee.Web.GUI.DropDownLists;
 using TradeUnionCommittee.Web.GUI.Oops;
 
 namespace TradeUnionCommittee.Web.GUI
@@ -49,7 +50,7 @@ namespace TradeUnionCommittee.Web.GUI
             new ServiceModule(Configuration.GetConnectionString("DefaultConnection"), services);
 
             DependencyInjectionService(services);
-            DependencyInjectionOops(services);
+            DependencyInjectionSystem(services);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -84,11 +85,15 @@ namespace TradeUnionCommittee.Web.GUI
             services.AddScoped<ILoginService, LoginService>();
             services.AddScoped<IAccountService, AccountService>();
             services.AddScoped<IPositionService, PositionService>();
+            services.AddScoped<ISubdivisionsService, SubdivisionsService>();
+            services.AddScoped<IDormitoryService, DormitoryService>();
+            services.AddScoped<IDepartmentalService, DepartmentalService>();
         }
 
-        private void DependencyInjectionOops(IServiceCollection services)
+        private void DependencyInjectionSystem(IServiceCollection services)
         {
             services.AddScoped<IOops, Oops.Oops>();
+            services.AddScoped<IDropDownList, DropDownList>();
         }
     }
 }
