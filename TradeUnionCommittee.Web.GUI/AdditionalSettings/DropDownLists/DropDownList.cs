@@ -9,23 +9,65 @@ namespace TradeUnionCommittee.Web.GUI.AdditionalSettings.DropDownLists
     public class DropDownList : IDropDownList
     {
         private readonly IAccountService _accountService;
+        //LevelEducation
+        //Study
         private readonly ISubdivisionsService _subdivisionsService;
         private readonly IPositionService _positionService;
         private readonly IDormitoryService _dormitoryService;
         private readonly IDepartmentalService _departmentalService;
+        //ScientificTitle
+        //AcademicDegree
+        private readonly ISocialActivityService _socialActivity;
+        private readonly IPrivilegesService _privilegesService;
+        private readonly IHobbyService _hobbyService;
+        private readonly ITravelService _travelService;
+        private readonly IWellnessService _wellnessService;
+        private readonly ITourService _tourService;
+        private readonly ICulturalService _culturalService;
+        private readonly IActivitiesService _activitiesService;
+        private readonly IAwardService _awardService;
+        private readonly IMaterialAidService _materialAidService;
 
 
         public DropDownList(IAccountService accountService,
+                            //
+                            //
                             ISubdivisionsService subdivisionsService,
                             IPositionService positionService,
                             IDormitoryService dormitoryService,
-                            IDepartmentalService departmentalService)
+                            IDepartmentalService departmentalService,
+                            //                
+                            //
+                            ISocialActivityService socialActivity,
+                            IPrivilegesService privilegesService,
+                            IHobbyService hobbyService,
+                            ITravelService travelService,
+                            IWellnessService wellnessService,
+                            ITourService tourService,
+                            ICulturalService culturalService,
+                            IActivitiesService activitiesService,
+                            IAwardService awardService,
+                            IMaterialAidService materialAidService)
         {
             _accountService = accountService;
+            //
+            //
             _subdivisionsService = subdivisionsService;
             _positionService = positionService;
             _dormitoryService = dormitoryService;
             _departmentalService = departmentalService;
+            //
+            //
+            _socialActivity = socialActivity;
+            _privilegesService = privilegesService;
+            _hobbyService = hobbyService;
+            _travelService = travelService;
+            _wellnessService = wellnessService;
+            _tourService = tourService;
+            _culturalService = culturalService;
+            _activitiesService = activitiesService;
+            _awardService = awardService;
+            _materialAidService = materialAidService;
         }
 
         public async Task<SelectList> GetRoles()
@@ -78,44 +120,64 @@ namespace TradeUnionCommittee.Web.GUI.AdditionalSettings.DropDownLists
             throw new NotImplementedException();
         }
 
-        public Task<SelectList> GetSocialActivity()
+        public async Task<SelectList> GetSocialActivity()
         {
-            throw new NotImplementedException();
+            var socialActivity = await _socialActivity.GetAllAsync();
+            return socialActivity.IsValid ? new SelectList(socialActivity.Result, "Id", "Name") : null;
         }
 
-        public Task<SelectList> GetPrivilegies()
+        public async Task<SelectList> GetPrivilegies()
         {
-            throw new NotImplementedException();
+            var privilegies = await _privilegesService.GetAllAsync();
+            return privilegies.IsValid ? new SelectList(privilegies.Result, "Id", "Name") : null;
         }
 
-        public Task<SelectList> GetHobby()
+        public async Task<SelectList> GetHobby()
         {
-            throw new NotImplementedException();
+            var hobby = await _hobbyService.GetAllAsync();
+            return hobby.IsValid ? new SelectList(hobby.Result, "Id", "Name") : null;
         }
 
-        public Task<SelectList> GetTravel()
+        public async Task<SelectList> GetTravel()
         {
-            throw new NotImplementedException();
+            var travel = await _travelService.GetAllAsync();
+            return travel.IsValid ? new SelectList(travel.Result, "Id", "Name") : null;
         }
 
-        public Task<SelectList> GetWellness()
+        public async Task<SelectList> GetWellness()
         {
-            throw new NotImplementedException();
+            var wellness = await _wellnessService.GetAllAsync();
+            return wellness.IsValid ? new SelectList(wellness.Result, "Id", "Name") : null;
         }
 
-        public Task<SelectList> GetTour()
+        public async Task<SelectList> GetTour()
         {
-            throw new NotImplementedException();
+            var tour = await _tourService.GetAllAsync();
+            return tour.IsValid ? new SelectList(tour.Result, "Id", "Name") : null;
         }
 
-        public Task<SelectList> GetCultural()
+        public async Task<SelectList> GetCultural()
         {
-            throw new NotImplementedException();
+            var cultural = await _culturalService.GetAllAsync();
+            return cultural.IsValid ? new SelectList(cultural.Result, "Id", "Name") : null;
         }
 
-        public Task<SelectList> GetActivities()
+        public async Task<SelectList> GetActivities()
         {
-            throw new NotImplementedException();
+            var activities = await _activitiesService.GetAllAsync();
+            return activities.IsValid ? new SelectList(activities.Result, "Id", "Name") : null;
+        }
+
+        public async Task<SelectList> GetAward()
+        {
+            var award = await _awardService.GetAllAsync();
+            return award.IsValid ? new SelectList(award.Result, "Id", "Name") : null;
+        }
+
+        public async Task<SelectList> GetMaterialAid()
+        {
+            var materialAid = await _materialAidService.GetAllAsync();
+            return materialAid.IsValid ? new SelectList(materialAid.Result, "Id", "Name") : null;
         }
     }
 }

@@ -23,5 +23,7 @@ namespace TradeUnionCommittee.Web.GUI.AdditionalSettings.DropDownLists
         Task<SelectList> GetTour();
         Task<SelectList> GetCultural();
         Task<SelectList> GetActivities();
+        Task<SelectList> GetAward();
+        Task<SelectList> GetMaterialAid();
     }
 }
