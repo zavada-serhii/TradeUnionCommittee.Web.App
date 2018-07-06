@@ -1,6 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using TradeUnionCommittee.BLL.Interfaces.Account;
 using TradeUnionCommittee.BLL.Interfaces.Directory;
 
@@ -9,14 +8,12 @@ namespace TradeUnionCommittee.Web.GUI.AdditionalSettings.DropDownLists
     public class DropDownList : IDropDownList
     {
         private readonly IAccountService _accountService;
-        //LevelEducation
-        //Study
+        private readonly IEducationService _educationService;
         private readonly ISubdivisionsService _subdivisionsService;
         private readonly IPositionService _positionService;
         private readonly IDormitoryService _dormitoryService;
         private readonly IDepartmentalService _departmentalService;
-        //ScientificTitle
-        //AcademicDegree
+        private readonly IScientificService _scientificService;
         private readonly ISocialActivityService _socialActivity;
         private readonly IPrivilegesService _privilegesService;
         private readonly IHobbyService _hobbyService;
@@ -30,14 +27,12 @@ namespace TradeUnionCommittee.Web.GUI.AdditionalSettings.DropDownLists
 
 
         public DropDownList(IAccountService accountService,
-                            //
-                            //
+                            IEducationService educationService,
                             ISubdivisionsService subdivisionsService,
                             IPositionService positionService,
                             IDormitoryService dormitoryService,
                             IDepartmentalService departmentalService,
-                            //                
-                            //
+                            IScientificService scientificService,
                             ISocialActivityService socialActivity,
                             IPrivilegesService privilegesService,
                             IHobbyService hobbyService,
@@ -50,14 +45,12 @@ namespace TradeUnionCommittee.Web.GUI.AdditionalSettings.DropDownLists
                             IMaterialAidService materialAidService)
         {
             _accountService = accountService;
-            //
-            //
+            _educationService = educationService;
             _subdivisionsService = subdivisionsService;
             _positionService = positionService;
             _dormitoryService = dormitoryService;
             _departmentalService = departmentalService;
-            //
-            //
+            _scientificService = scientificService;
             _socialActivity = socialActivity;
             _privilegesService = privilegesService;
             _hobbyService = hobbyService;
@@ -76,14 +69,16 @@ namespace TradeUnionCommittee.Web.GUI.AdditionalSettings.DropDownLists
             return roles.IsValid ? new SelectList(roles.Result, "Id", "Name") : null;
         }
 
-        public Task<SelectList> GetLevelEducation()
+        public async Task<SelectList> GetLevelEducation()
         {
-            throw new NotImplementedException();
+            var levelEducation = await _educationService.GetAllLevelEducationAsync();
+            return levelEducation.IsValid ? new SelectList(levelEducation.Result) : null;
         }
 
-        public Task<SelectList> GetStudy()
+        public async Task<SelectList> GetStudy()
         {
-            throw new NotImplementedException();
+            var nameInstitution = await _educationService.GetAllNameInstitutionAsync();
+            return nameInstitution.IsValid ? new SelectList(nameInstitution.Result) : null;
         }
 
         public async Task<SelectList> GetMainSubdivision()
@@ -110,14 +105,16 @@ namespace TradeUnionCommittee.Web.GUI.AdditionalSettings.DropDownLists
             return departmental.IsValid ? new SelectList(departmental.Result, "Key", "Value") : null;
         }
 
-        public Task<SelectList> GetScientificTitle()
+        public async Task<SelectList> GetScientificTitle()
         {
-            throw new NotImplementedException();
+            var scientificTitle = await _scientificService.GetAllScientificTitleAsync();
+            return scientificTitle.IsValid ? new SelectList(scientificTitle.Result) : null;
         }
 
-        public Task<SelectList> GetAcademicDegree()
+        public async Task<SelectList> GetAcademicDegree()
         {
-            throw new NotImplementedException();
+            var academicDegree = await _scientificService.GetAllScientificDegreeAsync();
+            return academicDegree.IsValid ? new SelectList(academicDegree.Result) : null;
         }
 
         public async Task<SelectList> GetSocialActivity()
