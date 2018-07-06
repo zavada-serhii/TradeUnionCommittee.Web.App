@@ -19,7 +19,7 @@ namespace TradeUnionCommittee.BLL.Services.Directory
             _database = database;
         }
 
-        public async Task<ActualResult<IEnumerable<SubdivisionDTO>>> GetAll()
+        public async Task<ActualResult<IEnumerable<SubdivisionDTO>>> GetAllAsync()
         {
             return await Task.Run(() =>
             {
@@ -37,7 +37,7 @@ namespace TradeUnionCommittee.BLL.Services.Directory
             });
         }
 
-        public async Task<ActualResult<SubdivisionDTO>> Get(long id)
+        public async Task<ActualResult<SubdivisionDTO>> GetAsync(long id)
         {
             return await Task.Run(() =>
             {
@@ -60,7 +60,7 @@ namespace TradeUnionCommittee.BLL.Services.Directory
             });
         }
 
-        public async Task<ActualResult> Create(SubdivisionDTO item)
+        public async Task<ActualResult> CreateAsync(SubdivisionDTO item)
         {
             var subdivision = _database.SubdivisionsRepository.Create(new Subdivisions { DeptName = item.DeptName, IdSubordinate = item.IdSubordinate });
             if (subdivision.IsValid == false && subdivision.ErrorsList.Count > 0)
@@ -71,7 +71,7 @@ namespace TradeUnionCommittee.BLL.Services.Directory
             return subdivision;
         }
 
-        public async Task<ActualResult> Update(SubdivisionDTO item)
+        public async Task<ActualResult> UpdateAsync(SubdivisionDTO item)
         {
             var subdivision = _database.SubdivisionsRepository.Update(new Subdivisions
             {
@@ -101,7 +101,7 @@ namespace TradeUnionCommittee.BLL.Services.Directory
             return subdivision;
         }
 
-        public async Task<ActualResult> Delete(long id)
+        public async Task<ActualResult> DeleteAsync(long id)
         {
             var subdivision = _database.SubdivisionsRepository.Delete(id);
             if (subdivision.IsValid == false && subdivision.ErrorsList.Count > 0)
@@ -112,7 +112,7 @@ namespace TradeUnionCommittee.BLL.Services.Directory
             return subdivision;
         }
 
-        public async Task<ActualResult> CheckName(string name)
+        public async Task<ActualResult> CheckNameAsync(string name)
         {
             return await Task.Run(() =>
             {

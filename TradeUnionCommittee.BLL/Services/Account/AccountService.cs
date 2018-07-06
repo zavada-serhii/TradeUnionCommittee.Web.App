@@ -20,7 +20,7 @@ namespace TradeUnionCommittee.BLL.Services.Account
             _database = database;
         }
 
-        public async Task<ActualResult<IEnumerable<AccountDTO>>> GetAll()
+        public async Task<ActualResult<IEnumerable<AccountDTO>>> GetAllAsync()
         {
             return await Task.Run(() =>
             {
@@ -43,7 +43,7 @@ namespace TradeUnionCommittee.BLL.Services.Account
             });
         }
 
-        public async Task<ActualResult<AccountDTO>> Get(long id)
+        public async Task<ActualResult<AccountDTO>> GetAsync(long id)
         {
             return await Task.Run(() =>
             {
@@ -64,7 +64,7 @@ namespace TradeUnionCommittee.BLL.Services.Account
             });
         }
 
-        public async Task<ActualResult> Create(AccountDTO item)
+        public async Task<ActualResult> CreateAsync(AccountDTO item)
         {
             var users = _database.UsersRepository.Create(new Users
             {
@@ -81,7 +81,7 @@ namespace TradeUnionCommittee.BLL.Services.Account
             return users;
         }
 
-        public async Task<ActualResult> Update(AccountDTO item)
+        public async Task<ActualResult> UpdateAsync(AccountDTO item)
         {
             ActualResult result;
 
@@ -110,7 +110,7 @@ namespace TradeUnionCommittee.BLL.Services.Account
             return result;
         }
 
-        public async Task<ActualResult> Delete(long id)
+        public async Task<ActualResult> DeleteAsync(long id)
         {
             var user = _database.UsersRepository.Delete(id);
             if (user.IsValid == false && user.ErrorsList.Count > 0)

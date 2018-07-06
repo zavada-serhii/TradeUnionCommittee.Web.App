@@ -84,7 +84,22 @@ namespace TradeUnionCommittee.Web.GUI
         {
             services.AddScoped<ILoginService, LoginService>();
             services.AddScoped<IAccountService, AccountService>();
+
             services.AddScoped<IPositionService, PositionService>();
+            services.AddScoped<ISocialActivityService, SocialActivityService>();
+            services.AddScoped<IPrivilegesService, PrivilegesService>();
+
+            services.AddScoped<IAwardService, AwardService>();
+            services.AddScoped<IMaterialAidService, MaterialAidService>();
+            services.AddScoped<IHobbyService, HobbyService>();
+
+            //services.AddScoped<ITravelService, TravelService>();
+            //services.AddScoped<IWellnessService, WellnessService>();
+            //services.AddScoped<ITourService, TourService>();
+
+            services.AddScoped<IActivitiesService, ActivitiesService>();
+            services.AddScoped<ICulturalService, CulturalService>();
+
             services.AddScoped<ISubdivisionsService, SubdivisionsService>();
             services.AddScoped<IDormitoryService, DormitoryService>();
             services.AddScoped<IDepartmentalService, DepartmentalService>();

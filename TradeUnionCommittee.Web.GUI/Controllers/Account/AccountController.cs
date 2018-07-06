@@ -29,7 +29,7 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Account
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Index()
         {
-            var result = await _accountService.GetAll();
+            var result = await _accountService.GetAllAsync();
             return View(result);
         }
 
@@ -50,7 +50,7 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Account
         {
             if (ModelState.IsValid)
             {
-                var result = await _accountService.Create(new AccountDTO { Email = vm.Email, Password = vm.Password, IdRole = vm.IdRole });
+                var result = await _accountService.CreateAsync(new AccountDTO { Email = vm.Email, Password = vm.Password, IdRole = vm.IdRole });
                 if (result.IsValid)
                 {
                     return RedirectToAction("Index");
@@ -67,7 +67,7 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Account
         public async Task<IActionResult> Update(long? id)
         {
             if (id == null) return NotFound();
-            var result = await _accountService.Get(id.Value);
+            var result = await _accountService.GetAsync(id.Value);
             if (result.IsValid)
             {
                 ViewBag.Role = await _dropDownList.GetRoles();
@@ -87,7 +87,7 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Account
             if (ModelState.IsValid)
             {
                 if (vm.IdUser == null) return NotFound();
-                var result = await _accountService.Update(new AccountDTO
+                var result = await _accountService.UpdateAsync(new AccountDTO
                 {
                     IdUser = vm.IdUser.Value,
                     Email = vm.Email,
@@ -119,7 +119,7 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Account
             if (ModelState.IsValid)
             {
                 if (vm.IdUser == null) return NotFound();
-                var result = await _accountService.Update(new AccountDTO
+                var result = await _accountService.UpdateAsync(new AccountDTO
                 {
                     IdUser = vm.IdUser.Value,
                     Password = vm.Password
@@ -138,7 +138,7 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Account
         public async Task<IActionResult> Delete(long? id)
         {
             if (id == null) return NotFound();
-            var result = await _accountService.Get(id.Value);
+            var result = await _accountService.GetAsync(id.Value);
             return result.IsValid ? View(result.Result) : _oops.OutPutError("Account", "Index", result.ErrorsList);
         }
 
@@ -148,7 +148,7 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Account
         public async Task<IActionResult> DeleteConfirmed(long? id)
         {
             if (id == null) return NotFound();
-            var result = await _accountService.Delete(id.Value);
+            var result = await _accountService.DeleteAsync(id.Value);
             return result.IsValid
                 ? RedirectToAction("Index")
                 : _oops.OutPutError("Account", "Index", result.ErrorsList);

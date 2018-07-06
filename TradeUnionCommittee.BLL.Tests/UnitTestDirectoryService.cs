@@ -13,35 +13,35 @@ namespace TradeUnionCommittee.BLL.Tests
         [TestMethod]
         public void TestGetPositionService()
         {
-            var result = _service.Get(1);
+            var result = _service.GetAsync(1);
             Assert.AreEqual(result.Result.IsValid, true);
         }
 
         [TestMethod]
         public void TestGetAllPositionService()
         {
-            var result = _service.GetAll();
+            var result = _service.GetAllAsync();
             Assert.AreEqual(result.Result.IsValid, true);
         }
 
         [TestMethod]
         public void TestCreatePositionService()
         {
-            var result = _service.Create(new DirectoryDTO {Name = "Test"});
+            var result = _service.CreateAsync(new DirectoryDTO {Name = "Test"});
             Assert.AreEqual(result.Result.IsValid, true);
         }
 
         [TestMethod]
         public void TestEditPositionService()
         {
-            var result = _service.Update(new DirectoryDTO {Id = 8, Name = "Test1" });
+            var result = _service.UpdateAsync(new DirectoryDTO {Id = 8, Name = "Test1" });
             Assert.AreEqual(result.Result.IsValid, true);
         }
 
         [TestMethod]
         public void TestRemovePositionService()
         {
-            var result = _service.Delete(8);
+            var result = _service.DeleteAsync(8);
             Assert.AreEqual(result.Result.IsValid, true);
         }
     }

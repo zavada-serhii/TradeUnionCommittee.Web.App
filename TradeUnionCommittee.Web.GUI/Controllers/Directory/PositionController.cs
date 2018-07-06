@@ -26,7 +26,7 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Directory
         [Authorize(Roles = "Admin,Accountant,Deputy")]
         public async Task<IActionResult> Index()
         {
-            var result = await _services.GetAll();
+            var result = await _services.GetAllAsync();
             return View(result);
         }
 
@@ -46,7 +46,7 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Directory
         {
             if (ModelState.IsValid)
             {
-                var result = await _services.Create(new DirectoryDTO { Name = vm.Name });
+                var result = await _services.CreateAsync(new DirectoryDTO { Name = vm.Name });
                 return result.IsValid
                     ? RedirectToAction("Index")
                     : _oops.OutPutError("Position", "Index", result.ErrorsList);
@@ -61,7 +61,7 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Directory
         public async Task<IActionResult> Update(long? id)
         {
             if (id == null) return NotFound();
-            var result = await _services.Get(id.Value);
+            var result = await _services.GetAsync(id.Value);
             if (result.IsValid)
             {
                 var mapper = new MapperConfiguration(cfg => cfg.CreateMap<DirectoryDTO, PositionViewModel>()).CreateMapper();
@@ -78,7 +78,7 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Directory
             if (ModelState.IsValid)
             {
                 if (vm.Id == null) return NotFound();
-                var result = await _services.Update(new DirectoryDTO { Id = vm.Id.Value, Name = vm.Name });
+                var result = await _services.UpdateAsync(new DirectoryDTO { Id = vm.Id.Value, Name = vm.Name });
                 return result.IsValid
                     ? RedirectToAction("Index")
                     : _oops.OutPutError("Position", "Index", result.ErrorsList);
@@ -93,7 +93,7 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Directory
         public async Task<IActionResult> Delete(long? id)
         {
             if (id == null) return NotFound();
-            var result = await _services.Get(id.Value);
+            var result = await _services.GetAsync(id.Value);
             return result.IsValid 
                 ? View(result.Result) 
                 : _oops.OutPutError("Position", "Index", result.ErrorsList);
@@ -105,7 +105,7 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Directory
         public async Task<IActionResult> DeleteConfirmed(long? id)
         {
             if (id == null) return NotFound();
-            var result = await _services.Delete(id.Value);
+            var result = await _services.DeleteAsync(id.Value);
             return result.IsValid
                 ? RedirectToAction("Index")
                 : _oops.OutPutError("Position", "Index", result.ErrorsList);
@@ -117,7 +117,7 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Directory
         [Authorize(Roles = "Admin,Accountant,Deputy")]
         public async Task<IActionResult> CheckName(string name)
         {
-            var result = await _services.CheckName(name);
+            var result = await _services.CheckNameAsync(name);
             return Json(result.IsValid);
         }
 

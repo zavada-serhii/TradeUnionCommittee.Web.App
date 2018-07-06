@@ -46,19 +46,19 @@ namespace TradeUnionCommittee.Web.GUI.DropDownLists
 
         public async Task<SelectList> GetMainSubdivision()
         {
-            var subdivision = await _subdivisionsService.GetAll();
+            var subdivision = await _subdivisionsService.GetAllAsync();
             return subdivision.IsValid ? new SelectList(subdivision.Result, "Id", "DeptName") : null;
         }
 
         public async Task<SelectList> GetPosition()
         {
-            var position = await _positionService.GetAll();
+            var position = await _positionService.GetAllAsync();
             return position.IsValid ? new SelectList(position.Result, "Id", "Name") : null;
         }
 
         public async Task<SelectList> GetDormitory()
         {
-            var dormitory = await _dormitoryService.GetAll();
+            var dormitory = await _dormitoryService.GetAllAsync();
             return dormitory.IsValid ? new SelectList(dormitory.Result, "Id", "NumberDormitory") : null;
         }
 

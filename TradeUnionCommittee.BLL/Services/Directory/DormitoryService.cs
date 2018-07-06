@@ -18,7 +18,7 @@ namespace TradeUnionCommittee.BLL.Services.Directory
             _database = database;
         }
 
-        public async Task<ActualResult<IEnumerable<DormitoryDTO>>> GetAll()
+        public async Task<ActualResult<IEnumerable<DormitoryDTO>>> GetAllAsync()
         {
             return await Task.Run(() =>
             {
@@ -28,7 +28,7 @@ namespace TradeUnionCommittee.BLL.Services.Directory
             });
         }
 
-        public async Task<ActualResult<DormitoryDTO>> Get(long id)
+        public async Task<ActualResult<DormitoryDTO>> GetAsync(long id)
         {
             return await Task.Run(() =>
             {
@@ -51,7 +51,7 @@ namespace TradeUnionCommittee.BLL.Services.Directory
             });
         }
 
-        public async Task<ActualResult> Create(DormitoryDTO item)
+        public async Task<ActualResult> CreateAsync(DormitoryDTO item)
         {
             var dormitory = _database.AddressPublicHouseRepository.Create(new AddressPublicHouse
             {
@@ -69,7 +69,7 @@ namespace TradeUnionCommittee.BLL.Services.Directory
             return dormitory;
         }
 
-        public async Task<ActualResult> Update(DormitoryDTO item)
+        public async Task<ActualResult> UpdateAsync(DormitoryDTO item)
         {
             var dormitory = _database.AddressPublicHouseRepository.Update(new AddressPublicHouse
             {
@@ -88,7 +88,7 @@ namespace TradeUnionCommittee.BLL.Services.Directory
             return dormitory;
         }
 
-        public async Task<ActualResult> Delete(long id)
+        public async Task<ActualResult> DeleteAsync(long id)
         {
             var dormitory = _database.AddressPublicHouseRepository.Delete(id);
             if (dormitory.IsValid == false && dormitory.ErrorsList.Count > 0)

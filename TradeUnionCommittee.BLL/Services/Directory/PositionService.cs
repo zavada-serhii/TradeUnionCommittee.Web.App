@@ -19,7 +19,7 @@ namespace TradeUnionCommittee.BLL.Services.Directory
             _database = database;
         }
 
-        public async Task<ActualResult<IEnumerable<DirectoryDTO>>> GetAll()
+        public async Task<ActualResult<IEnumerable<DirectoryDTO>>> GetAllAsync()
         {
             return await Task.Run(() =>
             {
@@ -28,7 +28,7 @@ namespace TradeUnionCommittee.BLL.Services.Directory
             });
         }
 
-        public async Task<ActualResult<DirectoryDTO>> Get(long id)
+        public async Task<ActualResult<DirectoryDTO>> GetAsync(long id)
         {
             return await Task.Run(() =>
             {
@@ -41,7 +41,7 @@ namespace TradeUnionCommittee.BLL.Services.Directory
             });
         }
 
-        public async Task<ActualResult> Create(DirectoryDTO item)
+        public async Task<ActualResult> CreateAsync(DirectoryDTO item)
         {
             var position = _database.PositionRepository.Create(new Position { Name = item.Name });
             if (position.IsValid == false && position.ErrorsList.Count > 0)
@@ -52,7 +52,7 @@ namespace TradeUnionCommittee.BLL.Services.Directory
             return position;
         }
 
-        public async Task<ActualResult> Update(DirectoryDTO item)
+        public async Task<ActualResult> UpdateAsync(DirectoryDTO item)
         {
             var position = _database.PositionRepository.Update(new Position { Id = item.Id, Name = item.Name });
             if (position.IsValid == false && position.ErrorsList.Count > 0)
@@ -63,7 +63,7 @@ namespace TradeUnionCommittee.BLL.Services.Directory
             return position;
         }
 
-        public async Task<ActualResult> Delete(long id)
+        public async Task<ActualResult> DeleteAsync(long id)
         {
             var position = _database.PositionRepository.Delete(id);
             if (position.IsValid == false && position.ErrorsList.Count > 0)
@@ -74,12 +74,12 @@ namespace TradeUnionCommittee.BLL.Services.Directory
             return position;
         }
 
-        public async Task<ActualResult> CheckName(string name)
+        public async Task<ActualResult> CheckNameAsync(string name)
         {
             return await Task.Run(() =>
             {
-                var res = _database.PositionRepository.Find(p => p.Name == name);
-                return res.Result.Any() ?
+                var position = _database.PositionRepository.Find(p => p.Name == name);
+                return position.Result.Any() ?
                     new ActualResult { IsValid = false} :
                     new ActualResult { IsValid = true};
             });
