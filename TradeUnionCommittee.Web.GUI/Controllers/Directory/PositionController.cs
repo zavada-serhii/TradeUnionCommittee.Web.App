@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
 using TradeUnionCommittee.BLL.DTO;
 using TradeUnionCommittee.BLL.Interfaces.Directory;
 using TradeUnionCommittee.Web.GUI.AdditionalSettings.Oops;
@@ -42,7 +42,7 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Directory
         [HttpPost]
         [Authorize(Roles = "Admin,Accountant,Deputy")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Name")] DirectoryViewModel vm)
+        public async Task<IActionResult> Create([Bind("Name")] PositionViewModel vm)
         {
             if (ModelState.IsValid)
             {
@@ -64,8 +64,8 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Directory
             var result = await _services.Get(id.Value);
             if (result.IsValid)
             {
-                var mapper = new MapperConfiguration(cfg => cfg.CreateMap<DirectoryDTO, DirectoryViewModel>()).CreateMapper();
-                return View(mapper.Map<DirectoryDTO, DirectoryViewModel>(result.Result));
+                var mapper = new MapperConfiguration(cfg => cfg.CreateMap<DirectoryDTO, PositionViewModel>()).CreateMapper();
+                return View(mapper.Map<DirectoryDTO, PositionViewModel>(result.Result));
             }
             return _oops.OutPutError("Position", "Index", result.ErrorsList);
         }
@@ -73,7 +73,7 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Directory
         [HttpPost, ActionName("Update")]
         [Authorize(Roles = "Admin,Accountant,Deputy")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> UpdateConfirmed([Bind("Id,Name")] DirectoryViewModel vm)
+        public async Task<IActionResult> UpdateConfirmed([Bind("Id,Name")] PositionViewModel vm)
         {
             if (ModelState.IsValid)
             {
