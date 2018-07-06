@@ -39,7 +39,7 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Account
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create()
         {
-            ViewBag.Role = await _dropDownList.GetDormitory();
+            ViewBag.Role = await _dropDownList.GetRoles();
             return View();
         }
 
@@ -70,10 +70,10 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Account
             var result = await _accountService.Get(id.Value);
             if (result.IsValid)
             {
-                ViewBag.Role = await _dropDownList.GetDormitory();
+                ViewBag.Role = await _dropDownList.GetRoles();
 
-                var mapper = new MapperConfiguration(cfg => cfg.CreateMap<AccountDTO, AccountViewModel>()).CreateMapper();
-                return View(mapper.Map<AccountDTO, AccountViewModel>(result.Result));
+                var mapper = new MapperConfiguration(cfg => cfg.CreateMap<AccountDTO, AccountPersonalDataViewModel>()).CreateMapper();
+                return View(mapper.Map<AccountDTO, AccountPersonalDataViewModel>(result.Result));
             }
             return _oops.OutPutError("Account", "Index", result.ErrorsList);
         }
@@ -82,14 +82,13 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Account
         [HttpPost, ActionName("Update")]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> UpdateConfirmed(AccountViewModel vm)
+        public async Task<IActionResult> UpdateConfirmed(AccountPersonalDataViewModel vm)
         {
             if (ModelState.IsValid)
             {
                 if (vm.IdUser == null) return NotFound();
                 var result = await _accountService.Update(new AccountDTO
                 {
-                    KeyUpdate = 1,
                     IdUser = vm.IdUser.Value,
                     Email = vm.Email,
                     IdRole = vm.IdRole
@@ -108,21 +107,20 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Account
         public IActionResult UpdatePassword(long? id)
         {
             if (id == null) return NotFound();
-            var model = new AccountViewModel {IdUser = id};
+            var model = new AccountUpdatePasswordViewModel { IdUser = id};
             return View(model);
         }
 
         [HttpPost, ActionName("UpdatePassword")]
         [Authorize(Roles = "Admin")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> UpdatePasswordConfirmed(AccountViewModel vm)
+        public async Task<IActionResult> UpdatePasswordConfirmed(AccountUpdatePasswordViewModel vm)
         {
             if (ModelState.IsValid)
             {
                 if (vm.IdUser == null) return NotFound();
                 var result = await _accountService.Update(new AccountDTO
                 {
-                    KeyUpdate = 2,
                     IdUser = vm.IdUser.Value,
                     Password = vm.Password
                 });

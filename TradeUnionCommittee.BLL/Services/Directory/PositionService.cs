@@ -43,44 +43,35 @@ namespace TradeUnionCommittee.BLL.Services.Directory
 
         public async Task<ActualResult> Create(DirectoryDTO item)
         {
-            return await Task.Run(async () =>
+            var position = _database.PositionRepository.Create(new Position { Name = item.Name });
+            if (position.IsValid == false && position.ErrorsList.Count > 0)
             {
-                var position = _database.PositionRepository.Create(new Position { Name = item.Name });
-                if (position.IsValid == false && position.ErrorsList.Count > 0)
-                {
-                    return new ActualResult { IsValid = false, ErrorsList = position.ErrorsList };
-                }
-                await _database.SaveAsync();
-                return position;
-            });
+                return new ActualResult { IsValid = false, ErrorsList = position.ErrorsList };
+            }
+            await _database.SaveAsync();
+            return position;
         }
 
         public async Task<ActualResult> Update(DirectoryDTO item)
         {
-            return await Task.Run(async () =>
+            var position = _database.PositionRepository.Update(new Position { Id = item.Id, Name = item.Name });
+            if (position.IsValid == false && position.ErrorsList.Count > 0)
             {
-                var position = _database.PositionRepository.Update(new Position { Id = item.Id, Name = item.Name });
-                if (position.IsValid == false && position.ErrorsList.Count > 0)
-                {
-                    return new ActualResult { IsValid = false, ErrorsList = position.ErrorsList };
-                }
-                await _database.SaveAsync();
-                return position;
-            });
+                return new ActualResult { IsValid = false, ErrorsList = position.ErrorsList };
+            }
+            await _database.SaveAsync();
+            return position;
         }
 
         public async Task<ActualResult> Delete(long id)
         {
-            return await Task.Run(async () =>
+            var position = _database.PositionRepository.Delete(id);
+            if (position.IsValid == false && position.ErrorsList.Count > 0)
             {
-                var position = _database.PositionRepository.Delete(id);
-                if (position.IsValid == false && position.ErrorsList.Count > 0)
-                {
-                    return new ActualResult { IsValid = false, ErrorsList = position.ErrorsList };
-                }
-                await _database.SaveAsync();
-                return position;
-            });
+                return new ActualResult { IsValid = false, ErrorsList = position.ErrorsList };
+            }
+            await _database.SaveAsync();
+            return position;
         }
 
         public async Task<ActualResult> CheckName(string name)

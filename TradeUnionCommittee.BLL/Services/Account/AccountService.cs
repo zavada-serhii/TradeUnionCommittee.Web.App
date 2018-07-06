@@ -66,69 +66,59 @@ namespace TradeUnionCommittee.BLL.Services.Account
 
         public async Task<ActualResult> Create(AccountDTO item)
         {
-            return await Task.Run(async() =>
+            var users = _database.UsersRepository.Create(new Users
             {
-                var users = _database.UsersRepository.Create(new Users
-                {
-                    Email = item.Email,
-                    Password = HashingPassword.HashPassword(item.Password),
-                    IdRole = item.IdRole
-                });
-
-                if (users.IsValid && users.ErrorsList.Count > 0)
-                {
-                    return new ActualResult {IsValid = false, ErrorsList = users.ErrorsList};
-                }
-                await _database.SaveAsync();
-                return users;
+                Email = item.Email,
+                Password = HashingPassword.HashPassword(item.Password),
+                IdRole = item.IdRole
             });
+
+            if (users.IsValid && users.ErrorsList.Count > 0)
+            {
+                return new ActualResult { IsValid = false, ErrorsList = users.ErrorsList };
+            }
+            await _database.SaveAsync();
+            return users;
         }
 
-        /// <summary>
-        /// Properties KeyUpdate
-        /// If value 1 - Update personal data (Email, Role),
-        /// If value 2 - Update password
-        /// </summary>
-        /// <param name="item"></param>
-        /// <returns></returns>
         public async Task<ActualResult> Update(AccountDTO item)
         {
-            return await Task.Run(() =>
-            {
-                var result = new ActualResult();
-                switch (item.KeyUpdate)
-                {
-                    case 1:
-                        result = _database.UserRepository.UpdatePersonalData(item.IdUser, item.Email, item.IdRole);
-                        break;
+            ActualResult result;
 
-                    case 2:
-                        result = _database.UserRepository.UpdatePassword(item.IdUser, HashingPassword.HashPassword(item.Password));
-                        break;
-                    default:
-                        result.IsValid = false;
-                        break;
-                }
-                if (result.IsValid == false && result.ErrorsList.Count > 0)
+            if (item.Password == null)
+            {
+                result = _database.UsersRepository.Update(new Users
                 {
-                    return new ActualResult { IsValid = false, ErrorsList = result.ErrorsList };
-                }
-                return result;
-            });
+                    Id = item.IdUser,
+                    Email = item.Email,
+                    IdRole = item.IdRole
+                });
+            }
+            else
+            {
+                result = _database.UsersRepository.Update(new Users
+                {
+                    Id = item.IdUser,
+                    Password = HashingPassword.HashPassword(item.Password)
+                });
+            }
+            if (result.IsValid == false && result.ErrorsList.Count > 0)
+            {
+                return new ActualResult { IsValid = false, ErrorsList = result.ErrorsList };
+            }
+            await _database.SaveAsync();
+            return result;
         }
 
         public async Task<ActualResult> Delete(long id)
         {
-            return await Task.Run(async () =>
+            var user = _database.UsersRepository.Delete(id);
+            if (user.IsValid == false && user.ErrorsList.Count > 0)
             {
-                var user = _database.UsersRepository.Delete(id);
-                if (user.IsValid == false && user.ErrorsList.Count > 0)
-                {
-                    return new ActualResult { IsValid = false, ErrorsList = user.ErrorsList };
-                }
-                await _database.SaveAsync();
-                return user;
-            });
+                return new ActualResult { IsValid = false, ErrorsList = user.ErrorsList };
+            }
+            await _database.SaveAsync();
+            return user;
         }
 
         //------------------------------------------------------------------------------------------------------------------------------------------

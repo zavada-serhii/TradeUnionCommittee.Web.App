@@ -5,7 +5,6 @@ using TradeUnionCommittee.DAL.EF;
 using TradeUnionCommittee.DAL.Entities;
 using TradeUnionCommittee.DAL.Interfaces;
 using TradeUnionCommittee.DAL.Interfaces.Login;
-using TradeUnionCommittee.DAL.Interfaces.User;
 using TradeUnionCommittee.DAL.Repositories.Account;
 using TradeUnionCommittee.DAL.Repositories.Directories;
 using TradeUnionCommittee.DAL.Repositories.Lists;
@@ -142,7 +141,6 @@ namespace TradeUnionCommittee.DAL.Repositories
         //------------------------------------------------------------------------------------------------------------------------------------------
 
         public ILoginRepository LoginRepository => _loginRepository ?? (_loginRepository = new LoginRepository(_context));
-        public IUserRepository UserRepository => _usersRepository ?? (_usersRepository = new UsersRepository(_context));
         public IRepository<Users> UsersRepository => _usersRepository ?? (_usersRepository = new UsersRepository(_context));
         public IRepository<Roles> RolesRepository => _rolesRepository ?? (_rolesRepository = new RolesRepository(_context));
 

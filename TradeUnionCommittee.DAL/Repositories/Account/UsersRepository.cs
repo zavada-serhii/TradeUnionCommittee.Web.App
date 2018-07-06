@@ -3,11 +3,10 @@ using System.Linq;
 using TradeUnionCommittee.Common.ActualResults;
 using TradeUnionCommittee.DAL.EF;
 using TradeUnionCommittee.DAL.Entities;
-using TradeUnionCommittee.DAL.Interfaces.User;
 
 namespace TradeUnionCommittee.DAL.Repositories.Account
 {
-    public class UsersRepository : Repository<Users>, IUserRepository
+    public class UsersRepository : Repository<Users>
     {
         private readonly TradeUnionCommitteeEmployeesCoreContext _db;
 
@@ -16,38 +15,28 @@ namespace TradeUnionCommittee.DAL.Repositories.Account
             _db = db;
         }
 
-        public ActualResult UpdatePersonalData(long idUser, string email, long idRole)
+        public override ActualResult Update(Users item)
         {
             var result = new ActualResult();
             try
             {
-                var user = _db.Users.Where(x => x.Id == idUser);
-                foreach (var userse in user)
-                {
-                    userse.Email = email;
-                    userse.IdRole = idRole;
-                }
-                _db.SaveChanges();
-            }
-            catch (Exception e)
-            {
-                result.IsValid = false;
-                result.ErrorsList.Add(e.Message);
-            }
-            return result;
-        }
+                var user = _db.Users.Where(x => x.Id == item.Id);
 
-        public ActualResult UpdatePassword(long idUser, string password)
-        {
-            var result = new ActualResult();
-            try
-            {
-                var user = _db.Users.Where(x => x.Id == idUser);
-                foreach (var userse in user)
+                if (item.Password == null)
                 {
-                    userse.Password = password;
+                    foreach (var userse in user)
+                    {
+                        userse.Email = item.Email;
+                        userse.IdRole = item.IdRole;
+                    }
                 }
-                _db.SaveChanges();
+                else
+                {
+                    foreach (var userse in user)
+                    {
+                        userse.Password = item.Password;
+                    }
+                }
             }
             catch (Exception e)
             {

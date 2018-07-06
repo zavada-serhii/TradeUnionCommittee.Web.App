@@ -63,57 +63,48 @@ namespace TradeUnionCommittee.BLL.Services.Directory
 
         public async Task<ActualResult> Create(DepartmentalDTO item)
         {
-            return await Task.Run(async () =>
+            var departmental = _database.AddressPublicHouseRepository.Create(new AddressPublicHouse
             {
-                var departmental = _database.AddressPublicHouseRepository.Create(new AddressPublicHouse
-                {
-                    City = item.City,
-                    Street = item.Street,
-                    NumberHouse = item.NumberHouse,
-                    Type = 2
-                });
-                if (departmental.IsValid == false && departmental.ErrorsList.Count > 0)
-                {
-                    return new ActualResult { IsValid = false, ErrorsList = departmental.ErrorsList };
-                }
-                await _database.SaveAsync();
-                return departmental;
+                City = item.City,
+                Street = item.Street,
+                NumberHouse = item.NumberHouse,
+                Type = 2
             });
+            if (departmental.IsValid == false && departmental.ErrorsList.Count > 0)
+            {
+                return new ActualResult { IsValid = false, ErrorsList = departmental.ErrorsList };
+            }
+            await _database.SaveAsync();
+            return departmental;
         }
 
         public async Task<ActualResult> Update(DepartmentalDTO item)
         {
-            return await Task.Run(async () =>
+            var departmental = _database.AddressPublicHouseRepository.Update(new AddressPublicHouse
             {
-                var departmental = _database.AddressPublicHouseRepository.Update(new AddressPublicHouse
-                {
-                    Id = item.Id,
-                    City = item.City,
-                    Street = item.Street,
-                    NumberHouse = item.NumberHouse,
-                    Type = 2
-                });
-                if (departmental.IsValid == false && departmental.ErrorsList.Count > 0)
-                {
-                    return new ActualResult { IsValid = false, ErrorsList = departmental.ErrorsList };
-                }
-                await _database.SaveAsync();
-                return departmental;
+                Id = item.Id,
+                City = item.City,
+                Street = item.Street,
+                NumberHouse = item.NumberHouse,
+                Type = 2
             });
+            if (departmental.IsValid == false && departmental.ErrorsList.Count > 0)
+            {
+                return new ActualResult { IsValid = false, ErrorsList = departmental.ErrorsList };
+            }
+            await _database.SaveAsync();
+            return departmental;
         }
 
         public async Task<ActualResult> Delete(long id)
         {
-            return await Task.Run(async () =>
+            var departmental = _database.AddressPublicHouseRepository.Delete(id);
+            if (departmental.IsValid == false && departmental.ErrorsList.Count > 0)
             {
-                var departmental = _database.AddressPublicHouseRepository.Delete(id);
-                if (departmental.IsValid == false && departmental.ErrorsList.Count > 0)
-                {
-                    return new ActualResult { IsValid = false, ErrorsList = departmental.ErrorsList };
-                }
-                await _database.SaveAsync();
-                return departmental;
-            });
+                return new ActualResult { IsValid = false, ErrorsList = departmental.ErrorsList };
+            }
+            await _database.SaveAsync();
+            return departmental;
         }
 
         public void Dispose()

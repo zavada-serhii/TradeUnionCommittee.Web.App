@@ -62,66 +62,54 @@ namespace TradeUnionCommittee.BLL.Services.Directory
 
         public async Task<ActualResult> Create(SubdivisionDTO item)
         {
-            return await Task.Run(async () =>
+            var subdivision = _database.SubdivisionsRepository.Create(new Subdivisions { DeptName = item.DeptName, IdSubordinate = item.IdSubordinate });
+            if (subdivision.IsValid == false && subdivision.ErrorsList.Count > 0)
             {
-                var subdivision = _database.SubdivisionsRepository.Create(new Subdivisions { DeptName = item.DeptName, IdSubordinate = item.IdSubordinate});
-                if (subdivision.IsValid == false && subdivision.ErrorsList.Count > 0)
-                {
-                    return new ActualResult { IsValid = false, ErrorsList = subdivision.ErrorsList };
-                }
-                await _database.SaveAsync();
-                return subdivision;
-            });
+                return new ActualResult { IsValid = false, ErrorsList = subdivision.ErrorsList };
+            }
+            await _database.SaveAsync();
+            return subdivision;
         }
 
         public async Task<ActualResult> Update(SubdivisionDTO item)
         {
-            return await Task.Run(async () =>
+            var subdivision = _database.SubdivisionsRepository.Update(new Subdivisions
             {
-                var subdivision = _database.SubdivisionsRepository.Update(new Subdivisions
-                {
-                    Id = item.Id,
-                    DeptName = item.DeptName
-                });
-                if (subdivision.IsValid == false && subdivision.ErrorsList.Count > 0)
-                {
-                    return new ActualResult { IsValid = false, ErrorsList = subdivision.ErrorsList };
-                }
-                await _database.SaveAsync();
-                return subdivision;
+                Id = item.Id,
+                DeptName = item.DeptName
             });
+            if (subdivision.IsValid == false && subdivision.ErrorsList.Count > 0)
+            {
+                return new ActualResult { IsValid = false, ErrorsList = subdivision.ErrorsList };
+            }
+            await _database.SaveAsync();
+            return subdivision;
         }
 
         public async Task<ActualResult> RestructuringUnits(SubdivisionDTO dto)
         {
-            return await Task.Run(async () =>
+            var subdivision = _database.SubdivisionsRepository.Update(new Subdivisions
             {
-                var subdivision = _database.SubdivisionsRepository.Update(new Subdivisions
-                {
-                    Id = dto.Id,
-                    IdSubordinate = dto.IdSubordinate
-                });
-                if (subdivision.IsValid == false && subdivision.ErrorsList.Count > 0)
-                {
-                    return new ActualResult { IsValid = false, ErrorsList = subdivision.ErrorsList };
-                }
-                await _database.SaveAsync();
-                return subdivision;
+                Id = dto.Id,
+                IdSubordinate = dto.IdSubordinate
             });
+            if (subdivision.IsValid == false && subdivision.ErrorsList.Count > 0)
+            {
+                return new ActualResult { IsValid = false, ErrorsList = subdivision.ErrorsList };
+            }
+            await _database.SaveAsync();
+            return subdivision;
         }
 
         public async Task<ActualResult> Delete(long id)
         {
-            return await Task.Run(async () =>
+            var subdivision = _database.SubdivisionsRepository.Delete(id);
+            if (subdivision.IsValid == false && subdivision.ErrorsList.Count > 0)
             {
-                var subdivision = _database.SubdivisionsRepository.Delete(id);
-                if (subdivision.IsValid == false && subdivision.ErrorsList.Count > 0)
-                {
-                    return new ActualResult { IsValid = false, ErrorsList = subdivision.ErrorsList };
-                }
-                await _database.SaveAsync();
-                return subdivision;
-            });
+                return new ActualResult { IsValid = false, ErrorsList = subdivision.ErrorsList };
+            }
+            await _database.SaveAsync();
+            return subdivision;
         }
 
         public async Task<ActualResult> CheckName(string name)
