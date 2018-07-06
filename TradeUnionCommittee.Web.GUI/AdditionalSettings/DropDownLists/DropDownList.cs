@@ -1,10 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
-using System;
+﻿using System;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using TradeUnionCommittee.BLL.Interfaces.Account;
 using TradeUnionCommittee.BLL.Interfaces.Directory;
 
-namespace TradeUnionCommittee.Web.GUI.DropDownLists
+namespace TradeUnionCommittee.Web.GUI.AdditionalSettings.DropDownLists
 {
     public class DropDownList : IDropDownList
     {

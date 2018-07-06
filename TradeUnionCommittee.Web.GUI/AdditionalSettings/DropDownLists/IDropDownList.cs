@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
-namespace TradeUnionCommittee.Web.GUI.DropDownLists
+namespace TradeUnionCommittee.Web.GUI.AdditionalSettings.DropDownLists
 {
     public interface IDropDownList
     {

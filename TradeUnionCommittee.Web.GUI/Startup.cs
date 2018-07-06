@@ -13,8 +13,8 @@ using TradeUnionCommittee.BLL.Interfaces.Login;
 using TradeUnionCommittee.BLL.Services.Account;
 using TradeUnionCommittee.BLL.Services.Directory;
 using TradeUnionCommittee.BLL.Services.Login;
+using TradeUnionCommittee.Web.GUI.AdditionalSettings.DropDownLists;
 using TradeUnionCommittee.Web.GUI.AdditionalSettings.Oops;
-using TradeUnionCommittee.Web.GUI.DropDownLists;
 
 namespace TradeUnionCommittee.Web.GUI
 {

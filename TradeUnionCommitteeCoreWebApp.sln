@@ -19,7 +19,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TradeUnionCommittee.Api", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TradeUnionCommittee.Service", "TradeUnionCommittee.Service\TradeUnionCommittee.Service.csproj", "{D4EB1575-1CC0-42C9-9292-CA137203EF98}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TradeUnionCommittee.Encryption", "TradeUnionCommittee.Encryption\TradeUnionCommittee.Encryption.csproj", "{0B5F7892-65FF-442C-A7D5-9C971EEC97E7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TradeUnionCommittee.Encryption", "TradeUnionCommittee.Encryption\TradeUnionCommittee.Encryption.csproj", "{0B5F7892-65FF-442C-A7D5-9C971EEC97E7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
