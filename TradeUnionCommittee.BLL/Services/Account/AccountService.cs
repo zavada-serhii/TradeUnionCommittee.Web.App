@@ -121,6 +121,17 @@ namespace TradeUnionCommittee.BLL.Services.Account
             return user;
         }
 
+        public async Task<ActualResult> CheckEmail(string email)
+        {
+            return await Task.Run(() =>
+            {
+                var res = _database.UsersRepository.Find(p => p.Email == email);
+                return res.Result.Any() ?
+                    new ActualResult { IsValid = false } :
+                    new ActualResult { IsValid = true };
+            });
+        }
+
         //------------------------------------------------------------------------------------------------------------------------------------------
 
         public async Task<ActualResult<IEnumerable<RolesDTO>>> GetRoles()

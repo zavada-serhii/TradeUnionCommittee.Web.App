@@ -10,5 +10,7 @@ namespace TradeUnionCommittee.BLL.Interfaces.Account
         Task<ActualResult<IEnumerable<RolesDTO>>> GetRoles();
 
         Task<ActualResult<RolesDTO>> GetRoleId(long id);
+
+        Task<ActualResult> CheckEmail(string email);
     }
 }

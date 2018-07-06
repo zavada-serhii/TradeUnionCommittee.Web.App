@@ -46,7 +46,7 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Account
         [HttpPost, ActionName("Create")]
         [Authorize(Roles = "Admin")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CreateConfirmed(AccountViewModel vm)
+        public async Task<IActionResult> CreateConfirmed(CreateAccountViewModel vm)
         {
             if (ModelState.IsValid)
             {
@@ -72,8 +72,8 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Account
             {
                 ViewBag.Role = await _dropDownList.GetRoles();
 
-                var mapper = new MapperConfiguration(cfg => cfg.CreateMap<AccountDTO, AccountPersonalDataViewModel>()).CreateMapper();
-                return View(mapper.Map<AccountDTO, AccountPersonalDataViewModel>(result.Result));
+                var mapper = new MapperConfiguration(cfg => cfg.CreateMap<AccountDTO, UpdatePersonalDataAccountViewModel>()).CreateMapper();
+                return View(mapper.Map<AccountDTO, UpdatePersonalDataAccountViewModel>(result.Result));
             }
             return _oops.OutPutError("Account", "Index", result.ErrorsList);
         }
@@ -82,7 +82,7 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Account
         [HttpPost, ActionName("Update")]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> UpdateConfirmed(AccountPersonalDataViewModel vm)
+        public async Task<IActionResult> UpdateConfirmed(UpdatePersonalDataAccountViewModel vm)
         {
             if (ModelState.IsValid)
             {
@@ -107,14 +107,14 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Account
         public IActionResult UpdatePassword(long? id)
         {
             if (id == null) return NotFound();
-            var model = new AccountUpdatePasswordViewModel { IdUser = id};
+            var model = new UpdatePasswordAccountViewModel { IdUser = id};
             return View(model);
         }
 
         [HttpPost, ActionName("UpdatePassword")]
         [Authorize(Roles = "Admin")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> UpdatePasswordConfirmed(AccountUpdatePasswordViewModel vm)
+        public async Task<IActionResult> UpdatePasswordConfirmed(UpdatePasswordAccountViewModel vm)
         {
             if (ModelState.IsValid)
             {
@@ -152,6 +152,16 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Account
             return result.IsValid
                 ? RedirectToAction("Index")
                 : _oops.OutPutError("Account", "Index", result.ErrorsList);
+        }
+
+        //------------------------------------------------------------------------------------------------------------------------------------------
+
+        [AcceptVerbs("Get", "Post")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> CheckEmail(string email)
+        {
+            var result = await _accountService.CheckEmail(email);
+            return Json(result.IsValid);
         }
 
         //------------------------------------------------------------------------------------------------------------------------------------------

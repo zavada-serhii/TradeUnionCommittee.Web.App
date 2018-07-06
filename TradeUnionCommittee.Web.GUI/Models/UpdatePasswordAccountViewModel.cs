@@ -2,7 +2,7 @@
 
 namespace TradeUnionCommittee.Web.GUI.Models
 {
-    public class AccountUpdatePasswordViewModel
+    public class UpdatePasswordAccountViewModel
     {
         public long? IdUser { get; set; }
 
