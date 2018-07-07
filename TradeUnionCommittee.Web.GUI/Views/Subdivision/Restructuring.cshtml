@@ -1,0 +1,43 @@
+﻿@model RestructuringViewModel
+@{
+    ViewData["Title"] = "Restructuring";
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <h2>Перенести</h2>
+        <form asp-action="Restructuring">
+            <div class="form">
+                <hr />
+
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                <div class="row">
+                    <div class="form-group col-md-3">
+                        <label>Підрозділ</label>
+                        <select asp-for="IdSubordinateSubdivision" class="form-control" asp-items="ViewBag.SubordinateSubdivision"></select>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group col-md-3">
+                        <label>Структурний Підрозділ</label>
+                        <select asp-for="IdMainSubdivision" class="form-control" asp-items="ViewBag.MainSubdivision"></select>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-3 text-right">
+                        <input type="submit" value="Перенести" class="btn btn-success btn-default" />
+                    </div>
+                </div>
+
+            </div>
+        </form>
+
+        <div>
+            <a asp-action="Index">Повернутися до списку підрозділів</a>
+        </div>
+    </div>
+
+</div>

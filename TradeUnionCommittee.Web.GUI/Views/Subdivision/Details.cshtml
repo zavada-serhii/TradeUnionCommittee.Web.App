@@ -1,14 +1,16 @@
-﻿@model TradeUnionCommittee.Common.ActualResults.ActualResult<IEnumerable<TradeUnionCommittee.BLL.DTO.SubdivisionDTO>>
+﻿@model IEnumerable<TradeUnionCommittee.BLL.DTO.SubdivisionDTO>
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Details";
 }
 
+
 <div class="row">
-    <a asp-controller="Home" asp-action="Directory" class="back-link">Повернутися до списку довідників</a>
+    <a asp-controller="Subdivision" asp-action="Index">Повернутися до списку підрозділів</a>
     <hr />
     <div class="form-group">
-        <a asp-action="Create" class="btn btn-success">Додати структурний підрозділ</a>
-    </div>
+            <a asp-action="CreateSubordinate" asp-route-id="@ViewData["IdMainSubdivision"]" class="btn btn-success">Додати підрозділ</a>
+            <a asp-action="Restructuring" asp-route-id="@ViewData["IdMainSubdivision"]" class="btn btn-success">Перенести підрозділ в інший структурний підрозділ</a>
+        </div>
 </div>
 
 <div class="row main-block">
@@ -17,13 +19,13 @@
         <thead>
             <tr>
                 <th>
-                    Структурні підрозділи
+                    @ViewData["NameMainSubdivision"]
                 </th>
                 <th></th>
             </tr>
         </thead>
         <tbody>
-            @foreach (var item in Model.Result)
+            @foreach (var item in Model)
             {
                 <tr>
                     <td>
@@ -31,7 +33,6 @@
                     </td>
 
                     <td class="text-right">
-                        <a asp-action="Details" asp-route-id="@item.Id">Деталі</a> |
                         <a asp-action="Update" asp-route-id="@item.Id">Редагувати</a> |
                         <a asp-action="Delete" asp-route-id="@item.Id">Видалити</a>
                     </td>

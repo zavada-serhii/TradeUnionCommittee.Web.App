@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using TradeUnionCommittee.BLL.DTO;
 using TradeUnionCommittee.BLL.Interfaces.Directory;
+using TradeUnionCommittee.Web.GUI.AdditionalSettings.DropDownLists;
 using TradeUnionCommittee.Web.GUI.AdditionalSettings.Oops;
 using TradeUnionCommittee.Web.GUI.Models;
 
@@ -11,11 +13,13 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Directory
     public class SubdivisionController : Controller
     {
         private readonly ISubdivisionsService _services;
+        private readonly IDropDownList _dropDownList;
         private readonly IOops _oops;
 
-        public SubdivisionController(ISubdivisionsService services, IOops oops)
+        public SubdivisionController(ISubdivisionsService services, IDropDownList dropDownList, IOops oops)
         {
             _services = services;
+            _dropDownList = dropDownList;
             _oops = oops;
         }
 
@@ -109,6 +113,76 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Directory
         }
 
         //------------------------------------------------------------------------------------------------------------------------------------------
+
+        [HttpGet]
+        [Authorize(Roles = "Admin,Accountant,Deputy")]
+        public async Task<IActionResult> Details(long? id)
+        {
+            if (id == null) return NotFound();
+            var result = await _services.GetSubordinateSubdivisions(id.Value);
+            var nameMainSubdivision = await _services.GetAsync(id.Value);
+            ViewData["IdMainSubdivision"] = id;
+            ViewData["NameMainSubdivision"] = nameMainSubdivision.Result.DeptName;
+            return result.IsValid
+                ? View(result.Result) 
+                : _oops.OutPutError("Subdivision", "Index", result.ErrorsList);
+        }
+
+        //------------------------------------------------------------------------------------------------------------------------------------------
+
+        [HttpGet]
+        [Authorize(Roles = "Admin,Accountant,Deputy")]
+        public IActionResult CreateSubordinate(long? id)
+        {
+            return View(new SubdivisionViewModel { Id = id});
+        }
+
+        [HttpPost, ActionName("CreateSubordinate")]
+        [Authorize(Roles = "Admin,Accountant,Deputy")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CreateSubordinateConfirmed([Bind("Id,Name")] SubdivisionViewModel vm)
+        {
+            if (ModelState.IsValid)
+            {
+                var result = await _services.CreateAsync(new SubdivisionDTO { IdSubordinate = vm.Id, DeptName = vm.Name });
+                return result.IsValid
+                    ? RedirectToAction("Index")
+                    : _oops.OutPutError("Subdivision", "Index", result.ErrorsList);
+            }
+            return View(vm);
+        }
+
+        //------------------------------------------------------------------------------------------------------------------------------------------
+
+        [HttpGet]
+        [Authorize(Roles = "Admin,Accountant,Deputy")]
+        public async Task<IActionResult> Restructuring(long? id)
+        {
+            if (id == null) return NotFound();
+            var subordinateSubdivision = await _services.GetSubordinateSubdivisions(id.Value);
+            ViewBag.MainSubdivision = await _dropDownList.GetMainSubdivision();
+            ViewBag.SubordinateSubdivision = new SelectList(subordinateSubdivision.Result, "Id", "DeptName");
+            return View();
+        }
+
+        [HttpPost, ActionName("Restructuring")]
+        [Authorize(Roles = "Admin,Accountant,Deputy")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> RestructuringConfirmed(RestructuringViewModel vm)
+        {
+            if (ModelState.IsValid)
+            {
+                var result = await _services.RestructuringUnits(new SubdivisionDTO
+                {
+                    Id = vm.IdSubordinateSubdivision,
+                    IdSubordinate = vm.IdMainSubdivision
+                });
+                return result.IsValid
+                    ? RedirectToAction("Index")
+                    : _oops.OutPutError("Subdivision", "Index", result.ErrorsList);
+            }
+            return View(vm);
+        }
 
         //------------------------------------------------------------------------------------------------------------------------------------------
 
