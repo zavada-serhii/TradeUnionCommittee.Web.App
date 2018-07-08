@@ -1,4 +1,4 @@
-﻿@model TradeUnionCommittee.Common.ActualResults.ActualResult<IEnumerable<TradeUnionCommittee.BLL.DTO.SubdivisionDTO>>
+﻿@model IEnumerable<TradeUnionCommittee.BLL.DTO.DepartmentalDTO>
 @{
     ViewData["Title"] = "Index";
 }
@@ -7,7 +7,7 @@
     <a asp-controller="Home" asp-action="Directory" class="back-link">Повернутися до списку довідників</a>
     <hr />
     <div class="form-group">
-        <a asp-action="Create" class="btn btn-success">Додати структурний підрозділ</a>
+        <a asp-action="Create" class="btn btn-success">Додати відомче</a>
     </div>
 </div>
 
@@ -17,21 +17,32 @@
         <thead>
             <tr>
                 <th>
-                    Структурні підрозділи
+                    Місто
+                </th>
+                <th>
+                    Вулиця
+                </th>
+                <th>
+                    Номер дому
                 </th>
                 <th></th>
             </tr>
         </thead>
         <tbody>
-            @foreach (var item in Model.Result)
+            @foreach (var item in Model)
             {
                 <tr>
                     <td>
-                        @Html.DisplayFor(modelItem => item.DeptName)
+                        @Html.DisplayFor(modelItem => item.City)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Street)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.NumberHouse)
                     </td>
 
                     <td class="text-right">
-                        <a asp-action="Details" asp-route-id="@item.Id">Деталі</a> |
                         <a asp-action="Update" asp-route-id="@item.Id">Редагувати</a> |
                         @if (User.IsInRole("Admin"))
                         {
