@@ -1,0 +1,63 @@
+﻿@model IEnumerable<TradeUnionCommittee.BLL.DTO.DormitoryDTO>
+@{
+    ViewData["Title"] = "Index";
+}
+
+<div class="row">
+    <a asp-controller="Home" asp-action="Directory" class="back-link">Повернутися до списку довідників</a>
+    <hr />
+    <div class="form-group">
+        <a asp-action="Create" class="btn btn-success">Додати гуртожиток</a>
+    </div>
+</div>
+
+<div class="row main-block">
+
+    <table class="table">
+        <thead>
+        <tr>
+            <th>
+                Номер гуртожитку
+            </th>
+            <th>
+                Місто
+            </th>
+            <th>
+                Вулиця
+            </th>
+            <th>
+                Номер дому
+            </th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NumberDormitory)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.City)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Street)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NumberHouse)
+                </td>
+
+                <td class="text-right">
+                    <a asp-action="Update" asp-route-id="@item.Id">Редагувати</a> |
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <a asp-action="Delete" asp-route-id="@item.Id">Видалити</a>
+                    }
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+
+</div>

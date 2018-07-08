@@ -67,7 +67,8 @@ namespace TradeUnionCommittee.BLL.Services.Directory
             {
                 return new ActualResult { IsValid = false, ErrorsList = subdivision.ErrorsList };
             }
-            await _database.SaveAsync();
+            var dbState = await _database.SaveAsync();
+            subdivision.IsValid = dbState.IsValid;
             return subdivision;
         }
 
@@ -82,7 +83,8 @@ namespace TradeUnionCommittee.BLL.Services.Directory
             {
                 return new ActualResult { IsValid = false, ErrorsList = subdivision.ErrorsList };
             }
-            await _database.SaveAsync();
+            var dbState = await _database.SaveAsync();
+            subdivision.IsValid = dbState.IsValid;
             return subdivision;
         }
 
@@ -97,7 +99,8 @@ namespace TradeUnionCommittee.BLL.Services.Directory
             {
                 return new ActualResult { IsValid = false, ErrorsList = subdivision.ErrorsList };
             }
-            await _database.SaveAsync();
+            var dbState = await _database.SaveAsync();
+            subdivision.IsValid = dbState.IsValid;
             return subdivision;
         }
 
@@ -108,7 +111,8 @@ namespace TradeUnionCommittee.BLL.Services.Directory
             {
                 return new ActualResult { IsValid = false, ErrorsList = subdivision.ErrorsList };
             }
-            await _database.SaveAsync();
+            var dbState = await _database.SaveAsync();
+            subdivision.IsValid = dbState.IsValid;
             return subdivision;
         }
 

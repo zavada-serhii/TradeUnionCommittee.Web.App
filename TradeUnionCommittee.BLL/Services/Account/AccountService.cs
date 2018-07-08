@@ -77,7 +77,8 @@ namespace TradeUnionCommittee.BLL.Services.Account
             {
                 return new ActualResult { IsValid = false, ErrorsList = users.ErrorsList };
             }
-            await _database.SaveAsync();
+            var dbState = await _database.SaveAsync();
+            users.IsValid = dbState.IsValid;
             return users;
         }
 
@@ -106,7 +107,8 @@ namespace TradeUnionCommittee.BLL.Services.Account
             {
                 return new ActualResult { IsValid = false, ErrorsList = result.ErrorsList };
             }
-            await _database.SaveAsync();
+            var dbState = await _database.SaveAsync();
+            result.IsValid = dbState.IsValid;
             return result;
         }
 
@@ -117,7 +119,8 @@ namespace TradeUnionCommittee.BLL.Services.Account
             {
                 return new ActualResult { IsValid = false, ErrorsList = user.ErrorsList };
             }
-            await _database.SaveAsync();
+            var dbState = await _database.SaveAsync();
+            user.IsValid = dbState.IsValid;
             return user;
         }
 

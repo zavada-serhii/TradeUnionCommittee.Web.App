@@ -69,6 +69,6 @@ namespace TradeUnionCommittee.DAL.Interfaces
 
         //------------------------------------------------------------------------------------------------------------------------------------------
 
-        Task<ActualResult<int>> SaveAsync();
+        Task<ActualResult> SaveAsync();
     }
 }

@@ -1,0 +1,64 @@
+﻿@model DormitoryViewModel
+@{
+    ViewData["Title"] = "Create";
+}
+
+<div class="row">
+    <div class="col-md-12">
+
+        <h2>Додати</h2>
+
+        <form asp-action="Create">
+            <div class="form">
+                <h4>Гуртожиток</h4>
+                <hr />
+
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                <div class="row">
+                    <div class="form-group col-md-3">
+                        <label asp-for="NumberDormitory" class="info-label">Номер гутожитку</label>
+                        <input asp-for="NumberDormitory" class="form-control" />
+                        <span asp-validation-for="NumberDormitory" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group col-md-3">
+                        <label asp-for="City" class="info-label">Місто</label>
+                        <input asp-for="City" class="form-control" />
+                        <span asp-validation-for="City" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group col-md-3">
+                        <label asp-for="Street" class="info-label">Вулиця</label>
+                        <input asp-for="Street" class="form-control" />
+                        <span asp-validation-for="Street" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group col-md-3">
+                        <label asp-for="NumberHouse" class="info-label">Номер дому</label>
+                        <input asp-for="NumberHouse" class="form-control" />
+                        <span asp-validation-for="NumberHouse" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-3 text-right">
+                        <input type="submit" value="Додати" class="btn btn-success btn-default" />
+                    </div>
+                </div>
+
+            </div>
+        </form>
+
+        <div>
+            <a asp-action="Index">Повернутися до списку гуртожитків</a>
+        </div>
+    </div>
+
+</div>

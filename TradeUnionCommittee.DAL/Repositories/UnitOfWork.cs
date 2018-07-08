@@ -146,12 +146,12 @@ namespace TradeUnionCommittee.DAL.Repositories
 
         //------------------------------------------------------------------------------------------------------------------------------------------
 
-        public async Task<ActualResult<int>> SaveAsync()
+        public async Task<ActualResult> SaveAsync()
         {
-            var result  = new ActualResult<int>();
+            var result = new ActualResult();
             try
             {
-                result.Result = await _context.SaveChangesAsync();
+                await _context.SaveChangesAsync();
             }
             catch (Exception e)
             {
