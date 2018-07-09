@@ -31,8 +31,8 @@
                     </td>
 
                     <td class="text-right">
-                        <a asp-action="Details" asp-route-id="@item.Id">Деталі</a> |
-                        <a asp-action="Update" asp-route-id="@item.Id">Редагувати</a> |
+                        <a asp-action="Details" asp-route-id="@item.Id">Деталі</a>
+                        <a asp-action="Update" asp-route-id="@item.Id">Редагувати</a>
                         @if (User.IsInRole("Admin"))
                         {
                             <a asp-action="Delete" asp-route-id="@item.Id">Видалити</a>
