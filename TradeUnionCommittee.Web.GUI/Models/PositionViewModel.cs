@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace TradeUnionCommittee.Web.GUI.Models
 {
-    public class PositionViewModel : DirectoryViewModel
+    public class PositionViewModel : BaseDirectoryViewModel
     {
         public override long? Id { get; set; }
 

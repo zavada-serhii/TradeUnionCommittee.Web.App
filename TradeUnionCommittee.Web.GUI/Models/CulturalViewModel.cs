@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace TradeUnionCommittee.Web.GUI.Models
 {
-    public class CulturalViewModel : DirectoryViewModel
+    public class CulturalViewModel : BaseDirectoryViewModel
     {
         public override long? Id { get; set; }
 

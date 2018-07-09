@@ -1,6 +1,6 @@
 ﻿namespace TradeUnionCommittee.Web.GUI.Models
 {
-    public abstract class DirectoryViewModel
+    public abstract class BaseDirectoryViewModel
     {
         public virtual long? Id { get; set; }
 
