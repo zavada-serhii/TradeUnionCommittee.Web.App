@@ -1,0 +1,38 @@
+﻿@model HobbyViewModel
+@{
+    ViewData["Title"] = "Create";
+}
+
+<div class="row">
+    <div class="col-md-12">
+
+        <h2>Додати</h2>
+
+        <form asp-action="Create">
+            <div class="form">
+                <h4>Хобі</h4>
+                <hr />
+
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="row">
+                    <div class="form-group col-md-3">
+                        <label asp-for="Name" class="info-label">Назва хобі</label>
+                        <input asp-for="Name" class="form-control" />
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-3 text-right">
+                        <input type="submit" value="Додати" class="btn btn-success btn-default" />
+                    </div>
+                </div>
+
+            </div>
+        </form>
+
+        <div>
+            <a asp-action="Index">Повернутися до списку хобі</a>
+        </div>
+    </div>
+
+</div>

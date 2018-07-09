@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>@ViewData["Title"] - UI</title>
+    <title>@ViewData["Title"] - ППО ОНУ ім. І.І.Мечникова</title>
     <environment include="Development">
         <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
         <link rel="stylesheet" href="~/lib/jquery-editable-select/jquery-editable-select.min.css" />
@@ -27,28 +27,32 @@
                 @if (User.IsInRole("Admin") || User.IsInRole("Accountant"))
                 {
                     <li class="nav-item">
-                        <a class="navbar-brand" asp-area="" asp-controller="AddEmployee" asp-action="Index">Додати нового співробітника</a>
+                        <a class="nav-link" asp-area="" asp-controller="AddEmployee" asp-action="Index">Додати нового співробітника</a>
                     </li>
                 }
 
                 <li class="nav-item">
-                    <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Directory">Довідники</a>
+                    <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Directory">Довідники</a>
                 </li>
 
                 @if (User.IsInRole("Admin"))
                 {
                     <li class="nav-item">
-                        <a class="navbar-brand" asp-area="" asp-controller="Account" asp-action="Index">Користувачі</a>
+                        <a class="nav-link" asp-area="" asp-controller="Account" asp-action="Index">Користувачі</a>
                     </li>
                 }
 
                 <li class="nav-item">
-                    <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="SignOut">Вийти</a>
+                    <a class="nav-link" asp-area="" @*asp-controller="Home" asp-action="SignOut"*@>Співробітники(Temporarily)</a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" asp-area="" @*asp-controller="Search" asp-action="Index" *@>Пошуки(In developing)</a>
                 </li>
 
-                @*<li class="nav-item">
-            <a asp-area="" asp-controller="Search" asp-action="Index" class="nav-link">Пошуки</a>
-        </li>*@
+                <li class="nav-item">
+                    <a class="nav-link" asp-area="" asp-controller="Home" asp-action="SignOut">Вийти</a>
+                </li>
 
             </ul>
         </div>
