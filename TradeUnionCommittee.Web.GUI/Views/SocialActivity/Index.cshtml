@@ -1,17 +1,13 @@
 ﻿@model IEnumerable<TradeUnionCommittee.BLL.DTO.DirectoryDTO>
-
 @{
-    ViewBag.Title = "Index";
-    Layout = "_Layout";
+    ViewData["Title"] = "Index";
 }
-
-
 
 <div class="row">
     <a asp-controller="Home" asp-action="Directory" class="back-link">Повернутися до списку довідників</a>
     <hr />
     <div class="form-group">
-        <a asp-action="Create" class="btn btn-success">Додати посаду</a>
+        <a asp-action="Create" class="btn btn-success">Додати громадську посаду</a>
     </div>
 </div>
 
@@ -21,7 +17,7 @@
         <thead>
             <tr>
                 <th>
-                    Посади
+                    Громадські посади
                 </th>
                 <th></th>
             </tr>

@@ -9,12 +9,12 @@ using TradeUnionCommittee.Web.GUI.Models;
 
 namespace TradeUnionCommittee.Web.GUI.Controllers.Directory
 {
-    public class PositionController : Controller
+    public class MaterialAidController : Controller
     {
-        private readonly IPositionService _services;
+        private readonly IMaterialAidService _services;
         private readonly IOops _oops;
 
-        public PositionController(IPositionService services, IOops oops)
+        public MaterialAidController(IMaterialAidService services, IOops oops)
         {
             _services = services;
             _oops = oops;
@@ -23,7 +23,7 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Directory
         //------------------------------------------------------------------------------------------------------------------------------------------
 
         [HttpGet]
-        [Authorize(Roles = "Admin,Accountant,Deputy")]
+        [Authorize(Roles = "Admin,Accountant")]
         public async Task<IActionResult> Index()
         {
             var result = await _services.GetAllAsync();
@@ -33,23 +33,23 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Directory
         //------------------------------------------------------------------------------------------------------------------------------------------
 
         [HttpGet]
-        [Authorize(Roles = "Admin,Accountant,Deputy")]
+        [Authorize(Roles = "Admin,Accountant")]
         public IActionResult Create()
         {
             return View();
         }
 
         [HttpPost]
-        [Authorize(Roles = "Admin,Accountant,Deputy")]
+        [Authorize(Roles = "Admin,Accountant")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Name")] PositionViewModel vm)
+        public async Task<IActionResult> Create([Bind("Name")] MaterialAidViewModel vm)
         {
             if (ModelState.IsValid)
             {
                 var result = await _services.CreateAsync(new DirectoryDTO { Name = vm.Name });
                 return result.IsValid
                     ? RedirectToAction("Index")
-                    : _oops.OutPutError("Position", "Index", result.ErrorsList);
+                    : _oops.OutPutError("MaterialAid", "Index", result.ErrorsList);
             }
             return View(vm);
         }
@@ -57,23 +57,23 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Directory
         //------------------------------------------------------------------------------------------------------------------------------------------
 
         [HttpGet]
-        [Authorize(Roles = "Admin,Accountant,Deputy")]
+        [Authorize(Roles = "Admin,Accountant")]
         public async Task<IActionResult> Update(long? id)
         {
             if (id == null) return NotFound();
             var result = await _services.GetAsync(id.Value);
             if (result.IsValid)
             {
-                var mapper = new MapperConfiguration(cfg => cfg.CreateMap<DirectoryDTO, PositionViewModel>()).CreateMapper();
-                return View(mapper.Map<DirectoryDTO, PositionViewModel>(result.Result));
+                var mapper = new MapperConfiguration(cfg => cfg.CreateMap<DirectoryDTO, MaterialAidViewModel>()).CreateMapper();
+                return View(mapper.Map<DirectoryDTO, MaterialAidViewModel>(result.Result));
             }
-            return _oops.OutPutError("Position", "Index", result.ErrorsList);
+            return _oops.OutPutError("MaterialAid", "Index", result.ErrorsList);
         }
 
         [HttpPost, ActionName("Update")]
-        [Authorize(Roles = "Admin,Accountant,Deputy")]
+        [Authorize(Roles = "Admin,Accountant")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> UpdateConfirmed([Bind("Id,Name")] PositionViewModel vm)
+        public async Task<IActionResult> UpdateConfirmed([Bind("Id,Name")] MaterialAidViewModel vm)
         {
             if (ModelState.IsValid)
             {
@@ -81,7 +81,7 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Directory
                 var result = await _services.UpdateAsync(new DirectoryDTO { Id = vm.Id.Value, Name = vm.Name });
                 return result.IsValid
                     ? RedirectToAction("Index")
-                    : _oops.OutPutError("Position", "Index", result.ErrorsList);
+                    : _oops.OutPutError("MaterialAid", "Index", result.ErrorsList);
             }
             return View(vm);
         }
@@ -94,9 +94,9 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Directory
         {
             if (id == null) return NotFound();
             var result = await _services.GetAsync(id.Value);
-            return result.IsValid 
-                ? View(result.Result) 
-                : _oops.OutPutError("Position", "Index", result.ErrorsList);
+            return result.IsValid
+                ? View(result.Result)
+                : _oops.OutPutError("MaterialAid", "Index", result.ErrorsList);
         }
 
         [HttpPost, ActionName("Delete")]
@@ -108,13 +108,13 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Directory
             var result = await _services.DeleteAsync(id.Value);
             return result.IsValid
                 ? RedirectToAction("Index")
-                : _oops.OutPutError("Position", "Index", result.ErrorsList);
+                : _oops.OutPutError("MaterialAid", "Index", result.ErrorsList);
         }
 
         //------------------------------------------------------------------------------------------------------------------------------------------
 
         [AcceptVerbs("Get", "Post")]
-        [Authorize(Roles = "Admin,Accountant,Deputy")]
+        [Authorize(Roles = "Admin,Accountant")]
         public async Task<IActionResult> CheckName(string name)
         {
             var result = await _services.CheckNameAsync(name);

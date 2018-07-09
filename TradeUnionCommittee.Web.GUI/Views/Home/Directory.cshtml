@@ -7,10 +7,10 @@
     @if (User.IsInRole("Admin") || User.IsInRole("Accountant"))
     {
         <li><a asp-area="" asp-controller="Position" asp-action="Index">Посади</a></li>
-        <li><a @*asp-area="" asp-controller="SocialActivity" asp-action="Index" *@>Громадські посади</a></li>
-        <li><a @*asp-area="" asp-controller="Privileges" asp-action="Index" *@>Пільги</a></li>
-        <li><a @*asp-area="" asp-controller="Award" asp-action="Index" *@>Матеріальні заохочення</a></li>
-        <li><a @*asp-area="" asp-controller="MaterialAid" asp-action="Index" *@>Матеріальні допомоги</a></li>
+        <li><a asp-area="" asp-controller="SocialActivity" asp-action="Index">Громадські посади</a></li>
+        <li><a asp-area="" asp-controller="Privileges" asp-action="Index">Пільги</a></li>
+        <li><a asp-area="" asp-controller="Award" asp-action="Index">Матеріальні заохочення</a></li>
+        <li><a asp-area="" asp-controller="MaterialAid" asp-action="Index">Матеріальні допомоги</a></li>
         <li><a @*asp-area="" asp-controller="Hobby" asp-action="Index" *@>Хобі</a></li>
         <li><a @*asp-area="" asp-controller="Travel" asp-action="Index" *@>Подорожі</a></li>
         <li><a @*asp-area="" asp-controller="Wellness" asp-action="Index" *@>Оздоровлення</a></li>
@@ -25,7 +25,7 @@
     @if (User.IsInRole("Deputy"))
     {
         <li><a asp-area="" asp-controller="Position" asp-action="Index">Посади</a></li>
-        <li><a @*asp-area="" asp-controller="SocialActivity" asp-action="Index" *@>Громадські посади</a></li>
+        <li><a asp-area="" asp-controller="SocialActivity" asp-action="Index">Громадські посади</a></li>
         <li><a asp-area="" asp-controller="Subdivision" asp-action="Index">Структурні підрозділи</a></li>
         <li><a @*asp-area="" asp-controller="Travel" asp-action="Index" *@>Подорожі</a></li>
         <li><a @*asp-area="" asp-controller="Wellness" asp-action="Index" *@>Оздоровлення</a></li>

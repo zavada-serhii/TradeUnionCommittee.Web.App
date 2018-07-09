@@ -9,12 +9,12 @@ using TradeUnionCommittee.Web.GUI.Models;
 
 namespace TradeUnionCommittee.Web.GUI.Controllers.Directory
 {
-    public class PositionController : Controller
+    public class SocialActivityController : Controller
     {
-        private readonly IPositionService _services;
+        private readonly ISocialActivityService _services;
         private readonly IOops _oops;
 
-        public PositionController(IPositionService services, IOops oops)
+        public SocialActivityController(ISocialActivityService services, IOops oops)
         {
             _services = services;
             _oops = oops;
@@ -42,14 +42,14 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Directory
         [HttpPost]
         [Authorize(Roles = "Admin,Accountant,Deputy")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Name")] PositionViewModel vm)
+        public async Task<IActionResult> Create([Bind("Name")] SocialActivityViewModel vm)
         {
             if (ModelState.IsValid)
             {
                 var result = await _services.CreateAsync(new DirectoryDTO { Name = vm.Name });
                 return result.IsValid
                     ? RedirectToAction("Index")
-                    : _oops.OutPutError("Position", "Index", result.ErrorsList);
+                    : _oops.OutPutError("SocialActivity", "Index", result.ErrorsList);
             }
             return View(vm);
         }
@@ -64,16 +64,16 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Directory
             var result = await _services.GetAsync(id.Value);
             if (result.IsValid)
             {
-                var mapper = new MapperConfiguration(cfg => cfg.CreateMap<DirectoryDTO, PositionViewModel>()).CreateMapper();
-                return View(mapper.Map<DirectoryDTO, PositionViewModel>(result.Result));
+                var mapper = new MapperConfiguration(cfg => cfg.CreateMap<DirectoryDTO, SocialActivityViewModel>()).CreateMapper();
+                return View(mapper.Map<DirectoryDTO, SocialActivityViewModel>(result.Result));
             }
-            return _oops.OutPutError("Position", "Index", result.ErrorsList);
+            return _oops.OutPutError("SocialActivity", "Index", result.ErrorsList);
         }
 
         [HttpPost, ActionName("Update")]
         [Authorize(Roles = "Admin,Accountant,Deputy")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> UpdateConfirmed([Bind("Id,Name")] PositionViewModel vm)
+        public async Task<IActionResult> UpdateConfirmed([Bind("Id,Name")] SocialActivityViewModel vm)
         {
             if (ModelState.IsValid)
             {
@@ -81,7 +81,7 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Directory
                 var result = await _services.UpdateAsync(new DirectoryDTO { Id = vm.Id.Value, Name = vm.Name });
                 return result.IsValid
                     ? RedirectToAction("Index")
-                    : _oops.OutPutError("Position", "Index", result.ErrorsList);
+                    : _oops.OutPutError("SocialActivity", "Index", result.ErrorsList);
             }
             return View(vm);
         }
@@ -94,9 +94,9 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Directory
         {
             if (id == null) return NotFound();
             var result = await _services.GetAsync(id.Value);
-            return result.IsValid 
-                ? View(result.Result) 
-                : _oops.OutPutError("Position", "Index", result.ErrorsList);
+            return result.IsValid
+                ? View(result.Result)
+                : _oops.OutPutError("SocialActivity", "Index", result.ErrorsList);
         }
 
         [HttpPost, ActionName("Delete")]
@@ -108,7 +108,7 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Directory
             var result = await _services.DeleteAsync(id.Value);
             return result.IsValid
                 ? RedirectToAction("Index")
-                : _oops.OutPutError("Position", "Index", result.ErrorsList);
+                : _oops.OutPutError("SocialActivity", "Index", result.ErrorsList);
         }
 
         //------------------------------------------------------------------------------------------------------------------------------------------
