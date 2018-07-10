@@ -1,6 +1,8 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System.Threading.Tasks;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TradeUnionCommittee.BLL.DTO;
 using TradeUnionCommittee.BLL.Services.Directory;
+using TradeUnionCommittee.BLL.Services.Search;
 using TradeUnionCommittee.DAL.Repositories;
 
 namespace TradeUnionCommittee.BLL.Tests
@@ -43,6 +45,17 @@ namespace TradeUnionCommittee.BLL.Tests
         {
             var result = _service.DeleteAsync(8);
             Assert.AreEqual(result.Result.IsValid, true);
+        }
+
+
+        private readonly SearchService _searchService = new SearchService(new UnitOfWork("Host=127.0.0.1;Port=5432;Database=TradeUnionCommitteeEmployeesCore;Username=postgres;Password=postgres"));
+
+
+        [TestMethod]
+        public async Task TestSearchService()
+        {
+            var result = await _searchService.ListAddedEmployeesTemp();
+            //Assert.AreEqual(result.Result.IsValid, true);
         }
     }
 }

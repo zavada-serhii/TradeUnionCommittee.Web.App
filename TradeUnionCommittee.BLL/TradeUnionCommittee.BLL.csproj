@@ -14,4 +14,9 @@
     <ProjectReference Include="..\TradeUnionCommittee.Encryption\TradeUnionCommittee.Encryption.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Interfaces\Search\" />
+    <Folder Include="Services\Search\" />
+  </ItemGroup>
+
 </Project>
