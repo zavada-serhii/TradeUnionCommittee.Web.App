@@ -31,7 +31,20 @@ namespace TradeUnionCommittee.BLL.Services.Search
                     listLong.Add(subdivisionse.Id);
                     listLong.Add(subdivisionse.IdSubordinate);
                 }
-
+                
+                /*
+                --Initial SQL Query
+                
+                SELECT COALESCE(ss.DeptName,s.DeptName) AS MainSubdivision, 
+                CASE WHEN ss.DeptName IS NULL THEN NULL ELSE s.DeptName END AS SubordinateSubdivision 
+                
+                FROM maindb.StructuralSubdivision AS s 
+                JOIN maindb.StructuralSubdivision AS ss ON s.DeptKod IN (ss.PKod, ss.DeptKod) 
+                JOIN maindb.ListPositionSubdivision AS ls ON ls.NameSubdivision = ss.DeptKod 
+                JOIN maindb.EmployeesUniversity AS e ON e.ID = ls.IDEmployees
+                
+                */
+                
                 //var result = (from e in employees
                 //              join pe in positionEmployees on e.Id equals pe.IdEmployee
                 //              join s in subdivision on pe.IdSubdivision equals s.Id
