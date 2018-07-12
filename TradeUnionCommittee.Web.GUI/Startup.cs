@@ -10,9 +10,11 @@ using TradeUnionCommittee.BLL.Infrastructure;
 using TradeUnionCommittee.BLL.Interfaces.Account;
 using TradeUnionCommittee.BLL.Interfaces.Directory;
 using TradeUnionCommittee.BLL.Interfaces.Login;
+using TradeUnionCommittee.BLL.Interfaces.Search;
 using TradeUnionCommittee.BLL.Services.Account;
 using TradeUnionCommittee.BLL.Services.Directory;
 using TradeUnionCommittee.BLL.Services.Login;
+using TradeUnionCommittee.BLL.Services.Search;
 using TradeUnionCommittee.Web.GUI.AdditionalSettings.DropDownLists;
 using TradeUnionCommittee.Web.GUI.AdditionalSettings.Oops;
 
@@ -50,6 +52,7 @@ namespace TradeUnionCommittee.Web.GUI
             new ServiceModule(Configuration.GetConnectionString("DefaultConnection"), services);
 
             DependencyInjectionService(services);
+            DependencyInjectionSearch(services);
             DependencyInjectionSystem(services);
         }
 
@@ -101,6 +104,11 @@ namespace TradeUnionCommittee.Web.GUI
             services.AddScoped<ISubdivisionsService, SubdivisionsService>();
             services.AddScoped<IDormitoryService, DormitoryService>();
             services.AddScoped<IDepartmentalService, DepartmentalService>();
+        }
+
+        private void DependencyInjectionSearch(IServiceCollection services)
+        {
+            services.AddScoped<ISearchService, SearchService>();
         }
 
         private void DependencyInjectionSystem(IServiceCollection services)
