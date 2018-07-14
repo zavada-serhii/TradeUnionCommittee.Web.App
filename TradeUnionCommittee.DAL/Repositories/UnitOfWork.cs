@@ -155,6 +155,7 @@ namespace TradeUnionCommittee.DAL.Repositories
             }
             catch (Exception e)
             {
+                _context.UndoChanges();
                 result.IsValid = false;
                 result.ErrorsList.Add(e.Message);
             }

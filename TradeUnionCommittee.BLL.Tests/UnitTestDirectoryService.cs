@@ -1,7 +1,9 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TradeUnionCommittee.BLL.DTO;
 using TradeUnionCommittee.BLL.Services.Directory;
+using TradeUnionCommittee.BLL.Services.Employee;
 using TradeUnionCommittee.BLL.Services.Search;
 using TradeUnionCommittee.DAL.Repositories;
 
@@ -56,6 +58,29 @@ namespace TradeUnionCommittee.BLL.Tests
         {
             var result = await _searchService.ListAddedEmployeesTemp();
             //Assert.AreEqual(result.Result.IsValid, true);
+        }
+
+        private readonly EmployeeService _employeeService = new EmployeeService(new UnitOfWork("Host=127.0.0.1;Port=5432;Database=TradeUnionCommitteeEmployeesCore;Username=postgres;Password=postgres"));
+
+        [TestMethod]
+        public async Task TestEmployeeService()
+        {
+            var result = await _employeeService.AddEmployee(new AddEmployeeDTO
+            {
+                FirstName = "Петров",
+                SecondName = "Петр",
+                Patronymic = "Петрович",
+                Sex = "Male",
+                BasicProfission = "Программист",
+                BirthDate = Convert.ToDateTime("01.01.1970"),
+                StartYearWork = 1990,
+                StartDateTradeUnion = Convert.ToDateTime("01.01.1990"),
+                IdentificationСode = "0000000001",
+                MechnikovCard = "0-000000-000001",
+                MobilePhone = "+38(050)000-00-01",
+                CityPhone = "000-00-01",
+                Note = "Примечание"
+            });
         }
     }
 }

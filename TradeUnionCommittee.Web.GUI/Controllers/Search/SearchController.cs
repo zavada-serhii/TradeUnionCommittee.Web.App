@@ -24,7 +24,7 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Search
         public async Task<IActionResult> ResultSearch()
         {
             var result = await _services.ListAddedEmployeesTemp();
-            return View(result);
+            return View(result.Result);
         }
     }
 }
