@@ -64,28 +64,6 @@ namespace TradeUnionCommittee.BLL.Services.Employee
             return new ActualResult {IsValid = result.IsValid};
         }
 
-        public async Task<ActualResult> CheckIdentificationСode(string identificationСode)
-        {
-            return await Task.Run(() =>
-            {
-                var code = _database.EmployeeRepository.Find(i => i.IdentificationСode == identificationСode);
-                return code.Result.Any() ?
-                    new ActualResult { IsValid = false } :
-                    new ActualResult { IsValid = true };
-            });
-        }
-
-        public async Task<ActualResult> CheckMechnikovCard(string mechnikovCard)
-        {
-            return await Task.Run(() =>
-            {
-                var card = _database.EmployeeRepository.Find(p => p.MechnikovCard == mechnikovCard);
-                return card.Result.Any() ?
-                    new ActualResult { IsValid = false } :
-                    new ActualResult { IsValid = true };
-            });
-        }
-
         private void AddEducation(AddEmployeeDTO dto)
         {
             _database.EducationRepository.Create(new Education
@@ -181,6 +159,28 @@ namespace TradeUnionCommittee.BLL.Services.Employee
                 IdPrivileges = dto.IdPrivileges,
                 Note = dto.NotePrivileges,
                 CheckPrivileges = true
+            });
+        }
+
+        public async Task<ActualResult> CheckIdentificationСode(string identificationСode)
+        {
+            return await Task.Run(() =>
+            {
+                var code = _database.EmployeeRepository.Find(i => i.IdentificationСode == identificationСode);
+                return code.Result.Any() ?
+                    new ActualResult { IsValid = false } :
+                    new ActualResult { IsValid = true };
+            });
+        }
+
+        public async Task<ActualResult> CheckMechnikovCard(string mechnikovCard)
+        {
+            return await Task.Run(() =>
+            {
+                var card = _database.EmployeeRepository.Find(p => p.MechnikovCard == mechnikovCard);
+                return card.Result.Any() ?
+                    new ActualResult { IsValid = false } :
+                    new ActualResult { IsValid = true };
             });
         }
 

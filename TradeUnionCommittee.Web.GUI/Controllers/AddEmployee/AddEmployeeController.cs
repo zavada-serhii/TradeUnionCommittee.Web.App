@@ -41,7 +41,8 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.AddEmployee
             if (ModelState.IsValid)
             {
                 var mapper = new MapperConfiguration(cfg => cfg.CreateMap<AddEmployeeViewModel, AddEmployeeDTO>().
-                ForMember("IdSubdivision", opt => opt.MapFrom(c => vm.SubordinateSubdivision ?? vm.MainSubdivision))).CreateMapper();
+                ForMember("IdSubdivision", opt => opt.MapFrom(c => vm.SubordinateSubdivision ?? vm.MainSubdivision)).
+                ForMember("CityPhone", opt => opt.MapFrom(c => vm.CityPhoneAdditional ?? vm.CityPhone))).CreateMapper();
 
                 var result = await _services.AddEmployeeAsync(mapper.Map<AddEmployeeViewModel, AddEmployeeDTO>(vm));
                 return result.IsValid

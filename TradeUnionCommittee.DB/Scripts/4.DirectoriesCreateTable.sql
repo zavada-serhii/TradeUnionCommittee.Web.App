@@ -41,8 +41,9 @@ INSERT INTO  "TypeEvent" ("Name") VALUES
 
 CREATE TABLE "Event" (
 	"Id" 		BIGSERIAL	NOT NULL	PRIMARY KEY,
-	"Name"		VARCHAR		NOT NULL	UNIQUE,
-	"TypeId" 	BIGINT 		NOT NULL 	UNIQUE REFERENCES "TypeEvent"("Id")
+	"Name"		VARCHAR		NOT NULL,
+	"TypeId" 	BIGINT 		NOT NULL 	REFERENCES "TypeEvent"("Id"),
+	UNIQUE("Name", "TypeId")
 );
 ALTER TABLE "Event"
 OWNER TO AdminTradeUnionCommitteeEmployees;
