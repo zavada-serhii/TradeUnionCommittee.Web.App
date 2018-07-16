@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.DTO;
 using TradeUnionCommittee.BLL.Interfaces.Employee;
 using TradeUnionCommittee.Common.ActualResults;
@@ -16,7 +17,7 @@ namespace TradeUnionCommittee.BLL.Services.Employee
             _database = database;
         }
 
-        public async Task<ActualResult> AddEmployee(AddEmployeeDTO dto)
+        public async Task<ActualResult> AddEmployeeAsync(AddEmployeeDTO dto)
         { 
             var employee = new DAL.Entities.Employee
             {
@@ -63,6 +64,28 @@ namespace TradeUnionCommittee.BLL.Services.Employee
             return new ActualResult {IsValid = result.IsValid};
         }
 
+        public async Task<ActualResult> CheckIdentificationСode(string identificationСode)
+        {
+            return await Task.Run(() =>
+            {
+                var code = _database.EmployeeRepository.Find(i => i.IdentificationСode == identificationСode);
+                return code.Result.Any() ?
+                    new ActualResult { IsValid = false } :
+                    new ActualResult { IsValid = true };
+            });
+        }
+
+        public async Task<ActualResult> CheckMechnikovCard(string mechnikovCard)
+        {
+            return await Task.Run(() =>
+            {
+                var card = _database.EmployeeRepository.Find(p => p.MechnikovCard == mechnikovCard);
+                return card.Result.Any() ?
+                    new ActualResult { IsValid = false } :
+                    new ActualResult { IsValid = true };
+            });
+        }
+
         private void AddEducation(AddEmployeeDTO dto)
         {
             _database.EducationRepository.Create(new Education
@@ -81,7 +104,7 @@ namespace TradeUnionCommittee.BLL.Services.Employee
                 IdEmployee = dto.IdEmployee,
                 IdPosition = dto.Position,
                 StartDate = dto.StartDatePosition,
-                IdSubdivision = dto.MainSubdivision != 0 ? dto.MainSubdivision : dto.SubordinateSubdivision
+                IdSubdivision = dto.IdSubdivision
             });
         }
 
@@ -159,6 +182,11 @@ namespace TradeUnionCommittee.BLL.Services.Employee
                 Note = dto.NotePrivileges,
                 CheckPrivileges = true
             });
+        }
+
+        public void Dispose()
+        {
+            _database.Dispose();
         }
     }
 }

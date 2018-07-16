@@ -6,6 +6,11 @@ namespace TradeUnionCommittee.BLL.Interfaces.Employee
 {
     public interface IEmployeeService
     {
-        Task<ActualResult> AddEmployee(AddEmployeeDTO dto);
+        Task<ActualResult> AddEmployeeAsync(AddEmployeeDTO dto);
+
+        Task<ActualResult> CheckIdentificationСode(string identificationСode);
+        Task<ActualResult> CheckMechnikovCard(string mechnikovCard);
+
+        void Dispose();
     }
 }

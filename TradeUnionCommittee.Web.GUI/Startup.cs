@@ -1,4 +1,5 @@
-﻿using FluentValidation.AspNetCore;
+﻿using FluentValidation;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -9,14 +10,18 @@ using Microsoft.Extensions.DependencyInjection;
 using TradeUnionCommittee.BLL.Infrastructure;
 using TradeUnionCommittee.BLL.Interfaces.Account;
 using TradeUnionCommittee.BLL.Interfaces.Directory;
+using TradeUnionCommittee.BLL.Interfaces.Employee;
 using TradeUnionCommittee.BLL.Interfaces.Login;
 using TradeUnionCommittee.BLL.Interfaces.Search;
 using TradeUnionCommittee.BLL.Services.Account;
 using TradeUnionCommittee.BLL.Services.Directory;
+using TradeUnionCommittee.BLL.Services.Employee;
 using TradeUnionCommittee.BLL.Services.Login;
 using TradeUnionCommittee.BLL.Services.Search;
 using TradeUnionCommittee.Web.GUI.AdditionalSettings.DropDownLists;
 using TradeUnionCommittee.Web.GUI.AdditionalSettings.Oops;
+using TradeUnionCommittee.Web.GUI.FluentValidation;
+using TradeUnionCommittee.Web.GUI.Models;
 
 namespace TradeUnionCommittee.Web.GUI
 {
@@ -54,6 +59,7 @@ namespace TradeUnionCommittee.Web.GUI
             DependencyInjectionService(services);
             DependencyInjectionSearch(services);
             DependencyInjectionSystem(services);
+            DependencyInjectionFluentValidation(services);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -88,6 +94,7 @@ namespace TradeUnionCommittee.Web.GUI
             services.AddScoped<ILoginService, LoginService>();
             services.AddScoped<IAccountService, AccountService>();
 
+            services.AddScoped<IEmployeeService, EmployeeService>();
             services.AddScoped<IEducationService, EducationService>();
             services.AddScoped<IScientificService, ScientificService>();
             services.AddScoped<IPositionService, PositionService>();
@@ -115,6 +122,11 @@ namespace TradeUnionCommittee.Web.GUI
         {
             services.AddScoped<IOops, Oops>();
             services.AddScoped<IDropDownList, DropDownList>();
+        }
+
+        private void DependencyInjectionFluentValidation(IServiceCollection services)
+        {
+            services.AddScoped<IValidator<AddEmployeeViewModel>, AddEmployeeValidation>();
         }
     }
 }

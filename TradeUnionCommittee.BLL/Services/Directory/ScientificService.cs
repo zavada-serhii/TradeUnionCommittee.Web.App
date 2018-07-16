@@ -22,7 +22,7 @@ namespace TradeUnionCommittee.BLL.Services.Directory
             {
                 return new ActualResult<IEnumerable<string>>
                 {
-                    Result = _database.ScientificRepository.GetAll().Result.Select(x => x.ScientificDegree).ToList()
+                    Result = _database.ScientificRepository.GetAll().Result.Select(x => x.ScientificDegree).Distinct().ToList()
                 };
             });
         }
@@ -33,7 +33,7 @@ namespace TradeUnionCommittee.BLL.Services.Directory
             {
                 return new ActualResult<IEnumerable<string>>
                 {
-                    Result = _database.ScientificRepository.GetAll().Result.Select(x => x.ScientificTitle).ToList()
+                    Result = _database.ScientificRepository.GetAll().Result.Select(x => x.ScientificTitle).Distinct().ToList()
                 };
             });
         }

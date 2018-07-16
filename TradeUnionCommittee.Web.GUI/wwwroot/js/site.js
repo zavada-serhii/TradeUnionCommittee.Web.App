@@ -56,23 +56,45 @@ $(function ()
     $("#year-education").mask("9999");
 });
 
+//------------------------------------------------------------------------------------------------------------------------------------------
+
+$(document).ready(function ()
+{
+    if (window.location.pathname === "/AddEmployee/Index")
+    {
+        var idSubordinateSubdivision = { id: $("#selectMain").val() };
+        $.post("/AddEmployee/GetSubordinateSubdivision", idSubordinateSubdivision, getSubordinateSubdivision);
+    }
+    if (window.location.pathname === "/Search")
+    {
+        document.getElementById("dormitory").checked = true;
+        document.getElementById("idDepartmental").disabled = true;
+        document.getElementById("idDormitory").disabled = false;
+
+        document.getElementById("employeeBirthDate").checked = true;
+        document.getElementById("employeeHobby").checked = true;
+
+        document.getElementById("home-phone").value = "";
+        document.getElementById("home-phone1").value = "";
+    }
+});
+
 $("#selectMain").change(function ()
 {
     var idSubordinateSubdivision = { id: $(this).val() };
-
-    $.post("/NewEmployees/GetSubordinateSubdivision", idSubordinateSubdivision, getSubordinateSubdivision);
+    $.post("/AddEmployee/GetSubordinateSubdivision", idSubordinateSubdivision, getSubordinateSubdivision);
 });
 
 function getSubordinateSubdivision(subordinateSubdivision)
 {
-    document.getElementById('subordinateSubdivision').innerHTML = ' ';
-
+    document.getElementById("subordinateSubdivision").innerHTML = " ";
     if (subordinateSubdivision !== null)
     {
-        $("#subordinateSubdivision").append("<option>Виберіть кафедру</option>");
-        $.each(subordinateSubdivision, function (i)
+        //$("#subordinateSubdivision").append("<option>Виберіть кафедру</option>");
+        $("#subordinateSubdivision").append("<option value value = null >Виберіть кафедру</option>");
+        $.each(subordinateSubdivision, function ()
         {
-            $("#subordinateSubdivision").append("<option value=" + this.id + ">" + this.name + "</option>");
+            $("#subordinateSubdivision").append("<option value=" + this.id + ">" + this.deptName + "</option>");
         });
     }
     else
@@ -80,6 +102,8 @@ function getSubordinateSubdivision(subordinateSubdivision)
         $("#subordinateSubdivision").append("<option>Кафедри відсутні</option>");
     }
 }
+
+//------------------------------------------------------------------------------------------------------------------------------------------
 
 $('input[name=CityPhone]').change(function ()
 {
@@ -102,28 +126,6 @@ $('input[name=CityPhoneAdditional]').change(function ()
     else
     {
         document.getElementById('home-phone').readOnly = false;
-    }
-});
-
-$(document).ready(function ()
-{
-    if (window.location.pathname === '/NewEmployees')
-    {
-        var idSubordinateSubdivision = { id: $('#selectMain').val() };
-        $.post("/NewEmployees/GetSubordinateSubdivision", idSubordinateSubdivision, getSubordinateSubdivision);
-    }
-
-    if (window.location.pathname === '/Search')
-    {
-        document.getElementById("dormitory").checked = true;
-        document.getElementById('idDepartmental').disabled = true;
-        document.getElementById('idDormitory').disabled = false;
-
-        document.getElementById("employeeBirthDate").checked = true;
-        document.getElementById("employeeHobby").checked = true;
-
-        document.getElementById("home-phone").value = "";
-        document.getElementById("home-phone1").value = "";
     }
 });
 

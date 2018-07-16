@@ -1,5 +1,4 @@
-﻿@using TradeUnionCommittee.Web.GUI.Models
-@model AddEmployeeViewModel
+﻿@model AddEmployeeViewModel
 @{
     ViewData["Title"] = "Додати нового члена профспілки";
 }
@@ -14,7 +13,7 @@
                 </div>
             </div>
             <hr>
-            <form asp-action="">
+            <form asp-action="AddEmployee">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 <div class="row">
                     <div class="form-group col-md-4">

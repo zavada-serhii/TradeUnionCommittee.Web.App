@@ -1,5 +1,7 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using TradeUnionCommittee.BLL.DTO;
 
 namespace TradeUnionCommittee.Web.GUI.AdditionalSettings.DropDownLists
 {
@@ -9,7 +11,7 @@ namespace TradeUnionCommittee.Web.GUI.AdditionalSettings.DropDownLists
         Task<SelectList> GetLevelEducation();
         Task<SelectList> GetStudy();
         Task<SelectList> GetMainSubdivision();
-        //Task<List<Subdivision>> GetSubordinateSubdivision(int id);
+        Task<List<SubdivisionDTO>> GetSubordinateSubdivisions(long id);
         Task<SelectList> GetPosition();
         Task<SelectList> GetDormitory();
         Task<SelectList> GetDepartmental();

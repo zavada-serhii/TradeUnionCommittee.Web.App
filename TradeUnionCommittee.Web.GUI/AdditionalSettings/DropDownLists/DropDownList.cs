@@ -1,5 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using System.Collections.Generic;
+using System.Linq;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Threading.Tasks;
+using TradeUnionCommittee.BLL.DTO;
 using TradeUnionCommittee.BLL.Interfaces.Account;
 using TradeUnionCommittee.BLL.Interfaces.Directory;
 
@@ -85,6 +88,18 @@ namespace TradeUnionCommittee.Web.GUI.AdditionalSettings.DropDownLists
         {
             var subdivision = await _subdivisionsService.GetAllAsync();
             return subdivision.IsValid ? new SelectList(subdivision.Result, "Id", "DeptName") : null;
+        }
+
+        public async Task<List<SubdivisionDTO>> GetSubordinateSubdivisions(long id)
+        {
+            var subordinateSubdivision = await _subdivisionsService.GetSubordinateSubdivisions(id);
+            List<SubdivisionDTO> listSubordinateSubdivision = null;
+            if (subordinateSubdivision.IsValid && subordinateSubdivision.Result.Any())
+            {
+                listSubordinateSubdivision = new List<SubdivisionDTO>();
+                listSubordinateSubdivision.AddRange(subordinateSubdivision.Result);
+            }
+            return listSubordinateSubdivision;
         }
 
         public async Task<SelectList> GetPosition()

@@ -25,8 +25,7 @@ namespace TradeUnionCommittee.BLL.DTO
 
         public long Position { get; set; }
         public DateTime StartDatePosition { get; set; }
-        public long MainSubdivision { get; set; }
-        public long SubordinateSubdivision { get; set; }
+        public long IdSubdivision { get; set; }
 
         //------------------------------------------------------------------------------------------------------------------------------------------
         
