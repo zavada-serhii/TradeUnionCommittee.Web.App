@@ -33,7 +33,7 @@
                 <td>@res.MainSubdivision</td>
                 <td>@res.SubordinateSubdivision</td>
                 <td>
-                    <a>Переглянути картку</a>
+                    <a asp-controller="MainInfoEmployee" asp-action="Index" asp-route-id="@res.IdUser">Переглянути картку</a>
                 </td>
             </tr>
         }

@@ -162,6 +162,29 @@ namespace TradeUnionCommittee.BLL.Services.Employee
             });
         }
 
+        //------------------------------------------------------------------------------------------------------------------------------------------
+
+        public Task<ActualResult<MainInfoEmployeeDTO>> GetMainInfoEmployeeAsync(long id)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        //------------------------------------------------------------------------------------------------------------------------------------------
+
+        public Task<ActualResult> UpdateMainInfoEmployeeAsync(MainInfoEmployeeDTO dto)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        //------------------------------------------------------------------------------------------------------------------------------------------
+
+        public Task<ActualResult> DeleteAsync(long id)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        //------------------------------------------------------------------------------------------------------------------------------------------
+
         public async Task<ActualResult> CheckIdentificationСode(string identificationСode)
         {
             return await Task.Run(() =>
@@ -183,6 +206,8 @@ namespace TradeUnionCommittee.BLL.Services.Employee
                     new ActualResult { IsValid = true };
             });
         }
+
+        //------------------------------------------------------------------------------------------------------------------------------------------
 
         public void Dispose()
         {
