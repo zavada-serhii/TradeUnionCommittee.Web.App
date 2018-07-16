@@ -85,7 +85,7 @@ namespace TradeUnionCommittee.Web.GUI
             {
                 routes.MapRoute(
                     name: "default",
-                    template: "{controller=Login}/{action=Login}/{id?}");
+                    template: "{controller=Home}/{action=Directory}/{id?}");
             });
         }
 
