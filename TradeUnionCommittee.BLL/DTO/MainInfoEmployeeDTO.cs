@@ -15,14 +15,14 @@ namespace TradeUnionCommittee.BLL.DTO
         public string MechnikovCard { get; set; }
         public string MobilePhone { get; set; }
         public string CityPhone { get; set; }
-        public string CityPhone2 { get; set; }
+        public string Note { get; set; }
 
-        public string BasicProfission { get; set; }
+        public string BasicProfession { get; set; }
         public int StartYearWork { get; set; }
         public int EndYearWork { get; set; }
 
         public DateTime StartDateTradeUnion { get; set; }
-        public DateTime EndDateTradeUnion { get; set; }
+        public DateTime? EndDateTradeUnion { get; set; }
 
         public string ScientifickDegree { get; set; }
         public string ScientifickTitle { get; set; }
@@ -30,7 +30,5 @@ namespace TradeUnionCommittee.BLL.DTO
         public string LevelEducation { get; set; }
         public string NameInstitution { get; set; }
         public int? YearReceiving { get; set; }
-
-        public string Note { get; set; }
     }
 }

@@ -1,5 +1,8 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using TradeUnionCommittee.BLL.DTO;
 using TradeUnionCommittee.BLL.Interfaces.Employee;
 using TradeUnionCommittee.Common.ActualResults;
@@ -164,9 +167,39 @@ namespace TradeUnionCommittee.BLL.Services.Employee
 
         //------------------------------------------------------------------------------------------------------------------------------------------
 
-        public Task<ActualResult<MainInfoEmployeeDTO>> GetMainInfoEmployeeAsync(long id)
+        public async Task<ActualResult<MainInfoEmployeeDTO>> GetMainInfoEmployeeAsync(long id)
         {
-            throw new System.NotImplementedException();
+            return await Task.Run(() =>
+            {
+                var mapper = new MapperConfiguration(cfg => cfg.CreateMap<DAL.Entities.Employee, MainInfoEmployeeDTO>()
+                .ForMember("IdEmployee", opt => opt.MapFrom(c => c.Id))
+                .ForMember("CountYear", opt => opt.MapFrom(c => CalculateAge(c.BirthDate)))).CreateMapper();
+                var employee =  mapper.Map<ActualResult<DAL.Entities.Employee>, ActualResult<MainInfoEmployeeDTO>>(_database.EmployeeRepository.Get(id));
+
+                var education = _database.EducationRepository.Get(id).Result;
+                var scientifick = _database.ScientificRepository.Get(id).Result;
+
+                employee.Result.LevelEducation = education.LevelEducation;
+                employee.Result.NameInstitution = education.NameInstitution;
+                employee.Result.YearReceiving = education.DateReceiving;
+
+                if (scientifick != null)
+                {
+                    employee.Result.ScientifickDegree = scientifick.ScientificDegree;
+                    employee.Result.ScientifickTitle = scientifick.ScientificTitle;
+                }
+                return employee;
+            });
+        }
+
+        private int CalculateAge(DateTime birthDate)
+        {
+            var yearsPassed = DateTime.Now.Year - birthDate.Year;
+            if (DateTime.Now.Month < birthDate.Month || (DateTime.Now.Month == birthDate.Month && DateTime.Now.Day < birthDate.Day))
+            {
+                yearsPassed--;
+            }
+            return yearsPassed;
         }
 
         //------------------------------------------------------------------------------------------------------------------------------------------

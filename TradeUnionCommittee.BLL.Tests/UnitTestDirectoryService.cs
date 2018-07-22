@@ -60,27 +60,12 @@ namespace TradeUnionCommittee.BLL.Tests
             //Assert.AreEqual(result.Result.IsValid, true);
         }
 
-        private readonly EmployeeService _employeeService = new EmployeeService(new UnitOfWork("Host=127.0.0.1;Port=5432;Database=TradeUnionCommitteeEmployeesCore;Username=postgres;Password=postgres"));
+        private readonly EmployeeService _employeeService = new EmployeeService(new UnitOfWork("Server=anton-db-server.postgres.database.azure.com;Database=TradeUnionCommitteeEmployeesCore;Port=5432;User Id=postgres@anton-db-server;Password=7355608@123veyder;"));
 
         [TestMethod]
         public async Task TestEmployeeService()
         {
-            var result = await _employeeService.AddEmployee(new AddEmployeeDTO
-            {
-                FirstName = "Петров",
-                SecondName = "Петр",
-                Patronymic = "Петрович",
-                Sex = "Male",
-                BasicProfission = "Программист",
-                BirthDate = Convert.ToDateTime("01.01.1970"),
-                StartYearWork = 1990,
-                StartDateTradeUnion = Convert.ToDateTime("01.01.1990"),
-                IdentificationСode = "0000000001",
-                MechnikovCard = "0-000000-000001",
-                MobilePhone = "+38(050)000-00-01",
-                CityPhone = "000-00-01",
-                Note = "Примечание"
-            });
+            var result = await _employeeService.GetMainInfoEmployeeAsync(1);
         }
     }
 }
