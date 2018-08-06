@@ -1,4 +1,4 @@
-﻿
+﻿@model TradeUnionCommittee.BLL.DTO.MainInfoEmployeeDTO
 @{
     ViewData["Title"] = "Index";
 }
@@ -27,9 +27,9 @@
     <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Посади та Пiльги</a>
         <div class="dropdown-menu">
-            <a class="dropdown-item" href="main-position.html">Основна посада</a>
-            <a class="dropdown-item" href="main-social.html">Громадська посада</a>
-            <a class="dropdown-item" href="aid-position.html">Пiльга</a>
+            <a class="dropdown-item" href="#">Основна посада</a>
+            <a class="dropdown-item" href="#">Громадська посада</a>
+            <a class="dropdown-item" href="#">Пiльга</a>
         </div>
     </li>
 
@@ -43,7 +43,7 @@
     </li>
 
     <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Заходи та хобi</a>
+        <a class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Заходи та хобi</a>
         <div class="dropdown-menu">
             <a class="dropdown-item" href="#">Поїздки</a>
             <a class="dropdown-item" href="#">Оздоровлення</a>
@@ -56,7 +56,7 @@
     </li>
 
     <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Додаткова інформація</a>
+        <a class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Додаткова інформація</a>
         <div class="dropdown-menu">
             <a class="dropdown-item" href="#">Флюрографічні обстеження</a>
             <a class="dropdown-item" href="#">Квартирний облік</a>
@@ -64,7 +64,7 @@
     </li>
 
     <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Сім'я</a>
+        <a class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Сім'я</a>
         <div class="dropdown-menu">
             <a class="dropdown-item" href="#">Члени ciмї</a>
             <a class="dropdown-item" href="#">Дiти</a>
@@ -73,7 +73,7 @@
     </li>
 
     <li class="nav-item">
-        <a class="nav-link" href="reports.html">Звiти</a>
+        <a class="nav-link" href="#">Звiти</a>
     </li>
 </ul>
     
@@ -86,82 +86,91 @@
     </div>
 </div>
 <hr>
-<form class="">
     <div class="row">
         <div class="form-group col-md-4">
             <label>Прiзвище</label>
-            <input type="text" name="surname" class="form-control" placeholder="Іванов">
+            <p class="h4">@Model.FirstName</p>
         </div>
         <div class="form-group col-md-4">
             <label>Iм'я</label>
-            <input type="text" name="name" class="form-control" placeholder="Іван">
+            <p class="h4">@Model.SecondName</p>
         </div>
 
-        <div class="form-group col-md-4">
-            <label>По батьковi</label>
-            <input type="text" name="middle-name" class="form-control" placeholder="Іванович">
-        </div>
+        @if (Model.Patronymic != null)
+        {
+            <div class="form-group col-md-4">
+                <label>По батьковi</label>
+                <p class="h4">@Model.Patronymic</p>
+            </div>
+        }
+
     </div>
 
     <div class="row">
+
         <div class="form-group col-md-4">
             <label>Стать</label>
             <div class="">
-                <label class="custom-control custom-radio">
-                    <input id="male" name="gender" type="radio" class="custom-control-input">
-                    <span class="custom-control-indicator"></span>
-                    <span class="custom-control-description">Чоловіча</span>
-                </label>
-                <label class="custom-control custom-radio">
-                    <input id="female" name="gender" type="radio" class="custom-control-input">
-                    <span class="custom-control-indicator"></span>
-                    <span class="custom-control-description">Жіноча</span>
-                </label>
+                <p class="h4">@Model.Sex</p>
             </div>
         </div>
 
-
-    </div>
-
-    <div class="row">
-
         <div class="form-group col-md-4">
             <label>Дата народження</label>
-            <input type="date" class="form-control" name="ident-code">
+            <p class="h4">@Model.BirthDate.ToString("dd.MM.yyyy")</p>
         </div>
 
         <div class="form-group col-md-2">
             <label>Вiк</label>
-            <input type="text" name="name" class="form-control" placeholder="35" readonly>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="form-group col-md-4">
-            <label>Iдентифiкацiйний код</label>
-            <input type="text" class="form-control" name="ident-code" placeholder="111111111111">
+            <p class="h4">@Model.CountYear</p>
         </div>
 
-        <div class="form-group col-md-4">
-            <label>MECHNIKOV TEACHER CARD</label>
-            <input type="text" class="form-control" name="ident-code" placeholder="111111111111">
-        </div>
     </div>
 
-    <div class="row">
-        <div class="form-group col-lg-6 col-xl-4">
-            <label>Мобiльний номер</label>
-            <input type="text" name="mobile-phone" class="form-control" placeholder="+38 (000) 000-00-00">
+    @if (Model.IdentificationСode != null || Model.MechnikovCard != null)
+    {
+        <div class="row">
+
+            @if (Model.IdentificationСode != null && (User.IsInRole("Admin") || User.IsInRole("Accountant")))
+            {
+                <div class="form-group col-md-4">
+                    <label>Iдентифiкацiйний код</label>
+                    <p class="h4">@Model.IdentificationСode</p>
+                </div>
+            }
+
+            @if (Model.MechnikovCard != null)
+            {
+                <div class="form-group col-md-4">
+                    <label>MECHNIKOV TEACHER CARD</label>
+                    <p class="h4">@Model.MechnikovCard</p>
+                </div>
+            }
+
         </div>
-        <div class="form-group col-lg-6 col-xl-4">
-            <label>Мicкий номер</label>
-            <input type="text" name="home-phone" class="form-control" placeholder="000-00-0">
+    }
+
+    @if (Model.MobilePhone != null || Model.CityPhone != null)
+    {
+        <div class="row">
+
+            @if (Model.MobilePhone != null)
+            {
+                <div class="form-group col-lg-6 col-xl-4">
+                    <label>Мобiльний номер</label>
+                    <p class="h4">@Model.MobilePhone</p>
+                </div>
+            }
+
+            @if (Model.CityPhone != null)
+            {
+                <div class="form-group col-lg-6 col-xl-4">
+                    <label>Мicкий номер</label>
+                    <p class="h4">@Model.CityPhone</p>
+                </div>
+            }
         </div>
-        <div class="form-group col-lg-6 col-xl-4">
-            <label>Мicкий номер</label>
-            <input type="text" name="home-phone" class="form-control" placeholder="000-00-00">
-        </div>
-    </div>
+    }
 
     <hr>
 
@@ -170,16 +179,21 @@
         <div class="row">
             <div class="form-group col-lg-6 col-xl-4">
                 <label>Основна професiя</label>
-                <input type="text" name="main-proff" class="form-control" placeholder="Математик, програміст">
+                <p class="h4">@Model.BasicProfession</p>
             </div>
             <div class="form-group col-lg-6 col-xl-4">
                 <label>Рiк початку роботи в ОНУ</label>
-                <input type="date" name="work-date-start" class="form-control">
+                <p class="h4">@Model.StartYearWork</p>
             </div>
-            <div class="form-group col-lg-6 col-xl-4">
-                <label>Рiк завершення роботи в ОНУ</label>
-                <input type="date" style="flex-direction: row" name="" class="form-control">
-            </div>
+
+            @if (Model.EndYearWork != 0)
+            {
+                <div class="form-group col-lg-6 col-xl-4">
+                    <label>Рiк завершення роботи в ОНУ</label>
+                    <p class="h4">@Model.EndYearWork</p>
+                </div>
+            }
+
         </div>
     </fieldset>
 
@@ -190,12 +204,16 @@
         <div class="row">
             <div class="form-group col-lg-6 col-xl-4">
                 <label>Дата вступу в ППО</label>
-                <input type="date" name="work-date-start" class="form-control">
+                <p class="h4">@Model.StartDateTradeUnion.ToString("dd.MM.yyyy")</p>
             </div>
-            <div class="form-group col-lg-6 col-xl-4">
-                <label>Дата виходу з ППО</label>
-                <input type="date" style="flex-direction: row" name="" class="form-control">
-            </div>
+
+            @if (Model.EndDateTradeUnion != null)
+            {
+                <div class="form-group col-lg-6 col-xl-4">
+                    <label>Дата виходу з ППО</label>
+                    <p class="h4">@Model.EndDateTradeUnion</p>
+                </div>
+            }
         </div>
     </fieldset>
 
@@ -206,55 +224,76 @@
         <div class="row">
             <div class="form-group col-lg-6 col-xl-4">
                 <label>Рівень освіти</label>
-                <select type="text" name="mobile-phone" class="form-control"></select>
+                <p class="h4">@Model.LevelEducation</p>
             </div>
             <div class="form-group col-lg-6 col-xl-4">
                 <label>Місце навцання</label>
-                <select type="text" name="mobile-phone" class="form-control"></select>
+                <p class="h4">@Model.NameInstitution</p>
             </div>
-            <div class="form-group col-lg-6 col-xl-4">
-                <label>Рiк отримання</label>
-                <input style="flex-direction: row" name="" class="form-control">
-            </div>
+
+            @if (Model.YearReceiving != null)
+            {
+                <div class="form-group col-lg-6 col-xl-4">
+                    <label>Рiк отримання</label>
+                    <p class="h4">@Model.YearReceiving</p>
+                </div>
+            }
         </div>
     </fieldset>
 
-    <hr>
+    @if (Model.ScientifickTitle != null || Model.ScientifickDegree != null)
+    {
+        <hr>
 
-    <fieldset class="form-group">
-        <legend>Кваліфікація</legend>
-        <div class="row">
-            <div class="form-group col-lg-6 col-xl-4">
-                <label>Учений ступінь</label>
-                <select type="text" name="mobile-phone" class="form-control"></select>
-            </div>
-            <div class="form-group col-lg-6 col-xl-4">
-                <label>Наукове звання</label>
-                <select type="text" name="mobile-phone" class="form-control"></select>
-            </div>
-        </div>
-    </fieldset>
+        <fieldset class="form-group">
+            <legend>Кваліфікація</legend>
+            <div class="row">
 
-    <hr>
+                @if (Model.ScientifickTitle != null)
+                {
+                    <div class="form-group col-lg-6 col-xl-4">
+                        <label>Учений ступінь</label>
+                        <p class="h4">@Model.ScientifickTitle</p>
+                    </div>
+                }
 
-    <fieldset class="form-group">
-        <legend>Примiтка</legend>
-        <div class="row">
-            <div class="form-group col-lg-12">
-                <textarea class="form-control" rows="6"></textarea>
+                @if (Model.ScientifickDegree != null)
+                {
+                    <div class="form-group col-lg-6 col-xl-4">
+                        <label>Наукове звання</label>
+                        <p class="h4">@Model.ScientifickDegree</p>
+                    </div>
+                }
+
             </div>
-        </div>
-    </fieldset>
+        </fieldset>
+    }
+
+    @if (Model.Note != null)
+    {
+        <hr>
+
+        <fieldset class="form-group">
+            <legend>Примiтка</legend>
+            <div class="row">
+                <div class="form-group col-lg-12">
+                    <p class="h4">@Model.Note</p>
+                </div>
+            </div>
+        </fieldset>
+    }
 
     <div class="row justify-content-end">
         <div class="col-md-6 text-right">
-            <a href="#" class="btn btn-success"><i class="fas fa-edit"></i>Редагувати</a>
-            <a href="#" class="btn btn-danger"><i class="fas fa-trash-alt"></i>Видалити члена профспілки</a>
+            <a asp-action="Update" asp-route="@Model.IdEmployee"  class="btn btn-success"><i class="fas fa-edit"></i>Редагувати</a>
+            
+            @if (User.IsInRole("Admin"))
+            {
+                <a asp-action="Delete" asp-route="@Model.IdEmployee" class="btn btn-danger"><i class="fas fa-trash-alt"></i>Видалити члена профспілки</a>
+            }
+
         </div>
     </div>
-
-</form>
-				
 				
 </div>
 </div>

@@ -173,7 +173,9 @@ namespace TradeUnionCommittee.BLL.Services.Employee
             {
                 var mapper = new MapperConfiguration(cfg => cfg.CreateMap<DAL.Entities.Employee, MainInfoEmployeeDTO>()
                 .ForMember("IdEmployee", opt => opt.MapFrom(c => c.Id))
-                .ForMember("CountYear", opt => opt.MapFrom(c => CalculateAge(c.BirthDate)))).CreateMapper();
+                .ForMember("CountYear", opt => opt.MapFrom(c => CalculateAge(c.BirthDate)))
+                .ForMember("Sex", opt => opt.MapFrom(c => ConvertToUkraine(c.Sex)))
+                ).CreateMapper();
                 var employee =  mapper.Map<ActualResult<DAL.Entities.Employee>, ActualResult<MainInfoEmployeeDTO>>(_database.EmployeeRepository.Get(id));
 
                 var education = _database.EducationRepository.Get(id).Result;
@@ -190,6 +192,18 @@ namespace TradeUnionCommittee.BLL.Services.Employee
                 }
                 return employee;
             });
+        }
+
+        private string ConvertToUkraine(string sex)
+        {
+            switch (sex)
+            {
+                case "Male":
+                    return new string("Чоловіча");
+                case "Female":
+                    return new string("Жіноча");
+            }
+            return sex;
         }
 
         private int CalculateAge(DateTime birthDate)
