@@ -14,9 +14,11 @@
                 </div>
             </div>
             <hr>
-            <form class="">
+            <form asp-action="Update">
 
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                
+                <input asp-for="IdEmployee" type="hidden"/>
 
                 <div class="row">
                     <div class="form-group col-md-4">
@@ -40,20 +42,39 @@
                     <div class="form-group col-md-4">
                         <label>Стать</label>
                         <div class="">
-                            <label class="custom-control custom-radio">
-                                <input id="male" name="gender" type="radio" class="custom-control-input">
-                                <span class="custom-control-indicator"></span>
-                                <span class="custom-control-description">Чоловіча</span>
-                            </label>
-                            <label class="custom-control custom-radio">
-                                <input id="female" name="gender" type="radio" class="custom-control-input">
-                                <span class="custom-control-indicator"></span>
-                                <span class="custom-control-description">Жіноча</span>
-                            </label>
+                            @if (Model.Sex == "Чоловіча")
+                            {
+                                <label class="custom-control custom-radio">
+                                    <input asp-for="Sex" value="Male" type="radio" checked class="custom-control-input">
+                                    <span class="custom-control-indicator"></span>
+                                    <span class="custom-control-description">Чоловіча</span>
+                                </label>
+
+                                <label class="custom-control custom-radio">
+                                    <input asp-for="Sex" value="Female" type="radio" class="custom-control-input">
+                                    <span class="custom-control-indicator"></span>
+                                    <span class="custom-control-description">Жіноча</span>
+                                </label>
+                            }
+
+                            @if (Model.Sex == "Жіноча")
+                            {
+                                <label class="custom-control custom-radio">
+                                    <input asp-for="Sex" value="Male" type="radio" class="custom-control-input">
+                                    <span class="custom-control-indicator"></span>
+                                    <span class="custom-control-description">Чоловіча</span>
+                                </label>
+
+                                <label class="custom-control custom-radio">
+                                    <input asp-for="Sex" value="Female" type="radio" checked class="custom-control-input">
+                                    <span class="custom-control-indicator"></span>
+                                    <span class="custom-control-description">Жіноча</span>
+                                </label>
+                            }
+
+                            <span asp-validation-for="Sex" class="text-danger"></span>
                         </div>
                     </div>
-
-
                 </div>
 
                 <div class="row">
@@ -128,7 +149,7 @@
                     </div>
                 </fieldset>
 
-                <hr>
+                @*<hr>
 
                 <fieldset class="form-group">
                     <legend>Освіта</legend>
@@ -164,7 +185,7 @@
                             <select asp-for="ScientifickDegree" type="text" class="form-control"></select>
                         </div>
                     </div>
-                </fieldset>
+                </fieldset>*@
 
                 <hr>
 
@@ -179,7 +200,7 @@
 
                 <div class="row justify-content-end">
                     <div class="col-md-6 text-right">
-                        <a href="#" class="btn btn-success"><i class="fas fa-edit"></i>Редагувати</a>
+                        <input type="submit" value="Редагувати" class="btn btn-success" />
                     </div>
                 </div>
             </form>
