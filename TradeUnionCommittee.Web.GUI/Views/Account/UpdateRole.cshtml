@@ -1,7 +1,6 @@
-﻿@using TradeUnionCommittee.Web.GUI.Models
-@model UpdatePasswordAccountViewModel
+﻿@model UpdateRoleAccountViewModel
 @{
-    ViewData["Title"] = "UpdatePassword";
+    ViewData["Title"] = "UpdateRole";
 }
 
 <section class="add-user container-fluid">
@@ -9,27 +8,20 @@
         <div class="col-md-12 add-user_block">
             <div class="row align-items-center mt-3">
                 <div class="col-md-10">
-                    <h2>Редагування паролю</h2>
+                    <h2>Редагування ролі</h2>
                 </div>
             </div>
             <hr>
-            <form asp-action="UpdatePassword">
+            <form asp-action="UpdateRole">
                 <div class="row">
 
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-
                     <input type="hidden" asp-for="IdUser" />
 
                     <div class="form-group col-lg-4 col-xl-3">
-                        <label asp-for="Password" class="info-label">Пароль</label>
-                        <input asp-for="Password" class="form-control" />
-                        <span asp-validation-for="Password" class="text-danger"></span>
-                    </div>
-
-                    <div class="form-group col-lg-4 col-xl-3">
-                        <label asp-for="ConfirmPassword" class="info-label">Підтвердження паролю</label>
-                        <input asp-for="ConfirmPassword" class="form-control" />
-                        <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                        <label asp-for="IdRole" class="info-label">Роль доступу</label>
+                        <select asp-for="IdRole" asp-items="@ViewBag.Role" class="custom-select"></select>
+                        <span asp-validation-for="IdRole" class="text-danger"></span>
                     </div>
 
                 </div>

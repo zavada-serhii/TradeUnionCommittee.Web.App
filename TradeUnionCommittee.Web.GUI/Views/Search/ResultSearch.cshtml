@@ -3,40 +3,54 @@
     ViewData["Title"] = "ResultSearch";
 }
 
-<div class="list_block container-fluid">
-    <div class="row align-items-center">
-        <div class="col-lg-8 col-xl-9">
-            <h2 class="top">Результат пошуку</h2>
+
+<section class="add-user container-fluid">
+    <div class="row justify-content-center">
+        <div class="col-md-12 add-user_block">
+            <div class="list_block container-fluid">
+                <div class="row align-items-center">
+                    <div class="col-lg-8 col-xl-9">
+                        <h2 class="top">Результат пошуку</h2>
+                    </div>
+                </div>
+		
+                <table class="table">
+                    <thead class="thead-default">
+                    <tr>
+                        <th>ПІБ</th>
+                        <th>Дата народження</th>
+                        <th>Мобільний номер</th>
+                        <th>Міский номер</th>
+                        <th>Структурний підрозділ</th>
+                        <th>Кафедра</th>
+                        <th>Деталі</th>
+                    </tr>
+                    </thead>
+        
+                    @foreach (var res in Model)
+                    {
+                        <tr>
+                            <td>@res.FullName</td>
+                            <td>@res.BirthDate.ToString("dd.MM.yyyy")</td>
+                            <td>@res.MobilePhone</td>
+                            <td>@res.CityPhone</td>
+                            <td>@res.MainSubdivision</td>
+                            <td>@res.SubordinateSubdivision</td>
+                            <td>
+                                <a asp-controller="MainInfoEmployee" asp-action="Index" asp-route-id="@res.IdUser">Докладніше</a>
+                            </td>
+                        </tr>
+                    }
+                </table>
+		
+            </div>
         </div>
     </div>
-		
-    <table class="table">
-        <thead class="thead-default">
-        <tr>
-            <th>ПІБ</th>
-            <th>Дата народження</th>
-            <th>Мобільний номер</th>
-            <th>Міский номер</th>
-            <th>Структурний підрозділ</th>
-            <th>Кафедра</th>
-            <th>Деталі</th>
-        </tr>
-        </thead>
-        
-        @foreach (var res in Model)
-        {
-            <tr>
-                <td>@res.FullName</td>
-                <td>@res.BirthDate.ToString("dd.MM.yyyy")</td>
-                <td>@res.MobilePhone</td>
-                <td>@res.CityPhone</td>
-                <td>@res.MainSubdivision</td>
-                <td>@res.SubordinateSubdivision</td>
-                <td>
-                    <a asp-controller="MainInfoEmployee" asp-action="Index" asp-route-id="@res.IdUser">Переглянути картку</a>
-                </td>
-            </tr>
-        }
-    </table>
-		
-</div>
+</section>
+
+
+       
+    
+
+
+

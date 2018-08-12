@@ -15,7 +15,8 @@ namespace TradeUnionCommittee.Web.GUI.AdditionalSettings
             return new MapperConfiguration(map =>
             {
                 map.CreateMap<AccountDTO, CreateAccountViewModel>().ReverseMap();
-                map.CreateMap<AccountDTO, UpdatePersonalDataAccountViewModel>().ReverseMap();
+                map.CreateMap<AccountDTO, UpdateEmailAccountViewModel>().ReverseMap();
+                map.CreateMap<AccountDTO, UpdateRoleAccountViewModel>().ReverseMap();
                 map.CreateMap<AccountDTO, UpdatePasswordAccountViewModel>().ReverseMap();
 
                 map.CreateMap<AddEmployeeViewModel, AddEmployeeDTO>()

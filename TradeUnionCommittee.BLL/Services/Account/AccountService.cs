@@ -84,25 +84,44 @@ namespace TradeUnionCommittee.BLL.Services.Account
 
         public async Task<ActualResult> UpdateAsync(AccountDTO item)
         {
-            ActualResult result;
+            var result = new ActualResult();
 
-            if (item.Password == null)
+            if (item.IdRole != 0)
             {
+                var user = await GetAsync(item.IdUser);
+                result = _database.UsersRepository.Update(new Users
+                {
+                    Id = item.IdUser,
+                    IdRole = item.IdRole,
+                    Email = user.Result.Email,
+                    Password = user.Result.Password
+                });
+            }
+
+            if (item.Email != null)
+            {
+                var user = await GetAsync(item.IdUser);
                 result = _database.UsersRepository.Update(new Users
                 {
                     Id = item.IdUser,
                     Email = item.Email,
-                    IdRole = item.IdRole
+                    Password = user.Result.Password,
+                    IdRole = user.Result.IdRole
                 });
             }
-            else
+
+            if (item.Password != null)
             {
+                var user = await GetAsync(item.IdUser);
                 result = _database.UsersRepository.Update(new Users
                 {
                     Id = item.IdUser,
-                    Password = HashingPassword.HashPassword(item.Password)
+                    Password = HashingPassword.HashPassword(item.Password),
+                    Email = user.Result.Email,
+                    IdRole = user.Result.IdRole
                 });
             }
+
             if (result.IsValid == false && result.ErrorsList.Count > 0)
             {
                 return new ActualResult { IsValid = false, ErrorsList = result.ErrorsList };

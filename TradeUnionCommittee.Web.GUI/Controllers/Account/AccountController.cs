@@ -64,23 +64,56 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Account
 
         [HttpGet]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Update(long? id)
+        public async Task<IActionResult> UpdateEmail(long? id)
         {
             if (id == null) return NotFound();
             var result = await _accountService.GetAsync(id.Value);
             if (result.IsValid)
             {
                 ViewBag.Role = await _dropDownList.GetRoles();
-                return View(_mapper.Map<UpdatePersonalDataAccountViewModel>(result.Result));
+                return View(_mapper.Map<UpdateEmailAccountViewModel>(result.Result));
             }
             return _oops.OutPutError("Account", "Index", result.ErrorsList);
         }
 
 
-        [HttpPost, ActionName("Update")]
+        [HttpPost, ActionName("UpdateEmail")]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> UpdateConfirmed(UpdatePersonalDataAccountViewModel vm)
+        public async Task<IActionResult> UpdateEmailConfirmed(UpdateEmailAccountViewModel vm)
+        {
+            if (ModelState.IsValid)
+            {
+                if (vm.IdUser == null) return NotFound();
+                var result = await _accountService.UpdateAsync(_mapper.Map<AccountDTO>(vm));
+                return result.IsValid
+                    ? RedirectToAction("Index")
+                    : _oops.OutPutError("Account", "Index", result.ErrorsList);
+            }
+            return View(vm);
+        }
+
+        //------------------------------------------------------------------------------------------------------------------------------------------
+
+        [HttpGet]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> UpdateRole(long? id)
+        {
+            if (id == null) return NotFound();
+            var result = await _accountService.GetAsync(id.Value);
+            if (result.IsValid)
+            {
+                ViewBag.Role = await _dropDownList.GetRoles();
+                return View(_mapper.Map<UpdateRoleAccountViewModel>(result.Result));
+            }
+            return _oops.OutPutError("Account", "Index", result.ErrorsList);
+        }
+
+
+        [HttpPost, ActionName("UpdateRole")]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> UpdateRoleConfirmed(UpdateRoleAccountViewModel vm)
         {
             if (ModelState.IsValid)
             {

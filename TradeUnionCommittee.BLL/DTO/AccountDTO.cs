@@ -7,7 +7,5 @@
         public string Password { get; set; }
         public long IdRole { get; set; }
         public string Role { get; set; }
-
-        public int KeyUpdate { get; set; }
     }
 }

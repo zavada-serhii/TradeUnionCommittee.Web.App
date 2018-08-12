@@ -4,65 +4,60 @@
     ViewData["Title"] = "Create";
 }
 
-<div class="row">
-    <div class="col-md-12">
-
-        <h2>Додати</h2>
-
-        <form asp-action="Create">
-            <div class="form">
-                <h4>Користувача</h4>
-                <hr />
-
-                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-
-
+<section class="add-user container-fluid">
+    <div class="row justify-content-center">
+        <div class="col-md-12 add-user_block">
+            <div class="row align-items-center mt-3">
+                <div class="col-md-10">
+                    <h2>Додати користувача</h2>
+                </div>
+            </div>
+            <hr>
+            <form asp-action="Create">
                 <div class="row">
-                    <div class="form-group col-md-3">
+
+                    <div class="form-group col-lg-4 col-xl-3">
                         <label asp-for="Email" class="info-label">Email</label>
                         <input asp-for="Email" class="form-control" />
                         <span asp-validation-for="Email" class="text-danger"></span>
                     </div>
-                </div>
 
-                <div class="row">
-                    <div class="form-group col-md-3">
+                    <div class="form-group col-lg-4 col-xl-3">
                         <label asp-for="IdRole" class="info-label">Роль доступу</label>
                         <select asp-for="IdRole" asp-items="@ViewBag.Role" class="custom-select"></select>
                         <span asp-validation-for="IdRole" class="text-danger"></span>
                     </div>
+
                 </div>
 
                 <div class="row">
+
                     <div class="form-group col-md-3">
                         <label asp-for="Password" class="info-label">Пароль</label>
                         <input asp-for="Password" class="form-control" />
                         <span asp-validation-for="Password" class="text-danger"></span>
                     </div>
-                </div>
 
-                <div class="row">
                     <div class="form-group col-md-3">
                         <label asp-for="ConfirmPassword" class="info-label">Підтвердження паролю</label>
                         <input asp-for="ConfirmPassword" class="form-control" />
                         <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
                     </div>
+
                 </div>
 
+                <div class="row justify-content-between">
+                    <div class="form-group col-lg-3">
+                        <div>
+                            <a asp-action="Index">Повернутися до списку користувачів</a>
+                        </div>
+                    </div>
 
-
-                <div class="row mb-3">
-                    <div class="col-md-3 text-right">
+                    <div class="col-md-6 text-right">
                         <input type="submit" value="Додати" class="btn btn-success btn-default" />
                     </div>
                 </div>
-
-            </div>
-        </form>
-
-        <div>
-            <a asp-action="Index">Повернутися до списку користувачів</a>
+            </form>
         </div>
     </div>
-
-</div>
+</section>
