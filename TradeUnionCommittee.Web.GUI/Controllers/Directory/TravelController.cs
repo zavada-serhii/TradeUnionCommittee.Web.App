@@ -13,11 +13,13 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Directory
     {
         private readonly ITravelService _services;
         private readonly IOops _oops;
+        private readonly IMapper _mapper;
 
-        public TravelController(ITravelService services, IOops oops)
+        public TravelController(ITravelService services, IOops oops, IMapper mapper)
         {
             _services = services;
             _oops = oops;
+            _mapper = mapper;
         }
 
         //------------------------------------------------------------------------------------------------------------------------------------------
@@ -42,11 +44,11 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Directory
         [HttpPost]
         [Authorize(Roles = "Admin,Accountant,Deputy")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Name")] TravelViewModel vm)
+        public async Task<IActionResult> Create(TravelViewModel vm)
         {
             if (ModelState.IsValid)
             {
-                var result = await _services.CreateAsync(new DirectoryDTO { Name = vm.Name });
+                var result = await _services.CreateAsync(_mapper.Map<DirectoryDTO>(vm));
                 return result.IsValid
                     ? RedirectToAction("Index")
                     : _oops.OutPutError("Travel", "Index", result.ErrorsList);
@@ -62,23 +64,20 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Directory
         {
             if (id == null) return NotFound();
             var result = await _services.GetAsync(id.Value);
-            if (result.IsValid)
-            {
-                var mapper = new MapperConfiguration(cfg => cfg.CreateMap<DirectoryDTO, TravelViewModel>()).CreateMapper();
-                return View(mapper.Map<DirectoryDTO, TravelViewModel>(result.Result));
-            }
-            return _oops.OutPutError("Travel", "Index", result.ErrorsList);
+            return result.IsValid
+                ? View(_mapper.Map<TravelViewModel>(result.Result))
+                : _oops.OutPutError("Travel", "Index", result.ErrorsList);
         }
 
         [HttpPost, ActionName("Update")]
         [Authorize(Roles = "Admin,Accountant,Deputy")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> UpdateConfirmed([Bind("Id,Name")] TravelViewModel vm)
+        public async Task<IActionResult> UpdateConfirmed(TravelViewModel vm)
         {
             if (ModelState.IsValid)
             {
                 if (vm.Id == null) return NotFound();
-                var result = await _services.UpdateAsync(new DirectoryDTO { Id = vm.Id.Value, Name = vm.Name });
+                var result = await _services.UpdateAsync(_mapper.Map<DirectoryDTO>(vm));
                 return result.IsValid
                     ? RedirectToAction("Index")
                     : _oops.OutPutError("Travel", "Index", result.ErrorsList);

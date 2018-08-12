@@ -13,11 +13,13 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Directory
     {
         private readonly IDormitoryService _services;
         private readonly IOops _oops;
+        private readonly IMapper _mapper;
 
-        public DormitoryController(IDormitoryService services, IOops oops)
+        public DormitoryController(IDormitoryService services, IOops oops, IMapper mapper)
         {
             _services = services;
             _oops = oops;
+            _mapper = mapper;
         }
 
         //------------------------------------------------------------------------------------------------------------------------------------------
@@ -46,13 +48,7 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Directory
         {
             if (ModelState.IsValid)
             {
-                var result = await _services.CreateAsync(new DormitoryDTO
-                {
-                    City = vm.City,
-                    Street = vm.Street,
-                    NumberHouse = vm.NumberHouse,
-                    NumberDormitory = vm.NumberDormitory
-                });
+                var result = await _services.CreateAsync(_mapper.Map<DormitoryDTO>(vm));
                 return result.IsValid
                     ? RedirectToAction("Index")
                     : _oops.OutPutError("Dormitory", "Index", result.ErrorsList);
@@ -68,12 +64,9 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Directory
         {
             if (id == null) return NotFound();
             var result = await _services.GetAsync(id.Value);
-            if (result.IsValid)
-            {
-                var mapper = new MapperConfiguration(cfg => cfg.CreateMap<DormitoryDTO, DormitoryViewModel>()).CreateMapper();
-                return View(mapper.Map<DormitoryDTO, DormitoryViewModel>(result.Result));
-            }
-            return _oops.OutPutError("Dormitory", "Index", result.ErrorsList);
+            return result.IsValid
+                ? View(_mapper.Map<DormitoryViewModel>(result.Result))
+                : _oops.OutPutError("Dormitory", "Index", result.ErrorsList);
         }
 
         [HttpPost, ActionName("Update")]
@@ -84,14 +77,7 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Directory
             if (ModelState.IsValid)
             {
                 if (vm.Id == null) return NotFound();
-                var result = await _services.UpdateAsync(new DormitoryDTO
-                {
-                    Id = vm.Id.Value,
-                    City = vm.City,
-                    Street = vm.Street,
-                    NumberHouse = vm.NumberHouse,
-                    NumberDormitory = vm.NumberDormitory
-                });
+                var result = await _services.UpdateAsync(_mapper.Map<DormitoryDTO>(vm));
                 return result.IsValid
                     ? RedirectToAction("Index")
                     : _oops.OutPutError("Dormitory", "Index", result.ErrorsList);

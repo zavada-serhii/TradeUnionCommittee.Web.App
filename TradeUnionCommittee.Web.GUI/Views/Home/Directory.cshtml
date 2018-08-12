@@ -2,36 +2,44 @@
     ViewData["Title"] = "Довідники";
 }
 
-<ul class="admin-panel-list">
+<section class="add-user container-fluid">
+    <div class="row justify-content-center">
+        <div class="col-md-12 add-user_block">
+            
+            <ul class="admin-panel-list">
 
-    @if (User.IsInRole("Admin") || User.IsInRole("Accountant"))
-    {
-        <li><a asp-area="" asp-controller="Position" asp-action="Index">Посади</a></li>
-        <li><a asp-area="" asp-controller="SocialActivity" asp-action="Index">Громадські посади</a></li>
-        <li><a asp-area="" asp-controller="Privileges" asp-action="Index">Пільги</a></li>
-        <li><a asp-area="" asp-controller="Award" asp-action="Index">Матеріальні заохочення</a></li>
-        <li><a asp-area="" asp-controller="MaterialAid" asp-action="Index">Матеріальні допомоги</a></li>
-        <li><a asp-area="" asp-controller="Hobby" asp-action="Index">Хобі</a></li>
-        <li><a asp-area="" asp-controller="Travel" asp-action="Index">Подорожі</a></li>
-        <li><a asp-area="" asp-controller="Wellness" asp-action="Index">Оздоровлення</a></li>
-        <li><a asp-area="" asp-controller="Tour" asp-action="Index">Путівки</a></li>
-        <li><a asp-area="" asp-controller="Activities" asp-action="Index">Заходи</a></li>
-        <li><a asp-area="" asp-controller="Cultural" asp-action="Index">Культурно-просвітницькі заклади</a></li>
-        <li><a asp-area="" asp-controller="Subdivision" asp-action="Index">Структурні підрозділи</a></li>
-        <li><a asp-area="" asp-controller="Departmental" asp-action="Index">Відомчі</a></li>
-        <li><a asp-area="" asp-controller="Dormitory" asp-action="Index">Гуртожитки</a></li>
-    }
+                @if (User.IsInRole("Admin") || User.IsInRole("Accountant"))
+                {
+                    <li><a asp-area="" asp-controller="Position" asp-action="Index">Посади</a></li>
+                    <li><a asp-area="" asp-controller="SocialActivity" asp-action="Index">Громадські посади</a></li>
+                    <li><a asp-area="" asp-controller="Privileges" asp-action="Index">Пільги</a></li>
+                    <li><a asp-area="" asp-controller="Award" asp-action="Index">Матеріальні заохочення</a></li>
+                    <li><a asp-area="" asp-controller="MaterialAid" asp-action="Index">Матеріальні допомоги</a></li>
+                    <li><a asp-area="" asp-controller="Hobby" asp-action="Index">Хобі</a></li>
+                    <li><a asp-area="" asp-controller="Travel" asp-action="Index">Подорожі</a></li>
+                    <li><a asp-area="" asp-controller="Wellness" asp-action="Index">Оздоровлення</a></li>
+                    <li><a asp-area="" asp-controller="Tour" asp-action="Index">Путівки</a></li>
+                    <li><a asp-area="" asp-controller="Activities" asp-action="Index">Заходи</a></li>
+                    <li><a asp-area="" asp-controller="Cultural" asp-action="Index">Культурно-просвітницькі заклади</a></li>
+                    <li><a asp-area="" asp-controller="Subdivision" asp-action="Index">Структурні підрозділи</a></li>
+                    <li><a asp-area="" asp-controller="Departmental" asp-action="Index">Відомчі</a></li>
+                    <li><a asp-area="" asp-controller="Dormitory" asp-action="Index">Гуртожитки</a></li>
+                }
 
-    @if (User.IsInRole("Deputy"))
-    {
-        <li><a asp-area="" asp-controller="Position" asp-action="Index">Посади</a></li>
-        <li><a asp-area="" asp-controller="SocialActivity" asp-action="Index">Громадські посади</a></li>
-        <li><a asp-area="" asp-controller="Subdivision" asp-action="Index">Структурні підрозділи</a></li>
-        <li><a asp-area="" asp-controller="Travel" asp-action="Index">Подорожі</a></li>
-        <li><a asp-area="" asp-controller="Wellness" asp-action="Index">Оздоровлення</a></li>
-        <li><a asp-area="" asp-controller="Cultural" asp-action="Index">Культурно-просвітницькі заклади</a></li>
-        <li><a asp-area="" asp-controller="Activities" asp-action="Index">Заходи</a></li>
-        <li><a asp-area="" asp-controller="Hobby" asp-action="Index">Хобі</a></li>
-    }
+                @if (User.IsInRole("Deputy"))
+                {
+                    <li><a asp-area="" asp-controller="Position" asp-action="Index">Посади</a></li>
+                    <li><a asp-area="" asp-controller="SocialActivity" asp-action="Index">Громадські посади</a></li>
+                    <li><a asp-area="" asp-controller="Subdivision" asp-action="Index">Структурні підрозділи</a></li>
+                    <li><a asp-area="" asp-controller="Travel" asp-action="Index">Подорожі</a></li>
+                    <li><a asp-area="" asp-controller="Wellness" asp-action="Index">Оздоровлення</a></li>
+                    <li><a asp-area="" asp-controller="Cultural" asp-action="Index">Культурно-просвітницькі заклади</a></li>
+                    <li><a asp-area="" asp-controller="Activities" asp-action="Index">Заходи</a></li>
+                    <li><a asp-area="" asp-controller="Hobby" asp-action="Index">Хобі</a></li>
+                }
 
-</ul>
+            </ul>
+
+        </div>
+    </div>
+</section>

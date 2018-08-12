@@ -1,4 +1,5 @@
-﻿using FluentValidation;
+﻿using AutoMapper;
+using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
@@ -18,6 +19,7 @@ using TradeUnionCommittee.BLL.Services.Directory;
 using TradeUnionCommittee.BLL.Services.Employee;
 using TradeUnionCommittee.BLL.Services.Login;
 using TradeUnionCommittee.BLL.Services.Search;
+using TradeUnionCommittee.Web.GUI.AdditionalSettings;
 using TradeUnionCommittee.Web.GUI.AdditionalSettings.DropDownLists;
 using TradeUnionCommittee.Web.GUI.AdditionalSettings.Oops;
 using TradeUnionCommittee.Web.GUI.FluentValidation;
@@ -122,6 +124,7 @@ namespace TradeUnionCommittee.Web.GUI
         {
             services.AddScoped<IOops, Oops>();
             services.AddScoped<IDropDownList, DropDownList>();
+            services.AddSingleton(cm => AutoMapperProvider.ConfigureAutoMapper());
         }
 
         private void DependencyInjectionFluentValidation(IServiceCollection services)

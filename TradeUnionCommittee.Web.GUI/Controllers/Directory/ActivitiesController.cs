@@ -13,11 +13,13 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Directory
     {
         private readonly IActivitiesService _services;
         private readonly IOops _oops;
+        private readonly IMapper _mapper;
 
-        public ActivitiesController(IActivitiesService services, IOops oops)
+        public ActivitiesController(IActivitiesService services, IOops oops, IMapper mapper)
         {
             _services = services;
             _oops = oops;
+            _mapper = mapper;
         }
 
         //------------------------------------------------------------------------------------------------------------------------------------------
@@ -42,11 +44,11 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Directory
         [HttpPost]
         [Authorize(Roles = "Admin,Accountant,Deputy")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Name")] ActivitiesViewModel vm)
+        public async Task<IActionResult> Create(ActivitiesViewModel vm)
         {
             if (ModelState.IsValid)
             {
-                var result = await _services.CreateAsync(new DirectoryDTO { Name = vm.Name });
+                var result = await _services.CreateAsync(_mapper.Map<DirectoryDTO>(vm));
                 return result.IsValid
                     ? RedirectToAction("Index")
                     : _oops.OutPutError("Activities", "Index", result.ErrorsList);
@@ -62,23 +64,20 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Directory
         {
             if (id == null) return NotFound();
             var result = await _services.GetAsync(id.Value);
-            if (result.IsValid)
-            {
-                var mapper = new MapperConfiguration(cfg => cfg.CreateMap<DirectoryDTO, ActivitiesViewModel>()).CreateMapper();
-                return View(mapper.Map<DirectoryDTO, ActivitiesViewModel>(result.Result));
-            }
-            return _oops.OutPutError("Activities", "Index", result.ErrorsList);
+            return result.IsValid
+                ? View(_mapper.Map<ActivitiesViewModel>(result.Result))
+                : _oops.OutPutError("Activities", "Index", result.ErrorsList);
         }
 
         [HttpPost, ActionName("Update")]
         [Authorize(Roles = "Admin,Accountant,Deputy")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> UpdateConfirmed([Bind("Id,Name")] ActivitiesViewModel vm)
+        public async Task<IActionResult> UpdateConfirmed(ActivitiesViewModel vm)
         {
             if (ModelState.IsValid)
             {
                 if (vm.Id == null) return NotFound();
-                var result = await _services.UpdateAsync(new DirectoryDTO { Id = vm.Id.Value, Name = vm.Name });
+                var result = await _services.UpdateAsync(_mapper.Map<DirectoryDTO>(vm));
                 return result.IsValid
                     ? RedirectToAction("Index")
                     : _oops.OutPutError("Activities", "Index", result.ErrorsList);

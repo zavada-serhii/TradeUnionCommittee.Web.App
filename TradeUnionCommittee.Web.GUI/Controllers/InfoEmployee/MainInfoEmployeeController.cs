@@ -15,12 +15,14 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.InfoEmployee
         private readonly IEmployeeService _services;
         private readonly IDropDownList _dropDownList;
         private readonly IOops _oops;
+        private readonly IMapper _mapper;
 
-        public MainInfoEmployeeController(IEmployeeService services, IDropDownList dropDownList, IOops oops)
+        public MainInfoEmployeeController(IEmployeeService services, IDropDownList dropDownList, IOops oops, IMapper mapper)
         {
             _services = services;
             _dropDownList = dropDownList;
             _oops = oops;
+            _mapper = mapper;
         }
 
         //------------------------------------------------------------------------------------------------------------------------------------------
@@ -41,12 +43,9 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.InfoEmployee
         {
             if (id == null) return NotFound();
             var result = await _services.GetMainInfoEmployeeAsync(id.Value);
-            if (result.IsValid)
-            {
-                var mapper = new MapperConfiguration(cfg => cfg.CreateMap<MainInfoEmployeeDTO, MainInfoEmployeeViewModel>()).CreateMapper();
-                return View(mapper.Map<MainInfoEmployeeDTO, MainInfoEmployeeViewModel>(result.Result));
-            }
-            return _oops.OutPutError("MainInfoEmployee", "Index", result.ErrorsList);
+            return result.IsValid 
+                ? View(_mapper.Map<MainInfoEmployeeViewModel>(result.Result)) 
+                : _oops.OutPutError("MainInfoEmployee", "Index", result.ErrorsList);
         }
 
         [HttpPost, ActionName("Update")]
@@ -57,25 +56,7 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.InfoEmployee
             if (ModelState.IsValid)
             {
                 if (vm.IdEmployee == null) return NotFound();
-                var result = await _services.UpdateMainInfoEmployeeAsync(new MainInfoEmployeeDTO
-                {
-                    IdEmployee = vm.IdEmployee.Value,
-                    FirstName = vm.FirstName,
-                    SecondName = vm.SecondName,
-                    Patronymic = vm.Patronymic,
-                    Sex = vm.Sex,
-                    BirthDate = vm.BirthDate,
-                    IdentificationСode = vm.IdentificationСode,
-                    MechnikovCard = vm.MechnikovCard,
-                    MobilePhone = vm.MobilePhone,
-                    CityPhone = vm.CityPhone,
-                    Note = vm.Note,
-                    BasicProfession = vm.BasicProfession,
-                    StartYearWork = vm.StartYearWork,
-                    EndYearWork = vm.EndYearWork,
-                    StartDateTradeUnion = vm.StartDateTradeUnion,
-                    EndDateTradeUnion = vm.EndDateTradeUnion
-                });
+                var result = await _services.UpdateMainInfoEmployeeAsync(_mapper.Map<MainInfoEmployeeDTO>(vm));
                 return result.IsValid
                     ? RedirectToAction("Index")
                     : _oops.OutPutError("MainInfoEmployee", "Index", result.ErrorsList);

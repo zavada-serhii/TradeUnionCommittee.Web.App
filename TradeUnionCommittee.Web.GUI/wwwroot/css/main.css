@@ -1,0 +1,47 @@
+@import url("https://fonts.googleapis.com/css?family=Roboto");
+body {
+  background-image: -webkit-gradient(linear, left bottom, left top, from(#accbee), to(#e7f0fd));
+  background-image: -webkit-linear-gradient(bottom, #accbee 0%, #e7f0fd 100%);
+  background-image: -o-linear-gradient(bottom, #accbee 0%, #e7f0fd 100%);
+  background-image: linear-gradient(to top, #accbee 0%, #e7f0fd 100%);
+  min-height: 97vh; }
+  body .list_block {
+    margin: 10px 20px;
+    padding: 10px 20px;
+    background-color: white;
+    -webkit-box-shadow: rgba(0, 0, 0, 0.07) 0px 0px 9px 2px;
+            box-shadow: rgba(0, 0, 0, 0.07) 0px 0px 9px 2px;
+    -webkit-border-radius: 10px;
+            border-radius: 10px; }
+  body .top {
+    display: inline-block; }
+    body .top.btn {
+      vertical-align: 5px; }
+  body h2 {
+    margin-bottom: .5rem;
+    text-transform: uppercase;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 600; }
+  body table tr:hover {
+    background-color: #eceeef; }
+  body table tr td:hover {
+    background-color: #e4e4e4; }
+  body div.add-user_block {
+    display: block;
+    width: 100%;
+    -webkit-border-radius: 10px;
+            border-radius: 10px;
+    margin: 23px 0;
+    padding: 25px 30px;
+    background-color: white;
+    -webkit-box-shadow: rgba(0, 0, 0, 0.07) 0px 0px 9px 2px;
+            box-shadow: rgba(0, 0, 0, 0.07) 0px 0px 9px 2px; }
+    body div.add-user_block label, body div.add-user_block legend {
+      font-family: 'Roboto', sans-serif; }
+    body div.add-user_block div.input-group .input-group-addon label.custom-checkbox {
+      margin-bottom: 0;
+      margin-right: 0;
+      padding-left: 1.1em; }
+
+.invisible {
+  display: none; }

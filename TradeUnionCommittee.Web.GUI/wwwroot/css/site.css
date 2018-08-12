@@ -1,7 +1,12 @@
 ﻿@import url("https://fonts.googleapis.com/css?family=Roboto");
 
-body 
-{
+
+body {
+    background-image: -webkit-gradient(linear, left bottom, left top, from(#accbee), to(#e7f0fd));
+    background-image: -webkit-linear-gradient(bottom, #accbee 0%, #e7f0fd 100%);
+    background-image: -o-linear-gradient(bottom, #accbee 0%, #e7f0fd 100%);
+    background-image: linear-gradient(to top, #accbee 0%, #e7f0fd 100%);
+    min-height: 97vh;
     padding-top: 50px;
     padding-bottom: 20px;
 }
@@ -91,6 +96,10 @@ nav {
     font-size: 21px;
 }
 
+.nav-link {
+    padding: 15px;
+}
+
 .back-link 
 {
     padding-left: 10px;
@@ -126,16 +135,6 @@ nav {
     text-transform: uppercase;
 }
 
-.nav > li > a 
-{
-    border-bottom-color: #000000;
-    border-bottom-color: rgba(0,0,0,0);
-    border-bottom-width: 4px;
-    font-size: 22px;
-    border-bottom-style: solid;
-    color: black !important;
-    letter-spacing: 2px;
-}
 
 @media screen and (max-width: 1080px) 
 {
@@ -149,13 +148,6 @@ nav {
     {
         font-size: 20px !important;
     }
-}
-
-.nav > li > a:hover 
-{
-    border-bottom-color: #2b8ce0;
-    border-bottom-width: 4px;
-    border-bottom-style: solid;
 }
 
 .navbar-inverse 

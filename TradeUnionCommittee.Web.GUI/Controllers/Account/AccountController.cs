@@ -15,12 +15,14 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Account
         private readonly IAccountService _accountService;
         private readonly IDropDownList _dropDownList;
         private readonly IOops _oops;
+        private readonly IMapper _mapper;
 
-        public AccountController(IAccountService accountService, IDropDownList dropDownList, IOops oops)
+        public AccountController(IAccountService accountService, IDropDownList dropDownList, IOops oops, IMapper mapper)
         {
             _accountService = accountService;
             _dropDownList = dropDownList;
             _oops = oops;
+            _mapper = mapper;
         }
 
         //------------------------------------------------------------------------------------------------------------------------------------------
@@ -50,12 +52,10 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Account
         {
             if (ModelState.IsValid)
             {
-                var result = await _accountService.CreateAsync(new AccountDTO { Email = vm.Email, Password = vm.Password, IdRole = vm.IdRole });
-                if (result.IsValid)
-                {
-                    return RedirectToAction("Index");
-                }
-                return _oops.OutPutError("Account", "Index", result.ErrorsList);
+                var result = await _accountService.CreateAsync(_mapper.Map<AccountDTO>(vm));
+                return result.IsValid
+                    ? RedirectToAction("Index")
+                    : _oops.OutPutError("Account", "Index", result.ErrorsList);
             }
             return View(vm);
         }
@@ -71,9 +71,7 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Account
             if (result.IsValid)
             {
                 ViewBag.Role = await _dropDownList.GetRoles();
-
-                var mapper = new MapperConfiguration(cfg => cfg.CreateMap<AccountDTO, UpdatePersonalDataAccountViewModel>()).CreateMapper();
-                return View(mapper.Map<AccountDTO, UpdatePersonalDataAccountViewModel>(result.Result));
+                return View(_mapper.Map<UpdatePersonalDataAccountViewModel>(result.Result));
             }
             return _oops.OutPutError("Account", "Index", result.ErrorsList);
         }
@@ -87,12 +85,7 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Account
             if (ModelState.IsValid)
             {
                 if (vm.IdUser == null) return NotFound();
-                var result = await _accountService.UpdateAsync(new AccountDTO
-                {
-                    IdUser = vm.IdUser.Value,
-                    Email = vm.Email,
-                    IdRole = vm.IdRole
-                });
+                var result = await _accountService.UpdateAsync(_mapper.Map<AccountDTO>(vm));
                 return result.IsValid
                     ? RedirectToAction("Index")
                     : _oops.OutPutError("Account", "Index", result.ErrorsList);
@@ -119,11 +112,7 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Account
             if (ModelState.IsValid)
             {
                 if (vm.IdUser == null) return NotFound();
-                var result = await _accountService.UpdateAsync(new AccountDTO
-                {
-                    IdUser = vm.IdUser.Value,
-                    Password = vm.Password
-                });
+                var result = await _accountService.UpdateAsync(_mapper.Map<AccountDTO>(vm));
                 return result.IsValid
                     ? RedirectToAction("Index")
                     : _oops.OutPutError("Account", "Index", result.ErrorsList);

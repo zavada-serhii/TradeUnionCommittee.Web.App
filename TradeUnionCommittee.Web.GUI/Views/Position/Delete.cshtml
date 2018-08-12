@@ -1,37 +1,44 @@
 ﻿@using TradeUnionCommittee.BLL.DTO
 @model DirectoryDTO
 @{
-    ViewData["Title"] = "Delete";
+    ViewData["Title"] = "Видалення посади";
 }
+	<section class="add-user container-fluid">
+		<div class="row justify-content-center">
+			<div class="col-md-12 add-user_block">
 
-<div class="row align-items-center">
-    <div class="col-md-6">
-        <h2>Видалення</h2>
+				<div class="row align-items-center mt-3">
+					<div class="col-md-10">
+						<h1>Видалення посади</h1>
+						<h3 class="text-muted">Ви впевнені, що хочете видалити посаду?</h3>
+					</div>
+				</div>
+				<hr>
+				<form asp-action="Delete">
+                    
+				    <input type="hidden" asp-for="Id" />
 
-        <h3>Ви впевнені, що хочете видалити посаду?</h3>
-    </div>
-    <div class="col-md-6 text-right">
-        <form asp-action="Delete">
-            <input type="submit" value="Видалити" class="btn btn-danger" />
-        </form>
-    </div>
-</div>
+				    <dl class="row">
+						<dt class="col-md-3">
+							<h6>Назва посади</h6>
+						</dt>
+						<dd class="col-md-5">
+						    <p class="lead" style="font-size: 15px;">@Html.DisplayFor(model => model.Name)</p>
+						</dd>
+					</dl>
 
-<div>
-    <hr />
-    <input type="hidden" asp-for="Id" />
-    <dl class="row">
-        <dt class="col-md-3">
-            <h6>Назва посади</h6>
-        </dt>
-        <dd class="col-md-5">
-            <p class="lead" style="font-size: 15px;">@Html.DisplayFor(model => model.Name)</p>
-        </dd>
-    </dl>
+					<div class="row justify-content-between">
+						<div class="form-group col-lg-3">
+							<div>
+							    <a asp-action="Index">Повернутися до списку посад</a>
+							</div>
+						</div>
+						<div class="col-md-6 text-right">
+						    <input type="submit" value="Видалити" class="btn btn-danger" />
+						</div>
+					</div>
 
-
-    <div class="form-actions no-color">
-        <a asp-action="Index">Повернутися до списку посад</a>
-    </div>
-
-</div>
+				</form>
+			</div>
+		</div>
+	</section>

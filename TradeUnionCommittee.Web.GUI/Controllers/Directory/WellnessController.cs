@@ -13,11 +13,13 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Directory
     {
         private readonly IWellnessService _services;
         private readonly IOops _oops;
+        private readonly IMapper _mapper;
 
-        public WellnessController(IWellnessService services, IOops oops)
+        public WellnessController(IWellnessService services, IOops oops, IMapper mapper)
         {
             _services = services;
             _oops = oops;
+            _mapper = mapper;
         }
 
         //------------------------------------------------------------------------------------------------------------------------------------------
@@ -42,11 +44,11 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Directory
         [HttpPost]
         [Authorize(Roles = "Admin,Accountant,Deputy")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Name")] WellnessViewModel vm)
+        public async Task<IActionResult> Create(WellnessViewModel vm)
         {
             if (ModelState.IsValid)
             {
-                var result = await _services.CreateAsync(new DirectoryDTO { Name = vm.Name });
+                var result = await _services.CreateAsync(_mapper.Map<DirectoryDTO>(vm));
                 return result.IsValid
                     ? RedirectToAction("Index")
                     : _oops.OutPutError("Wellness", "Index", result.ErrorsList);
@@ -62,23 +64,20 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Directory
         {
             if (id == null) return NotFound();
             var result = await _services.GetAsync(id.Value);
-            if (result.IsValid)
-            {
-                var mapper = new MapperConfiguration(cfg => cfg.CreateMap<DirectoryDTO, WellnessViewModel>()).CreateMapper();
-                return View(mapper.Map<DirectoryDTO, WellnessViewModel>(result.Result));
-            }
-            return _oops.OutPutError("Wellness", "Index", result.ErrorsList);
+            return result.IsValid
+                ? View(_mapper.Map<WellnessViewModel>(result.Result))
+                : _oops.OutPutError("Wellness", "Index", result.ErrorsList);
         }
 
         [HttpPost, ActionName("Update")]
         [Authorize(Roles = "Admin,Accountant,Deputy")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> UpdateConfirmed([Bind("Id,Name")] WellnessViewModel vm)
+        public async Task<IActionResult> UpdateConfirmed(WellnessViewModel vm)
         {
             if (ModelState.IsValid)
             {
                 if (vm.Id == null) return NotFound();
-                var result = await _services.UpdateAsync(new DirectoryDTO { Id = vm.Id.Value, Name = vm.Name });
+                var result = await _services.UpdateAsync(_mapper.Map<DirectoryDTO>(vm));
                 return result.IsValid
                     ? RedirectToAction("Index")
                     : _oops.OutPutError("Wellness", "Index", result.ErrorsList);

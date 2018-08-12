@@ -5,10 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>@ViewData["Title"] - ППО ОНУ ім. І.І.Мечникова</title>
     <environment include="Development">
-        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-        <link rel="stylesheet" href="~/css/site.css" />
-        <link rel="stylesheet" href="~/css/libs.min.css">
-        <link rel="stylesheet" href="~/lib/jquery-editable-select/jquery-editable-select.min.css" />
+        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" asp-append-version="true" />
+        <link rel="stylesheet" href="~/css/libs.min.css"/>
+        <link rel="stylesheet" href="~/css/site.css"/>
+        <link rel="stylesheet" href="~/lib/jquery-editable-select/jquery-editable-select.min.css"/>
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
     </environment>
     <environment exclude="Development">
@@ -20,7 +20,7 @@
     </environment>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg fixed-top  navbar-dark bg-primary">
+<nav class="navbar navbar-expand-lg fixed-top  navbar-dark bg-primary">
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExample08" aria-controls="navbarsExample08" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -51,7 +51,7 @@
                 </li>
                 
                 <li class="nav-item">
-                    <a class="nav-link" asp-area="" @*asp-controller="Search" asp-action="Index" *@>Пошуки(In developing)</a>
+                    <a class="nav-link" asp-area="">Пошуки(In developing)</a>
                 </li>
 
                 <li class="nav-item">
@@ -61,39 +61,33 @@
             </ul>
         </div>
     </nav>
-    <div class="container body-content">
-        <br>
-        @RenderBody()
-        <hr />
-        <footer>
-            <p>&copy; ППО ОНУ ім. І.І. Мечникова - @DateTime.Now.Year</p>
-        </footer>
-    </div>
+<div class="container body-content">
+    <br>
+    @RenderBody()
+    <hr/>
+    <footer>
+        <p>&copy; ППО ОНУ ім. І.І. Мечникова - @DateTime.Now.Year</p>
+    </footer>
+</div>
 
-    <environment include="Development">
-        <script src="~/lib/jquery/dist/jquery.js"></script>
-        <script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
-        <script src="~/lib/jquery-editable-select/jquery-editable-select.min.js"></script>
-        <script src="~/lib/jquery-masked-input/jquery.maskedinput.js"></script>
-        <script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
-        <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
-        <script src="~/js/site.js"></script>
-        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
-    </environment>
-    <environment exclude="Development">
-        <script src="~/lib/jquery/dist/jquery.min.js" asp-append-version="true"></script>
-        <script src="~/lib/bootstrap/dist/js/bootstrap.min.js" asp-append-version="true"></script>
-        <script src="~/lib/jquery-editable-select/jquery-editable-select.min.js" asp-append-version="true"></script>
-        <script src="~/lib/jquery-masked-input/jquery.maskedinput.min.js" asp-append-version="true"></script>
-        <script src="~/lib/jquery-validation/dist/jquery.validate.min.js" asp-append-version="true"></script>
-        <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js" asp-append-version="true"></script>
-        <script src="~/js/site.min.js" asp-append-version="true"></script>
-        <script asp-append-version="true" src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-        <script asp-append-version="true" src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
-        <script asp-append-version="true" src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
-    </environment>
-    @RenderSection("Scripts", required: false)
+<environment include="Development">
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="~/lib/jquery-editable-select/jquery-editable-select.min.js"></script>
+    <script src="~/lib/jquery-masked-input/jquery.maskedinput.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
+    <script src="~/js/site.js"></script>
+</environment>
+<environment exclude="Development">
+    <script src="~/lib/jquery/dist/jquery.min.js" asp-append-version="true"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.min.js" asp-append-version="true"></script>
+    <script src="~/lib/jquery-editable-select/jquery-editable-select.min.js" asp-append-version="true"></script>
+    <script src="~/lib/jquery-masked-input/jquery.maskedinput.min.js" asp-append-version="true"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js" asp-append-version="true"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js" asp-append-version="true"></script>
+    <script src="~/js/site.min.js" asp-append-version="true"></script>
+</environment>
+@RenderSection("Scripts", required: false)
 </body>
 </html>

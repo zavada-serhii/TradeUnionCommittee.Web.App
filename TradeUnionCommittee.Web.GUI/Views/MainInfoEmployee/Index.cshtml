@@ -30,8 +30,6 @@
         <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Посади та Пiльга</a>
             <div class="dropdown-menu">
-                <a class="dropdown-item" href="#">Освіта</a>
-                <a class="dropdown-item" href="#">Кваліфікація</a>
                 <a class="dropdown-item" href="#">Основна посада</a>
                 <a class="dropdown-item" href="#">Громадська посада</a>
                 <a class="dropdown-item" href="#">Пiльга</a>
@@ -221,32 +219,66 @@
             }
         </div>
     </fieldset>
+    
 
+@if (Model.Note != null)
+{
     <hr>
 
     <fieldset class="form-group">
-        <legend>Освіта</legend>
+        <legend>Примiтка</legend>
         <div class="row">
-            <div class="form-group col-lg-6 col-xl-4">
-                <label>Рівень освіти</label>
-                <p class="h4">@Model.LevelEducation</p>
+            <div class="form-group col-lg-12">
+                <p class="h4">@Model.Note</p>
             </div>
-            <div class="form-group col-lg-6 col-xl-4">
-                <label>Місце навцання</label>
-                <p class="h4">@Model.NameInstitution</p>
-            </div>
-
-            @if (Model.YearReceiving != null)
-            {
-                <div class="form-group col-lg-6 col-xl-4">
-                    <label>Рiк отримання</label>
-                    <p class="h4">@Model.YearReceiving</p>
-                </div>
-            }
         </div>
     </fieldset>
+}
+    
+<div class="row justify-content-end">
+    <div class="col-md-6 text-right">
+        <a asp-action="Update" asp-route-id="@Model.IdEmployee" class="btn btn-success"><i class="fas fa-edit"></i>Редагувати головні дані</a>
 
-    @if (Model.ScientifickTitle != null || Model.ScientifickDegree != null)
+        @if (User.IsInRole("Admin"))
+        {
+            <a asp-action="Delete" asp-route-id="@Model.IdEmployee" class="btn btn-danger"><i class="fas fa-trash-alt"></i>Видалити члена профспілки</a>
+        }
+
+    </div>
+</div>
+
+<hr>
+
+<fieldset class="form-group">
+    <legend>Освіта</legend>
+    <div class="row">
+        <div class="form-group col-lg-6 col-xl-4">
+            <label>Рівень освіти</label>
+            <p class="h4">@Model.LevelEducation</p>
+        </div>
+        <div class="form-group col-lg-6 col-xl-4">
+            <label>Місце навцання</label>
+            <p class="h4">@Model.NameInstitution</p>
+        </div>
+
+        @if (Model.YearReceiving != null)
+        {
+            <div class="form-group col-lg-6 col-xl-4">
+                <label>Рiк отримання</label>
+                <p class="h4">@Model.YearReceiving</p>
+            </div>
+        }
+    </div>
+</fieldset>
+    
+<div class="row justify-content-end">
+    <div class="col-md-6 text-right">
+        <a asp-action="Update" asp-route-id="@Model.IdEmployee" class="btn btn-success"><i class="fas fa-edit"></i>Редагувати освіту члена профспілки</a>
+    </div>
+</div>
+
+
+@if (Model.ScientifickTitle != null || Model.ScientifickDegree != null)
     {
         <hr>
 
@@ -272,34 +304,28 @@
 
             </div>
         </fieldset>
-    }
 
-    @if (Model.Note != null)
-    {
-        <hr>
+        <div class="row justify-content-end">
+            <div class="col-md-6 text-right">
+                <a asp-action="Update" asp-route-id="@Model.IdEmployee" class="btn btn-success"><i class="fas fa-edit"></i>Редагувати кваліфікацію</a>
 
-        <fieldset class="form-group">
-            <legend>Примiтка</legend>
-            <div class="row">
-                <div class="form-group col-lg-12">
-                    <p class="h4">@Model.Note</p>
-                </div>
+                @if (User.IsInRole("Admin"))
+                {
+                <a asp-action="Delete" asp-route-id="@Model.IdEmployee" class="btn btn-danger"><i class="fas fa-trash-alt"></i>Видалити кваліфікацію</a>
+                }
+
             </div>
-        </fieldset>
-    }
-
+        </div>
+}
+else
+{
     <div class="row justify-content-end">
         <div class="col-md-6 text-right">
-            <a asp-action="Update" asp-route-id="@Model.IdEmployee" class="btn btn-success"><i class="fas fa-edit"></i>Редагувати</a>
-
-            @if (User.IsInRole("Admin"))
-            {
-                <a asp-action="Delete" asp-route-id="@Model.IdEmployee" class="btn btn-danger"><i class="fas fa-trash-alt"></i>Видалити члена профспілки</a>
-            }
-
+            <a asp-action="Update" asp-route-id="@Model.IdEmployee" class="btn btn-success"><i class="fas fa-edit"></i>Додати кваліфікацію</a>
         </div>
     </div>
-				
+}
+
 </div>
 </div>
 		

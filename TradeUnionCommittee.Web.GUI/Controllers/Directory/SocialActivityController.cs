@@ -13,11 +13,13 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Directory
     {
         private readonly ISocialActivityService _services;
         private readonly IOops _oops;
+        private readonly IMapper _mapper;
 
-        public SocialActivityController(ISocialActivityService services, IOops oops)
+        public SocialActivityController(ISocialActivityService services, IOops oops, IMapper mapper)
         {
             _services = services;
             _oops = oops;
+            _mapper = mapper;
         }
 
         //------------------------------------------------------------------------------------------------------------------------------------------
@@ -42,11 +44,11 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Directory
         [HttpPost]
         [Authorize(Roles = "Admin,Accountant,Deputy")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Name")] SocialActivityViewModel vm)
+        public async Task<IActionResult> Create(SocialActivityViewModel vm)
         {
             if (ModelState.IsValid)
             {
-                var result = await _services.CreateAsync(new DirectoryDTO { Name = vm.Name });
+                var result = await _services.CreateAsync(_mapper.Map<DirectoryDTO>(vm));
                 return result.IsValid
                     ? RedirectToAction("Index")
                     : _oops.OutPutError("SocialActivity", "Index", result.ErrorsList);
@@ -62,23 +64,20 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Directory
         {
             if (id == null) return NotFound();
             var result = await _services.GetAsync(id.Value);
-            if (result.IsValid)
-            {
-                var mapper = new MapperConfiguration(cfg => cfg.CreateMap<DirectoryDTO, SocialActivityViewModel>()).CreateMapper();
-                return View(mapper.Map<DirectoryDTO, SocialActivityViewModel>(result.Result));
-            }
-            return _oops.OutPutError("SocialActivity", "Index", result.ErrorsList);
+            return result.IsValid
+                ? View(_mapper.Map<SocialActivityViewModel>(result.Result))
+                : _oops.OutPutError("SocialActivity", "Index", result.ErrorsList);
         }
 
         [HttpPost, ActionName("Update")]
         [Authorize(Roles = "Admin,Accountant,Deputy")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> UpdateConfirmed([Bind("Id,Name")] SocialActivityViewModel vm)
+        public async Task<IActionResult> UpdateConfirmed(SocialActivityViewModel vm)
         {
             if (ModelState.IsValid)
             {
                 if (vm.Id == null) return NotFound();
-                var result = await _services.UpdateAsync(new DirectoryDTO { Id = vm.Id.Value, Name = vm.Name });
+                var result = await _services.UpdateAsync(_mapper.Map<DirectoryDTO>(vm));
                 return result.IsValid
                     ? RedirectToAction("Index")
                     : _oops.OutPutError("SocialActivity", "Index", result.ErrorsList);
