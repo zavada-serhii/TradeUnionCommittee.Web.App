@@ -202,8 +202,9 @@ namespace TradeUnionCommittee.BLL.Services.Employee
                     return new string("Чоловіча");
                 case "Female":
                     return new string("Жіноча");
+                default:
+                    return sex;
             }
-            return sex;
         }
 
         private int CalculateAge(DateTime birthDate)
@@ -218,16 +219,22 @@ namespace TradeUnionCommittee.BLL.Services.Employee
 
         //------------------------------------------------------------------------------------------------------------------------------------------
 
-        public Task<ActualResult> UpdateMainInfoEmployeeAsync(MainInfoEmployeeDTO dto)
+        public async Task<ActualResult> UpdateMainInfoEmployeeAsync(MainInfoEmployeeDTO dto)
         {
-            throw new System.NotImplementedException();
+            return await Task.Run(() =>
+            {
+                return new ActualResult();
+            });
         }
 
         //------------------------------------------------------------------------------------------------------------------------------------------
 
-        public Task<ActualResult> DeleteAsync(long id)
+        public async Task<ActualResult> DeleteAsync(long id)
         {
-            throw new System.NotImplementedException();
+            return await Task.Run(() =>
+            {
+                return new ActualResult();
+            });
         }
 
         //------------------------------------------------------------------------------------------------------------------------------------------

@@ -38,6 +38,7 @@ namespace TradeUnionCommittee.Web.GUI.AdditionalSettings
                 map.CreateMap<DormitoryDTO, DormitoryViewModel>().ReverseMap();
                 map.CreateMap<SubdivisionDTO, SubdivisionViewModel>().ForMember("Name", c => c.MapFrom(x => x.DeptName)).ReverseMap();
 
+                map.CreateMap<EducationDTO, UpdateEducationViewModel>().ForMember("YearReceiving", c => c.MapFrom(x => x.DateReceiving)).ReverseMap();
 
                 map.CreateMap<MainInfoEmployeeDTO, MainInfoEmployeeViewModel>().ReverseMap();
 

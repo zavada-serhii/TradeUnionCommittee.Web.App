@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TradeUnionCommittee.BLL.DTO;
 using TradeUnionCommittee.BLL.Interfaces.Directory;
 using TradeUnionCommittee.Common.ActualResults;
 using TradeUnionCommittee.DAL.Interfaces;
@@ -36,6 +37,31 @@ namespace TradeUnionCommittee.BLL.Services.Directory
                     Result = _database.EducationRepository.GetAll().Result.Select(x => x.NameInstitution).Distinct().ToList()
                 };
             });
+        }
+
+        //------------------------------------------------------------------------------------------------------------------------------------------
+
+        public async Task<ActualResult<EducationDTO>> GetEducationEmployeeAsync(long idEmployee)
+        {
+            return await Task.Run(() =>
+            {
+                var education = _database.EducationRepository.GetWithInclude(x => x.IdEmployee == idEmployee).Result.FirstOrDefault();
+                return new ActualResult<EducationDTO>
+                {
+                    Result = new EducationDTO
+                    {
+                        IdEmployee = education.IdEmployee,
+                        DateReceiving = education.DateReceiving,
+                        NameInstitution = education.NameInstitution,
+                        LevelEducation = education.LevelEducation
+                    }
+                };
+            });
+        }
+
+        public Task<ActualResult> UpdateEducationEmployeeAsync(EducationDTO dto)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

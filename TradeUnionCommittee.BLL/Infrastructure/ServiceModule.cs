@@ -24,7 +24,6 @@ namespace TradeUnionCommittee.BLL.Infrastructure
         {
             return new MapperConfiguration(map =>
             {
-               
 
             }).CreateMapper();
         }

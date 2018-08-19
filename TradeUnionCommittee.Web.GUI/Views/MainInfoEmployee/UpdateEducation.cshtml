@@ -1,0 +1,54 @@
+﻿@model UpdateEducationViewModel
+@{
+    ViewData["Title"] = "UpdateEducation";
+}
+
+<section class="add-user container-fluid">
+    <div class="row justify-content-center">
+        <div class="col-md-12 add-user_block">
+            <div class="row align-items-center mt-3">
+                <div class="col-md-10">
+                    <h2>Редагування освіти</h2>
+                </div>
+            </div>
+            <hr>
+            <form asp-action="UpdateEducation">
+                <div class="row">
+                
+                    <input type="hidden" asp-for="IdEmployee"/>
+                    
+                    <div class="form-group col-lg-4 col-xl-3">
+                        <label asp-for="LevelEducation" class="control-label required">Рiвень освiти</label><br>
+                        <select asp-for="LevelEducation" id="editable-select-LevelEducation" class="custom-select" style="width: 100%" asp-items="@ViewBag.LevelEducation"></select>
+                        <span asp-validation-for="LevelEducation" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group col-lg-4 col-xl-3">
+                        <label asp-for="NameInstitution" class="control-label required">Місце навчання</label><br>
+                        <select asp-for="NameInstitution" id="editable-select-Study" class="custom-select" asp-items="@ViewBag.Study"></select>
+                        <span asp-validation-for="NameInstitution" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group col-lg-4 col-xl-3">
+                        <label asp-for="YearReceiving">Рік отримання</label>
+                        <input asp-for="YearReceiving" id="year-education" type="text" class="form-control" placeholder="1990">
+                        <span asp-validation-for="YearReceiving" class="text-danger"></span>
+                    </div>
+
+                </div>
+
+                <div class="row justify-content-between">
+                    <div class="form-group col-lg-3">
+                        <div>
+                            <a asp-action="Index">Повернутися</a>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 text-right">
+                        <input type="submit" value="Зберегти" class="btn btn-success btn-default" />
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
