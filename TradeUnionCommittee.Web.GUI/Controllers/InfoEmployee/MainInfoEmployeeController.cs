@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption;
 using TradeUnionCommittee.BLL.DTO;
 using TradeUnionCommittee.BLL.Interfaces.Directory;
 using TradeUnionCommittee.BLL.Interfaces.Employee;
@@ -16,16 +15,16 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.InfoEmployee
     {
         private readonly IEmployeeService _services;
         private readonly IEducationService _educationService;
-        private readonly IScientificService _scientificService;
+        private readonly IQualificationService _qualificationService;
         private readonly IDropDownList _dropDownList;
         private readonly IOops _oops;
         private readonly IMapper _mapper;
 
-        public MainInfoEmployeeController(IEmployeeService services, IEducationService educationService, IScientificService scientificService, IDropDownList dropDownList, IOops oops, IMapper mapper)
+        public MainInfoEmployeeController(IEmployeeService services, IEducationService educationService, IQualificationService qualificationService, IDropDownList dropDownList, IOops oops, IMapper mapper)
         {
             _services = services;
             _educationService = educationService;
-            _scientificService = scientificService;
+            _qualificationService = qualificationService;
             _dropDownList = dropDownList;
             _oops = oops;
             _mapper = mapper;
@@ -135,16 +134,78 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.InfoEmployee
 
         [HttpGet]
         [Authorize(Roles = "Admin,Accountant,Deputy")]
+        public async Task<IActionResult> CreateQualification(long id)
+        {
+            await FillingDropDownListsQualification();
+            return View(new QualificationViewModel {IdEmployee = id});
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Admin,Accountant,Deputy")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CreateQualification(QualificationViewModel vm)
+        {
+            if (ModelState.IsValid)
+            {
+                var result = await _qualificationService.CreateQualificationEmployeeAsync(_mapper.Map<QualificationDTO>(vm));
+                return result.IsValid
+                    ? RedirectToAction("Index", new {id = vm.IdEmployee})
+                    : _oops.OutPutError("MainInfoEmployee", "Index", result.ErrorsList);
+            }
+            return View(vm);
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "Admin,Accountant,Deputy")]
         public async Task<IActionResult> UpdateQualification(long? id)
         {
             if (id == null) return NotFound();
-            var result = await _scientificService.GetScientificEmployeeAsync(id.Value);
+            var result = await _qualificationService.GetQualificationEmployeeAsync(id.Value);
             if (result.IsValid)
             {
                 await FillingDropDownListsQualification();
-                return View(_mapper.Map<UpdateEducationViewModel>(result.Result));
+                return View(_mapper.Map<QualificationViewModel>(result.Result));
             }
             return _oops.OutPutError("MainInfoEmployee", "Index", result.ErrorsList);
+        }
+
+        [HttpPost, ActionName("UpdateQualification")]
+        [Authorize(Roles = "Admin,Accountant,Deputy")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> UpdateQualificationConfirmed(QualificationViewModel vm)
+        {
+            if (ModelState.IsValid)
+            {
+                if (vm.IdEmployee == null) return NotFound();
+                var result = await _qualificationService.UpdateQualificationEmployeeAsync(_mapper.Map<QualificationDTO>(vm));
+                return result.IsValid
+                    ? RedirectToAction("Index", new {id = vm.IdEmployee})
+                    : _oops.OutPutError("MainInfoEmployee", "Index", result.ErrorsList);
+            }
+            return View(vm);
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> DeleteQualification(long? id)
+        {
+            if (id == null) return NotFound();
+            var result = await _qualificationService.GetQualificationEmployeeAsync(id.Value);
+            return result.IsValid
+                ? View(result.Result)
+                : _oops.OutPutError("MainInfoEmployee", "Index", result.ErrorsList);
+        }
+
+        [HttpPost, ActionName("DeleteQualification")]
+        [Authorize(Roles = "Admin")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteQualificationConfirmed(long? id)
+        {
+            if (id == null) return NotFound();
+            var result = await _qualificationService.DeleteQualificationEmployeeAsync(id.Value);
+            return result.IsValid
+                ? RedirectToAction("Index", new { id })
+                : _oops.OutPutError("MainInfoEmployee", "Index", result.ErrorsList);
         }
 
         //------------------------------------------------------------------------------------------------------------------------------------------

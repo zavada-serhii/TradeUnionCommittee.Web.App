@@ -98,7 +98,8 @@ OWNER TO AdminTradeUnionCommitteeEmployees;
 CREATE TABLE "Subdivisions"(
 	"Id" 		BIGSERIAL 	NOT NULL 	PRIMARY KEY,
 	"IdSubordinate" BIGINT 				REFERENCES "Subdivisions"("Id"),
-	"DeptName" 	VARCHAR 	NOT NULL 	UNIQUE
+	"DeptName" 	VARCHAR 	NOT NULL 	UNIQUE,
+	"Abbreviation" VARCHAR  NOT NULL 	UNIQUE
 );
 ALTER TABLE "Subdivisions"
 OWNER TO AdminTradeUnionCommitteeEmployees;

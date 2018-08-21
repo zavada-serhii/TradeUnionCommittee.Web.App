@@ -5,5 +5,6 @@
         public long Id { get; set; }
         public long? IdSubordinate { get; set; }
         public string DeptName { get; set; }
+        public string Abbreviation { get; set; }
     }
 }

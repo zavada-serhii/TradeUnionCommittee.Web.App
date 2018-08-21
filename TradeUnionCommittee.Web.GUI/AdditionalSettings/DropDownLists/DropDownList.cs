@@ -16,7 +16,7 @@ namespace TradeUnionCommittee.Web.GUI.AdditionalSettings.DropDownLists
         private readonly IPositionService _positionService;
         private readonly IDormitoryService _dormitoryService;
         private readonly IDepartmentalService _departmentalService;
-        private readonly IScientificService _scientificService;
+        private readonly IQualificationService _scientificService;
         private readonly ISocialActivityService _socialActivity;
         private readonly IPrivilegesService _privilegesService;
         private readonly IHobbyService _hobbyService;
@@ -35,7 +35,7 @@ namespace TradeUnionCommittee.Web.GUI.AdditionalSettings.DropDownLists
                             IPositionService positionService,
                             IDormitoryService dormitoryService,
                             IDepartmentalService departmentalService,
-                            IScientificService scientificService,
+                            IQualificationService scientificService,
                             ISocialActivityService socialActivity,
                             IPrivilegesService privilegesService,
                             IHobbyService hobbyService,

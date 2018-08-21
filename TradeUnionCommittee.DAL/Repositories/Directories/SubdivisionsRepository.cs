@@ -24,7 +24,8 @@ namespace TradeUnionCommittee.DAL.Repositories.Directories
                 {
                     _dbContext.Subdivisions.Add(new Subdivisions
                     {
-                        DeptName = item.DeptName
+                        DeptName = item.DeptName,
+                        Abbreviation = item.Abbreviation
                     });
                 }
                 else
@@ -32,6 +33,7 @@ namespace TradeUnionCommittee.DAL.Repositories.Directories
                     _dbContext.Subdivisions.Add(new Subdivisions
                     {
                         DeptName = item.DeptName,
+                        Abbreviation = item.Abbreviation,
                         IdSubordinate = item.IdSubordinate
                     });
                 }
@@ -45,34 +47,6 @@ namespace TradeUnionCommittee.DAL.Repositories.Directories
             return result;
         }
 
-        public override ActualResult Update(Subdivisions item)
-        {
-            var result = new ActualResult();
-            try
-            {
-                var subdivision =_dbContext.Subdivisions.FirstOrDefault(x => x.Id == item.Id);
-                if (subdivision != null)
-                {
-                    if (item.IdSubordinate == null)
-                    {
-                        subdivision.DeptName = item.DeptName;
-                    }
-                    else
-                    {
-                        subdivision.IdSubordinate = item.IdSubordinate;
-                    }
-                }
-                else
-                {
-                    result.IsValid = false;
-                }
-            }
-            catch (Exception e)
-            {
-                result.IsValid = false;
-                result.ErrorsList.Add(e.Message);
-            }
-            return result;
-        }
+        
     }
 }

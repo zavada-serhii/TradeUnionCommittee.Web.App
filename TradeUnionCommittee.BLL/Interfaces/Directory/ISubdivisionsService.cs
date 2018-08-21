@@ -9,5 +9,7 @@ namespace TradeUnionCommittee.BLL.Interfaces.Directory
     {
         Task<ActualResult> RestructuringUnits(SubdivisionDTO dto);
         Task<ActualResult<IEnumerable<SubdivisionDTO>>> GetSubordinateSubdivisions(long id);
+        Task<ActualResult> CheckAbbreviationAsync(string name);
+        Task<ActualResult> UpdateAbbreviation(SubdivisionDTO dto);
     }
 }

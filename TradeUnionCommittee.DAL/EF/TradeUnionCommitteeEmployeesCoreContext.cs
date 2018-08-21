@@ -1012,6 +1012,10 @@ namespace TradeUnionCommittee.DAL.EF
                     .IsRequired()
                     .HasColumnType("character varying");
 
+                entity.Property(e => e.Abbreviation)
+                    .IsRequired()
+                    .HasColumnType("character varying");
+
                 entity.HasOne(d => d.IdSubordinateNavigation)
                     .WithMany(p => p.InverseIdSubordinateNavigation)
                     .HasForeignKey(d => d.IdSubordinate)

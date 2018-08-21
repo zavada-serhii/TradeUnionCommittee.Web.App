@@ -98,7 +98,7 @@ namespace TradeUnionCommittee.Web.GUI
 
             services.AddScoped<IEmployeeService, EmployeeService>();
             services.AddScoped<IEducationService, EducationService>();
-            services.AddScoped<IScientificService, ScientificService>();
+            services.AddScoped<IQualificationService, QualificationService>();
             services.AddScoped<IPositionService, PositionService>();
             services.AddScoped<ISocialActivityService, SocialActivityService>();
             services.AddScoped<IPrivilegesService, PrivilegesService>();

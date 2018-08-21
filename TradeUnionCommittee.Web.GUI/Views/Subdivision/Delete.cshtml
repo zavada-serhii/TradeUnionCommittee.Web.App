@@ -18,9 +18,9 @@
 
 <div>
     <hr />
+    <input type="hidden" asp-for="Id" />
+    
     <dl class="row">
-
-        <input type="hidden" asp-for="Id" />
         <dt class="col-md-3">
             <h6>Назва підрозділу</h6>
         </dt>
@@ -29,6 +29,15 @@
         </dd>
     </dl>
 
+    
+    <dl class="row">
+        <dt class="col-md-3">
+            <h6>Aбревіатура</h6>
+        </dt>
+        <dd class="col-md-5">
+            <p class="lead" style="font-size: 15px;">@Html.DisplayFor(model => model.Abbreviation)</p>
+        </dd>
+    </dl>
 
     <div class="form-actions no-color">
         <a asp-action="Index">Повернутися до списку підрозділів</a>

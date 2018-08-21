@@ -54,7 +54,8 @@ namespace TradeUnionCommittee.BLL.Services.Directory
                     Result = new SubdivisionDTO
                     {
                         Id = subdivision.Result.Id,
-                        DeptName = subdivision.Result.DeptName
+                        DeptName = subdivision.Result.DeptName,
+                        Abbreviation = subdivision.Result.Abbreviation
                     }
                 };
             });
@@ -62,7 +63,12 @@ namespace TradeUnionCommittee.BLL.Services.Directory
 
         public async Task<ActualResult> CreateAsync(SubdivisionDTO item)
         {
-            var subdivision = _database.SubdivisionsRepository.Create(new Subdivisions { DeptName = item.DeptName, IdSubordinate = item.IdSubordinate });
+            var subdivision = _database.SubdivisionsRepository.Create(new Subdivisions
+            {
+                DeptName = item.DeptName,
+                Abbreviation = item.Abbreviation,
+                IdSubordinate = item.IdSubordinate
+            });
             if (subdivision.IsValid == false && subdivision.ErrorsList.Count > 0)
             {
                 return new ActualResult { IsValid = false, ErrorsList = subdivision.ErrorsList };
@@ -72,13 +78,12 @@ namespace TradeUnionCommittee.BLL.Services.Directory
             return subdivision;
         }
 
-        public async Task<ActualResult> UpdateAsync(SubdivisionDTO item)
+        public async Task<ActualResult> UpdateAsync(SubdivisionDTO dto)
         {
-            var subdivision = _database.SubdivisionsRepository.Update(new Subdivisions
-            {
-                Id = item.Id,
-                DeptName = item.DeptName
-            });
+            var sub = _database.SubdivisionsRepository.Get(dto.Id);
+            sub.Result.DeptName = dto.DeptName;
+            var subdivision = _database.SubdivisionsRepository.Update(sub.Result);
+
             if (subdivision.IsValid == false && subdivision.ErrorsList.Count > 0)
             {
                 return new ActualResult { IsValid = false, ErrorsList = subdivision.ErrorsList };
@@ -86,15 +91,30 @@ namespace TradeUnionCommittee.BLL.Services.Directory
             var dbState = await _database.SaveAsync();
             subdivision.IsValid = dbState.IsValid;
             return subdivision;
+        }
+
+        public async Task<ActualResult> UpdateAbbreviation(SubdivisionDTO dto)
+        {
+            var sub = _database.SubdivisionsRepository.Get(dto.Id);
+            sub.Result.Abbreviation = dto.Abbreviation;
+            var subdivision = _database.SubdivisionsRepository.Update(sub.Result);
+
+            if (subdivision.IsValid == false && subdivision.ErrorsList.Count > 0)
+            {
+                return new ActualResult { IsValid = false, ErrorsList = subdivision.ErrorsList };
+            }
+            var dbState = await _database.SaveAsync();
+            subdivision.IsValid = dbState.IsValid;
+            return subdivision;
+
         }
 
         public async Task<ActualResult> RestructuringUnits(SubdivisionDTO dto)
         {
-            var subdivision = _database.SubdivisionsRepository.Update(new Subdivisions
-            {
-                Id = dto.Id,
-                IdSubordinate = dto.IdSubordinate
-            });
+            var sub = _database.SubdivisionsRepository.Get(dto.Id);
+            sub.Result.IdSubordinate = dto.IdSubordinate;
+            var subdivision = _database.SubdivisionsRepository.Update(sub.Result);
+
             if (subdivision.IsValid == false && subdivision.ErrorsList.Count > 0)
             {
                 return new ActualResult { IsValid = false, ErrorsList = subdivision.ErrorsList };
@@ -121,6 +141,17 @@ namespace TradeUnionCommittee.BLL.Services.Directory
             return await Task.Run(() =>
             {
                 var subdivision = _database.SubdivisionsRepository.Find(p => p.DeptName == name);
+                return subdivision.Result.Any() ?
+                    new ActualResult { IsValid = false } :
+                    new ActualResult { IsValid = true };
+            });
+        }
+
+        public async Task<ActualResult> CheckAbbreviationAsync(string name)
+        {
+            return await Task.Run(() =>
+            {
+                var subdivision = _database.SubdivisionsRepository.Find(p => p.Abbreviation == name);
                 return subdivision.Result.Any() ?
                     new ActualResult { IsValid = false } :
                     new ActualResult { IsValid = true };

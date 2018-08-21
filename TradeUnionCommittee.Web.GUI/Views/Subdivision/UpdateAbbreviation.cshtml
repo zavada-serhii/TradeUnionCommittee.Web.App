@@ -1,6 +1,6 @@
-﻿@model UpdateSubdivisionViewModel
+﻿@model UpdateAbbreviationSubdivisionViewModel
 @{
-    ViewData["Title"] = "Update";
+    ViewData["Title"] = "UpdateAbbreviation";
 }
 
 <div class="row">
@@ -8,17 +8,17 @@
 
         <h2>Редагування</h2>
 
-        <form asp-action="Update">
+        <form asp-action="UpdateAbbreviation">
             <div class="form">
-                <h4>Структурного підрозділу</h4>
+                <h4>Абревіатури cтруктурного підрозділу</h4>
                 <hr />
 
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 <div class="row">
                     <div class="form-group col-md-3">
-                        <label asp-for="Name" class="info-label">Назва підрозділу</label>
-                        <input asp-for="Name" class="form-control" />
-                        <span asp-validation-for="Name" class="text-danger"></span>
+                        <label asp-for="Abbreviation" class="info-label">Назва aбревіатури</label>
+                        <input asp-for="Abbreviation" class="form-control" />
+                        <span asp-validation-for="Abbreviation" class="text-danger"></span>
                     </div>
                 </div>
                 <div class="row mb-3">

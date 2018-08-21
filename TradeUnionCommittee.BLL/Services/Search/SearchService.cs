@@ -37,11 +37,14 @@ namespace TradeUnionCommittee.BLL.Services.Search
                         {
                             IdUser = e.Id,
                             FullName = e.FirstName + " " + e.SecondName + " " + e.Patronymic,
+                            SurnameAndInitials = e.FirstName + " " + e.SecondName[0] + ". " + e.Patronymic[0] + ". ",
                             BirthDate = e.BirthDate,
                             MobilePhone = e.MobilePhone,
                             CityPhone = e.CityPhone,
                             MainSubdivision = s.DeptName,
-                            SubordinateSubdivision = s.Id == ss.Id ? null : ss.DeptName
+                            MainSubdivisionAbbreviation = s.Abbreviation,
+                            SubordinateSubdivision = s.Id == ss.Id ? null : ss.DeptName,
+                            SubordinateSubdivisionAbbreviation = s.Id == ss.Id ? null : ss.Abbreviation
                         }).ToList();
 
                 return new ActualResult<IEnumerable<ResultSearchDTO>> {Result = result};

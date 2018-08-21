@@ -68,19 +68,48 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Directory
             if (id == null) return NotFound();
             var result = await _services.GetAsync(id.Value);
             return result.IsValid 
-                ? View(_mapper.Map<SubdivisionViewModel>(result.Result)) 
+                ? View(_mapper.Map<UpdateSubdivisionViewModel>(result.Result)) 
                 : _oops.OutPutError("Subdivision", "Index", result.ErrorsList);
         }
 
         [HttpPost, ActionName("Update")]
         [Authorize(Roles = "Admin,Accountant,Deputy")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> UpdateConfirmed(SubdivisionViewModel vm)
+        public async Task<IActionResult> UpdateConfirmed(UpdateSubdivisionViewModel vm)
         {
             if (ModelState.IsValid)
             {
                 if (vm.Id == null) return NotFound();
                 var result = await _services.UpdateAsync(_mapper.Map<SubdivisionDTO>(vm));
+                return result.IsValid
+                    ? RedirectToAction("Index")
+                    : _oops.OutPutError("Subdivision", "Index", result.ErrorsList);
+            }
+            return View(vm);
+        }
+
+        //------------------------------------------------------------------------------------------------------------------------------------------
+
+        [HttpGet]
+        [Authorize(Roles = "Admin,Accountant,Deputy")]
+        public async Task<IActionResult> UpdateAbbreviation(long? id)
+        {
+            if (id == null) return NotFound();
+            var result = await _services.GetAsync(id.Value);
+            return result.IsValid
+                ? View(_mapper.Map<UpdateAbbreviationSubdivisionViewModel>(result.Result))
+                : _oops.OutPutError("Subdivision", "Index", result.ErrorsList);
+        }
+
+        [HttpPost, ActionName("UpdateAbbreviation")]
+        [Authorize(Roles = "Admin,Accountant,Deputy")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> UpdateAbbreviationConfirmed(UpdateAbbreviationSubdivisionViewModel vm)
+        {
+            if (ModelState.IsValid)
+            {
+                if (vm.Id == null) return NotFound();
+                var result = await _services.UpdateAbbreviation(_mapper.Map<SubdivisionDTO>(vm));
                 return result.IsValid
                     ? RedirectToAction("Index")
                     : _oops.OutPutError("Subdivision", "Index", result.ErrorsList);
@@ -141,13 +170,13 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Directory
         [HttpPost, ActionName("CreateSubordinate")]
         [Authorize(Roles = "Admin,Accountant,Deputy")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CreateSubordinateConfirmed([Bind("Id,Name")] SubdivisionViewModel vm)
+        public async Task<IActionResult> CreateSubordinateConfirmed(SubdivisionViewModel vm)
         {
             if (ModelState.IsValid)
             {
-                var result = await _services.CreateAsync(new SubdivisionDTO { IdSubordinate = vm.Id, DeptName = vm.Name });
+                var result = await _services.CreateAsync(new SubdivisionDTO { IdSubordinate = vm.Id, DeptName = vm.Name,Abbreviation = vm.Abbreviation});
                 return result.IsValid
-                    ? RedirectToAction("Index")
+                    ? RedirectToAction("Details", new { id = vm.Id})
                     : _oops.OutPutError("Subdivision", "Index", result.ErrorsList);
             }
             return View(vm);
@@ -192,6 +221,14 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Directory
         public async Task<IActionResult> CheckName(string name)
         {
             var result = await _services.CheckNameAsync(name);
+            return Json(result.IsValid);
+        }
+
+        [AcceptVerbs("Get", "Post")]
+        [Authorize(Roles = "Admin,Accountant,Deputy")]
+        public async Task<IActionResult> CheckAbbreviation(string abbreviation)
+        {
+            var result = await _services.CheckAbbreviationAsync(abbreviation);
             return Json(result.IsValid);
         }
 
