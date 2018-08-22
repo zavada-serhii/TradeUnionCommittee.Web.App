@@ -36,7 +36,7 @@ namespace TradeUnionCommittee.BLL.Services.Account
                     {
                         IdUser = u.Id,
                         Email = u.Email,
-                        Role = r.Name
+                        Role = ConvertRoleToUkrainianLang(r.Name)
                     }).ToList();
 
                 return actualResults;
@@ -160,8 +160,24 @@ namespace TradeUnionCommittee.BLL.Services.Account
         {
             return await Task.Run(() =>
             {
-                var mapper = new MapperConfiguration(cfg => cfg.CreateMap<Roles, RolesDTO>()).CreateMapper();
-                return mapper.Map<ActualResult<IEnumerable<Roles>>, ActualResult<IEnumerable<RolesDTO>>>(_database.RolesRepository.GetAll());
+                var dtos = new List<RolesDTO>();
+                var collection = _database.RolesRepository.GetAll().Result;
+                foreach (var v in collection)
+                {
+                    switch (v.Name)
+                    {
+                        case "Admin":
+                            dtos.Add(new RolesDTO { Id = v.Id, Name = "Адміністратор" });
+                            break;
+                        case "Accountant":
+                            dtos.Add(new RolesDTO { Id = v.Id, Name = "Бухгалтер" });
+                            break;
+                        case "Deputy":
+                            dtos.Add(new RolesDTO { Id = v.Id, Name = "Заступник" });
+                            break;
+                    }
+                }
+                return new ActualResult<IEnumerable<RolesDTO>> {Result = dtos};
             });
         }
 
@@ -175,6 +191,21 @@ namespace TradeUnionCommittee.BLL.Services.Account
         }
 
         //------------------------------------------------------------------------------------------------------------------------------------------
+
+        private string ConvertRoleToUkrainianLang(string s)
+        {
+            switch (s)
+            {
+                case "Admin":
+                    return "Адміністратор";
+                case "Accountant":
+                    return "Бухгалтер";
+                case "Deputy":
+                    return "Заступник";
+                default:
+                    return string.Empty;
+            }
+        }
 
         public void Dispose()
         {

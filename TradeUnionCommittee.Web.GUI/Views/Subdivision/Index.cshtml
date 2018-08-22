@@ -3,53 +3,63 @@
     ViewData["Title"] = "Index";
 }
 
-<div class="row">
-    <a asp-controller="Home" asp-action="Directory" class="back-link">Повернутися до списку довідників</a>
-    <hr />
-    <div class="form-group">
-        <a asp-action="Create" class="btn btn-success">Додати структурний підрозділ</a>
-    </div>
-</div>
+<section class="add-user container-fluid">
+    <div class="row justify-content-center">
+        <div class="col-md-12 add-user_block">
+            <div class="row">
+                <a asp-controller="Home" asp-action="Directory" class="back-link">Повернутися</a>
+                <hr />
+                <div class="form-group">
+                    <a asp-action="Create" class="btn btn-success">Додати структурний підрозділ</a>
+                </div>
+            </div>
+            <div class="row main-block">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>
+                               Назва
+                            </th>
 
-<div class="row main-block">
-
-    <table class="table">
-        <thead>
-            <tr>
-                <th>
-                    Структурні підрозділи
-                </th>
-
-                <th>
-                    Aбревіатура
-                </th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model.Result)
-            {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.DeptName)
-                </td>
-
-                <td>
-                    @Html.DisplayFor(modelItem => item.Abbreviation)
-                </td>
-
-                <td class="text-right">
-                    <a asp-action="Details" asp-route-id="@item.Id">Деталі</a>
-                    <a asp-action="Update" asp-route-id="@item.Id">Редагувати</a>
-                    <a asp-action="UpdateAbbreviation" asp-route-id="@item.Id">Редагувати абревіатуру</a>
-                    @if (User.IsInRole("Admin"))
+                            <th>
+                                Aбревіатура
+                            </th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    @foreach (var item in Model.Result)
                     {
-                        <a asp-action="Delete" asp-route-id="@item.Id">Видалити</a>
-                    }
-                </td>
-            </tr>
-            }
-        </tbody>
-    </table>
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.DeptName)
+                            </td>
 
-</div>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Abbreviation)
+                            </td>
+                            
+                            <td class="text-right">
+                                <div class="btn-group">
+                                    <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown"></button>
+                                    <div class="dropdown-menu">
+                                        <a class="dropdown-item" asp-action="Update" asp-route-id="@item.Id">Редагувати назву</a>
+                                        <a class="dropdown-item" asp-action="UpdateAbbreviation" asp-route-id="@item.Id">Редагувати абревіатуру</a>
+                                        <a class="dropdown-item" asp-action="Details" asp-route-id="@item.Id">Підрозділи</a>
+                                        <a class="dropdown-item" asp-action="CreateSubordinate" asp-route-id="@item.Id">Додати підрозділ</a>
+                                        <a class="dropdown-item" asp-action="Restructuring" asp-route-id="@item.Id">Реструктуризація</a>
+                                        @if (User.IsInRole("Admin"))
+                                        {
+                                            <a class="dropdown-item" asp-action="Delete" asp-route-id="@item.Id">Видалити</a>
+                                        }
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>

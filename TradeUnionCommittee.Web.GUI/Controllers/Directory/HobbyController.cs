@@ -18,6 +18,7 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Directory
         public HobbyController(IHobbyService services, IOops oops, IMapper mapper)
         {
             _services = services;
+            _mapper = mapper;
             _oops = oops;
         }
 

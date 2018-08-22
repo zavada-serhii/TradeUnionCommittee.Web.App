@@ -3,41 +3,37 @@
     ViewData["Title"] = "Restructuring";
 }
 
-<div class="row">
-    <div class="col-md-12">
-        <h2>Перенести</h2>
-        <form asp-action="Restructuring">
-            <div class="form">
-                <hr />
+<section class="add-user container-fluid">
+    <div class="row justify-content-center">
+        <div class="col-md-12 add-user_block">
 
+            <div class="row align-items-center mt-3">
+                <div class="col-md-10">
+                    <h1>Реструктуризація</h1>
+                </div>
+            </div>
+            <hr>
+            <form asp-action="Restructuring">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-
                 <div class="row">
-                    <div class="form-group col-md-3">
-                        <label>Підрозділ</label>
+                    <div class="form-group col-lg-4 col-xl-6">
                         <select asp-for="IdSubordinateSubdivision" class="form-control" asp-items="ViewBag.SubordinateSubdivision"></select>
                     </div>
-                </div>
-
-                <div class="row">
-                    <div class="form-group col-md-3">
-                        <label>Структурний Підрозділ</label>
+                    <div class="form-group col-lg-4 col-xl-6">
                         <select asp-for="IdMainSubdivision" class="form-control" asp-items="ViewBag.MainSubdivision"></select>
                     </div>
                 </div>
-
-                <div class="row mb-3">
-                    <div class="col-md-3 text-right">
-                        <input type="submit" value="Перенести" class="btn btn-success btn-default" />
+                <div class="row justify-content-between">
+                    <div class="form-group col-lg-3">
+                        <div>
+                            <a asp-action="Index">Повернутися</a>
+                        </div>
+                    </div>
+                    <div class="col-md-6 text-right">
+                        <input type="submit" value="Реструктуризувати" class="btn btn-success btn-default" />
                     </div>
                 </div>
-
-            </div>
-        </form>
-
-        <div>
-            <a asp-action="Index">Повернутися до списку підрозділів</a>
+            </form>
         </div>
     </div>
-
-</div>
+</section>
