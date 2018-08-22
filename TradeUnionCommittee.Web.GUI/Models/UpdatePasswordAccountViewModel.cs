@@ -4,7 +4,7 @@ namespace TradeUnionCommittee.Web.GUI.Models
 {
     public class UpdatePasswordAccountViewModel
     {
-        public long? IdUser { get; set; }
+        public string HashIdUser { get; set; }
 
         [DataType(DataType.Password)]
         [Required(ErrorMessage = "Пароль не може бути порожнім")]

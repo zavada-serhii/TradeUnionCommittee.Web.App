@@ -23,6 +23,7 @@
                         <th>
                             Роль доступу
                         </th>
+
                         <th></th>
                     </tr>
                     </thead>
@@ -42,10 +43,10 @@
                                 <div class="btn-group">
                                     <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown"></button>
                                     <div class="dropdown-menu">
-                                        <a class="dropdown-item" asp-action="UpdateEmail" asp-route-id="@item.IdUser">Редагувати Email</a>
-                                        <a class="dropdown-item" asp-action="UpdatePassword" asp-route-id="@item.IdUser">Редагувати пароль</a>
-                                        <a class="dropdown-item" asp-action="UpdateRole" asp-route-id="@item.IdUser">Редагувати роль</a>
-                                        <a class="dropdown-item" asp-action="Delete" asp-route-id="@item.IdUser">Видалити</a>
+                                        <a class="dropdown-item" asp-action="UpdateEmail" asp-route-id="@item.HashIdUser">Редагувати Email</a>
+                                        <a class="dropdown-item" asp-action="UpdatePassword" asp-route-id="@item.HashIdUser">Редагувати пароль</a>
+                                        <a class="dropdown-item" asp-action="UpdateRole" asp-route-id="@item.HashIdUser">Редагувати роль</a>
+                                        <a class="dropdown-item" asp-action="Delete" asp-route-id="@item.HashIdUser">Видалити</a>
                                     </div>
                                 </div>
                             </td>

@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using TradeUnionCommittee.DAL.Interfaces;
 using TradeUnionCommittee.DAL.Repositories;
+using TradeUnionCommittee.Encryption;
 
 namespace TradeUnionCommittee.BLL.Infrastructure
 {
@@ -11,6 +12,7 @@ namespace TradeUnionCommittee.BLL.Infrastructure
         {
             services.AddScoped<IUnitOfWork, UnitOfWork>(o => new UnitOfWork(connectionString));
             services.AddSingleton(cm => AutoMapperModule.ConfigureAutoMapper());
+            services.AddScoped<ICryptoUtilities, CryptoUtilities>();
         }
     }
 

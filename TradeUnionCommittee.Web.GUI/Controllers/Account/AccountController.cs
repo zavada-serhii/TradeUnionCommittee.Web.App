@@ -64,10 +64,10 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Account
 
         [HttpGet]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> UpdateEmail(long? id)
+        public async Task<IActionResult> UpdateEmail(string id)
         {
             if (id == null) return NotFound();
-            var result = await _accountService.GetAsync(id.Value);
+            var result = await _accountService.GetAsync(id);
             if (result.IsValid)
             {
                 ViewBag.Role = await _dropDownList.GetRoles();
@@ -84,7 +84,7 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Account
         {
             if (ModelState.IsValid)
             {
-                if (vm.IdUser == null) return NotFound();
+                if (vm.HashIdUser == null) return NotFound();
                 var result = await _accountService.UpdateAsync(_mapper.Map<AccountDTO>(vm));
                 return result.IsValid
                     ? RedirectToAction("Index")
@@ -97,10 +97,10 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Account
 
         [HttpGet]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> UpdateRole(long? id)
+        public async Task<IActionResult> UpdateRole(string id)
         {
             if (id == null) return NotFound();
-            var result = await _accountService.GetAsync(id.Value);
+            var result = await _accountService.GetAsync(id);
             if (result.IsValid)
             {
                 ViewBag.Role = await _dropDownList.GetRoles();
@@ -117,7 +117,7 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Account
         {
             if (ModelState.IsValid)
             {
-                if (vm.IdUser == null) return NotFound();
+                if (vm.HashIdUser == null) return NotFound();
                 var result = await _accountService.UpdateAsync(_mapper.Map<AccountDTO>(vm));
                 return result.IsValid
                     ? RedirectToAction("Index")
@@ -130,10 +130,10 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Account
 
         [HttpGet]
         [Authorize(Roles = "Admin")]
-        public IActionResult UpdatePassword(long? id)
+        public IActionResult UpdatePassword(string id)
         {
             if (id == null) return NotFound();
-            var model = new UpdatePasswordAccountViewModel { IdUser = id};
+            var model = new UpdatePasswordAccountViewModel { HashIdUser = id};
             return View(model);
         }
 
@@ -144,7 +144,7 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Account
         {
             if (ModelState.IsValid)
             {
-                if (vm.IdUser == null) return NotFound();
+                if (vm.HashIdUser == null) return NotFound();
                 var result = await _accountService.UpdateAsync(_mapper.Map<AccountDTO>(vm));
                 return result.IsValid
                     ? RedirectToAction("Index")
@@ -157,20 +157,20 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Account
 
         [HttpGet]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Delete(long? id)
+        public async Task<IActionResult> Delete(string id)
         {
             if (id == null) return NotFound();
-            var result = await _accountService.GetAsync(id.Value);
+            var result = await _accountService.GetAsync(id);
             return result.IsValid ? View(result.Result) : _oops.OutPutError("Account", "Index", result.ErrorsList);
         }
 
         [HttpPost, ActionName("Delete")]
         [Authorize(Roles = "Admin")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(long? id)
+        public async Task<IActionResult> DeleteConfirmed(string id)
         {
             if (id == null) return NotFound();
-            var result = await _accountService.DeleteAsync(id.Value);
+            var result = await _accountService.DeleteAsync(id);
             return result.IsValid
                 ? RedirectToAction("Index")
                 : _oops.OutPutError("Account", "Index", result.ErrorsList);

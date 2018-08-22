@@ -14,10 +14,12 @@ namespace TradeUnionCommittee.BLL.Services.Account
     public class AccountService : IAccountService
     {
         private readonly IUnitOfWork _database;
+        private readonly ICryptoUtilities _cryptoUtilities;
 
-        public AccountService(IUnitOfWork database)
+        public AccountService(IUnitOfWork database, ICryptoUtilities cryptoUtilities)
         {
             _database = database;
+            _cryptoUtilities = cryptoUtilities;
         }
 
         public async Task<ActualResult<IEnumerable<AccountDTO>>> GetAllAsync()
@@ -34,7 +36,7 @@ namespace TradeUnionCommittee.BLL.Services.Account
                     on r.Id equals u.IdRole
                     select new AccountDTO
                     {
-                        IdUser = u.Id,
+                        HashIdUser = _cryptoUtilities.EncryptLong(u.Id,EnumCryptoUtilities.AccountService),
                         Email = u.Email,
                         Role = ConvertRoleToUkrainianLang(r.Name)
                     }).ToList();
@@ -43,10 +45,17 @@ namespace TradeUnionCommittee.BLL.Services.Account
             });
         }
 
-        public async Task<ActualResult<AccountDTO>> GetAsync(long id)
+        public Task<ActualResult<AccountDTO>> GetAsync(long id)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public async Task<ActualResult<AccountDTO>> GetAsync(string hashId)
         {
             return await Task.Run(() =>
             {
+                var id = _cryptoUtilities.DecryptLong(hashId,EnumCryptoUtilities.AccountService);
+
                 var user = _database.UsersRepository.Get(id);
                 if (user.IsValid == false && user.ErrorsList.Count > 0 || user.Result == null)
                 {
@@ -56,7 +65,7 @@ namespace TradeUnionCommittee.BLL.Services.Account
                 {
                     Result = new AccountDTO
                     {
-                        IdUser = user.Result.Id,
+                        HashIdUser = _cryptoUtilities.EncryptLong(user.Result.Id,EnumCryptoUtilities.AccountService),
                         Email = user.Result.Email,
                         IdRole = user.Result.IdRole
                     }
@@ -86,12 +95,14 @@ namespace TradeUnionCommittee.BLL.Services.Account
         {
             var result = new ActualResult();
 
+            var id = _cryptoUtilities.DecryptLong(item.HashIdUser,EnumCryptoUtilities.AccountService);
+
             if (item.IdRole != 0)
             {
-                var user = await GetAsync(item.IdUser);
+                var user = await GetAsync(item.HashIdUser);
                 result = _database.UsersRepository.Update(new Users
                 {
-                    Id = item.IdUser,
+                    Id = id,
                     IdRole = item.IdRole,
                     Email = user.Result.Email,
                     Password = user.Result.Password
@@ -100,10 +111,10 @@ namespace TradeUnionCommittee.BLL.Services.Account
 
             if (item.Email != null)
             {
-                var user = await GetAsync(item.IdUser);
+                var user = await GetAsync(item.HashIdUser);
                 result = _database.UsersRepository.Update(new Users
                 {
-                    Id = item.IdUser,
+                    Id = id,
                     Email = item.Email,
                     Password = user.Result.Password,
                     IdRole = user.Result.IdRole
@@ -112,10 +123,10 @@ namespace TradeUnionCommittee.BLL.Services.Account
 
             if (item.Password != null)
             {
-                var user = await GetAsync(item.IdUser);
+                var user = await GetAsync(item.HashIdUser);
                 result = _database.UsersRepository.Update(new Users
                 {
-                    Id = item.IdUser,
+                    Id = id,
                     Password = HashingPassword.HashPassword(item.Password),
                     Email = user.Result.Email,
                     IdRole = user.Result.IdRole
@@ -131,8 +142,14 @@ namespace TradeUnionCommittee.BLL.Services.Account
             return result;
         }
 
-        public async Task<ActualResult> DeleteAsync(long id)
+        public Task<ActualResult> DeleteAsync(long id)
         {
+            throw new System.NotImplementedException();
+        }
+
+        public async Task<ActualResult> DeleteAsync(string hashId)
+        {
+            var id = _cryptoUtilities.DecryptLong(hashId,EnumCryptoUtilities.AccountService);
             var user = _database.UsersRepository.Delete(id);
             if (user.IsValid == false && user.ErrorsList.Count > 0)
             {

@@ -2,7 +2,7 @@
 {
     public class UpdateRoleAccountViewModel
     {
-        public long? IdUser { get; set; }
+        public string HashIdUser { get; set; }
 
         public long IdRole { get; set; }
     }
