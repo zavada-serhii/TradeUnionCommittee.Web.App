@@ -36,7 +36,7 @@ namespace TradeUnionCommittee.BLL.Services.Account
                     on r.Id equals u.IdRole
                     select new AccountDTO
                     {
-                        HashIdUser = _cryptoUtilities.EncryptLong(u.Id,EnumCryptoUtilities.AccountService),
+                        HashIdUser = _cryptoUtilities.EncryptLong(u.Id,EnumCryptoUtilities.Account),
                         Email = u.Email,
                         Role = ConvertRoleToUkrainianLang(r.Name)
                     }).ToList();
@@ -54,7 +54,7 @@ namespace TradeUnionCommittee.BLL.Services.Account
         {
             return await Task.Run(() =>
             {
-                var id = _cryptoUtilities.DecryptLong(hashId,EnumCryptoUtilities.AccountService);
+                var id = _cryptoUtilities.DecryptLong(hashId,EnumCryptoUtilities.Account);
 
                 var user = _database.UsersRepository.Get(id);
                 if (user.IsValid == false && user.ErrorsList.Count > 0 || user.Result == null)
@@ -65,7 +65,7 @@ namespace TradeUnionCommittee.BLL.Services.Account
                 {
                     Result = new AccountDTO
                     {
-                        HashIdUser = _cryptoUtilities.EncryptLong(user.Result.Id,EnumCryptoUtilities.AccountService),
+                        HashIdUser = _cryptoUtilities.EncryptLong(user.Result.Id,EnumCryptoUtilities.Account),
                         Email = user.Result.Email,
                         IdRole = user.Result.IdRole
                     }
@@ -95,7 +95,7 @@ namespace TradeUnionCommittee.BLL.Services.Account
         {
             var result = new ActualResult();
 
-            var id = _cryptoUtilities.DecryptLong(item.HashIdUser,EnumCryptoUtilities.AccountService);
+            var id = _cryptoUtilities.DecryptLong(item.HashIdUser,EnumCryptoUtilities.Account);
 
             if (item.IdRole != 0)
             {
@@ -149,7 +149,7 @@ namespace TradeUnionCommittee.BLL.Services.Account
 
         public async Task<ActualResult> DeleteAsync(string hashId)
         {
-            var id = _cryptoUtilities.DecryptLong(hashId,EnumCryptoUtilities.AccountService);
+            var id = _cryptoUtilities.DecryptLong(hashId,EnumCryptoUtilities.Account);
             var user = _database.UsersRepository.Delete(id);
             if (user.IsValid == false && user.ErrorsList.Count > 0)
             {
