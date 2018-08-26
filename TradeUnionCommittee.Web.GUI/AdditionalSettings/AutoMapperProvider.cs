@@ -1,5 +1,8 @@
 ﻿using AutoMapper;
 using TradeUnionCommittee.BLL.DTO;
+using TradeUnionCommittee.Common.ActualResults;
+using TradeUnionCommittee.DAL.Entities;
+using TradeUnionCommittee.Encryption;
 using TradeUnionCommittee.Web.GUI.Models;
 
 namespace TradeUnionCommittee.Web.GUI.AdditionalSettings
@@ -12,6 +15,8 @@ namespace TradeUnionCommittee.Web.GUI.AdditionalSettings
         /// <returns>IMapper.</returns>
         public static IMapper ConfigureAutoMapper()
         {
+            ICryptoUtilities cryptoUtilities = new CryptoUtilities();
+
             return new MapperConfiguration(map =>
             {
                 map.CreateMap<AccountDTO, CreateAccountViewModel>().ReverseMap();
@@ -44,6 +49,13 @@ namespace TradeUnionCommittee.Web.GUI.AdditionalSettings
                 map.CreateMap<QualificationDTO, QualificationViewModel>().ReverseMap();
 
                 map.CreateMap<MainInfoEmployeeDTO, MainInfoEmployeeViewModel>().ReverseMap();
+
+                //---------------------------------------------------------------------------------------------
+
+                map.CreateMap<Position, DirectoryDTO>()
+                .ForMember("HashId", c => c.MapFrom(x => cryptoUtilities.EncryptLong(x.Id, EnumCryptoUtilities.Position)))
+                .ReverseMap()
+                .ForMember("Id", c => c.MapFrom(x => cryptoUtilities.DecryptLong(x.HashId, EnumCryptoUtilities.Position)));
 
             }).CreateMapper();
         }

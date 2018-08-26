@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -7,90 +8,106 @@ using TradeUnionCommittee.BLL.Interfaces.Directory;
 using TradeUnionCommittee.Common.ActualResults;
 using TradeUnionCommittee.DAL.Entities;
 using TradeUnionCommittee.DAL.Interfaces;
+using TradeUnionCommittee.Encryption;
 
 namespace TradeUnionCommittee.BLL.Services.Directory
 {
     public class PositionService : IPositionService
     {
         private readonly IUnitOfWork _database;
+        private readonly IMapper _mapper;
+        private readonly ICryptoUtilities _cryptoUtilities;
 
-        public PositionService(IUnitOfWork database)
+        public PositionService(IUnitOfWork database, IMapper mapper, ICryptoUtilities cryptoUtilities)
         {
             _database = database;
+            _mapper = mapper;
+            _cryptoUtilities = cryptoUtilities;
         }
 
-        public async Task<ActualResult<IEnumerable<DirectoryDTO>>> GetAllAsync()
+        public async Task<ActualResult<IEnumerable<DirectoryDTO>>> GetAllAsync() => 
+            await Task.Run(() => _mapper.Map<ActualResult<IEnumerable<DirectoryDTO>>>(_database.PositionRepository.GetAll()));
+
+        public async Task<ActualResult<DirectoryDTO>> GetAsync(string hashId)
         {
-            return await Task.Run(() =>
-            {
-                var mapper = new MapperConfiguration(cfg => cfg.CreateMap<Position, DirectoryDTO>()).CreateMapper();
-                return mapper.Map<ActualResult<IEnumerable<Position>>, ActualResult<IEnumerable<DirectoryDTO>>>(_database.PositionRepository.GetAll());
-            });
+            var check = await CheckDecryptAndTupleInDb(hashId);
+            return check.IsValid 
+                ? _mapper.Map<ActualResult<DirectoryDTO>>(_database.PositionRepository.Get(_cryptoUtilities.DecryptLong(hashId, EnumCryptoUtilities.Position))) 
+                : new ActualResult<DirectoryDTO>(check.ErrorsList);
         }
 
-        public async Task<ActualResult<DirectoryDTO>> GetAsync(long id)
+        public async Task<ActualResult> CreateAsync(DirectoryDTO dto)
         {
-            return await Task.Run(() =>
+            if (!await CheckNameAsync(dto.Name))
             {
-                var position = _database.PositionRepository.Get(id);
-                if (position.IsValid == false && position.ErrorsList.Count > 0 || position.Result == null)
+                _database.PositionRepository.Create(_mapper.Map<Position>(dto));
+                return _mapper.Map<ActualResult>(await _database.SaveAsync());
+            }
+            return new ActualResult("0004");
+        }
+
+        public async Task<ActualResult> UpdateAsync(DirectoryDTO dto)
+        {
+            var check = await CheckDecryptAndTupleInDb(dto.HashId);
+            if (check.IsValid)
+            {
+                if (!await CheckNameAsync(dto.Name))
                 {
-                    return new ActualResult<DirectoryDTO> { IsValid = false, ErrorsList = position.ErrorsList };
+                    _database.PositionRepository.Update(_mapper.Map<Position>(dto));
+                    return _mapper.Map<ActualResult>(await _database.SaveAsync());
                 }
-                return new ActualResult<DirectoryDTO> { Result = new DirectoryDTO { Id = position.Result.Id, Name = position.Result.Name } };
-            });
-        }
-
-        public async Task<ActualResult> CreateAsync(DirectoryDTO item)
-        {
-            var position = _database.PositionRepository.Create(new Position { Name = item.Name });
-            if (position.IsValid == false && position.ErrorsList.Count > 0)
-            {
-                return new ActualResult { IsValid = false, ErrorsList = position.ErrorsList };
+                return new ActualResult("0004");
             }
-            var dbState = await _database.SaveAsync();
-            position.IsValid = dbState.IsValid;
-            return position;
+            return new ActualResult(check.ErrorsList);
         }
 
-        public async Task<ActualResult> UpdateAsync(DirectoryDTO item)
+        public async Task<ActualResult> DeleteAsync(string hashId)
         {
-            var position = _database.PositionRepository.Update(new Position { Id = item.Id, Name = item.Name });
-            if (position.IsValid == false && position.ErrorsList.Count > 0)
+            var check = await CheckDecryptAndTupleInDb(hashId, false);
+            if (check.IsValid)
             {
-                return new ActualResult { IsValid = false, ErrorsList = position.ErrorsList };
+                _database.PositionRepository.Delete(_cryptoUtilities.DecryptLong(hashId, EnumCryptoUtilities.Position));
+                return _mapper.Map<ActualResult>(await _database.SaveAsync());
             }
-            var dbState = await _database.SaveAsync();
-            position.IsValid = dbState.IsValid;
-            return position;
+            return new ActualResult(check.ErrorsList);
         }
 
-        public async Task<ActualResult> DeleteAsync(long id)
+        public async Task<bool> CheckNameAsync(string name) => 
+            await Task.Run(() => _database.PositionRepository.Find(p => p.Name == name).Result.Any());
+
+        private async Task<ActualResult> CheckDecryptAndTupleInDb(string hashId, bool checkTuple = true) => await Task.Run(() =>
         {
-            var position = _database.PositionRepository.Delete(id);
-            if (position.IsValid == false && position.ErrorsList.Count > 0)
+            if (_cryptoUtilities.CheckDecrypt(hashId, EnumCryptoUtilities.Position))
             {
-                return new ActualResult { IsValid = false, ErrorsList = position.ErrorsList };
+                if (checkTuple)
+                {
+                    var id = _cryptoUtilities.DecryptLong(hashId, EnumCryptoUtilities.Position);
+                    if (_database.PositionRepository.Find(x => x.Id == id).Result.Any())
+                    {
+                        return new ActualResult();
+                    }
+                    return new ActualResult("0001");
+                }
+                return new ActualResult();
             }
-            var dbState = await _database.SaveAsync();
-            position.IsValid = dbState.IsValid;
-            return position;
-        }
-
-        public async Task<ActualResult> CheckNameAsync(string name)
-        {
-            return await Task.Run(() =>
-            {
-                var position = _database.PositionRepository.Find(p => p.Name == name);
-                return position.Result.Any() ?
-                    new ActualResult { IsValid = false} :
-                    new ActualResult { IsValid = true};
-            });
-        }
+            return new ActualResult("0003");
+        });
 
         public void Dispose()
         {
             _database.Dispose();
+        }
+
+        //-------------------------------------------------------------------------------------------------------------------
+
+        public Task<ActualResult<DirectoryDTO>> GetAsync(long id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<ActualResult> DeleteAsync(long id)
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using TradeUnionCommittee.Common.ActualResults;
 using TradeUnionCommittee.DAL.EF;
+using TradeUnionCommittee.DAL.Entities;
 using TradeUnionCommittee.DAL.Interfaces;
 
 namespace TradeUnionCommittee.DAL.Repositories
@@ -39,12 +40,6 @@ namespace TradeUnionCommittee.DAL.Repositories
             try
             {
                 result.Result = _db.Set<T>().Find(id);
-
-                if (result.Result == null)
-                {
-                    result.IsValid = false;
-                    result.ErrorsList.Add("Data has been deleted or changed!");
-                }
             }
             catch (Exception e)
             {
@@ -59,7 +54,7 @@ namespace TradeUnionCommittee.DAL.Repositories
             var result = new ActualResult<IEnumerable<T>>();
             try
             {
-                result.Result = _db.Set<T>().Where(predicate).ToList();
+                result.Result = _db.Set<T>().AsNoTracking().Where(predicate).ToList();
             }
             catch (Exception e)
             {

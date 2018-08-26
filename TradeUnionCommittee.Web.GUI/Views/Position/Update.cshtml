@@ -16,6 +16,8 @@
             <form asp-action="Update">
 
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                
+                <input type="hidden" asp-for="HashId"/>
 
                 <div class="row">
                     <div class="form-group col-lg-4 col-xl-4">
@@ -28,7 +30,7 @@
                 <div class="row justify-content-between">
                     <div class="form-group col-lg-3">
                         <div>
-                            <a asp-action="Index">Повернутися до списку посад</a>
+                            <a asp-action="Index">Повернутися</a>
                         </div>
                     </div>
                     <div class="col-md-6 text-right">

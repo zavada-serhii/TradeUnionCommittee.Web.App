@@ -1,11 +1,10 @@
 ﻿using HashidsNet;
-using System;
 
 namespace TradeUnionCommittee.Encryption
 {
     public class CryptoUtilities : ICryptoUtilities
     {
-        private const string Salt = "Development Salt";
+        private const string Salt = "Development Salt ";
         private const int MinHashLenght = 5;
         private const string Alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
 
@@ -15,18 +14,21 @@ namespace TradeUnionCommittee.Encryption
             return hashids.EncodeLong(plainLong);
         }
 
+        public bool CheckDecrypt(string cipherText, EnumCryptoUtilities crypto)
+        {
+            var hashids = new Hashids(Salt + AdditionalSalt(crypto), MinHashLenght, Alphabet);
+            return hashids.DecodeLong(cipherText).Length > 0;
+        }
+
         public long DecryptLong(string cipherText, EnumCryptoUtilities crypto)
         {
+            if (cipherText == null)
+            {
+                return 0;
+            }
             var hashids = new Hashids(Salt + AdditionalSalt(crypto), MinHashLenght, Alphabet);
             var decod = hashids.DecodeLong(cipherText);
             return decod[0];
-        }
-
-        public int DecryptInt(string cipherText, EnumCryptoUtilities crypto)
-        {
-            var hashids = new Hashids(Salt + AdditionalSalt(crypto), MinHashLenght, Alphabet);
-            var decod = hashids.DecodeLong(cipherText);
-            return Convert.ToInt32(decod[0]);
         }
 
         private string AdditionalSalt(EnumCryptoUtilities crypto)
@@ -71,9 +73,9 @@ namespace TradeUnionCommittee.Encryption
 
     public interface ICryptoUtilities
     {
-        int DecryptInt(string cipherText,EnumCryptoUtilities crypto);
         long DecryptLong(string cipherText,EnumCryptoUtilities crypto);
         string EncryptLong(long plainLong, EnumCryptoUtilities crypto);
+        bool CheckDecrypt(string cipherText, EnumCryptoUtilities crypto);
     }
 
     public enum EnumCryptoUtilities

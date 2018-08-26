@@ -10,5 +10,7 @@ namespace TradeUnionCommittee.Web.GUI.Models
         [Required(ErrorMessage = "Назва не може бути порожньою!")]
         [Remote("CheckName", "Position", ErrorMessage = "Ця назва вже використовується!")]
         public override string Name { get; set; }
+
+        public string HashId { get; set; }
     }
 }

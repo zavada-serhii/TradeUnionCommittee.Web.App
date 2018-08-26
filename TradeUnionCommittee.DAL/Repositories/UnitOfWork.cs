@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using TradeUnionCommittee.Common.ActualResults;
 using TradeUnionCommittee.DAL.EF;
 using TradeUnionCommittee.DAL.Entities;
@@ -152,6 +154,24 @@ namespace TradeUnionCommittee.DAL.Repositories
             try
             {
                 await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException ex)
+            {
+                var entity = ex.Entries.Single().GetDatabaseValues();
+                if (entity == null)
+                {
+                    _context.UndoChanges();
+                    result.IsValid = false;
+                    result.ErrorsList.Add("0001");
+                    //The entity being updated is already deleted by another user
+                }
+                else
+                {
+                    var data = ex.Entries.Single();
+                    data.OriginalValues.SetValues(data.GetDatabaseValues());
+                    result.IsValid = false;
+                    result.ErrorsList.Add("0002");
+                }
             }
             catch (Exception e)
             {
