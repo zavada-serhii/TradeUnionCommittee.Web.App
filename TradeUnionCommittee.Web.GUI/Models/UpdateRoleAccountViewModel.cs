@@ -4,6 +4,6 @@
     {
         public string HashIdUser { get; set; }
 
-        public long IdRole { get; set; }
+        public string HashIdRole { get; set; }
     }
 }

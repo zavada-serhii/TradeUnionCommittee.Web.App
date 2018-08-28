@@ -17,7 +17,7 @@ namespace TradeUnionCommittee.BLL.Services.Login
         public async Task<ActualResult<string>> Login(string email, string password)
         {
             var result = new ActualResult<string>();
-            var role = await _dataBase.LoginRepository.Login(email, password);
+            var role = await _dataBase.UsersRepository.Login(email, password);
             if (role.IsValid)
             {
                 result.Result = role.Result;

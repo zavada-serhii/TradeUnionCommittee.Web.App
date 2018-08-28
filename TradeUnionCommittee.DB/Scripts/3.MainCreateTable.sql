@@ -18,7 +18,7 @@ CREATE TABLE "Employee"(
         "DateAdded" 		DATE 		NOT NULL        DEFAULT CURRENT_DATE
 );
 ALTER TABLE "Employee"
-OWNER TO AdminTradeUnionCommitteeEmployees;
+OWNER TO postgres;
 
 -----------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -31,7 +31,7 @@ CREATE TABLE "Education"(
 	UNIQUE("IdEmployee")
 );
 ALTER TABLE "Education"
-OWNER TO AdminTradeUnionCommitteeEmployees;
+OWNER TO postgres;
 
 -----------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -43,7 +43,7 @@ CREATE TABLE "Scientific"(
 	UNIQUE("IdEmployee")
 );
 ALTER TABLE "Scientific"
-OWNER TO AdminTradeUnionCommitteeEmployees;
+OWNER TO postgres;
 
 -----------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -56,7 +56,7 @@ CREATE TABLE "Children"(
 	"BirthDate"		DATE 		NOT NULL
 );
 ALTER TABLE "Children"
-OWNER TO AdminTradeUnionCommitteeEmployees;
+OWNER TO postgres;
 
 -----------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -69,7 +69,7 @@ CREATE TABLE "GrandChildren"(
 	"BirthDate"		DATE 		NOT NULL
 );
 ALTER TABLE "GrandChildren"
-OWNER TO AdminTradeUnionCommitteeEmployees;
+OWNER TO postgres;
 
 -----------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -82,4 +82,4 @@ CREATE TABLE "Family"(
 	"BirthDate"		DATE 		NULL
 );
 ALTER TABLE "Family"
-OWNER TO AdminTradeUnionCommitteeEmployees;
+OWNER TO postgres;

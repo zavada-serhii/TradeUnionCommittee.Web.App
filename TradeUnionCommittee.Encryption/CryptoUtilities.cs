@@ -37,6 +37,8 @@ namespace TradeUnionCommittee.Encryption
             {
                 case EnumCryptoUtilities.Account:
                     return "AccountService";
+                case EnumCryptoUtilities.Role:
+                    return "RoleService";
                 case EnumCryptoUtilities.Position:
                     return "PositionService";
                 case EnumCryptoUtilities.SocialActivity:
@@ -81,19 +83,20 @@ namespace TradeUnionCommittee.Encryption
     public enum EnumCryptoUtilities
     {
         Account = 1,
-        Position = 2,
-        SocialActivity = 3,
-        Privileges = 4,
-        Award = 5,
-        MaterialAid = 6,
-        Hobby = 7,
-        Travel = 8,
-        Wellness = 9,
-        Tour = 10,
-        Activities = 11,
-        Cultural = 12,
-        Subdivision = 13,
-        Departmental = 14,
-        Dormitory = 15
+        Role = 2,
+        Position = 3,
+        SocialActivity = 4,
+        Privileges = 5,
+        Award = 6,
+        MaterialAid = 7,
+        Hobby = 8,
+        Travel = 9,
+        Wellness = 10,
+        Tour = 11,
+        Activities = 12,
+        Cultural = 13,
+        Subdivision = 14,
+        Departmental = 15,
+        Dormitory = 16
     }
 }

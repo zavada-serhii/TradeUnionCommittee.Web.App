@@ -5,16 +5,20 @@ using TradeUnionCommittee.Common.ActualResults;
 
 namespace TradeUnionCommittee.BLL.Interfaces.Account
 {
-    public interface IAccountService : IService<AccountDTO>
+    public interface IAccountService
     {
+        Task<ActualResult<IEnumerable<AccountDTO>>> GetAllUsersAsync();
+        Task<ActualResult<AccountDTO>> GetUserAsync(string hashId);
+        Task<ActualResult> CreateUserAsync(AccountDTO dto);
+        Task<ActualResult> UpdateUserEmailAsync(AccountDTO dto);
+        Task<ActualResult> UpdateUserPasswordAsync(AccountDTO dto);
+        Task<ActualResult> UpdateUserRoleAsync(AccountDTO dto);
+        Task<ActualResult> DeleteUserAsync(string hashId);
+        Task<bool> CheckEmailAsync(string email);
+
         Task<ActualResult<IEnumerable<RolesDTO>>> GetRoles();
+        Task<ActualResult<RolesDTO>> GetRoleId(string hashId);
 
-        Task<ActualResult<RolesDTO>> GetRoleId(long id);
-
-        Task<ActualResult> CheckEmail(string email);
-
-        Task<ActualResult<AccountDTO>> GetAsync(string hashId);
-
-        Task<ActualResult> DeleteAsync(string hashId);
+        void Dispose();
     }
 }

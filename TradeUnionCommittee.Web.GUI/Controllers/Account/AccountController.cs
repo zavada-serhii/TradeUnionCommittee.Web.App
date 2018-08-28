@@ -31,7 +31,7 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Account
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Index()
         {
-            var result = await _accountService.GetAllAsync();
+            var result = await _accountService.GetAllUsersAsync();
             return View(result);
         }
 
@@ -52,7 +52,7 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Account
         {
             if (ModelState.IsValid)
             {
-                var result = await _accountService.CreateAsync(_mapper.Map<AccountDTO>(vm));
+                var result = await _accountService.CreateUserAsync(_mapper.Map<AccountDTO>(vm));
                 return result.IsValid
                     ? RedirectToAction("Index")
                     : _oops.OutPutError("Account", "Index", result.ErrorsList);
@@ -67,7 +67,7 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Account
         public async Task<IActionResult> UpdateEmail(string id)
         {
             if (id == null) return NotFound();
-            var result = await _accountService.GetAsync(id);
+            var result = await _accountService.GetUserAsync(id);
             if (result.IsValid)
             {
                 ViewBag.Role = await _dropDownList.GetRoles();
@@ -85,7 +85,7 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Account
             if (ModelState.IsValid)
             {
                 if (vm.HashIdUser == null) return NotFound();
-                var result = await _accountService.UpdateAsync(_mapper.Map<AccountDTO>(vm));
+                var result = await _accountService.UpdateUserEmailAsync(_mapper.Map<AccountDTO>(vm));
                 return result.IsValid
                     ? RedirectToAction("Index")
                     : _oops.OutPutError("Account", "Index", result.ErrorsList);
@@ -100,7 +100,7 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Account
         public async Task<IActionResult> UpdateRole(string id)
         {
             if (id == null) return NotFound();
-            var result = await _accountService.GetAsync(id);
+            var result = await _accountService.GetUserAsync(id);
             if (result.IsValid)
             {
                 ViewBag.Role = await _dropDownList.GetRoles();
@@ -118,7 +118,7 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Account
             if (ModelState.IsValid)
             {
                 if (vm.HashIdUser == null) return NotFound();
-                var result = await _accountService.UpdateAsync(_mapper.Map<AccountDTO>(vm));
+                var result = await _accountService.UpdateUserRoleAsync(_mapper.Map<AccountDTO>(vm));
                 return result.IsValid
                     ? RedirectToAction("Index")
                     : _oops.OutPutError("Account", "Index", result.ErrorsList);
@@ -145,7 +145,7 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Account
             if (ModelState.IsValid)
             {
                 if (vm.HashIdUser == null) return NotFound();
-                var result = await _accountService.UpdateAsync(_mapper.Map<AccountDTO>(vm));
+                var result = await _accountService.UpdateUserPasswordAsync(_mapper.Map<AccountDTO>(vm));
                 return result.IsValid
                     ? RedirectToAction("Index")
                     : _oops.OutPutError("Account", "Index", result.ErrorsList);
@@ -160,7 +160,7 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Account
         public async Task<IActionResult> Delete(string id)
         {
             if (id == null) return NotFound();
-            var result = await _accountService.GetAsync(id);
+            var result = await _accountService.GetUserAsync(id);
             return result.IsValid ? View(result.Result) : _oops.OutPutError("Account", "Index", result.ErrorsList);
         }
 
@@ -170,7 +170,7 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Account
         public async Task<IActionResult> DeleteConfirmed(string id)
         {
             if (id == null) return NotFound();
-            var result = await _accountService.DeleteAsync(id);
+            var result = await _accountService.DeleteUserAsync(id);
             return result.IsValid
                 ? RedirectToAction("Index")
                 : _oops.OutPutError("Account", "Index", result.ErrorsList);
@@ -182,8 +182,7 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Account
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> CheckEmail(string email)
         {
-            var result = await _accountService.CheckEmail(email);
-            return Json(result.IsValid);
+            return Json(!await _accountService.CheckEmailAsync(email));
         }
 
         //------------------------------------------------------------------------------------------------------------------------------------------
