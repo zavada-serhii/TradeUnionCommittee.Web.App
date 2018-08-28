@@ -41,7 +41,7 @@ namespace TradeUnionCommittee.BLL.Services.Account
             var checkRole = await CheckRoleDecrypt(dto.HashIdRole);
             if (!await CheckEmailAsync(dto.Email))
             {
-                if (!checkRole.IsValid)
+                if (checkRole.IsValid)
                 {
                     _database.UsersRepository.CreateUser(_mapper.Map<Users>(dto));
                     return _mapper.Map<ActualResult>(await _database.SaveAsync());
