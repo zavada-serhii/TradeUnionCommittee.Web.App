@@ -1,9 +1,9 @@
-﻿using AutoMapper;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.DTO;
+using TradeUnionCommittee.BLL.Infrastructure;
 using TradeUnionCommittee.BLL.Interfaces.Directory;
 using TradeUnionCommittee.Common.ActualResults;
 using TradeUnionCommittee.DAL.Entities;
@@ -15,24 +15,24 @@ namespace TradeUnionCommittee.BLL.Services.Directory
     public class PositionService : IPositionService
     {
         private readonly IUnitOfWork _database;
-        private readonly IMapper _mapper;
         private readonly ICryptoUtilities _cryptoUtilities;
+        private readonly IAutoMapperModule _mapperModule;
 
-        public PositionService(IUnitOfWork database, IMapper mapper, ICryptoUtilities cryptoUtilities)
+        public PositionService(IUnitOfWork database, IAutoMapperModule mapperModule, ICryptoUtilities cryptoUtilities)
         {
             _database = database;
-            _mapper = mapper;
+            _mapperModule = mapperModule;
             _cryptoUtilities = cryptoUtilities;
         }
 
         public async Task<ActualResult<IEnumerable<DirectoryDTO>>> GetAllAsync() => 
-            await Task.Run(() => _mapper.Map<ActualResult<IEnumerable<DirectoryDTO>>>(_database.PositionRepository.GetAll()));
+            await Task.Run(() => _mapperModule.Mapper.Map<ActualResult<IEnumerable<DirectoryDTO>>>(_database.PositionRepository.GetAll()));
 
         public async Task<ActualResult<DirectoryDTO>> GetAsync(string hashId)
         {
             var check = await CheckDecryptAndTupleInDb(hashId);
             return check.IsValid 
-                ? _mapper.Map<ActualResult<DirectoryDTO>>(_database.PositionRepository.Get(_cryptoUtilities.DecryptLong(hashId, EnumCryptoUtilities.Position))) 
+                ? _mapperModule.Mapper.Map<ActualResult<DirectoryDTO>>(_database.PositionRepository.Get(_cryptoUtilities.DecryptLong(hashId, EnumCryptoUtilities.Position))) 
                 : new ActualResult<DirectoryDTO>(check.ErrorsList);
         }
 
@@ -40,8 +40,8 @@ namespace TradeUnionCommittee.BLL.Services.Directory
         {
             if (!await CheckNameAsync(dto.Name))
             {
-                _database.PositionRepository.Create(_mapper.Map<Position>(dto));
-                return _mapper.Map<ActualResult>(await _database.SaveAsync());
+                _database.PositionRepository.Create(_mapperModule.Mapper.Map<Position>(dto));
+                return _mapperModule.Mapper.Map<ActualResult>(await _database.SaveAsync());
             }
             return new ActualResult("0004");
         }
@@ -53,8 +53,8 @@ namespace TradeUnionCommittee.BLL.Services.Directory
             {
                 if (!await CheckNameAsync(dto.Name))
                 {
-                    _database.PositionRepository.Update(_mapper.Map<Position>(dto));
-                    return _mapper.Map<ActualResult>(await _database.SaveAsync());
+                    _database.PositionRepository.Update(_mapperModule.Mapper.Map<Position>(dto));
+                    return _mapperModule.Mapper.Map<ActualResult>(await _database.SaveAsync());
                 }
                 return new ActualResult("0004");
             }
@@ -67,7 +67,7 @@ namespace TradeUnionCommittee.BLL.Services.Directory
             if (check.IsValid)
             {
                 _database.PositionRepository.Delete(_cryptoUtilities.DecryptLong(hashId, EnumCryptoUtilities.Position));
-                return _mapper.Map<ActualResult>(await _database.SaveAsync());
+                return _mapperModule.Mapper.Map<ActualResult>(await _database.SaveAsync());
             }
             return new ActualResult(check.ErrorsList);
         }

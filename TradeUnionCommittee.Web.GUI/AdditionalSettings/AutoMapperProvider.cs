@@ -1,7 +1,5 @@
 ﻿using AutoMapper;
 using TradeUnionCommittee.BLL.DTO;
-using TradeUnionCommittee.DAL.Entities;
-using TradeUnionCommittee.Encryption;
 using TradeUnionCommittee.Web.GUI.Models;
 
 namespace TradeUnionCommittee.Web.GUI.AdditionalSettings
@@ -14,7 +12,6 @@ namespace TradeUnionCommittee.Web.GUI.AdditionalSettings
         /// <returns>IMapper.</returns>
         public static IMapper ConfigureAutoMapper()
         {
-            ICryptoUtilities cryptoUtilities = new CryptoUtilities();
             return new MapperConfiguration(map =>
             {
                 //-- Controller Mapper ---------------------------------------------------------------------------------------------------------
@@ -50,41 +47,7 @@ namespace TradeUnionCommittee.Web.GUI.AdditionalSettings
 
                 map.CreateMap<MainInfoEmployeeDTO, MainInfoEmployeeViewModel>().ReverseMap();
 
-                //-- Service Mapper ------------------------------------------------------------------------------------------------------------
-
-                map.CreateMap<Users, AccountDTO>()
-                    .ForMember(d => d.HashIdUser, c => c.MapFrom(x => cryptoUtilities.EncryptLong(x.Id, EnumCryptoUtilities.Account)))
-                    .ForMember(d => d.Role, c => c.MapFrom(x => ConvertToUkrainianLang(x.IdRoleNavigation.Name)))
-                    .ReverseMap()
-                    .ForMember(d => d.Id, c => c.MapFrom(x => cryptoUtilities.DecryptLong(x.HashIdUser, EnumCryptoUtilities.Account)))
-                    .ForMember(d => d.IdRole, c => c.MapFrom(x => cryptoUtilities.DecryptLong(x.HashIdRole, EnumCryptoUtilities.Role)));
-
-                map.CreateMap<Roles, RolesDTO>()
-                    .ForMember(d => d.HashId, c => c.MapFrom(x => cryptoUtilities.EncryptLong(x.Id, EnumCryptoUtilities.Role)))
-                    .ForMember(d => d.Name, c => c.MapFrom(x => ConvertToUkrainianLang(x.Name)))
-                    .ReverseMap();
-
-                map.CreateMap<Position, DirectoryDTO>()
-                    .ForMember(d => d.HashId, c => c.MapFrom(x => cryptoUtilities.EncryptLong(x.Id, EnumCryptoUtilities.Position)))
-                    .ReverseMap()
-                    .ForMember(d => d.Id, c => c.MapFrom(x => cryptoUtilities.DecryptLong(x.HashId, EnumCryptoUtilities.Position)));
-
             }).CreateMapper();
-        }
-
-        private static string ConvertToUkrainianLang(string param)
-        {
-            switch (param)
-            {
-                case "Admin":
-                    return "Адміністратор";
-                case "Accountant":
-                    return "Бухгалтер";
-                case "Deputy":
-                    return "Заступник";
-                default:
-                    return string.Empty;
-            }
         }
     }
 }

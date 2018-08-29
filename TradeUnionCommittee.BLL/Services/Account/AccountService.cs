@@ -1,8 +1,8 @@
-﻿using AutoMapper;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.DTO;
+using TradeUnionCommittee.BLL.Infrastructure;
 using TradeUnionCommittee.BLL.Interfaces.Account;
 using TradeUnionCommittee.Common.ActualResults;
 using TradeUnionCommittee.DAL.Entities;
@@ -14,25 +14,25 @@ namespace TradeUnionCommittee.BLL.Services.Account
     public class AccountService : IAccountService
     {
         private readonly IUnitOfWork _database;
-        private readonly IMapper _mapper;
         private readonly ICryptoUtilities _cryptoUtilities;
+        private readonly IAutoMapperModule _mapperModule;
 
-        public AccountService(IUnitOfWork database, ICryptoUtilities cryptoUtilities, IMapper mapper)
+        public AccountService(IUnitOfWork database, ICryptoUtilities cryptoUtilities, IAutoMapperModule mapperModule)
         {
             _database = database;
             _cryptoUtilities = cryptoUtilities;
-            _mapper = mapper;
+            _mapperModule = mapperModule;
         }
 
         public async Task<ActualResult<IEnumerable<AccountDTO>>> GetAllUsersAsync() => 
-            await Task.Run(() => _mapper.Map<ActualResult<IEnumerable<AccountDTO>>>(_database.UsersRepository.GetAllUsers()));
+            await Task.Run(() => _mapperModule.Mapper.Map<ActualResult<IEnumerable<AccountDTO>>>(_database.UsersRepository.GetAllUsers()));
 
 
         public async Task<ActualResult<AccountDTO>> GetUserAsync(string hashId)
         {
             var check = await CheckUserDecryptAndTupleInDb(hashId);
             return check.IsValid
-                ? _mapper.Map<ActualResult<AccountDTO>>(_database.UsersRepository.GetUser(_cryptoUtilities.DecryptLong(hashId, EnumCryptoUtilities.Account)))
+                ? _mapperModule.Mapper.Map<ActualResult<AccountDTO>>(_database.UsersRepository.GetUser(_cryptoUtilities.DecryptLong(hashId, EnumCryptoUtilities.Account)))
                 : new ActualResult<AccountDTO>(check.ErrorsList);
         }
 
@@ -43,8 +43,8 @@ namespace TradeUnionCommittee.BLL.Services.Account
             {
                 if (checkRole.IsValid)
                 {
-                    _database.UsersRepository.CreateUser(_mapper.Map<Users>(dto));
-                    return _mapper.Map<ActualResult>(await _database.SaveAsync());
+                    _database.UsersRepository.CreateUser(_mapperModule.Mapper.Map<Users>(dto));
+                    return _mapperModule.Mapper.Map<ActualResult>(await _database.SaveAsync());
                 }
                 return new ActualResult(checkRole.ErrorsList);
             }
@@ -58,8 +58,8 @@ namespace TradeUnionCommittee.BLL.Services.Account
             {
                 if (!await CheckEmailAsync(dto.Email))
                 {
-                    _database.UsersRepository.UpdateUserEmail(_mapper.Map<Users>(dto));
-                    return _mapper.Map<ActualResult>(await _database.SaveAsync());
+                    _database.UsersRepository.UpdateUserEmail(_mapperModule.Mapper.Map<Users>(dto));
+                    return _mapperModule.Mapper.Map<ActualResult>(await _database.SaveAsync());
                 }
                 return new ActualResult("0004");
             }
@@ -71,8 +71,8 @@ namespace TradeUnionCommittee.BLL.Services.Account
             var check = await CheckUserDecryptAndTupleInDb(dto.HashIdUser);
             if (check.IsValid)
             {
-                _database.UsersRepository.UpdateUserPassword(_mapper.Map<Users>(dto));
-                return _mapper.Map<ActualResult>(await _database.SaveAsync());
+                _database.UsersRepository.UpdateUserPassword(_mapperModule.Mapper.Map<Users>(dto));
+                return _mapperModule.Mapper.Map<ActualResult>(await _database.SaveAsync());
             }
             return new ActualResult(check.ErrorsList);
         }
@@ -83,8 +83,8 @@ namespace TradeUnionCommittee.BLL.Services.Account
             var checkRole = await CheckRoleDecrypt(dto.HashIdRole);
             if (checkUser.IsValid && checkRole.IsValid)
             {
-                _database.UsersRepository.UpdateUserRole(_mapper.Map<Users>(dto));
-                return _mapper.Map<ActualResult>(await _database.SaveAsync());
+                _database.UsersRepository.UpdateUserRole(_mapperModule.Mapper.Map<Users>(dto));
+                return _mapperModule.Mapper.Map<ActualResult>(await _database.SaveAsync());
             }
             return new ActualResult(new List<string> { checkUser.ErrorsList.FirstOrDefault(), checkRole.ErrorsList.FirstOrDefault() });
         }
@@ -95,7 +95,7 @@ namespace TradeUnionCommittee.BLL.Services.Account
             if (check.IsValid)
             {
                 _database.UsersRepository.DeleteUser(_cryptoUtilities.DecryptLong(hashId, EnumCryptoUtilities.Account));
-                return _mapper.Map<ActualResult>(await _database.SaveAsync());
+                return _mapperModule.Mapper.Map<ActualResult>(await _database.SaveAsync());
             }
             return new ActualResult(check.ErrorsList);
         }
@@ -106,13 +106,13 @@ namespace TradeUnionCommittee.BLL.Services.Account
         //------------------------------------------------------------------------------------------------------------------------------------------
 
         public async Task<ActualResult<IEnumerable<RolesDTO>>> GetRoles() => 
-            await Task.Run(() => _mapper.Map<ActualResult<IEnumerable<RolesDTO>>>(_database.UsersRepository.GetAllRoles()));
+            await Task.Run(() => _mapperModule.Mapper.Map<ActualResult<IEnumerable<RolesDTO>>>(_database.UsersRepository.GetAllRoles()));
 
         public async Task<ActualResult<RolesDTO>> GetRoleId(string hashId)
         {
             var check = await CheckRoleDecrypt(hashId);
             return check.IsValid
-                ? _mapper.Map<ActualResult<RolesDTO>>(_database.UsersRepository.GetRole(_cryptoUtilities.DecryptLong(hashId, EnumCryptoUtilities.Role)))
+                ? _mapperModule.Mapper.Map<ActualResult<RolesDTO>>(_database.UsersRepository.GetRole(_cryptoUtilities.DecryptLong(hashId, EnumCryptoUtilities.Role)))
                 : new ActualResult<RolesDTO>(check.ErrorsList);
         }
 

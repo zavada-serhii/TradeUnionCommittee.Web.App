@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using TradeUnionCommittee.BLL.Interfaces.Account;
 using TradeUnionCommittee.BLL.Interfaces.Directory;
 using TradeUnionCommittee.BLL.Interfaces.Employee;
@@ -20,12 +19,15 @@ namespace TradeUnionCommittee.BLL.Infrastructure
     {
         public static IServiceCollection AddTradeUnionCommitteeServiceModule(this IServiceCollection services, string connectionString)
         {
+            // Injection UnitOfWork, CryptoUtilities && AutoMapper 
+
             services.AddScoped<IUnitOfWork, UnitOfWork>(o => new UnitOfWork(connectionString));
-            services.AddScoped<ICryptoUtilities, CryptoUtilities>();
-            services.AddSingleton(cm => AutoMapperModule.ConfigureAutoMapper());
+            services.AddSingleton<ICryptoUtilities, CryptoUtilities>();
+            services.AddSingleton<IAutoMapperModule, AutoMapperModule>();
 
+            // Injection All Service
             //---------------------------------------------------------------------------------------------
-
+            
             services.AddScoped<ILoginService, LoginService>();
             services.AddScoped<IAccountService, AccountService>();
 
@@ -52,18 +54,6 @@ namespace TradeUnionCommittee.BLL.Infrastructure
             //---------------------------------------------------------------------------------------------
 
             return services;
-        }
-    }
-
-    internal class AutoMapperModule
-    {
-        internal static IMapper ConfigureAutoMapper()
-        {
-            return new MapperConfiguration(map =>
-            {
-
-
-            }).CreateMapper();
         }
     }
 }
