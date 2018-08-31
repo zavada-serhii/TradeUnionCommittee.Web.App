@@ -1,8 +1,8 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
-using AutoMapper;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.DTO;
 using TradeUnionCommittee.BLL.Interfaces.Directory;
 using TradeUnionCommittee.Web.GUI.AdditionalSettings.DropDownLists;
@@ -152,7 +152,7 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Directory
             var result = await _services.GetSubordinateSubdivisions(id.Value);
             var nameMainSubdivision = await _services.GetAsync(id.Value);
             ViewData["IdMainSubdivision"] = id;
-            ViewData["NameMainSubdivision"] = nameMainSubdivision.Result.DeptName;
+            ViewData["NameMainSubdivision"] = nameMainSubdivision.Result.Name;
             return result.IsValid
                 ? View(result.Result) 
                 : _oops.OutPutError("Subdivision", "Index", result.ErrorsList);
@@ -174,7 +174,7 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Directory
         {
             if (ModelState.IsValid)
             {
-                var result = await _services.CreateAsync(new SubdivisionDTO { IdSubordinate = vm.Id, DeptName = vm.Name,Abbreviation = vm.Abbreviation});
+                var result = await _services.CreateAsync(new SubdivisionDTO { IdSubordinate = vm.Id, Name = vm.Name,Abbreviation = vm.Abbreviation});
                 return result.IsValid
                     ? RedirectToAction("Details", new { id = vm.Id})
                     : _oops.OutPutError("Subdivision", "Index", result.ErrorsList);
@@ -191,7 +191,7 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Directory
             if (id == null) return NotFound();
             var subordinateSubdivision = await _services.GetSubordinateSubdivisions(id.Value);
             ViewBag.MainSubdivision = await _dropDownList.GetMainSubdivision();
-            ViewBag.SubordinateSubdivision = new SelectList(subordinateSubdivision.Result, "Id", "DeptName");
+            ViewBag.SubordinateSubdivision = new SelectList(subordinateSubdivision.Result, "Id", "Name");
             return View();
         }
 

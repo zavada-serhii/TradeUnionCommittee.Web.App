@@ -24,7 +24,7 @@ namespace TradeUnionCommittee.DAL.Repositories.Directories
                 {
                     _dbContext.Subdivisions.Add(new Subdivisions
                     {
-                        DeptName = item.DeptName,
+                        Name = item.Name,
                         Abbreviation = item.Abbreviation
                     });
                 }
@@ -32,7 +32,7 @@ namespace TradeUnionCommittee.DAL.Repositories.Directories
                 {
                     _dbContext.Subdivisions.Add(new Subdivisions
                     {
-                        DeptName = item.DeptName,
+                        Name = item.Name,
                         Abbreviation = item.Abbreviation,
                         IdSubordinate = item.IdSubordinate
                     });

@@ -51,7 +51,7 @@ namespace TradeUnionCommittee.BLL.Services.Directory
                     Result = new EducationDTO
                     {
                         IdEmployee = education.IdEmployee,
-                        DateReceiving = education.DateReceiving,
+                        YearReceiving = education.YearReceiving,
                         NameInstitution = education.NameInstitution,
                         LevelEducation = education.LevelEducation
                     }

@@ -1004,11 +1004,11 @@ namespace TradeUnionCommittee.DAL.EF
 
             modelBuilder.Entity<Subdivisions>(entity =>
             {
-                entity.HasIndex(e => e.DeptName)
-                    .HasName("Subdivisions_DeptName_key")
+                entity.HasIndex(e => e.Name)
+                    .HasName("Subdivisions_Name_key")
                     .IsUnique();
 
-                entity.Property(e => e.DeptName)
+                entity.Property(e => e.Name)
                     .IsRequired()
                     .HasColumnType("character varying");
 

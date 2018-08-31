@@ -27,7 +27,7 @@ CREATE TABLE "Education"(
 	"IdEmployee" 		BIGINT 		NOT NULL	REFERENCES "Employee"("Id") ON UPDATE CASCADE ON DELETE CASCADE,
 	"LevelEducation" 	VARCHAR		NOT NULL,
 	"NameInstitution" 	VARCHAR		NOT NULL,
-	"DateReceiving" 	INT             NULL,
+	"YearReceiving" 	INT             NULL,
 	UNIQUE("IdEmployee")
 );
 ALTER TABLE "Education"

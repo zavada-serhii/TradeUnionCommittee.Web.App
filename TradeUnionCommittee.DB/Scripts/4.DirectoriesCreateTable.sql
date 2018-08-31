@@ -98,7 +98,7 @@ OWNER TO postgres;
 CREATE TABLE "Subdivisions"(
 	"Id" 		BIGSERIAL 	NOT NULL 	PRIMARY KEY,
 	"IdSubordinate" BIGINT 				REFERENCES "Subdivisions"("Id"),
-	"DeptName" 	VARCHAR 	NOT NULL 	UNIQUE,
+	"Name" 	VARCHAR 	NOT NULL 	UNIQUE,
 	"Abbreviation" VARCHAR  NOT NULL 	UNIQUE
 );
 ALTER TABLE "Subdivisions"

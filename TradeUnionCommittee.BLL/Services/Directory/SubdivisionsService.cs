@@ -54,7 +54,7 @@ namespace TradeUnionCommittee.BLL.Services.Directory
                     Result = new SubdivisionDTO
                     {
                         Id = subdivision.Result.Id,
-                        DeptName = subdivision.Result.DeptName,
+                        Name = subdivision.Result.Name,
                         Abbreviation = subdivision.Result.Abbreviation
                     }
                 };
@@ -65,7 +65,7 @@ namespace TradeUnionCommittee.BLL.Services.Directory
         {
             var subdivision = _database.SubdivisionsRepository.Create(new Subdivisions
             {
-                DeptName = item.DeptName,
+                Name = item.Name,
                 Abbreviation = item.Abbreviation,
                 IdSubordinate = item.IdSubordinate
             });
@@ -81,7 +81,7 @@ namespace TradeUnionCommittee.BLL.Services.Directory
         public async Task<ActualResult> UpdateAsync(SubdivisionDTO dto)
         {
             var sub = _database.SubdivisionsRepository.Get(dto.Id);
-            sub.Result.DeptName = dto.DeptName;
+            sub.Result.Name = dto.Name;
             var subdivision = _database.SubdivisionsRepository.Update(sub.Result);
 
             if (subdivision.IsValid == false && subdivision.ErrorsList.Count > 0)
@@ -140,7 +140,7 @@ namespace TradeUnionCommittee.BLL.Services.Directory
         {
             return await Task.Run(() =>
             {
-                var subdivision = _database.SubdivisionsRepository.Find(p => p.DeptName == name);
+                var subdivision = _database.SubdivisionsRepository.Find(p => p.Name == name);
                 return subdivision.Result.Any() ?
                     new ActualResult { IsValid = false } :
                     new ActualResult { IsValid = true };

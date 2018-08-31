@@ -1,8 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using AutoMapper;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
-using AutoMapper;
 using TradeUnionCommittee.BLL.DTO;
 using TradeUnionCommittee.BLL.Interfaces.Employee;
 using TradeUnionCommittee.Common.ActualResults;
@@ -74,7 +73,7 @@ namespace TradeUnionCommittee.BLL.Services.Employee
                 IdEmployee = dto.IdEmployee,
                 LevelEducation = dto.LevelEducation,
                 NameInstitution = dto.NameInstitution,
-                DateReceiving = dto.YearReceiving
+                YearReceiving = dto.YearReceiving
             });
         }
 
@@ -183,7 +182,7 @@ namespace TradeUnionCommittee.BLL.Services.Employee
 
                 employee.Result.LevelEducation = education.LevelEducation;
                 employee.Result.NameInstitution = education.NameInstitution;
-                employee.Result.YearReceiving = education.DateReceiving;
+                employee.Result.YearReceiving = education.YearReceiving;
 
                 if (scientifick != null)
                 {

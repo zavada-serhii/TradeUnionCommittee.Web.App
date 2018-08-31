@@ -94,7 +94,7 @@ function getSubordinateSubdivision(subordinateSubdivision)
         $("#subordinateSubdivision").append("<option value value = null >Виберіть кафедру</option>");
         $.each(subordinateSubdivision, function ()
         {
-            $("#subordinateSubdivision").append("<option value=" + this.id + ">" + this.deptName + "</option>");
+            $("#subordinateSubdivision").append("<option value=" + this.id + ">" + this.name + "</option>");
         });
     }
     else
