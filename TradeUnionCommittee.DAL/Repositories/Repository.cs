@@ -5,7 +5,6 @@ using System.Linq;
 using System.Linq.Expressions;
 using TradeUnionCommittee.Common.ActualResults;
 using TradeUnionCommittee.DAL.EF;
-using TradeUnionCommittee.DAL.Entities;
 using TradeUnionCommittee.DAL.Interfaces;
 
 namespace TradeUnionCommittee.DAL.Repositories

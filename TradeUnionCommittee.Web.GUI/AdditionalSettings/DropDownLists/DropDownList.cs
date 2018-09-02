@@ -87,12 +87,12 @@ namespace TradeUnionCommittee.Web.GUI.AdditionalSettings.DropDownLists
         public async Task<SelectList> GetMainSubdivision()
         {
             var subdivision = await _subdivisionsService.GetAllAsync();
-            return subdivision.IsValid ? new SelectList(subdivision.Result, "Id", "Name") : null;
+            return subdivision.IsValid ? new SelectList(subdivision.Result, "HashId", "Name") : null;
         }
 
         public async Task<List<SubdivisionDTO>> GetSubordinateSubdivisions(long id)
         {
-            var subordinateSubdivision = await _subdivisionsService.GetSubordinateSubdivisions(id);
+            var subordinateSubdivision = await _subdivisionsService.GetSubordinateSubdivisions("");
             List<SubdivisionDTO> listSubordinateSubdivision = null;
             if (subordinateSubdivision.IsValid && subordinateSubdivision.Result.Any())
             {

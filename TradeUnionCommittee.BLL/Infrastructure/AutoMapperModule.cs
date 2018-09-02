@@ -44,6 +44,12 @@ namespace TradeUnionCommittee.BLL.Infrastructure
                         .ReverseMap()
                         .ForMember(d => d.Id, c => c.MapFrom(x => _cryptoUtilities.DecryptLong(x.HashId, EnumCryptoUtilities.Position)));
 
+                    map.CreateMap<Subdivisions, SubdivisionDTO>()
+                        .ForMember(d => d.HashId, c => c.MapFrom(x => _cryptoUtilities.EncryptLong(x.Id, EnumCryptoUtilities.Subdivision)))
+                        .ReverseMap()
+                        .ForMember(d => d.Id, c => c.MapFrom(x => _cryptoUtilities.DecryptLong(x.HashId, EnumCryptoUtilities.Subdivision)))
+                        .ForMember(d => d.IdSubordinate, c => c.MapFrom(x => _cryptoUtilities.DecryptLong(x.HashIdSubordinate, EnumCryptoUtilities.Subdivision)));
+
                 }).CreateMapper();
             }
         }

@@ -1,166 +1,186 @@
-﻿using AutoMapper;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.DTO;
+using TradeUnionCommittee.BLL.Infrastructure;
 using TradeUnionCommittee.BLL.Interfaces.Directory;
 using TradeUnionCommittee.Common.ActualResults;
 using TradeUnionCommittee.DAL.Entities;
 using TradeUnionCommittee.DAL.Interfaces;
+using TradeUnionCommittee.Encryption;
 
 namespace TradeUnionCommittee.BLL.Services.Directory
 {
     public class SubdivisionsService : ISubdivisionsService
     {
         private readonly IUnitOfWork _database;
+        private readonly ICryptoUtilities _cryptoUtilities;
+        private readonly IAutoMapperModule _mapperModule;
 
-        public SubdivisionsService(IUnitOfWork database)
+        public SubdivisionsService(IUnitOfWork database, IAutoMapperModule mapperModule, ICryptoUtilities cryptoUtilities)
         {
             _database = database;
+            _mapperModule = mapperModule;
+            _cryptoUtilities = cryptoUtilities;
         }
 
-        public async Task<ActualResult<IEnumerable<SubdivisionDTO>>> GetAllAsync()
+        public async Task<ActualResult<IEnumerable<SubdivisionDTO>>> GetAllAsync() =>
+            await Task.Run(() => _mapperModule.Mapper.Map<ActualResult<IEnumerable<SubdivisionDTO>>>(_database.SubdivisionsRepository.Find(x => x.IdSubordinate == null)));
+
+        public async Task<ActualResult<IEnumerable<SubdivisionDTO>>> GetSubordinateSubdivisions(string hashId)
         {
-            return await Task.Run(() =>
-            {
-                var mapper = new MapperConfiguration(cfg => cfg.CreateMap<Subdivisions, SubdivisionDTO>()).CreateMapper();
-                return mapper.Map<ActualResult<IEnumerable<Subdivisions>>, ActualResult<IEnumerable<SubdivisionDTO>>>(_database.SubdivisionsRepository.Find(x => x.IdSubordinate == null));
-            });
+            var check = await CheckDecryptAndTupleInDb(hashId);
+            return check.IsValid
+                ? _mapperModule.Mapper.Map<ActualResult<IEnumerable<SubdivisionDTO>>>(_database.SubdivisionsRepository.Find(x => x.IdSubordinate == _cryptoUtilities.DecryptLong(hashId, EnumCryptoUtilities.Subdivision)))
+                : new ActualResult<IEnumerable<SubdivisionDTO>>(check.ErrorsList);
         }
 
-        public async Task<ActualResult<IEnumerable<SubdivisionDTO>>> GetSubordinateSubdivisions(long id)
+        public async Task<ActualResult<SubdivisionDTO>> GetAsync(string hashId)
         {
-            return await Task.Run(() =>
-            {
-                var mapper = new MapperConfiguration(cfg => cfg.CreateMap<Subdivisions, SubdivisionDTO>()).CreateMapper();
-                return mapper.Map<ActualResult<IEnumerable<Subdivisions>>, ActualResult<IEnumerable<SubdivisionDTO>>>(_database.SubdivisionsRepository.Find(x => x.IdSubordinate == id));
-            });
+            var check = await CheckDecryptAndTupleInDb(hashId);
+            return check.IsValid
+                ? _mapperModule.Mapper.Map<ActualResult<SubdivisionDTO>>(_database.SubdivisionsRepository.Get(_cryptoUtilities.DecryptLong(hashId, EnumCryptoUtilities.Subdivision)))
+                : new ActualResult<SubdivisionDTO>(check.ErrorsList);
         }
 
-        public async Task<ActualResult<SubdivisionDTO>> GetAsync(long id)
+        public async Task<ActualResult> CreateMainSubdivisionAsync(SubdivisionDTO dto)
         {
-            return await Task.Run(() =>
+            if (!await CheckNameAsync(dto.Name) && !await CheckAbbreviationAsync(dto.Name))
             {
-                var subdivision = _database.SubdivisionsRepository.Get(id);
-                if (subdivision.IsValid == false && subdivision.ErrorsList.Count > 0 || subdivision.Result == null)
+                _database.SubdivisionsRepository.Create(_mapperModule.Mapper.Map<Subdivisions>(dto));
+                return _mapperModule.Mapper.Map<ActualResult>(await _database.SaveAsync());
+            }
+            return new ActualResult("0004");
+        }
+
+        public async Task<ActualResult> CreateSubordinateSubdivisionAsync(SubdivisionDTO dto)
+        {
+            var check = await CheckDecryptAndTupleInDb(dto.HashIdSubordinate, false);
+            if (check.IsValid)
+            {
+                if (!await CheckNameAsync(dto.Name) && !await CheckAbbreviationAsync(dto.Name))
                 {
-                    return new ActualResult<SubdivisionDTO>
-                    {
-                        IsValid = false, ErrorsList = subdivision.ErrorsList
-                    };
+                    _database.SubdivisionsRepository.Create(_mapperModule.Mapper.Map<Subdivisions>(dto));
+                    return _mapperModule.Mapper.Map<ActualResult>(await _database.SaveAsync());
                 }
-                return new ActualResult<SubdivisionDTO>
+                return new ActualResult("0004");
+            }
+            return new ActualResult(check.ErrorsList);
+        }
+
+        public async Task<ActualResult> UpdateNameSubdivisionAsync(SubdivisionDTO dto)
+        {
+            var check = await CheckDecryptAndTupleInDb(dto.HashId);
+            if (check.IsValid)
+            {
+                if (!await CheckNameAsync(dto.Name))
                 {
-                    Result = new SubdivisionDTO
+                    var subdivision = _database.SubdivisionsRepository
+                        .Find(x => x.Id == _cryptoUtilities.DecryptLong(dto.HashId, EnumCryptoUtilities.Subdivision))
+                        .Result.FirstOrDefault();
+
+                    if (subdivision != null)
                     {
-                        Id = subdivision.Result.Id,
-                        Name = subdivision.Result.Name,
-                        Abbreviation = subdivision.Result.Abbreviation
+                        subdivision.Name = dto.Name;
+                        _database.SubdivisionsRepository.Update(subdivision);
+                        return _mapperModule.Mapper.Map<ActualResult>(await _database.SaveAsync());
                     }
-                };
-            });
+                    return new ActualResult("0001");
+                }
+                return new ActualResult("0004");
+            }
+            return new ActualResult(check.ErrorsList);
         }
 
-        public async Task<ActualResult> CreateAsync(SubdivisionDTO item)
+        public async Task<ActualResult> UpdateAbbreviationSubdivisionAsync(SubdivisionDTO dto)
         {
-            var subdivision = _database.SubdivisionsRepository.Create(new Subdivisions
+            var check = await CheckDecryptAndTupleInDb(dto.HashId);
+            if (check.IsValid)
             {
-                Name = item.Name,
-                Abbreviation = item.Abbreviation,
-                IdSubordinate = item.IdSubordinate
-            });
-            if (subdivision.IsValid == false && subdivision.ErrorsList.Count > 0)
-            {
-                return new ActualResult { IsValid = false, ErrorsList = subdivision.ErrorsList };
+                if (!await CheckNameAsync(dto.Name))
+                {
+                    var subdivision = _database.SubdivisionsRepository
+                        .Find(x => x.Id == _cryptoUtilities.DecryptLong(dto.HashId, EnumCryptoUtilities.Subdivision))
+                        .Result.FirstOrDefault();
+
+                    if (subdivision != null)
+                    {
+                        subdivision.Abbreviation = dto.Abbreviation;
+                        _database.SubdivisionsRepository.Update(subdivision);
+                        return _mapperModule.Mapper.Map<ActualResult>(await _database.SaveAsync());
+                    }
+                    return new ActualResult("0001");
+                }
+                return new ActualResult("0004");
             }
-            var dbState = await _database.SaveAsync();
-            subdivision.IsValid = dbState.IsValid;
-            return subdivision;
+            return new ActualResult(check.ErrorsList);
         }
 
-        public async Task<ActualResult> UpdateAsync(SubdivisionDTO dto)
+        public async Task<ActualResult> DeleteAsync(string hashId)
         {
-            var sub = _database.SubdivisionsRepository.Get(dto.Id);
-            sub.Result.Name = dto.Name;
-            var subdivision = _database.SubdivisionsRepository.Update(sub.Result);
-
-            if (subdivision.IsValid == false && subdivision.ErrorsList.Count > 0)
+            var check = await CheckDecryptAndTupleInDb(hashId, false);
+            if (check.IsValid)
             {
-                return new ActualResult { IsValid = false, ErrorsList = subdivision.ErrorsList };
+                _database.SubdivisionsRepository.Delete(_cryptoUtilities.DecryptLong(hashId, EnumCryptoUtilities.Subdivision));
+                return _mapperModule.Mapper.Map<ActualResult>(await _database.SaveAsync());
             }
-            var dbState = await _database.SaveAsync();
-            subdivision.IsValid = dbState.IsValid;
-            return subdivision;
-        }
-
-        public async Task<ActualResult> UpdateAbbreviation(SubdivisionDTO dto)
-        {
-            var sub = _database.SubdivisionsRepository.Get(dto.Id);
-            sub.Result.Abbreviation = dto.Abbreviation;
-            var subdivision = _database.SubdivisionsRepository.Update(sub.Result);
-
-            if (subdivision.IsValid == false && subdivision.ErrorsList.Count > 0)
-            {
-                return new ActualResult { IsValid = false, ErrorsList = subdivision.ErrorsList };
-            }
-            var dbState = await _database.SaveAsync();
-            subdivision.IsValid = dbState.IsValid;
-            return subdivision;
-
+            return new ActualResult(check.ErrorsList);
         }
 
         public async Task<ActualResult> RestructuringUnits(SubdivisionDTO dto)
         {
-            var sub = _database.SubdivisionsRepository.Get(dto.Id);
-            sub.Result.IdSubordinate = dto.IdSubordinate;
-            var subdivision = _database.SubdivisionsRepository.Update(sub.Result);
-
-            if (subdivision.IsValid == false && subdivision.ErrorsList.Count > 0)
+            var checkMainSubdivisions = await CheckDecryptAndTupleInDb(dto.HashId);
+            var checkSubordinateSubdivisions = await CheckDecryptAndTupleInDb(dto.HashIdSubordinate);
+            if (checkMainSubdivisions.IsValid && checkSubordinateSubdivisions.IsValid)
             {
-                return new ActualResult { IsValid = false, ErrorsList = subdivision.ErrorsList };
+                var subdivision = _database.SubdivisionsRepository
+                    .Find(x => x.Id == _cryptoUtilities.DecryptLong(dto.HashIdSubordinate, EnumCryptoUtilities.Subdivision)).Result
+                    .FirstOrDefault();
+
+                if (subdivision != null)
+                {
+                    subdivision.IdSubordinate = _cryptoUtilities.DecryptLong(dto.HashId, EnumCryptoUtilities.Subdivision);
+                    _database.SubdivisionsRepository.Update(subdivision);
+                    return _mapperModule.Mapper.Map<ActualResult>(await _database.SaveAsync());
+                }
+                return new ActualResult("0001");
             }
-            var dbState = await _database.SaveAsync();
-            subdivision.IsValid = dbState.IsValid;
-            return subdivision;
-        }
-
-        public async Task<ActualResult> DeleteAsync(long id)
-        {
-            var subdivision = _database.SubdivisionsRepository.Delete(id);
-            if (subdivision.IsValid == false && subdivision.ErrorsList.Count > 0)
-            {
-                return new ActualResult { IsValid = false, ErrorsList = subdivision.ErrorsList };
-            }
-            var dbState = await _database.SaveAsync();
-            subdivision.IsValid = dbState.IsValid;
-            return subdivision;
-        }
-
-        public async Task<ActualResult> CheckNameAsync(string name)
-        {
-            return await Task.Run(() =>
-            {
-                var subdivision = _database.SubdivisionsRepository.Find(p => p.Name == name);
-                return subdivision.Result.Any() ?
-                    new ActualResult { IsValid = false } :
-                    new ActualResult { IsValid = true };
-            });
-        }
-
-        public async Task<ActualResult> CheckAbbreviationAsync(string name)
-        {
-            return await Task.Run(() =>
-            {
-                var subdivision = _database.SubdivisionsRepository.Find(p => p.Abbreviation == name);
-                return subdivision.Result.Any() ?
-                    new ActualResult { IsValid = false } :
-                    new ActualResult { IsValid = true };
-            });
+            var listErrors = checkMainSubdivisions.ErrorsList.ToList();
+            listErrors.AddRange(checkSubordinateSubdivisions.ErrorsList);
+            return new ActualResult(listErrors);
         }
 
         public void Dispose()
         {
             _database.Dispose();
         }
+
+        //-------------------------------------------------------------------------------------------------------------------
+
+        private async Task<ActualResult> CheckDecryptAndTupleInDb(string hashId, bool checkTuple = true) => await Task.Run(() =>
+        {
+            if (_cryptoUtilities.CheckDecrypt(hashId, EnumCryptoUtilities.Subdivision))
+            {
+                if (checkTuple)
+                {
+                    var id = _cryptoUtilities.DecryptLong(hashId, EnumCryptoUtilities.Subdivision);
+                    if (_database.SubdivisionsRepository.Find(x => x.Id == id).Result.Any())
+                    {
+                        return new ActualResult();
+                    }
+                    return new ActualResult("0001");
+                }
+                return new ActualResult();
+            }
+            return new ActualResult("0003");
+        });
+
+        //-------------------------------------------------------------------------------------------------------------------
+        
+        public async Task<bool> CheckNameAsync(string name) =>
+            await Task.Run(() => _database.SubdivisionsRepository.Find(p => p.Name == name).Result.Any());
+
+        public async Task<bool> CheckAbbreviationAsync(string name) =>
+            await Task.Run(() => _database.SubdivisionsRepository.Find(p => p.Abbreviation == name).Result.Any());
     }
 }

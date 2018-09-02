@@ -38,9 +38,12 @@ namespace TradeUnionCommittee.Web.GUI.AdditionalSettings
                 map.CreateMap<DirectoryDTO, CulturalViewModel>().ReverseMap();
                 map.CreateMap<DepartmentalDTO, DepartmentalViewModel>().ReverseMap();
                 map.CreateMap<DormitoryDTO, DormitoryViewModel>().ReverseMap();
-                map.CreateMap<SubdivisionDTO, SubdivisionViewModel>().ReverseMap();
-                map.CreateMap<SubdivisionDTO, UpdateSubdivisionViewModel>().ReverseMap();
+
+                map.CreateMap<SubdivisionDTO, CreateMainSubdivisionViewModel>().ReverseMap();
+                map.CreateMap<SubdivisionDTO, UpdateNameSubdivisionViewModel>().ReverseMap();
                 map.CreateMap<SubdivisionDTO, UpdateAbbreviationSubdivisionViewModel>().ReverseMap();
+                map.CreateMap<SubdivisionDTO, CreateSubordinateSubdivisionViewModel>().ReverseMap();
+                map.CreateMap<SubdivisionDTO, RestructuringViewModel>().ReverseMap();
 
                 map.CreateMap<EducationDTO, UpdateEducationViewModel>().ReverseMap();
                 map.CreateMap<QualificationDTO, QualificationViewModel>().ReverseMap();

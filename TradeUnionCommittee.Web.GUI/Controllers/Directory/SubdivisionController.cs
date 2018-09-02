@@ -47,11 +47,11 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Directory
         [HttpPost, ActionName("Create")]
         [Authorize(Roles = "Admin,Accountant,Deputy")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CreateConfirmed(SubdivisionViewModel vm)
+        public async Task<IActionResult> CreateConfirmed(CreateMainSubdivisionViewModel vm)
         {
             if (ModelState.IsValid)
             {
-                var result = await _services.CreateAsync(_mapper.Map<SubdivisionDTO>(vm));
+                var result = await _services.CreateMainSubdivisionAsync(_mapper.Map<SubdivisionDTO>(vm));
                 return result.IsValid
                     ? RedirectToAction("Index")
                     : _oops.OutPutError("Subdivision", "Index", result.ErrorsList);
@@ -63,24 +63,24 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Directory
 
         [HttpGet]
         [Authorize(Roles = "Admin,Accountant,Deputy")]
-        public async Task<IActionResult> Update(long? id)
+        public async Task<IActionResult> UpdateName(string id)
         {
             if (id == null) return NotFound();
-            var result = await _services.GetAsync(id.Value);
-            return result.IsValid 
-                ? View(_mapper.Map<UpdateSubdivisionViewModel>(result.Result)) 
+            var result = await _services.GetAsync(id);
+            return result.IsValid
+                ? View(_mapper.Map<UpdateNameSubdivisionViewModel>(result.Result))
                 : _oops.OutPutError("Subdivision", "Index", result.ErrorsList);
         }
 
-        [HttpPost, ActionName("Update")]
+        [HttpPost, ActionName("UpdateName")]
         [Authorize(Roles = "Admin,Accountant,Deputy")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> UpdateConfirmed(UpdateSubdivisionViewModel vm)
+        public async Task<IActionResult> UpdateNameConfirmed(UpdateNameSubdivisionViewModel vm)
         {
             if (ModelState.IsValid)
             {
-                if (vm.Id == null) return NotFound();
-                var result = await _services.UpdateAsync(_mapper.Map<SubdivisionDTO>(vm));
+                if (vm.HashId == null) return NotFound();
+                var result = await _services.UpdateNameSubdivisionAsync(_mapper.Map<SubdivisionDTO>(vm));
                 return result.IsValid
                     ? RedirectToAction("Index")
                     : _oops.OutPutError("Subdivision", "Index", result.ErrorsList);
@@ -92,10 +92,10 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Directory
 
         [HttpGet]
         [Authorize(Roles = "Admin,Accountant,Deputy")]
-        public async Task<IActionResult> UpdateAbbreviation(long? id)
+        public async Task<IActionResult> UpdateAbbreviation(string id)
         {
             if (id == null) return NotFound();
-            var result = await _services.GetAsync(id.Value);
+            var result = await _services.GetAsync(id);
             return result.IsValid
                 ? View(_mapper.Map<UpdateAbbreviationSubdivisionViewModel>(result.Result))
                 : _oops.OutPutError("Subdivision", "Index", result.ErrorsList);
@@ -108,8 +108,8 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Directory
         {
             if (ModelState.IsValid)
             {
-                if (vm.Id == null) return NotFound();
-                var result = await _services.UpdateAbbreviation(_mapper.Map<SubdivisionDTO>(vm));
+                if (vm.HashId == null) return NotFound();
+                var result = await _services.UpdateAbbreviationSubdivisionAsync(_mapper.Map<SubdivisionDTO>(vm));
                 return result.IsValid
                     ? RedirectToAction("Index")
                     : _oops.OutPutError("Subdivision", "Index", result.ErrorsList);
@@ -121,22 +121,22 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Directory
 
         [HttpGet]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Delete(long? id)
+        public async Task<IActionResult> Delete(string id)
         {
             if (id == null) return NotFound();
-            var result = await _services.GetAsync(id.Value);
+            var result = await _services.GetAsync(id);
             return result.IsValid
-                ? View(_mapper.Map<SubdivisionViewModel>(result.Result))
+                ? View(_mapper.Map<DeleteSubdivisionViewModel>(result.Result))
                 : _oops.OutPutError("Subdivision", "Index", result.ErrorsList);
         }
 
         [HttpPost, ActionName("Delete")]
         [Authorize(Roles = "Admin")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(long? id)
+        public async Task<IActionResult> DeleteConfirmed(string id)
         {
             if (id == null) return NotFound();
-            var result = await _services.DeleteAsync(id.Value);
+            var result = await _services.DeleteAsync(id);
             return result.IsValid
                 ? RedirectToAction("Index")
                 : _oops.OutPutError("Subdivision", "Index", result.ErrorsList);
@@ -146,11 +146,11 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Directory
 
         [HttpGet]
         [Authorize(Roles = "Admin,Accountant,Deputy")]
-        public async Task<IActionResult> Details(long? id)
+        public async Task<IActionResult> Details(string id)
         {
             if (id == null) return NotFound();
-            var result = await _services.GetSubordinateSubdivisions(id.Value);
-            var nameMainSubdivision = await _services.GetAsync(id.Value);
+            var result = await _services.GetSubordinateSubdivisions(id);
+            var nameMainSubdivision = await _services.GetAsync(id);
             ViewData["IdMainSubdivision"] = id;
             ViewData["NameMainSubdivision"] = nameMainSubdivision.Result.Name;
             return result.IsValid
@@ -162,21 +162,21 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Directory
 
         [HttpGet]
         [Authorize(Roles = "Admin,Accountant,Deputy")]
-        public IActionResult CreateSubordinate(long? id)
+        public IActionResult CreateSubordinate(string id)
         {
-            return View(new SubdivisionViewModel { Id = id});
+            return View(new CreateSubordinateSubdivisionViewModel { HashIdSubordinate = id });
         }
 
         [HttpPost, ActionName("CreateSubordinate")]
         [Authorize(Roles = "Admin,Accountant,Deputy")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CreateSubordinateConfirmed(SubdivisionViewModel vm)
+        public async Task<IActionResult> CreateSubordinateConfirmed(CreateSubordinateSubdivisionViewModel vm)
         {
             if (ModelState.IsValid)
             {
-                var result = await _services.CreateAsync(new SubdivisionDTO { IdSubordinate = vm.Id, Name = vm.Name,Abbreviation = vm.Abbreviation});
+                var result = await _services.CreateSubordinateSubdivisionAsync(_mapper.Map<SubdivisionDTO>(vm));
                 return result.IsValid
-                    ? RedirectToAction("Details", new { id = vm.Id})
+                    ? RedirectToAction("Details", new { id = vm.HashIdSubordinate })
                     : _oops.OutPutError("Subdivision", "Index", result.ErrorsList);
             }
             return View(vm);
@@ -186,12 +186,12 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Directory
 
         [HttpGet]
         [Authorize(Roles = "Admin,Accountant,Deputy")]
-        public async Task<IActionResult> Restructuring(long? id)
+        public async Task<IActionResult> Restructuring(string id)
         {
             if (id == null) return NotFound();
-            var subordinateSubdivision = await _services.GetSubordinateSubdivisions(id.Value);
+            var subordinateSubdivision = await _services.GetSubordinateSubdivisions(id);
             ViewBag.MainSubdivision = await _dropDownList.GetMainSubdivision();
-            ViewBag.SubordinateSubdivision = new SelectList(subordinateSubdivision.Result, "Id", "Name");
+            ViewBag.SubordinateSubdivision = new SelectList(subordinateSubdivision.Result, "HashId", "Name");
             return View();
         }
 
@@ -202,11 +202,7 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Directory
         {
             if (ModelState.IsValid)
             {
-                var result = await _services.RestructuringUnits(new SubdivisionDTO
-                {
-                    Id = vm.IdSubordinateSubdivision,
-                    IdSubordinate = vm.IdMainSubdivision
-                });
+                var result = await _services.RestructuringUnits(_mapper.Map<SubdivisionDTO>(vm));
                 return result.IsValid
                     ? RedirectToAction("Index")
                     : _oops.OutPutError("Subdivision", "Index", result.ErrorsList);
@@ -220,16 +216,14 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Directory
         [Authorize(Roles = "Admin,Accountant,Deputy")]
         public async Task<IActionResult> CheckName(string name)
         {
-            var result = await _services.CheckNameAsync(name);
-            return Json(result.IsValid);
+            return Json(!await _services.CheckNameAsync(name));
         }
 
         [AcceptVerbs("Get", "Post")]
         [Authorize(Roles = "Admin,Accountant,Deputy")]
         public async Task<IActionResult> CheckAbbreviation(string abbreviation)
         {
-            var result = await _services.CheckAbbreviationAsync(abbreviation);
-            return Json(result.IsValid);
+            return Json(!await _services.CheckAbbreviationAsync(abbreviation));
         }
 
         //------------------------------------------------------------------------------------------------------------------------------------------

@@ -5,11 +5,19 @@ using TradeUnionCommittee.Common.ActualResults;
 
 namespace TradeUnionCommittee.BLL.Interfaces.Directory
 {
-    public interface ISubdivisionsService : IService<SubdivisionDTO>, IDirectoryService
+    public interface ISubdivisionsService //: IService<SubdivisionDTO>, IDirectoryService
     {
+        Task<ActualResult<IEnumerable<SubdivisionDTO>>> GetAllAsync();
+        Task<ActualResult<SubdivisionDTO>> GetAsync(string hashId);
+        Task<ActualResult> CreateMainSubdivisionAsync(SubdivisionDTO dto);
+        Task<ActualResult> UpdateNameSubdivisionAsync(SubdivisionDTO dto);
+        Task<ActualResult> UpdateAbbreviationSubdivisionAsync(SubdivisionDTO dto);
+        Task<ActualResult<IEnumerable<SubdivisionDTO>>> GetSubordinateSubdivisions(string hashId);
+        Task<ActualResult> CreateSubordinateSubdivisionAsync(SubdivisionDTO dto);
         Task<ActualResult> RestructuringUnits(SubdivisionDTO dto);
-        Task<ActualResult<IEnumerable<SubdivisionDTO>>> GetSubordinateSubdivisions(long id);
-        Task<ActualResult> CheckAbbreviationAsync(string name);
-        Task<ActualResult> UpdateAbbreviation(SubdivisionDTO dto);
+        Task<ActualResult> DeleteAsync(string hashId);
+        Task<bool> CheckNameAsync(string name);
+        Task<bool> CheckAbbreviationAsync(string name);
+        void Dispose();
     }
 }

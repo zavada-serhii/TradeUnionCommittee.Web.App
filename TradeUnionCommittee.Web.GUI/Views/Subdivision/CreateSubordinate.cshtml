@@ -1,4 +1,4 @@
-﻿@model SubdivisionViewModel
+﻿@model CreateSubordinateSubdivisionViewModel
 @{
     ViewData["Title"] = "CreateSubordinate";
 }
@@ -14,7 +14,7 @@
             <hr>
             <form asp-action="CreateSubordinate">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                <input asp-for="Id" type="hidden" />
+                <input asp-for="HashIdSubordinate" type="hidden" />
                 <div class="row">
                     <div class="form-group col-lg-4 col-xl-4">
                         <label asp-for="Name" class="info-label">Назва підрозділу</label>
