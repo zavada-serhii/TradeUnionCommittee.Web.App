@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using TradeUnionCommittee.BLL.BL;
 using TradeUnionCommittee.BLL.Interfaces.Account;
 using TradeUnionCommittee.BLL.Interfaces.Directory;
 using TradeUnionCommittee.BLL.Interfaces.Employee;
@@ -19,15 +20,16 @@ namespace TradeUnionCommittee.BLL.Infrastructure
     {
         public static IServiceCollection AddTradeUnionCommitteeServiceModule(this IServiceCollection services, string connectionString)
         {
-            // Injection UnitOfWork, CryptoUtilities && AutoMapper 
+            // Injection UnitOfWork, CryptoUtilities, AutoMapper && CheckerService 
 
             services.AddScoped<IUnitOfWork, UnitOfWork>(o => new UnitOfWork(connectionString));
             services.AddSingleton<ICryptoUtilities, CryptoUtilities>();
             services.AddSingleton<IAutoMapperModule, AutoMapperModule>();
+            services.AddSingleton<ICheckerService, CheckerService>();
 
             // Injection All Service
             //---------------------------------------------------------------------------------------------
-            
+
             services.AddScoped<ILoginService, LoginService>();
             services.AddScoped<IAccountService, AccountService>();
 
