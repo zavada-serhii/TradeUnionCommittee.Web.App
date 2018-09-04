@@ -38,9 +38,9 @@ namespace TradeUnionCommittee.Web.GUI
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(options =>
                 {
-                    options.LoginPath = new PathString("/Login/Login");
-                    options.LogoutPath = new PathString("/Login/Login");
-                    options.AccessDeniedPath = new PathString("/Login/AccessDenied");
+                    options.LoginPath = new PathString("/Account/Login");
+                    options.LogoutPath = new PathString("/Account/Login");
+                    options.AccessDeniedPath = new PathString("/Account/AccessDenied");
                 });
 
             services

@@ -1,27 +1,33 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TradeUnionCommittee.BLL.BL;
 using TradeUnionCommittee.BLL.DTO;
 using TradeUnionCommittee.BLL.Infrastructure;
 using TradeUnionCommittee.BLL.Interfaces.Account;
 using TradeUnionCommittee.Common.ActualResults;
 using TradeUnionCommittee.DAL.Entities;
 using TradeUnionCommittee.DAL.Interfaces;
-using TradeUnionCommittee.Encryption;
 
 namespace TradeUnionCommittee.BLL.Services.Account
 {
     public class AccountService : IAccountService
     {
         private readonly IUnitOfWork _database;
-        private readonly ICryptoUtilities _cryptoUtilities;
         private readonly IAutoMapperModule _mapperModule;
+        private readonly ICheckerService _checkerService;
 
-        public AccountService(IUnitOfWork database, ICryptoUtilities cryptoUtilities, IAutoMapperModule mapperModule)
+        public AccountService(IUnitOfWork database, IAutoMapperModule mapperModule, ICheckerService checkerService)
         {
             _database = database;
-            _cryptoUtilities = cryptoUtilities;
             _mapperModule = mapperModule;
+            _checkerService = checkerService;
+        }
+
+        public async Task<ActualResult<string>> Login(string email, string password)
+        {
+            var role = await _database.UsersRepository.Login(email, password);
+            return role.IsValid ? new ActualResult<string> { Result = role.Result } : new ActualResult<string>(Errors.InvalidLoginOrPassword);
         }
 
         public async Task<ActualResult<IEnumerable<AccountDTO>>> GetAllUsersAsync() => 
@@ -30,15 +36,15 @@ namespace TradeUnionCommittee.BLL.Services.Account
 
         public async Task<ActualResult<AccountDTO>> GetUserAsync(string hashId)
         {
-            var check = await CheckUserDecryptAndTupleInDb(hashId);
+            var check = await _checkerService.CheckDecryptAndTupleInDbWithId(hashId, BL.Services.Account);
             return check.IsValid
-                ? _mapperModule.Mapper.Map<ActualResult<AccountDTO>>(_database.UsersRepository.GetUser(_cryptoUtilities.DecryptLong(hashId, EnumCryptoUtilities.Account)))
+                ? _mapperModule.Mapper.Map<ActualResult<AccountDTO>>(_database.UsersRepository.GetUser(check.Result))
                 : new ActualResult<AccountDTO>(check.ErrorsList);
         }
 
         public async Task<ActualResult> CreateUserAsync(AccountDTO dto)
         {
-            var checkRole = await CheckRoleDecrypt(dto.HashIdRole);
+            var checkRole = await _checkerService.CheckDecryptAndTupleInDb(dto.HashIdRole, BL.Services.Role, false);
             if (!await CheckEmailAsync(dto.Email))
             {
                 if (checkRole.IsValid)
@@ -53,7 +59,7 @@ namespace TradeUnionCommittee.BLL.Services.Account
 
         public async Task<ActualResult> UpdateUserEmailAsync(AccountDTO dto)
         {
-            var check = await CheckUserDecryptAndTupleInDb(dto.HashIdUser);
+            var check = await _checkerService.CheckDecryptAndTupleInDb(dto.HashIdUser, BL.Services.Account);
             if (check.IsValid)
             {
                 if (!await CheckEmailAsync(dto.Email))
@@ -68,7 +74,7 @@ namespace TradeUnionCommittee.BLL.Services.Account
 
         public async Task<ActualResult> UpdateUserPasswordAsync(AccountDTO dto)
         {
-            var check = await CheckUserDecryptAndTupleInDb(dto.HashIdUser);
+            var check = await _checkerService.CheckDecryptAndTupleInDb(dto.HashIdUser, BL.Services.Account);
             if (check.IsValid)
             {
                 _database.UsersRepository.UpdateUserPassword(_mapperModule.Mapper.Map<Users>(dto));
@@ -79,8 +85,8 @@ namespace TradeUnionCommittee.BLL.Services.Account
 
         public async Task<ActualResult> UpdateUserRoleAsync(AccountDTO dto)
         {
-            var checkUser = await CheckUserDecryptAndTupleInDb(dto.HashIdUser);
-            var checkRole = await CheckRoleDecrypt(dto.HashIdRole);
+            var checkUser = await _checkerService.CheckDecryptAndTupleInDb(dto.HashIdUser, BL.Services.Account);
+            var checkRole = await _checkerService.CheckDecryptAndTupleInDb(dto.HashIdRole, BL.Services.Role, false);
             if (checkUser.IsValid && checkRole.IsValid)
             {
                 _database.UsersRepository.UpdateUserRole(_mapperModule.Mapper.Map<Users>(dto));
@@ -91,10 +97,10 @@ namespace TradeUnionCommittee.BLL.Services.Account
 
         public async Task<ActualResult> DeleteUserAsync(string hashId)
         {
-            var check = await CheckUserDecryptAndTupleInDb(hashId, false);
+            var check = await _checkerService.CheckDecryptAndTupleInDbWithId(hashId, BL.Services.Account, false);
             if (check.IsValid)
             {
-                _database.UsersRepository.DeleteUser(_cryptoUtilities.DecryptLong(hashId, EnumCryptoUtilities.Account));
+                _database.UsersRepository.DeleteUser(check.Result);
                 return _mapperModule.Mapper.Map<ActualResult>(await _database.SaveAsync());
             }
             return new ActualResult(check.ErrorsList);
@@ -110,9 +116,9 @@ namespace TradeUnionCommittee.BLL.Services.Account
 
         public async Task<ActualResult<RolesDTO>> GetRoleId(string hashId)
         {
-            var check = await CheckRoleDecrypt(hashId);
+            var check = await _checkerService.CheckDecryptAndTupleInDbWithId(hashId, BL.Services.Role, false);
             return check.IsValid
-                ? _mapperModule.Mapper.Map<ActualResult<RolesDTO>>(_database.UsersRepository.GetRole(_cryptoUtilities.DecryptLong(hashId, EnumCryptoUtilities.Role)))
+                ? _mapperModule.Mapper.Map<ActualResult<RolesDTO>>(_database.UsersRepository.GetRole(check.Result))
                 : new ActualResult<RolesDTO>(check.ErrorsList);
         }
 
@@ -122,24 +128,5 @@ namespace TradeUnionCommittee.BLL.Services.Account
         {
             _database.Dispose();
         }
-
-        //------------------------------------------------------------------------------------------------------------------------------------------
-
-        private async Task<ActualResult> CheckUserDecryptAndTupleInDb(string hashId, bool checkTuple = true) => await Task.Run(() =>
-        {
-            if (_cryptoUtilities.CheckDecrypt(hashId, EnumCryptoUtilities.Account))
-            {
-                if (checkTuple)
-                {
-                    var id = _cryptoUtilities.DecryptLong(hashId, EnumCryptoUtilities.Account);
-                    return _database.UsersRepository.FindUsers(x => x.Id == id).Result.Any() ? new ActualResult() : new ActualResult(Errors.TupleDeleted);
-                }
-                return new ActualResult();
-            }
-            return new ActualResult(Errors.InvalidId);
-        });
-
-        private async Task<ActualResult> CheckRoleDecrypt(string hashId) => 
-            await Task.Run(() => _cryptoUtilities.CheckDecrypt(hashId, EnumCryptoUtilities.Role) ? new ActualResult() : new ActualResult(Errors.InvalidId));
     }
 }

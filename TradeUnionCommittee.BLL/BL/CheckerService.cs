@@ -9,8 +9,28 @@ namespace TradeUnionCommittee.BLL.BL
 {
     public interface ICheckerService
     {
-        Task<ActualResult> CheckDecryptAndTupleInDb(string hashId, EnumCryptoUtilities crypto, bool checkTuple = true);
-        Task<ActualResult<long>> CheckDecryptAndTupleInDbWithId(string hashId, EnumCryptoUtilities crypto, bool checkTuple = true);
+        Task<ActualResult> CheckDecryptAndTupleInDb(string hashId, Services service, bool checkTuple = true);
+        Task<ActualResult<long>> CheckDecryptAndTupleInDbWithId(string hashId, Services service, bool checkTuple = true);
+    }
+
+    public enum Services
+    {
+        Account = 1,
+        Role = 2,
+        Position = 3,
+        SocialActivity = 4,
+        Privileges = 5,
+        Award = 6,
+        MaterialAid = 7,
+        Hobby = 8,
+        Travel = 9,
+        Wellness = 10,
+        Tour = 11,
+        Activities = 12,
+        Cultural = 13,
+        Subdivision = 14,
+        Departmental = 15,
+        Dormitory = 16
     }
 
     internal class CheckerService : ICheckerService
@@ -24,10 +44,12 @@ namespace TradeUnionCommittee.BLL.BL
             _cryptoUtilities = cryptoUtilities;
         }
 
-        public async Task<ActualResult> CheckDecryptAndTupleInDb(string hashId, EnumCryptoUtilities crypto, bool checkTuple = true)
+        public async Task<ActualResult> CheckDecryptAndTupleInDb(string hashId, Services service, bool checkTuple = true)
         {
             return await Task.Run(() =>
             {
+                var crypto = (EnumCryptoUtilities) service;
+
                 if (_cryptoUtilities.CheckDecrypt(hashId, crypto, out long id))
                 {
                     if (checkTuple)
@@ -40,10 +62,12 @@ namespace TradeUnionCommittee.BLL.BL
             });
         }
 
-        public async Task<ActualResult<long>> CheckDecryptAndTupleInDbWithId(string hashId, EnumCryptoUtilities crypto, bool checkTuple = true)
+        public async Task<ActualResult<long>> CheckDecryptAndTupleInDbWithId(string hashId, Services service, bool checkTuple = true)
         {
             return await Task.Run(() =>
             {
+                var crypto = (EnumCryptoUtilities)service;
+
                 if (_cryptoUtilities.CheckDecrypt(hashId, crypto, out long id))
                 {
                     if (checkTuple)
@@ -64,7 +88,7 @@ namespace TradeUnionCommittee.BLL.BL
                     return _database.UsersRepository.FindUsers(x => x.Id == id).Result.Any();
 
                 case EnumCryptoUtilities.Role:
-                    return false;
+                    return true;
 
                 case EnumCryptoUtilities.Position:
                     return _database.PositionRepository.Find(x => x.Id == id).Result.Any();

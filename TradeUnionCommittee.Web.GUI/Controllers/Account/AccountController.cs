@@ -1,6 +1,11 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
+using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.DTO;
 using TradeUnionCommittee.BLL.Interfaces.Account;
@@ -23,6 +28,46 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Account
             _dropDownList = dropDownList;
             _oops = oops;
             _mapper = mapper;
+        }
+
+        //------------------------------------------------------------------------------------------------------------------------------------------
+
+        [HttpGet]
+        public IActionResult Login()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Login(LoginViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var role = await _accountService.Login(model.Email, model.Password);
+                if (role.IsValid)
+                {
+                    await Authenticate(model.Email, role.Result); // аутентификация
+                    return RedirectToAction("Directory", "Home");
+                }
+                ViewBag.IncorectLoginPassword = role.ErrorsList.FirstOrDefault();
+                return View();
+            }
+            return View(model);
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "Admin,Accountant,Deputy")]
+        public async Task<IActionResult> SignOut()
+        {
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            return RedirectToAction("Login", "Account");
+        }
+
+        [HttpGet]
+        public IActionResult AccessDenied()
+        {
+            return View();
         }
 
         //------------------------------------------------------------------------------------------------------------------------------------------
@@ -183,6 +228,23 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Account
         public async Task<IActionResult> CheckEmail(string email)
         {
             return Json(!await _accountService.CheckEmailAsync(email));
+        }
+
+        //------------------------------------------------------------------------------------------------------------------------------------------
+
+        private async Task Authenticate(string email, string role)
+        {
+            // создаем один claim
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimsIdentity.DefaultNameClaimType, email),
+                new Claim(ClaimsIdentity.DefaultRoleClaimType, role)
+            };
+            // создаем объект ClaimsIdentity
+            var id = new ClaimsIdentity(claims, "ApplicationCookie", ClaimsIdentity.DefaultNameClaimType,
+                ClaimsIdentity.DefaultRoleClaimType);
+            // установка аутентификационных куки
+            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(id));
         }
 
         //------------------------------------------------------------------------------------------------------------------------------------------
