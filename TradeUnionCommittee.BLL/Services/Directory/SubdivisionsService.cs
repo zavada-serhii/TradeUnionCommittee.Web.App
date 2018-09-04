@@ -50,7 +50,7 @@ namespace TradeUnionCommittee.BLL.Services.Directory
                 _database.SubdivisionsRepository.Create(_mapperModule.Mapper.Map<Subdivisions>(dto));
                 return _mapperModule.Mapper.Map<ActualResult>(await _database.SaveAsync());
             }
-            return new ActualResult("0004");
+            return new ActualResult(Errors.DuplicateData);
         }
 
         public async Task<ActualResult> CreateSubordinateSubdivisionAsync(SubdivisionDTO dto)
@@ -63,7 +63,7 @@ namespace TradeUnionCommittee.BLL.Services.Directory
                     _database.SubdivisionsRepository.Create(_mapperModule.Mapper.Map<Subdivisions>(dto));
                     return _mapperModule.Mapper.Map<ActualResult>(await _database.SaveAsync());
                 }
-                return new ActualResult("0004");
+                return new ActualResult(Errors.DuplicateData);
             }
             return new ActualResult(check.ErrorsList);
         }
@@ -85,9 +85,9 @@ namespace TradeUnionCommittee.BLL.Services.Directory
                         _database.SubdivisionsRepository.Update(subdivision);
                         return _mapperModule.Mapper.Map<ActualResult>(await _database.SaveAsync());
                     }
-                    return new ActualResult("0001");
+                    return new ActualResult(Errors.TupleDeleted);
                 }
-                return new ActualResult("0004");
+                return new ActualResult(Errors.DuplicateData);
             }
             return new ActualResult(check.ErrorsList);
         }
@@ -109,9 +109,9 @@ namespace TradeUnionCommittee.BLL.Services.Directory
                         _database.SubdivisionsRepository.Update(subdivision);
                         return _mapperModule.Mapper.Map<ActualResult>(await _database.SaveAsync());
                     }
-                    return new ActualResult("0001");
+                    return new ActualResult(Errors.TupleDeleted);
                 }
-                return new ActualResult("0004");
+                return new ActualResult(Errors.DuplicateData);
             }
             return new ActualResult(check.ErrorsList);
         }
@@ -143,7 +143,7 @@ namespace TradeUnionCommittee.BLL.Services.Directory
                     _database.SubdivisionsRepository.Update(subdivision);
                     return _mapperModule.Mapper.Map<ActualResult>(await _database.SaveAsync());
                 }
-                return new ActualResult("0001");
+                return new ActualResult(Errors.TupleDeleted);
             }
             var listErrors = checkMainSubdivisions.ErrorsList.ToList();
             listErrors.AddRange(checkSubordinateSubdivisions.ErrorsList);
@@ -168,11 +168,11 @@ namespace TradeUnionCommittee.BLL.Services.Directory
                     {
                         return new ActualResult();
                     }
-                    return new ActualResult("0001");
+                    return new ActualResult(Errors.TupleDeleted);
                 }
                 return new ActualResult();
             }
-            return new ActualResult("0003");
+            return new ActualResult(Errors.InvalidId);
         });
 
         //-------------------------------------------------------------------------------------------------------------------

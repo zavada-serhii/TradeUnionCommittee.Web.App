@@ -48,7 +48,7 @@ namespace TradeUnionCommittee.BLL.Services.Account
                 }
                 return new ActualResult(checkRole.ErrorsList);
             }
-            return new ActualResult("0004");
+            return new ActualResult(Errors.DuplicateData);
         }
 
         public async Task<ActualResult> UpdateUserEmailAsync(AccountDTO dto)
@@ -61,7 +61,7 @@ namespace TradeUnionCommittee.BLL.Services.Account
                     _database.UsersRepository.UpdateUserEmail(_mapperModule.Mapper.Map<Users>(dto));
                     return _mapperModule.Mapper.Map<ActualResult>(await _database.SaveAsync());
                 }
-                return new ActualResult("0004");
+                return new ActualResult(Errors.DuplicateData);
             }
             return new ActualResult(check.ErrorsList);
         }
@@ -132,18 +132,14 @@ namespace TradeUnionCommittee.BLL.Services.Account
                 if (checkTuple)
                 {
                     var id = _cryptoUtilities.DecryptLong(hashId, EnumCryptoUtilities.Account);
-                    if (_database.UsersRepository.FindUsers(x => x.Id == id).Result.Any())
-                    {
-                        return new ActualResult();
-                    }
-                    return new ActualResult("0001");
+                    return _database.UsersRepository.FindUsers(x => x.Id == id).Result.Any() ? new ActualResult() : new ActualResult(Errors.TupleDeleted);
                 }
                 return new ActualResult();
             }
-            return new ActualResult("0003");
+            return new ActualResult(Errors.InvalidId);
         });
 
         private async Task<ActualResult> CheckRoleDecrypt(string hashId) => 
-            await Task.Run(() => _cryptoUtilities.CheckDecrypt(hashId, EnumCryptoUtilities.Role) ? new ActualResult() : new ActualResult("0003"));
+            await Task.Run(() => _cryptoUtilities.CheckDecrypt(hashId, EnumCryptoUtilities.Role) ? new ActualResult() : new ActualResult(Errors.InvalidId));
     }
 }

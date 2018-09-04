@@ -16,19 +16,8 @@ namespace TradeUnionCommittee.BLL.Services.Login
 
         public async Task<ActualResult<string>> Login(string email, string password)
         {
-            var result = new ActualResult<string>();
             var role = await _dataBase.UsersRepository.Login(email, password);
-            if (role.IsValid)
-            {
-                result.Result = role.Result;
-            }
-            else
-            {
-                result.IsValid = false;
-                result.ErrorsList.Add("Не правильний логін або пароль!");
-                return result;
-            }
-            return result;
+            return role.IsValid ? new ActualResult<string> {Result = role.Result} : new ActualResult<string>(Errors.InvalidLoginOrPassword);
         }
 
         public void Dispose()

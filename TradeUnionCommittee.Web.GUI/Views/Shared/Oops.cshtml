@@ -9,7 +9,10 @@
 
             <div class="row align-items-center mt-3">
                 <div class="col-md-10">
-                    <h3 class="text-danger">Помилка: @ViewBag.Error</h3>
+                    @foreach (var error in @ViewBag.Errors)
+                    {
+                        <h3 class="text-danger">Помилка: @error</h3>
+                    }
                 </div>
             </div>
 

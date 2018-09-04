@@ -144,7 +144,6 @@ namespace TradeUnionCommittee.DAL.Repositories
 
         public async Task<ActualResult> SaveAsync()
         {
-            var result = new ActualResult();
             try
             {
                await _context.SaveChangesAsync();
@@ -155,25 +154,18 @@ namespace TradeUnionCommittee.DAL.Repositories
                 if (entity == null)
                 {
                     _context.UndoChanges();
-                    result.IsValid = false;
-                    result.ErrorsList.Add("0001");
-                    //The entity being updated is already deleted by another user
+                    return new ActualResult(Errors.TupleDeleted);
                 }
-                else
-                {
-                    var data = ex.Entries.Single();
-                    data.OriginalValues.SetValues(data.GetDatabaseValues());
-                    result.IsValid = false;
-                    result.ErrorsList.Add("0002");
-                }
+                var data = ex.Entries.Single();
+                data.OriginalValues.SetValues(data.GetDatabaseValues());
+                return new ActualResult(Errors.TupleUpdated);
             }
             catch (Exception e)
             {
                 _context.UndoChanges();
-                result.IsValid = false;
-                result.ErrorsList.Add(e.Message);
+                return new ActualResult(e.Message);
             }
-            return result;
+            return new ActualResult();
         }
 
         //------------------------------------------------------------------------------------------------------------------------------------------

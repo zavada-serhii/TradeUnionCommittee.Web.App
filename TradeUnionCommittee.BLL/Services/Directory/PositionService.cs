@@ -43,7 +43,7 @@ namespace TradeUnionCommittee.BLL.Services.Directory
                 _database.PositionRepository.Create(_mapperModule.Mapper.Map<Position>(dto));
                 return _mapperModule.Mapper.Map<ActualResult>(await _database.SaveAsync());
             }
-            return new ActualResult("0004");
+            return new ActualResult(Errors.DuplicateData);
         }
 
         public async Task<ActualResult> UpdateAsync(DirectoryDTO dto)
@@ -56,7 +56,7 @@ namespace TradeUnionCommittee.BLL.Services.Directory
                     _database.PositionRepository.Update(_mapperModule.Mapper.Map<Position>(dto));
                     return _mapperModule.Mapper.Map<ActualResult>(await _database.SaveAsync());
                 }
-                return new ActualResult("0004");
+                return new ActualResult(Errors.DuplicateData);
             }
             return new ActualResult(check.ErrorsList);
         }
@@ -86,11 +86,11 @@ namespace TradeUnionCommittee.BLL.Services.Directory
                     {
                         return new ActualResult();
                     }
-                    return new ActualResult("0001");
+                    return new ActualResult(Errors.TupleDeleted);
                 }
                 return new ActualResult();
             }
-            return new ActualResult("0003");
+            return new ActualResult(Errors.InvalidId);
         });
 
         public void Dispose()

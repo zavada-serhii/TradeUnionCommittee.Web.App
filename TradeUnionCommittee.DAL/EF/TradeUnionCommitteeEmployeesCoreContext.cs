@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using TradeUnionCommittee.DAL.Entities;
 
@@ -8,18 +9,19 @@ namespace TradeUnionCommittee.DAL.EF
     {
         public static void UndoChanges(this TradeUnionCommitteeEmployeesCoreContext dbContext)
         {
-            foreach (var entry in dbContext.ChangeTracker.Entries())
+            foreach (var entry in dbContext.ChangeTracker.Entries().Where(x => x.State != EntityState.Unchanged).ToList())
             {
                 switch (entry.State)
                 {
                     case EntityState.Modified:
+                        entry.CurrentValues.SetValues(entry.OriginalValues);
                         entry.State = EntityState.Unchanged;
-                        break;
-                    case EntityState.Deleted:
-                        entry.Reload();
                         break;
                     case EntityState.Added:
                         entry.State = EntityState.Detached;
+                        break;
+                    case EntityState.Deleted:
+                        entry.State = EntityState.Unchanged;
                         break;
                 }
             }
