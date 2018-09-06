@@ -90,9 +90,9 @@ namespace TradeUnionCommittee.Web.GUI.AdditionalSettings.DropDownLists
             return subdivision.IsValid ? new SelectList(subdivision.Result, "HashId", "Name") : null;
         }
 
-        public async Task<List<SubdivisionDTO>> GetSubordinateSubdivisions(long id)
+        public async Task<List<SubdivisionDTO>> GetSubordinateSubdivisions(string hashId)
         {
-            var subordinateSubdivision = await _subdivisionsService.GetSubordinateSubdivisions("");
+            var subordinateSubdivision = await _subdivisionsService.GetSubordinateSubdivisions(hashId);
             List<SubdivisionDTO> listSubordinateSubdivision = null;
             if (subordinateSubdivision.IsValid && subordinateSubdivision.Result.Any())
             {

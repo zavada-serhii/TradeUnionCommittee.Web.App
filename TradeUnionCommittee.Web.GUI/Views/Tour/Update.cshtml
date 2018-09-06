@@ -1,38 +1,45 @@
 ﻿@model TourViewModel
 @{
-    ViewData["Title"] = "Update";
+    ViewData["Title"] = "Редагування путівки";
+    Layout = "_Layout";
 }
 
-<div class="row">
-    <div class="col-md-12">
+<section class="add-user container-fluid">
+    <div class="row justify-content-center">
+        <div class="col-md-12 add-user_block">
 
-        <h2>Редагування</h2>
-
-        <form asp-action="Update">
-            <div class="form">
-                <h4>Путівки</h4>
-                <hr />
+            <div class="row align-items-center mt-3">
+                <div class="col-md-10">
+                    <h1>Редагування путівки</h1>
+                </div>
+            </div>
+            <hr>
+            <form asp-action="Update">
 
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                <input type="hidden" asp-for="Id" />
+
                 <div class="row">
-                    <div class="form-group col-md-3">
-                        <label asp-for="Name" class="info-label">Назва путівки</label>
-                        <input asp-for="Name" class="form-control" />
+                    <div class="form-group col-lg-4 col-xl-4">
+                        <label asp-for="Name">Назва путівки</label>
+                        <input asp-for="Name" type="text" class="form-control">
                         <span asp-validation-for="Name" class="text-danger"></span>
                     </div>
                 </div>
-                <div class="row mb-3">
-                    <div class="col-md-3 text-right">
+
+                <div class="row justify-content-between">
+                    <div class="form-group col-lg-3">
+                        <div>
+                            <a asp-action="Index">Повернутися</a>
+                        </div>
+                    </div>
+                    <div class="col-md-6 text-right">
                         <input type="submit" value="Зберегти" class="btn btn-success btn-default" />
                     </div>
                 </div>
 
-            </div>
-        </form>
-
-        <div>
-            <a asp-action="Index">Повернутися до списку путівок</a>
+            </form>
         </div>
     </div>
-
-</div>
+</section>

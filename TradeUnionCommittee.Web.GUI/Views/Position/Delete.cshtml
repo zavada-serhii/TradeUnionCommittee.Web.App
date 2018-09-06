@@ -2,7 +2,9 @@
 @model DirectoryDTO
 @{
     ViewData["Title"] = "Видалення посади";
+    Layout = "_Layout";
 }
+
 	<section class="add-user container-fluid">
 		<div class="row justify-content-center">
 			<div class="col-md-12 add-user_block">
@@ -20,10 +22,10 @@
 
 				    <dl class="row">
 						<dt class="col-md-3">
-							<h6>Назва посади</h6>
+							<a>Назва посади</a>
 						</dt>
 						<dd class="col-md-5">
-						    <p class="lead" style="font-size: 15px;">@Html.DisplayFor(model => model.Name)</p>
+						    <p class="lead" style="font-size: 15px;">@Model.Name</p>
 						</dd>
 					</dl>
 

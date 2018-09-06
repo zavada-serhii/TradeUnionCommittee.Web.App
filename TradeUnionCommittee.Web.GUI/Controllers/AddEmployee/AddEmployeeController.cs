@@ -53,7 +53,7 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.AddEmployee
 
         [AcceptVerbs("Get", "Post")]
         [Authorize(Roles = "Admin,Accountant")]
-        public async Task<IActionResult> GetSubordinateSubdivision(int id)
+        public async Task<IActionResult> GetSubordinateSubdivision(string id)
         {
             var subordinateSubdivision = await _dropDownList.GetSubordinateSubdivisions(id);
             return Json(subordinateSubdivision);

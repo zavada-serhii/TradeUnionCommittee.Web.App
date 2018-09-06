@@ -11,7 +11,7 @@ namespace TradeUnionCommittee.Web.GUI.AdditionalSettings.DropDownLists
         Task<SelectList> GetLevelEducation();
         Task<SelectList> GetStudy();
         Task<SelectList> GetMainSubdivision();
-        Task<List<SubdivisionDTO>> GetSubordinateSubdivisions(long id);
+        Task<List<SubdivisionDTO>> GetSubordinateSubdivisions(string hashId);
         Task<SelectList> GetPosition();
         Task<SelectList> GetDormitory();
         Task<SelectList> GetDepartmental();
