@@ -16,9 +16,9 @@ namespace TradeUnionCommittee.BLL.Services.Directory
     {
         private readonly IUnitOfWork _database;
         private readonly ICryptoUtilities _cryptoUtilities;
-        private readonly IAutoMapperModule _mapperModule;
+        private readonly IAutoMapperService _mapperModule;
 
-        public PositionService(IUnitOfWork database, IAutoMapperModule mapperModule, ICryptoUtilities cryptoUtilities)
+        public PositionService(IUnitOfWork database, IAutoMapperService mapperModule, ICryptoUtilities cryptoUtilities)
         {
             _database = database;
             _mapperModule = mapperModule;

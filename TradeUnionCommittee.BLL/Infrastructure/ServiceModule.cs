@@ -22,7 +22,7 @@ namespace TradeUnionCommittee.BLL.Infrastructure
 
             services.AddScoped<IUnitOfWork, UnitOfWork>(o => new UnitOfWork(connectionString));
             services.AddSingleton<ICryptoUtilities, CryptoUtilities>();
-            services.AddSingleton<IAutoMapperModule, AutoMapperModule>();
+            services.AddSingleton<IAutoMapperService, AutoMapperService>();
             services.AddTransient<ICheckerService, CheckerService>();
 
             // Injection All Service

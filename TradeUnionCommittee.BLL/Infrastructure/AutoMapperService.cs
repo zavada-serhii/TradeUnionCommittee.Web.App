@@ -5,18 +5,18 @@ using TradeUnionCommittee.Encryption;
 
 namespace TradeUnionCommittee.BLL.Infrastructure
 {
-    public interface IAutoMapperModule
+    public interface IAutoMapperService
     {
         IMapper Mapper { get; }
     }
 
     //------------------------------------------------------------------------------
 
-    internal sealed class AutoMapperModule : IAutoMapperModule
+    internal sealed class AutoMapperService : IAutoMapperService
     {
         private readonly ICryptoUtilities _cryptoUtilities;
 
-        public AutoMapperModule(ICryptoUtilities cryptoUtilities)
+        public AutoMapperService(ICryptoUtilities cryptoUtilities)
         {
             _cryptoUtilities = cryptoUtilities;
         }

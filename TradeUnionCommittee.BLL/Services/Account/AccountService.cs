@@ -14,13 +14,13 @@ namespace TradeUnionCommittee.BLL.Services.Account
     public class AccountService : IAccountService
     {
         private readonly IUnitOfWork _database;
-        private readonly IAutoMapperModule _mapperModule;
+        private readonly IAutoMapperService _mapperService;
         private readonly ICheckerService _checkerService;
 
-        public AccountService(IUnitOfWork database, IAutoMapperModule mapperModule, ICheckerService checkerService)
+        public AccountService(IUnitOfWork database, IAutoMapperService mapperService, ICheckerService checkerService)
         {
             _database = database;
-            _mapperModule = mapperModule;
+            _mapperService = mapperService;
             _checkerService = checkerService;
         }
 
@@ -31,14 +31,14 @@ namespace TradeUnionCommittee.BLL.Services.Account
         }
 
         public async Task<ActualResult<IEnumerable<AccountDTO>>> GetAllUsersAsync() => 
-            await Task.Run(() => _mapperModule.Mapper.Map<ActualResult<IEnumerable<AccountDTO>>>(_database.UsersRepository.GetAllUsers()));
+            await Task.Run(() => _mapperService.Mapper.Map<ActualResult<IEnumerable<AccountDTO>>>(_database.UsersRepository.GetAllUsers()));
 
 
         public async Task<ActualResult<AccountDTO>> GetUserAsync(string hashId)
         {
             var check = await _checkerService.CheckDecryptAndTupleInDbWithId(hashId, BL.Services.Account);
             return check.IsValid
-                ? _mapperModule.Mapper.Map<ActualResult<AccountDTO>>(_database.UsersRepository.GetUser(check.Result))
+                ? _mapperService.Mapper.Map<ActualResult<AccountDTO>>(_database.UsersRepository.GetUser(check.Result))
                 : new ActualResult<AccountDTO>(check.ErrorsList);
         }
 
@@ -49,8 +49,8 @@ namespace TradeUnionCommittee.BLL.Services.Account
             {
                 if (checkRole.IsValid)
                 {
-                    _database.UsersRepository.CreateUser(_mapperModule.Mapper.Map<Users>(dto));
-                    return _mapperModule.Mapper.Map<ActualResult>(await _database.SaveAsync());
+                    _database.UsersRepository.CreateUser(_mapperService.Mapper.Map<Users>(dto));
+                    return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
                 }
                 return new ActualResult(checkRole.ErrorsList);
             }
@@ -64,8 +64,8 @@ namespace TradeUnionCommittee.BLL.Services.Account
             {
                 if (!await CheckEmailAsync(dto.Email))
                 {
-                    _database.UsersRepository.UpdateUserEmail(_mapperModule.Mapper.Map<Users>(dto));
-                    return _mapperModule.Mapper.Map<ActualResult>(await _database.SaveAsync());
+                    _database.UsersRepository.UpdateUserEmail(_mapperService.Mapper.Map<Users>(dto));
+                    return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
                 }
                 return new ActualResult(Errors.DuplicateData);
             }
@@ -77,8 +77,8 @@ namespace TradeUnionCommittee.BLL.Services.Account
             var check = await _checkerService.CheckDecryptAndTupleInDb(dto.HashIdUser, BL.Services.Account);
             if (check.IsValid)
             {
-                _database.UsersRepository.UpdateUserPassword(_mapperModule.Mapper.Map<Users>(dto));
-                return _mapperModule.Mapper.Map<ActualResult>(await _database.SaveAsync());
+                _database.UsersRepository.UpdateUserPassword(_mapperService.Mapper.Map<Users>(dto));
+                return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
             }
             return new ActualResult(check.ErrorsList);
         }
@@ -89,8 +89,8 @@ namespace TradeUnionCommittee.BLL.Services.Account
             var checkRole = await _checkerService.CheckDecryptAndTupleInDb(dto.HashIdRole, BL.Services.Role, false);
             if (checkUser.IsValid && checkRole.IsValid)
             {
-                _database.UsersRepository.UpdateUserRole(_mapperModule.Mapper.Map<Users>(dto));
-                return _mapperModule.Mapper.Map<ActualResult>(await _database.SaveAsync());
+                _database.UsersRepository.UpdateUserRole(_mapperService.Mapper.Map<Users>(dto));
+                return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
             }
             return new ActualResult(new List<string> { checkUser.ErrorsList.FirstOrDefault(), checkRole.ErrorsList.FirstOrDefault() });
         }
@@ -101,7 +101,7 @@ namespace TradeUnionCommittee.BLL.Services.Account
             if (check.IsValid)
             {
                 _database.UsersRepository.DeleteUser(check.Result);
-                return _mapperModule.Mapper.Map<ActualResult>(await _database.SaveAsync());
+                return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
             }
             return new ActualResult(check.ErrorsList);
         }
@@ -112,13 +112,13 @@ namespace TradeUnionCommittee.BLL.Services.Account
         //------------------------------------------------------------------------------------------------------------------------------------------
 
         public async Task<ActualResult<IEnumerable<RolesDTO>>> GetRoles() => 
-            await Task.Run(() => _mapperModule.Mapper.Map<ActualResult<IEnumerable<RolesDTO>>>(_database.UsersRepository.GetAllRoles()));
+            await Task.Run(() => _mapperService.Mapper.Map<ActualResult<IEnumerable<RolesDTO>>>(_database.UsersRepository.GetAllRoles()));
 
         public async Task<ActualResult<RolesDTO>> GetRoleId(string hashId)
         {
             var check = await _checkerService.CheckDecryptAndTupleInDbWithId(hashId, BL.Services.Role, false);
             return check.IsValid
-                ? _mapperModule.Mapper.Map<ActualResult<RolesDTO>>(_database.UsersRepository.GetRole(check.Result))
+                ? _mapperService.Mapper.Map<ActualResult<RolesDTO>>(_database.UsersRepository.GetRole(check.Result))
                 : new ActualResult<RolesDTO>(check.ErrorsList);
         }
 
