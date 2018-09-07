@@ -2,37 +2,37 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TradeUnionCommittee.BLL.BL;
 using TradeUnionCommittee.BLL.DTO;
 using TradeUnionCommittee.BLL.Infrastructure;
 using TradeUnionCommittee.BLL.Interfaces.Directory;
 using TradeUnionCommittee.Common.ActualResults;
 using TradeUnionCommittee.DAL.Entities;
 using TradeUnionCommittee.DAL.Interfaces;
-using TradeUnionCommittee.Encryption;
 
 namespace TradeUnionCommittee.BLL.Services.Directory
 {
     public class PositionService : IPositionService
     {
         private readonly IUnitOfWork _database;
-        private readonly ICryptoUtilities _cryptoUtilities;
-        private readonly IAutoMapperService _mapperModule;
+        private readonly IAutoMapperService _mapperService;
+        private readonly ICheckerService _checkerService;
 
-        public PositionService(IUnitOfWork database, IAutoMapperService mapperModule, ICryptoUtilities cryptoUtilities)
+        public PositionService(IUnitOfWork database, IAutoMapperService mapperService, ICheckerService checkerService)
         {
             _database = database;
-            _mapperModule = mapperModule;
-            _cryptoUtilities = cryptoUtilities;
+            _mapperService = mapperService;
+            _checkerService = checkerService;
         }
 
         public async Task<ActualResult<IEnumerable<DirectoryDTO>>> GetAllAsync() => 
-            await Task.Run(() => _mapperModule.Mapper.Map<ActualResult<IEnumerable<DirectoryDTO>>>(_database.PositionRepository.GetAll()));
+            await Task.Run(() => _mapperService.Mapper.Map<ActualResult<IEnumerable<DirectoryDTO>>>(_database.PositionRepository.GetAll()));
 
         public async Task<ActualResult<DirectoryDTO>> GetAsync(string hashId)
         {
-            var check = await CheckDecryptAndTupleInDb(hashId);
+            var check = await _checkerService.CheckDecryptAndTupleInDbWithId(hashId, BL.Services.Position);
             return check.IsValid 
-                ? _mapperModule.Mapper.Map<ActualResult<DirectoryDTO>>(_database.PositionRepository.Get(_cryptoUtilities.DecryptLong(hashId, EnumCryptoUtilities.Position))) 
+                ? _mapperService.Mapper.Map<ActualResult<DirectoryDTO>>(_database.PositionRepository.Get(check.Result)) 
                 : new ActualResult<DirectoryDTO>(check.ErrorsList);
         }
 
@@ -40,21 +40,21 @@ namespace TradeUnionCommittee.BLL.Services.Directory
         {
             if (!await CheckNameAsync(dto.Name))
             {
-                _database.PositionRepository.Create(_mapperModule.Mapper.Map<Position>(dto));
-                return _mapperModule.Mapper.Map<ActualResult>(await _database.SaveAsync());
+                _database.PositionRepository.Create(_mapperService.Mapper.Map<Position>(dto));
+                return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
             }
             return new ActualResult(Errors.DuplicateData);
         }
 
         public async Task<ActualResult> UpdateAsync(DirectoryDTO dto)
         {
-            var check = await CheckDecryptAndTupleInDb(dto.HashId);
+            var check = await _checkerService.CheckDecryptAndTupleInDbWithId(dto.HashId, BL.Services.Position);
             if (check.IsValid)
             {
                 if (!await CheckNameAsync(dto.Name))
                 {
-                    _database.PositionRepository.Update(_mapperModule.Mapper.Map<Position>(dto));
-                    return _mapperModule.Mapper.Map<ActualResult>(await _database.SaveAsync());
+                    _database.PositionRepository.Update(_mapperService.Mapper.Map<Position>(dto));
+                    return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
                 }
                 return new ActualResult(Errors.DuplicateData);
             }
@@ -63,35 +63,17 @@ namespace TradeUnionCommittee.BLL.Services.Directory
 
         public async Task<ActualResult> DeleteAsync(string hashId)
         {
-            var check = await CheckDecryptAndTupleInDb(hashId, false);
+            var check = await _checkerService.CheckDecryptAndTupleInDbWithId(hashId, BL.Services.Position, false);
             if (check.IsValid)
             {
-                _database.PositionRepository.Delete(_cryptoUtilities.DecryptLong(hashId, EnumCryptoUtilities.Position));
-                return _mapperModule.Mapper.Map<ActualResult>(await _database.SaveAsync());
+                _database.PositionRepository.Delete(check.Result);
+                return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
             }
             return new ActualResult(check.ErrorsList);
         }
 
         public async Task<bool> CheckNameAsync(string name) => 
             await Task.Run(() => _database.PositionRepository.Find(p => p.Name == name).Result.Any());
-
-        private async Task<ActualResult> CheckDecryptAndTupleInDb(string hashId, bool checkTuple = true) => await Task.Run(() =>
-        {
-            if (_cryptoUtilities.CheckDecrypt(hashId, EnumCryptoUtilities.Position))
-            {
-                if (checkTuple)
-                {
-                    var id = _cryptoUtilities.DecryptLong(hashId, EnumCryptoUtilities.Position);
-                    if (_database.PositionRepository.Find(x => x.Id == id).Result.Any())
-                    {
-                        return new ActualResult();
-                    }
-                    return new ActualResult(Errors.TupleDeleted);
-                }
-                return new ActualResult();
-            }
-            return new ActualResult(Errors.InvalidId);
-        });
 
         public void Dispose()
         {
