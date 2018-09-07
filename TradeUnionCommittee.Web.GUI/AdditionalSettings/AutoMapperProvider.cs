@@ -31,9 +31,9 @@ namespace TradeUnionCommittee.Web.GUI.AdditionalSettings
                 map.CreateMap<DirectoryDTO, AwardViewModel>().ReverseMap();
                 map.CreateMap<DirectoryDTO, MaterialAidViewModel>().ReverseMap();
                 map.CreateMap<DirectoryDTO, HobbyViewModel>().ReverseMap();
-                map.CreateMap<DirectoryDTO, TravelViewModel>().ReverseMap();
-                map.CreateMap<DirectoryDTO, WellnessViewModel>().ReverseMap();
-                map.CreateMap<DirectoryDTO, TourViewModel>().ReverseMap();
+                map.CreateMap<TravelDTO, TravelViewModel>().ReverseMap();
+                map.CreateMap<WellnessDTO, WellnessViewModel>().ReverseMap();
+                map.CreateMap<TourDTO, TourViewModel>().ReverseMap();
                 map.CreateMap<DirectoryDTO, ActivitiesViewModel>().ReverseMap();
                 map.CreateMap<DirectoryDTO, CulturalViewModel>().ReverseMap();
                 map.CreateMap<DepartmentalDTO, DepartmentalViewModel>().ReverseMap();

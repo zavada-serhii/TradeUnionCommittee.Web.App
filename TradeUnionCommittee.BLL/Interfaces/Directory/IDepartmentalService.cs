@@ -7,6 +7,6 @@ namespace TradeUnionCommittee.BLL.Interfaces.Directory
 {
     public interface IDepartmentalService : IService<DepartmentalDTO>
     {
-        Task<ActualResult<Dictionary<long, string>>> GetAllShortcut();
+        Task<ActualResult<Dictionary<string, string>>> GetAllShortcut();
     }
 }

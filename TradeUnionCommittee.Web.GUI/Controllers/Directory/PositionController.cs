@@ -74,7 +74,6 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Directory
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> UpdateConfirmed(PositionViewModel vm)
         {
-            ModelState.Remove("Id");
             if (ModelState.IsValid)
             {
                 if (vm.HashId == null) return NotFound();

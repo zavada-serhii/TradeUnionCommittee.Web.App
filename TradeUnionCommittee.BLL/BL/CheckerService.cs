@@ -11,6 +11,7 @@ namespace TradeUnionCommittee.BLL.BL
     {
         Task<ActualResult> CheckDecryptAndTupleInDb(string hashId, Services service, bool checkTuple = true);
         Task<ActualResult<long>> CheckDecryptAndTupleInDbWithId(string hashId, Services service, bool checkTuple = true);
+        void Dispose();
     }
 
     public enum Services
@@ -78,6 +79,11 @@ namespace TradeUnionCommittee.BLL.BL
                 }
                 return new ActualResult<long>(Errors.InvalidId);
             });
+        }
+
+        public void Dispose()
+        {
+            _database.Dispose();
         }
 
         private bool CheckTupleInDb(long id, EnumCryptoUtilities crypto)

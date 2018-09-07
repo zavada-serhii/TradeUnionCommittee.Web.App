@@ -1,8 +1,9 @@
-﻿using AutoMapper;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TradeUnionCommittee.BLL.BL;
 using TradeUnionCommittee.BLL.DTO;
+using TradeUnionCommittee.BLL.Infrastructure;
 using TradeUnionCommittee.BLL.Interfaces.Directory;
 using TradeUnionCommittee.Common.ActualResults;
 using TradeUnionCommittee.DAL.Entities;
@@ -13,84 +14,70 @@ namespace TradeUnionCommittee.BLL.Services.Directory
     public class ActivitiesService : IActivitiesService
     {
         private readonly IUnitOfWork _database;
+        private readonly IAutoMapperService _mapperService;
+        private readonly ICheckerService _checkerService;
 
-        public ActivitiesService(IUnitOfWork database)
+        public ActivitiesService(IUnitOfWork database, IAutoMapperService mapperService, ICheckerService checkerService)
         {
             _database = database;
+            _mapperService = mapperService;
+            _checkerService = checkerService;
         }
 
-        public async Task<ActualResult<IEnumerable<DirectoryDTO>>> GetAllAsync()
+        public async Task<ActualResult<IEnumerable<DirectoryDTO>>> GetAllAsync() =>
+            await Task.Run(() => _mapperService.Mapper.Map<ActualResult<IEnumerable<DirectoryDTO>>>(_database.ActivitiesRepository.GetAll()));
+
+        public async Task<ActualResult<DirectoryDTO>> GetAsync(string hashId)
         {
-            return await Task.Run(() =>
-            {
-                var mapper = new MapperConfiguration(cfg => cfg.CreateMap<Activities, DirectoryDTO>()).CreateMapper();
-                return mapper.Map<ActualResult<IEnumerable<Activities>>, ActualResult<IEnumerable<DirectoryDTO>>>(_database.ActivitiesRepository.GetAll());
-            });
+            var check = await _checkerService.CheckDecryptAndTupleInDbWithId(hashId, BL.Services.Activities);
+            return check.IsValid
+                ? _mapperService.Mapper.Map<ActualResult<DirectoryDTO>>(_database.ActivitiesRepository.Get(check.Result))
+                : new ActualResult<DirectoryDTO>(check.ErrorsList);
         }
 
-        public async Task<ActualResult<DirectoryDTO>> GetAsync(long id)
+        public async Task<ActualResult> CreateAsync(DirectoryDTO dto)
         {
-            return await Task.Run(() =>
+            if (!await CheckNameAsync(dto.Name))
             {
-                var activities = _database.ActivitiesRepository.Get(id);
-                if (activities.IsValid == false && activities.ErrorsList.Count > 0 || activities.Result == null)
+                _database.ActivitiesRepository.Create(_mapperService.Mapper.Map<Activities>(dto));
+                return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
+            }
+            return new ActualResult(Errors.DuplicateData);
+        }
+
+        public async Task<ActualResult> UpdateAsync(DirectoryDTO dto)
+        {
+            var check = await _checkerService.CheckDecryptAndTupleInDbWithId(dto.HashId, BL.Services.Activities);
+            if (check.IsValid)
+            {
+                if (!await CheckNameAsync(dto.Name))
                 {
-                    return new ActualResult<DirectoryDTO> { IsValid = false, ErrorsList = activities.ErrorsList };
+                    _database.ActivitiesRepository.Update(_mapperService.Mapper.Map<Activities>(dto));
+                    return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
                 }
-                return new ActualResult<DirectoryDTO> { Result = new DirectoryDTO { Id = activities.Result.Id, Name = activities.Result.Name } };
-            });
-        }
-
-        public async Task<ActualResult> CreateAsync(DirectoryDTO item)
-        {
-            var activities = _database.ActivitiesRepository.Create(new Activities { Name = item.Name });
-            if (activities.IsValid == false && activities.ErrorsList.Count > 0)
-            {
-                return new ActualResult { IsValid = false, ErrorsList = activities.ErrorsList };
+                return new ActualResult(Errors.DuplicateData);
             }
-            var dbState = await _database.SaveAsync();
-            activities.IsValid = dbState.IsValid;
-            return activities;
+            return new ActualResult(check.ErrorsList);
         }
 
-        public async Task<ActualResult> UpdateAsync(DirectoryDTO item)
+        public async Task<ActualResult> DeleteAsync(string hashId)
         {
-            var activities = _database.ActivitiesRepository.Update(new Activities { Id = item.Id, Name = item.Name });
-            if (activities.IsValid == false && activities.ErrorsList.Count > 0)
+            var check = await _checkerService.CheckDecryptAndTupleInDbWithId(hashId, BL.Services.Activities, false);
+            if (check.IsValid)
             {
-                return new ActualResult { IsValid = false, ErrorsList = activities.ErrorsList };
+                _database.ActivitiesRepository.Delete(check.Result);
+                return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
             }
-            var dbState = await _database.SaveAsync();
-            activities.IsValid = dbState.IsValid;
-            return activities;
+            return new ActualResult(check.ErrorsList);
         }
 
-        public async Task<ActualResult> DeleteAsync(long id)
-        {
-            var activities = _database.ActivitiesRepository.Delete(id);
-            if (activities.IsValid == false && activities.ErrorsList.Count > 0)
-            {
-                return new ActualResult { IsValid = false, ErrorsList = activities.ErrorsList };
-            }
-            var dbState = await _database.SaveAsync();
-            activities.IsValid = dbState.IsValid;
-            return activities;
-        }
-
-        public async Task<ActualResult> CheckNameAsync(string name)
-        {
-            return await Task.Run(() =>
-            {
-                var activities = _database.ActivitiesRepository.Find(p => p.Name == name);
-                return activities.Result.Any() ?
-                    new ActualResult { IsValid = false } :
-                    new ActualResult { IsValid = true };
-            });
-        }
+        public async Task<bool> CheckNameAsync(string name) =>
+            await Task.Run(() => _database.ActivitiesRepository.Find(p => p.Name == name).Result.Any());
 
         public void Dispose()
         {
             _database.Dispose();
+            _checkerService.Dispose();
         }
     }
 }

@@ -60,10 +60,10 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Directory
 
         [HttpGet]
         [Authorize(Roles = "Admin,Accountant,Deputy")]
-        public async Task<IActionResult> Update(long? id)
+        public async Task<IActionResult> Update(string id)
         {
             if (id == null) return NotFound();
-            var result = await _services.GetAsync(id.Value);
+            var result = await _services.GetAsync(id);
             return result.IsValid
                 ? View(_mapper.Map<SocialActivityViewModel>(result.Result))
                 : _oops.OutPutError("SocialActivity", "Index", result.ErrorsList);
@@ -76,7 +76,7 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Directory
         {
             if (ModelState.IsValid)
             {
-                if (vm.Id == null) return NotFound();
+                if (vm.HashId == null) return NotFound();
                 var result = await _services.UpdateAsync(_mapper.Map<DirectoryDTO>(vm));
                 return result.IsValid
                     ? RedirectToAction("Index")
@@ -89,10 +89,10 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Directory
 
         [HttpGet]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Delete(long? id)
+        public async Task<IActionResult> Delete(string id)
         {
             if (id == null) return NotFound();
-            var result = await _services.GetAsync(id.Value);
+            var result = await _services.GetAsync(id);
             return result.IsValid
                 ? View(result.Result)
                 : _oops.OutPutError("SocialActivity", "Index", result.ErrorsList);
@@ -101,10 +101,10 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Directory
         [HttpPost, ActionName("Delete")]
         [Authorize(Roles = "Admin")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(long? id)
+        public async Task<IActionResult> DeleteConfirmed(string id)
         {
             if (id == null) return NotFound();
-            var result = await _services.DeleteAsync(id.Value);
+            var result = await _services.DeleteAsync(id);
             return result.IsValid
                 ? RedirectToAction("Index")
                 : _oops.OutPutError("SocialActivity", "Index", result.ErrorsList);
@@ -116,8 +116,7 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Directory
         [Authorize(Roles = "Admin,Accountant,Deputy")]
         public async Task<IActionResult> CheckName(string name)
         {
-            var result = await _services.CheckNameAsync(name);
-            return Json(result.IsValid);
+            return Json(!await _services.CheckNameAsync(name));
         }
 
         //------------------------------------------------------------------------------------------------------------------------------------------

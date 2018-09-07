@@ -1,7 +1,8 @@
-﻿using AutoMapper;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using TradeUnionCommittee.BLL.BL;
 using TradeUnionCommittee.BLL.DTO;
+using TradeUnionCommittee.BLL.Infrastructure;
 using TradeUnionCommittee.BLL.Interfaces.Directory;
 using TradeUnionCommittee.Common.ActualResults;
 using TradeUnionCommittee.DAL.Entities;
@@ -12,99 +13,59 @@ namespace TradeUnionCommittee.BLL.Services.Directory
     public class DormitoryService : IDormitoryService
     {
         private readonly IUnitOfWork _database;
+        private readonly IAutoMapperService _mapperService;
+        private readonly ICheckerService _checkerService;
 
-        public DormitoryService(IUnitOfWork database)
+        public DormitoryService(IUnitOfWork database, IAutoMapperService mapperService, ICheckerService checkerService)
         {
             _database = database;
+            _mapperService = mapperService;
+            _checkerService = checkerService;
         }
 
-        public async Task<ActualResult<IEnumerable<DormitoryDTO>>> GetAllAsync()
+        public async Task<ActualResult<IEnumerable<DormitoryDTO>>> GetAllAsync() =>
+            await Task.Run(() => _mapperService.Mapper.Map<ActualResult<IEnumerable<DormitoryDTO>>>(_database.AddressPublicHouseRepository.Find(x => x.Type == 1)));
+
+        public async Task<ActualResult<DormitoryDTO>> GetAsync(string hashId)
         {
-            return await Task.Run(() =>
-            {
-                var mapper = new MapperConfiguration(cfg => cfg.CreateMap<AddressPublicHouse, DormitoryDTO>()).CreateMapper();
-                return mapper.Map<ActualResult<IEnumerable<AddressPublicHouse>>, ActualResult<IEnumerable<DormitoryDTO>>>(
-                    _database.AddressPublicHouseRepository.Find(x => x.Type == 1));
-            });
+            var check = await _checkerService.CheckDecryptAndTupleInDbWithId(hashId, BL.Services.Dormitory);
+            return check.IsValid
+                ? _mapperService.Mapper.Map<ActualResult<DormitoryDTO>>(_database.AddressPublicHouseRepository.Get(check.Result))
+                : new ActualResult<DormitoryDTO>(check.ErrorsList);
         }
 
-        public async Task<ActualResult<DormitoryDTO>> GetAsync(long id)
+        public async Task<ActualResult> CreateAsync(DormitoryDTO dto)
         {
-            return await Task.Run(() =>
-            {
-                var dormitory = _database.AddressPublicHouseRepository.Get(id);
-                if (dormitory.IsValid == false && dormitory.ErrorsList.Count > 0 || dormitory.Result == null)
-                {
-                    return new ActualResult<DormitoryDTO> { IsValid = false, ErrorsList = dormitory.ErrorsList };
-                }
-                return new ActualResult<DormitoryDTO>
-                {
-                    Result = new DormitoryDTO
-                    {
-                        Id = dormitory.Result.Id,
-                        City = dormitory.Result.City,
-                        Street = dormitory.Result.Street,
-                        NumberHouse = dormitory.Result.NumberHouse,
-                        NumberDormitory = dormitory.Result.NumberDormitory
-                    }
-                };
-            });
+            _database.AddressPublicHouseRepository.Create(_mapperService.Mapper.Map<AddressPublicHouse>(dto));
+            return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
         }
 
-        public async Task<ActualResult> CreateAsync(DormitoryDTO item)
+        public async Task<ActualResult> UpdateAsync(DormitoryDTO dto)
         {
-            var dormitory = _database.AddressPublicHouseRepository.Create(new AddressPublicHouse
+            var check = await _checkerService.CheckDecryptAndTupleInDbWithId(dto.HashId, BL.Services.Dormitory);
+            if (check.IsValid)
             {
-                City = item.City,
-                Street = item.Street,
-                NumberHouse = item.NumberHouse,
-                NumberDormitory = item.NumberDormitory,
-                Type = 1
-            });
-            if (dormitory.IsValid == false && dormitory.ErrorsList.Count > 0)
-            {
-                return new ActualResult { IsValid = false, ErrorsList = dormitory.ErrorsList };
+                _database.AddressPublicHouseRepository.Update(_mapperService.Mapper.Map<AddressPublicHouse>(dto));
+                return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
             }
-            var dbState = await _database.SaveAsync();
-            dormitory.IsValid = dbState.IsValid;
-            return dormitory;
+            return new ActualResult(check.ErrorsList);
         }
 
-        public async Task<ActualResult> UpdateAsync(DormitoryDTO item)
+        public async Task<ActualResult> DeleteAsync(string hashId)
         {
-            var dormitory = _database.AddressPublicHouseRepository.Update(new AddressPublicHouse
+            var check = await _checkerService.CheckDecryptAndTupleInDbWithId(hashId, BL.Services.Dormitory, false);
+            if (check.IsValid)
             {
-                Id = item.Id,
-                City = item.City,
-                Street = item.Street,
-                NumberHouse = item.NumberHouse,
-                NumberDormitory = item.NumberDormitory,
-                Type = 1
-            });
-            if (dormitory.IsValid == false && dormitory.ErrorsList.Count > 0)
-            {
-                return new ActualResult { IsValid = false, ErrorsList = dormitory.ErrorsList };
+                _database.AddressPublicHouseRepository.Delete(check.Result);
+                return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
             }
-            var dbState = await _database.SaveAsync();
-            dormitory.IsValid = dbState.IsValid;
-            return dormitory;
-        }
-
-        public async Task<ActualResult> DeleteAsync(long id)
-        {
-            var dormitory = _database.AddressPublicHouseRepository.Delete(id);
-            if (dormitory.IsValid == false && dormitory.ErrorsList.Count > 0)
-            {
-                return new ActualResult { IsValid = false, ErrorsList = dormitory.ErrorsList };
-            }
-            var dbState = await _database.SaveAsync();
-            dormitory.IsValid = dbState.IsValid;
-            return dormitory;
+            return new ActualResult(check.ErrorsList);
         }
 
         public void Dispose()
         {
             _database.Dispose();
+            _checkerService.Dispose();
         }
     }
 }

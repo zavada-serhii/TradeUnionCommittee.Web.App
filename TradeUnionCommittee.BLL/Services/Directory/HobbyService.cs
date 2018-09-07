@@ -1,8 +1,9 @@
-﻿using AutoMapper;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TradeUnionCommittee.BLL.BL;
 using TradeUnionCommittee.BLL.DTO;
+using TradeUnionCommittee.BLL.Infrastructure;
 using TradeUnionCommittee.BLL.Interfaces.Directory;
 using TradeUnionCommittee.Common.ActualResults;
 using TradeUnionCommittee.DAL.Entities;
@@ -13,84 +14,70 @@ namespace TradeUnionCommittee.BLL.Services.Directory
     public class HobbyService : IHobbyService
     {
         private readonly IUnitOfWork _database;
+        private readonly IAutoMapperService _mapperService;
+        private readonly ICheckerService _checkerService;
 
-        public HobbyService(IUnitOfWork database)
+        public HobbyService(IUnitOfWork database, IAutoMapperService mapperService, ICheckerService checkerService)
         {
             _database = database;
+            _mapperService = mapperService;
+            _checkerService = checkerService;
         }
 
-        public async Task<ActualResult<IEnumerable<DirectoryDTO>>> GetAllAsync()
+        public async Task<ActualResult<IEnumerable<DirectoryDTO>>> GetAllAsync() =>
+            await Task.Run(() => _mapperService.Mapper.Map<ActualResult<IEnumerable<DirectoryDTO>>>(_database.HobbyRepository.GetAll()));
+
+        public async Task<ActualResult<DirectoryDTO>> GetAsync(string hashId)
         {
-            return await Task.Run(() =>
-            {
-                var mapper = new MapperConfiguration(cfg => cfg.CreateMap<Hobby, DirectoryDTO>()).CreateMapper();
-                return mapper.Map<ActualResult<IEnumerable<Hobby>>, ActualResult<IEnumerable<DirectoryDTO>>>(_database.HobbyRepository.GetAll());
-            });
+            var check = await _checkerService.CheckDecryptAndTupleInDbWithId(hashId, BL.Services.Hobby);
+            return check.IsValid
+                ? _mapperService.Mapper.Map<ActualResult<DirectoryDTO>>(_database.HobbyRepository.Get(check.Result))
+                : new ActualResult<DirectoryDTO>(check.ErrorsList);
         }
 
-        public async Task<ActualResult<DirectoryDTO>> GetAsync(long id)
+        public async Task<ActualResult> CreateAsync(DirectoryDTO dto)
         {
-            return await Task.Run(() =>
+            if (!await CheckNameAsync(dto.Name))
             {
-                var hobby = _database.HobbyRepository.Get(id);
-                if (hobby.IsValid == false && hobby.ErrorsList.Count > 0 || hobby.Result == null)
+                _database.HobbyRepository.Create(_mapperService.Mapper.Map<Hobby>(dto));
+                return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
+            }
+            return new ActualResult(Errors.DuplicateData);
+        }
+
+        public async Task<ActualResult> UpdateAsync(DirectoryDTO dto)
+        {
+            var check = await _checkerService.CheckDecryptAndTupleInDbWithId(dto.HashId, BL.Services.Hobby);
+            if (check.IsValid)
+            {
+                if (!await CheckNameAsync(dto.Name))
                 {
-                    return new ActualResult<DirectoryDTO> { IsValid = false, ErrorsList = hobby.ErrorsList };
+                    _database.HobbyRepository.Update(_mapperService.Mapper.Map<Hobby>(dto));
+                    return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
                 }
-                return new ActualResult<DirectoryDTO> { Result = new DirectoryDTO { Id = hobby.Result.Id, Name = hobby.Result.Name } };
-            });
-        }
-
-        public async Task<ActualResult> CreateAsync(DirectoryDTO item)
-        {
-            var hobby = _database.HobbyRepository.Create(new Hobby { Name = item.Name });
-            if (hobby.IsValid == false && hobby.ErrorsList.Count > 0)
-            {
-                return new ActualResult { IsValid = false, ErrorsList = hobby.ErrorsList };
+                return new ActualResult(Errors.DuplicateData);
             }
-            var dbState = await _database.SaveAsync();
-            hobby.IsValid = dbState.IsValid;
-            return hobby;
+            return new ActualResult(check.ErrorsList);
         }
 
-        public async Task<ActualResult> UpdateAsync(DirectoryDTO item)
+        public async Task<ActualResult> DeleteAsync(string hashId)
         {
-            var hobby = _database.HobbyRepository.Update(new Hobby { Id = item.Id, Name = item.Name });
-            if (hobby.IsValid == false && hobby.ErrorsList.Count > 0)
+            var check = await _checkerService.CheckDecryptAndTupleInDbWithId(hashId, BL.Services.Hobby, false);
+            if (check.IsValid)
             {
-                return new ActualResult { IsValid = false, ErrorsList = hobby.ErrorsList };
+                _database.HobbyRepository.Delete(check.Result);
+                return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
             }
-            var dbState = await _database.SaveAsync();
-            hobby.IsValid = dbState.IsValid;
-            return hobby;
+            return new ActualResult(check.ErrorsList);
         }
 
-        public async Task<ActualResult> DeleteAsync(long id)
-        {
-            var hobby = _database.HobbyRepository.Delete(id);
-            if (hobby.IsValid == false && hobby.ErrorsList.Count > 0)
-            {
-                return new ActualResult { IsValid = false, ErrorsList = hobby.ErrorsList };
-            }
-            var dbState = await _database.SaveAsync();
-            hobby.IsValid = dbState.IsValid;
-            return hobby;
-        }
-
-        public async Task<ActualResult> CheckNameAsync(string name)
-        {
-            return await Task.Run(() =>
-            {
-                var hobby = _database.HobbyRepository.Find(p => p.Name == name);
-                return hobby.Result.Any() ?
-                    new ActualResult { IsValid = false } :
-                    new ActualResult { IsValid = true };
-            });
-        }
+        public async Task<bool> CheckNameAsync(string name) =>
+            await Task.Run(() => _database.HobbyRepository.Find(p => p.Name == name).Result.Any());
 
         public void Dispose()
         {
             _database.Dispose();
+            _checkerService.Dispose();
         }
     }
 }

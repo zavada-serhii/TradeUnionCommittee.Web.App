@@ -1,8 +1,9 @@
-﻿using AutoMapper;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TradeUnionCommittee.BLL.BL;
 using TradeUnionCommittee.BLL.DTO;
+using TradeUnionCommittee.BLL.Infrastructure;
 using TradeUnionCommittee.BLL.Interfaces.Directory;
 using TradeUnionCommittee.Common.ActualResults;
 using TradeUnionCommittee.DAL.Entities;
@@ -13,84 +14,70 @@ namespace TradeUnionCommittee.BLL.Services.Directory
     public class AwardService : IAwardService
     {
         private readonly IUnitOfWork _database;
+        private readonly IAutoMapperService _mapperService;
+        private readonly ICheckerService _checkerService;
 
-        public AwardService(IUnitOfWork database)
+        public AwardService(IUnitOfWork database, IAutoMapperService mapperService, ICheckerService checkerService)
         {
             _database = database;
+            _mapperService = mapperService;
+            _checkerService = checkerService;
         }
 
-        public async Task<ActualResult<IEnumerable<DirectoryDTO>>> GetAllAsync()
+        public async Task<ActualResult<IEnumerable<DirectoryDTO>>> GetAllAsync() =>
+            await Task.Run(() => _mapperService.Mapper.Map<ActualResult<IEnumerable<DirectoryDTO>>>(_database.AwardRepository.GetAll()));
+
+        public async Task<ActualResult<DirectoryDTO>> GetAsync(string hashId)
         {
-            return await Task.Run(() =>
-            {
-                var mapper = new MapperConfiguration(cfg => cfg.CreateMap<Award, DirectoryDTO>()).CreateMapper();
-                return mapper.Map<ActualResult<IEnumerable<Award>>, ActualResult<IEnumerable<DirectoryDTO>>>(_database.AwardRepository.GetAll());
-            });
+            var check = await _checkerService.CheckDecryptAndTupleInDbWithId(hashId, BL.Services.Award);
+            return check.IsValid
+                ? _mapperService.Mapper.Map<ActualResult<DirectoryDTO>>(_database.AwardRepository.Get(check.Result))
+                : new ActualResult<DirectoryDTO>(check.ErrorsList);
         }
 
-        public async Task<ActualResult<DirectoryDTO>> GetAsync(long id)
+        public async Task<ActualResult> CreateAsync(DirectoryDTO dto)
         {
-            return await Task.Run(() =>
+            if (!await CheckNameAsync(dto.Name))
             {
-                var award = _database.AwardRepository.Get(id);
-                if (award.IsValid == false && award.ErrorsList.Count > 0 || award.Result == null)
+                _database.AwardRepository.Create(_mapperService.Mapper.Map<Award>(dto));
+                return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
+            }
+            return new ActualResult(Errors.DuplicateData);
+        }
+
+        public async Task<ActualResult> UpdateAsync(DirectoryDTO dto)
+        {
+            var check = await _checkerService.CheckDecryptAndTupleInDbWithId(dto.HashId, BL.Services.Award);
+            if (check.IsValid)
+            {
+                if (!await CheckNameAsync(dto.Name))
                 {
-                    return new ActualResult<DirectoryDTO> { IsValid = false, ErrorsList = award.ErrorsList };
+                    _database.AwardRepository.Update(_mapperService.Mapper.Map<Award>(dto));
+                    return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
                 }
-                return new ActualResult<DirectoryDTO> { Result = new DirectoryDTO { Id = award.Result.Id, Name = award.Result.Name } };
-            });
-        }
-
-        public async Task<ActualResult> CreateAsync(DirectoryDTO item)
-        {
-            var award = _database.AwardRepository.Create(new Award { Name = item.Name });
-            if (award.IsValid == false && award.ErrorsList.Count > 0)
-            {
-                return new ActualResult { IsValid = false, ErrorsList = award.ErrorsList };
+                return new ActualResult(Errors.DuplicateData);
             }
-            var dbState = await _database.SaveAsync();
-            award.IsValid = dbState.IsValid;
-            return award;
+            return new ActualResult(check.ErrorsList);
         }
 
-        public async Task<ActualResult> UpdateAsync(DirectoryDTO item)
+        public async Task<ActualResult> DeleteAsync(string hashId)
         {
-            var award = _database.AwardRepository.Update(new Award { Id = item.Id, Name = item.Name });
-            if (award.IsValid == false && award.ErrorsList.Count > 0)
+            var check = await _checkerService.CheckDecryptAndTupleInDbWithId(hashId, BL.Services.Award, false);
+            if (check.IsValid)
             {
-                return new ActualResult { IsValid = false, ErrorsList = award.ErrorsList };
+                _database.AwardRepository.Delete(check.Result);
+                return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
             }
-            var dbState = await _database.SaveAsync();
-            award.IsValid = dbState.IsValid;
-            return award;
+            return new ActualResult(check.ErrorsList);
         }
 
-        public async Task<ActualResult> DeleteAsync(long id)
-        {
-            var award = _database.AwardRepository.Delete(id);
-            if (award.IsValid == false && award.ErrorsList.Count > 0)
-            {
-                return new ActualResult { IsValid = false, ErrorsList = award.ErrorsList };
-            }
-            var dbState = await _database.SaveAsync();
-            award.IsValid = dbState.IsValid;
-            return award;
-        }
-
-        public async Task<ActualResult> CheckNameAsync(string name)
-        {
-            return await Task.Run(() =>
-            {
-                var award = _database.AwardRepository.Find(p => p.Name == name);
-                return award.Result.Any() ?
-                    new ActualResult { IsValid = false } :
-                    new ActualResult { IsValid = true };
-            });
-        }
+        public async Task<bool> CheckNameAsync(string name) =>
+            await Task.Run(() => _database.AwardRepository.Find(p => p.Name == name).Result.Any());
 
         public void Dispose()
         {
             _database.Dispose();
+            _checkerService.Dispose();
         }
     }
 }

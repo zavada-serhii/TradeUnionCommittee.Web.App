@@ -127,6 +127,7 @@ namespace TradeUnionCommittee.BLL.Services.Account
         public void Dispose()
         {
             _database.Dispose();
+            _checkerService.Dispose();
         }
     }
 }

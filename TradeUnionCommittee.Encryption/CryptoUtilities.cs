@@ -7,10 +7,11 @@ namespace TradeUnionCommittee.Encryption
         private const string Salt = "Development Salt ";
         private const int MinHashLenght = 5;
         private const string Alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+        private const string Seps = "TradeUnionCommittee.Encryption.Assembly.Development.Seps";
 
         private Hashids ObjectHashids(EnumCryptoUtilities crypto)
         {
-            return new Hashids(Salt + AdditionalSalt(crypto), MinHashLenght, Alphabet);
+            return new Hashids(Salt + AdditionalSalt(crypto), MinHashLenght, Alphabet, Seps);
         }
 
         public string EncryptLong(long plainLong, EnumCryptoUtilities crypto)
@@ -26,11 +27,6 @@ namespace TradeUnionCommittee.Encryption
             }
             var decod = ObjectHashids(crypto).DecodeLong(cipherText);
             return decod[0];
-        }
-
-        public bool CheckDecrypt(string cipherText, EnumCryptoUtilities crypto)
-        {
-            return ObjectHashids(crypto).DecodeLong(cipherText).Length > 0;
         }
 
         public bool CheckDecrypt(string cipherText, EnumCryptoUtilities crypto, out long id)
@@ -92,7 +88,6 @@ namespace TradeUnionCommittee.Encryption
     {
         long DecryptLong(string cipherText,EnumCryptoUtilities crypto);
         string EncryptLong(long plainLong, EnumCryptoUtilities crypto);
-        bool CheckDecrypt(string cipherText, EnumCryptoUtilities crypto);
         bool CheckDecrypt(string cipherText, EnumCryptoUtilities crypto, out long id);
     }
 

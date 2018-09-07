@@ -4,7 +4,7 @@ namespace TradeUnionCommittee.Web.GUI.Models
 {
     public class DepartmentalViewModel
     {
-        public long? Id { get; set; }
+        public string HashId { get; set; }
         [Required(ErrorMessage = "Місто не може бути порожнім!")]
         public string City { get; set; }
         [Required(ErrorMessage = "Вулиця не може бути порожньою!")]

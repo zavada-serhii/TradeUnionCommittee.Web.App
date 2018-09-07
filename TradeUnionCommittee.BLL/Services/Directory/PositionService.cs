@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.BL;
@@ -78,18 +77,7 @@ namespace TradeUnionCommittee.BLL.Services.Directory
         public void Dispose()
         {
             _database.Dispose();
-        }
-
-        //-------------------------------------------------------------------------------------------------------------------
-
-        public Task<ActualResult<DirectoryDTO>> GetAsync(long id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<ActualResult> DeleteAsync(long id)
-        {
-            throw new NotImplementedException();
+            _checkerService.Dispose();
         }
     }
 }
