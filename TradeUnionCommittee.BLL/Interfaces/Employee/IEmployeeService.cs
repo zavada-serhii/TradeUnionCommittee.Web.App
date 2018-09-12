@@ -9,9 +9,9 @@ namespace TradeUnionCommittee.BLL.Interfaces.Employee
         Task<ActualResult> AddEmployeeAsync(AddEmployeeDTO dto);
         Task<ActualResult<MainInfoEmployeeDTO>> GetMainInfoEmployeeAsync(long id);
         Task<ActualResult> UpdateMainInfoEmployeeAsync(MainInfoEmployeeDTO dto);
-        Task<ActualResult> DeleteAsync(long id);
-        Task<ActualResult> CheckIdentificationСode(string identificationСode);
-        Task<ActualResult> CheckMechnikovCard(string mechnikovCard);
+        Task<ActualResult> DeleteAsync(string hashId);
+        Task<bool> CheckIdentificationСode(string identificationСode);
+        Task<bool> CheckMechnikovCard(string mechnikovCard);
         void Dispose();
     }
 }

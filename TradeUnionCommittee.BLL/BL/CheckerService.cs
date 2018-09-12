@@ -31,7 +31,8 @@ namespace TradeUnionCommittee.BLL.BL
         Cultural = 13,
         Subdivision = 14,
         Departmental = 15,
-        Dormitory = 16
+        Dormitory = 16,
+        Employee = 17
     }
 
     internal class CheckerService : ICheckerService
@@ -137,6 +138,9 @@ namespace TradeUnionCommittee.BLL.BL
 
                 case EnumCryptoUtilities.Departmental:
                     return _database.AddressPublicHouseRepository.Find(x => x.Id == id && x.Type == 2).Result.Any();
+
+                case EnumCryptoUtilities.Employee:
+                    return _database.EmployeeRepository.Find(x => x.Id == id).Result.Any();
 
                 default:
                     throw new ArgumentOutOfRangeException(nameof(crypto), crypto, null);

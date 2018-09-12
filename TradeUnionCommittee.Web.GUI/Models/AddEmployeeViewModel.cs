@@ -15,7 +15,7 @@ namespace TradeUnionCommittee.Web.GUI.Models
             {"Female","Жіноча"}
         };
         public string Sex { get; set; }
-        public string BasicProfission { get; set; }
+        public string BasicProfession { get; set; }
         public DateTime? BirthDate { get; set; }
         public int? StartYearWork { get; set; }
         public DateTime? StartDateTradeUnion { get; set; }
@@ -32,10 +32,10 @@ namespace TradeUnionCommittee.Web.GUI.Models
         public string NameInstitution { get; set; }
         public int? YearReceiving { get; set; }
 
-        public long? Position { get; set; }
+        public string HashIdPosition { get; set; }
         public DateTime? StartDatePosition { get; set; }
-        public long? MainSubdivision { get; set; }
-        public long? SubordinateSubdivision { get; set; }
+        public string HashIdMainSubdivision { get; set; }
+        public string HashIdSubordinateSubdivision { get; set; }
 
         //------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -59,10 +59,10 @@ namespace TradeUnionCommittee.Web.GUI.Models
         public string NumberApartmentHouseUniversity { get; set; }
         public DateTime? DateReceivingHouseFromUniversity { get; set; }
 
-        public long? IdDormitory { get; set; }
+        public string HashIdDormitory { get; set; }
         public string NumberRoomDormitory { get; set; }
 
-        public long? IdDepartmental { get; set; }
+        public string HashIdDepartmental { get; set; }
         public string NumberRoomDepartmental { get; set; }
 
         //------------------------------------------------------------------------------------------------------------------------------------------
@@ -72,11 +72,11 @@ namespace TradeUnionCommittee.Web.GUI.Models
         public string ScientifickTitle { get; set; }
 
         public bool SocialActivity { get; set; }
-        public long? IdSocialActivity { get; set; }
+        public string HashIdSocialActivity { get; set; }
         public string NoteSocialActivity { get; set; }
 
         public bool Privileges { get; set; }
-        public long? IdPrivileges { get; set; }
+        public string HashIdPrivileges { get; set; }
         public string NotePrivileges { get; set; }
     }
 }

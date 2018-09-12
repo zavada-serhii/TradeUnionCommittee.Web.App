@@ -55,24 +55,21 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.AddEmployee
         [Authorize(Roles = "Admin,Accountant")]
         public async Task<IActionResult> GetSubordinateSubdivision(string id)
         {
-            var subordinateSubdivision = await _dropDownList.GetSubordinateSubdivisions(id);
-            return Json(subordinateSubdivision);
+            return Json(await _dropDownList.GetSubordinateSubdivisions(id));
         }
 
         [AcceptVerbs("Get", "Post")]
         [Authorize(Roles = "Admin,Accountant")]
         public async Task<IActionResult> CheckIdentificationСode(string identificationСode)
         {
-            var result = await _services.CheckIdentificationСode(identificationСode);
-            return Json(result.IsValid);
+            return Json(!await _services.CheckIdentificationСode(identificationСode));
         }
 
         [AcceptVerbs("Get", "Post")]
         [Authorize(Roles = "Admin,Accountant")]
         public async Task<IActionResult> CheckMechnikovCard(string mechnikovCard)
         {
-            var result = await _services.CheckMechnikovCard(mechnikovCard);
-            return Json(result.IsValid);
+            return Json(!await _services.CheckMechnikovCard(mechnikovCard));
         }
 
         private async Task FillingDropDownLists()

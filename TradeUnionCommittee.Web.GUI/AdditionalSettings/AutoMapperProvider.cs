@@ -22,7 +22,7 @@ namespace TradeUnionCommittee.Web.GUI.AdditionalSettings
                 map.CreateMap<AccountDTO, UpdatePasswordAccountViewModel>().ReverseMap();
 
                 map.CreateMap<AddEmployeeViewModel, AddEmployeeDTO>()
-                .ForMember(d => d.IdSubdivision, opt => opt.MapFrom(c => c.SubordinateSubdivision ?? c.MainSubdivision))
+                .ForMember(d => d.HashIdSubdivision, opt => opt.MapFrom(c => c.HashIdSubordinateSubdivision ?? c.HashIdMainSubdivision))
                 .ForMember(d => d.CityPhone, opt => opt.MapFrom(c => c.CityPhoneAdditional ?? c.CityPhone));
 
                 map.CreateMap<DirectoryDTO, PositionViewModel>().ReverseMap();

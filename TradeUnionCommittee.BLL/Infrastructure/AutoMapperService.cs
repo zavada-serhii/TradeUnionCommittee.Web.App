@@ -41,6 +41,8 @@ namespace TradeUnionCommittee.BLL.Infrastructure
 
                     //------------------------------------------------------------------------------
 
+                    // -- Mapping for directory
+
                     map.CreateMap<Position, DirectoryDTO>()
                         .ForMember(d => d.HashId, c => c.MapFrom(x => _cryptoUtilities.EncryptLong(x.Id, EnumCryptoUtilities.Position)))
                         .ReverseMap()
@@ -71,8 +73,6 @@ namespace TradeUnionCommittee.BLL.Infrastructure
                         .ReverseMap()
                         .ForMember(d => d.Id, c => c.MapFrom(x => _cryptoUtilities.DecryptLong(x.HashId, EnumCryptoUtilities.Hobby)));
 
-                    //------------------------------------------------------------------------------
-
                     map.CreateMap<Event, TravelDTO>()
                         .ForMember(d => d.HashId, c => c.MapFrom(x => _cryptoUtilities.EncryptLong(x.Id, EnumCryptoUtilities.Travel)))
                         .ReverseMap()
@@ -91,8 +91,6 @@ namespace TradeUnionCommittee.BLL.Infrastructure
                         .ForMember(d => d.Id, c => c.MapFrom(x => _cryptoUtilities.DecryptLong(x.HashId, EnumCryptoUtilities.Tour)))
                         .ForMember(d => d.TypeId, c => c.UseValue(3));
 
-                    //------------------------------------------------------------------------------
-
                     map.CreateMap<Activities, DirectoryDTO>()
                         .ForMember(d => d.HashId, c => c.MapFrom(x => _cryptoUtilities.EncryptLong(x.Id, EnumCryptoUtilities.Activities)))
                         .ReverseMap()
@@ -103,15 +101,11 @@ namespace TradeUnionCommittee.BLL.Infrastructure
                         .ReverseMap()
                         .ForMember(d => d.Id, c => c.MapFrom(x => _cryptoUtilities.DecryptLong(x.HashId, EnumCryptoUtilities.Cultural)));
 
-                    //------------------------------------------------------------------------------
-
                     map.CreateMap<Subdivisions, SubdivisionDTO>()
                         .ForMember(d => d.HashId, c => c.MapFrom(x => _cryptoUtilities.EncryptLong(x.Id, EnumCryptoUtilities.Subdivision)))
                         .ReverseMap()
                         .ForMember(d => d.Id, c => c.MapFrom(x => _cryptoUtilities.DecryptLong(x.HashId, EnumCryptoUtilities.Subdivision)))
                         .ForMember(d => d.IdSubordinate, c => c.MapFrom(x => _cryptoUtilities.DecryptLong(x.HashIdSubordinate, EnumCryptoUtilities.Subdivision)));
-
-                    //------------------------------------------------------------------------------
 
                     map.CreateMap<AddressPublicHouse, DormitoryDTO>()
                         .ForMember(d => d.HashId, c => c.MapFrom(x => _cryptoUtilities.EncryptLong(x.Id, EnumCryptoUtilities.Dormitory)))
@@ -124,6 +118,61 @@ namespace TradeUnionCommittee.BLL.Infrastructure
                         .ReverseMap()
                         .ForMember(d => d.Id, c => c.MapFrom(x => _cryptoUtilities.DecryptLong(x.HashId, EnumCryptoUtilities.Departmental)))
                         .ForMember(d => d.Type, c => c.UseValue(2));
+
+                    //------------------------------------------------------------------------------
+
+                    // -- Mapping for create employee
+
+                    map.CreateMap<Employee, AddEmployeeDTO>().ReverseMap();
+
+                    map.CreateMap<Education, AddEmployeeDTO>()
+                        .ReverseMap()
+                        .ForMember(d => d.IdEmployee, c => c.MapFrom(x => x.IdEmployee));
+
+                    map.CreateMap<PositionEmployees, AddEmployeeDTO>()
+                        .ReverseMap()
+                        .ForMember(d => d.IdEmployee, c => c.MapFrom(x => x.IdEmployee))
+                        .ForMember(d => d.IdSubdivision, c => c.MapFrom(x => x.IdSubdivision))
+                        .ForMember(d => d.IdPosition, c => c.MapFrom(x => x.IdPosition))
+                        .ForMember(d => d.StartDate, c=> c.MapFrom(x => x.StartDatePosition))
+                        .ForMember(d => d.CheckPosition, c => c.UseValue(true));
+
+                    map.CreateMap<PrivateHouseEmployees, AddEmployeeDTO>()
+                        .ReverseMap()
+                        .ForMember(x => x.IdEmployee, c => c.MapFrom(x => x.IdEmployee))
+                        .ForMember(x => x.City, c => c.MapFrom(x => x.TypeAccommodation == "privateHouse" ? x.CityPrivateHouse : x.CityHouseUniversity))
+                        .ForMember(x => x.Street, c => c.MapFrom(x => x.TypeAccommodation == "privateHouse" ? x.StreetPrivateHouse : x.StreetHouseUniversity))
+                        .ForMember(x => x.NumberHouse, c => c.MapFrom(x => x.TypeAccommodation == "privateHouse" ? x.NumberHousePrivateHouse : x.NumberHouseUniversity))
+                        .ForMember(x => x.NumberApartment, c => c.MapFrom(x => x.TypeAccommodation == "privateHouse" ? x.NumberApartmentPrivateHouse : x.NumberApartmentHouseUniversity))
+                        .ForMember(x => x.DateReceiving, c => c.MapFrom(x => x.TypeAccommodation == "fromUniversity" ? x.DateReceivingHouseFromUniversity : null));
+
+                    map.CreateMap<PublicHouseEmployees, AddEmployeeDTO>()
+                        .ReverseMap()
+                        .ForMember(x => x.IdEmployee, c => c.MapFrom(x => x.IdEmployee))
+                        .ForMember(x => x.IdAddressPublicHouse, c => c.MapFrom(x => x.TypeAccommodation == "dormitory" ? x.IdDormitory : x.IdDepartmental))
+                        .ForMember(x => x.NumberRoom, c => c.MapFrom(x => x.TypeAccommodation == "dormitory" ? x.NumberRoomDormitory : x.NumberRoomDepartmental));
+
+                    map.CreateMap<Scientific, AddEmployeeDTO>()
+                        .ReverseMap()
+                        .ForMember(x => x.IdEmployee, c => c.MapFrom(x => x.IdEmployee))
+                        .ForMember(x => x.ScientificDegree, c => c.MapFrom(x => x.ScientifickDegree))
+                        .ForMember(x => x.ScientificTitle, c => c.MapFrom(x => x.ScientifickTitle));
+
+                    map.CreateMap<SocialActivityEmployees, AddEmployeeDTO>()
+                        .ReverseMap()
+                        .ForMember(x => x.IdEmployee, c => c.MapFrom(x => x.IdEmployee))
+                        .ForMember(x => x.IdSocialActivity, c => c.MapFrom(x => x.IdSocialActivity))
+                        .ForMember(x => x.Note, c => c.MapFrom(x => x.NoteSocialActivity))
+                        .ForMember(d => d.CheckSocialActivity, c => c.UseValue(true));
+
+                    map.CreateMap<PrivilegeEmployees, AddEmployeeDTO>()
+                        .ReverseMap()
+                        .ForMember(x => x.IdEmployee, c => c.MapFrom(x => x.IdEmployee))
+                        .ForMember(x => x.IdPrivileges, c => c.MapFrom(x => x.IdPrivileges))
+                        .ForMember(x => x.Note, c => c.MapFrom(x => x.NotePrivileges))
+                        .ForMember(d => d.CheckPrivileges, c => c.UseValue(true));
+
+                    //------------------------------------------------------------------------------
 
                 }).CreateMapper();
             }

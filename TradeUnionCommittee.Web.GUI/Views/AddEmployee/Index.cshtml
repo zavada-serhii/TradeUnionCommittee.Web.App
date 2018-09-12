@@ -1,6 +1,7 @@
 ﻿@model AddEmployeeViewModel
 @{
     ViewData["Title"] = "Додати нового члена профспілки";
+    Layout = "_Layout";
 }
 
 <section class="add-user container-fluid">
@@ -56,9 +57,9 @@
 
                 <div class="row">
                     <div class="form-group col-lg-6 col-xl-4">
-                        <label asp-for="BasicProfission" class="control-label required">Професія за дипломом</label>
-                        <input asp-for="BasicProfission" type="text" class="form-control" placeholder="Математик, Програміст">
-                        <span asp-validation-for="BasicProfission" class="text-danger"></span>
+                        <label asp-for="BasicProfession" class="control-label required">Професія за дипломом</label>
+                        <input asp-for="BasicProfession" type="text" class="form-control" placeholder="Математик, Програміст">
+                        <span asp-validation-for="BasicProfession" class="text-danger"></span>
                     </div>
                     <div class="form-group col-lg-6 col-xl-4">
                         <label asp-for="BirthDate" class="control-label required">Дата народження</label>
@@ -140,9 +141,9 @@
                     <div class="row">
 
                         <div class="form-group col-lg-4 col-xl-3">
-                            <label asp-for="Position" class="control-label required">Посада</label><br>
-                            <select asp-for="Position" asp-items="@ViewBag.Position" class="custom-select"></select>
-                            <span asp-validation-for="Position" class="text-danger"></span>
+                            <label asp-for="HashIdPosition" class="control-label required">Посада</label><br>
+                            <select asp-for="HashIdPosition" asp-items="@ViewBag.Position" class="custom-select"></select>
+                            <span asp-validation-for="HashIdPosition" class="text-danger"></span>
                         </div>
 
                         <div class="form-group col-lg-4 col-xl-3">
@@ -151,14 +152,14 @@
                         </div>
 
                         <div class="form-group col-lg-4 col-xl-3">
-                            <label asp-for="MainSubdivision" class="control-label required">Структурний пiдроздiл</label><br>
-                            <select asp-for="MainSubdivision" asp-items="@ViewBag.MainSubdivision" id="selectMain" class="custom-select"></select>
-                            <span asp-validation-for="MainSubdivision" class="text-danger"></span>
+                            <label asp-for="HashIdMainSubdivision" class="control-label required">Структурний пiдроздiл</label><br>
+                            <select asp-for="HashIdMainSubdivision" asp-items="@ViewBag.MainSubdivision" id="selectMain" class="custom-select"></select>
+                            <span asp-validation-for="HashIdMainSubdivision" class="text-danger"></span>
                         </div>
 
                         <div class="form-group col-lg-4 col-xl-3">
-                            <label asp-for="SubordinateSubdivision">Кафедра</label><br>
-                            <select asp-for="SubordinateSubdivision" id="subordinateSubdivision" class="custom-select" style="width: 100%"></select>
+                            <label asp-for="HashIdSubordinateSubdivision">Кафедра</label><br>
+                            <select asp-for="HashIdSubordinateSubdivision" id="subordinateSubdivision" class="custom-select" style="width: 100%"></select>
                         </div>
 
                     </div>
@@ -258,9 +259,9 @@
                     <div class="row">
 
                         <div class="form-group col-lg-4 col-xl-3">
-                            <label asp-for="IdDormitory" class="control-label required">Номер гуртожитку</label>
-                            <select asp-for="IdDormitory" asp-items="@ViewBag.Dormitory" class="custom-select" style="width: 100%"></select>
-                            <span asp-validation-for="IdDormitory" class="text-danger"></span>
+                            <label asp-for="HashIdDormitory" class="control-label required">Номер гуртожитку</label>
+                            <select asp-for="HashIdDormitory" asp-items="@ViewBag.Dormitory" class="custom-select" style="width: 100%"></select>
+                            <span asp-validation-for="HashIdDormitory" class="text-danger"></span>
                         </div>
 
                         <div class="form-group col-lg-4 col-xl-3">
@@ -280,9 +281,9 @@
                     <div class="row">
 
                         <div class="form-group col-lg-4 col-xl-3">
-                            <label asp-for="IdDepartmental" class="control-label required">Адреса вiдомчого</label>
-                            <select asp-for="IdDepartmental" asp-items="@ViewBag.Departmental" class="custom-select"></select>
-                            <span asp-validation-for="IdDepartmental" class="text-danger"></span>
+                            <label asp-for="HashIdDepartmental" class="control-label required">Адреса вiдомчого</label>
+                            <select asp-for="HashIdDepartmental" asp-items="@ViewBag.Departmental" class="custom-select"></select>
+                            <span asp-validation-for="HashIdDepartmental" class="text-danger"></span>
                         </div>
 
                         <div class="form-group col-lg-4 col-xl-3">
@@ -349,15 +350,15 @@
                     <div class="row">
 
                         <div class="form-group col-lg-4 col-xl-4">
-                            <label asp-for="IdSocialActivity" class="control-label required">Назва посади</label><br />
-                            <select asp-for="IdSocialActivity" asp-items="@ViewBag.SocialActivity" class="custom-select" style="width: 100%"></select>
-                            <span asp-validation-for="IdSocialActivity" class="text-danger"></span>
+                            <label asp-for="HashIdSocialActivity" class="control-label required">Назва посади</label><br />
+                            <select asp-for="HashIdSocialActivity" asp-items="@ViewBag.SocialActivity" class="custom-select" style="width: 100%"></select>
+                            <span asp-validation-for="HashIdSocialActivity" class="text-danger"></span>
                         </div>
                     </div>
                     <div class="row">
                         <div class="form-group col-lg-12 col-xl-12">
                             <label asp-for="NoteSocialActivity">Примітка</label>
-                            <textarea asp-for="NoteSocialActivity" class="form-control" rows="4" class="textarea"></textarea>
+                            <textarea asp-for="NoteSocialActivity" class="form-control" rows="4"></textarea>
                         </div>
                     </div>
                     <hr>
@@ -370,15 +371,15 @@
                     <div class="row">
 
                         <div class="form-group col-lg-4 col-xl-4">
-                            <label asp-for="IdPrivileges" class="control-label required">Назва пільги</label><br />
-                            <select asp-for="IdPrivileges" asp-items="@ViewBag.Privilegies" class="custom-select" style="width: 100%"></select>
-                            <span asp-validation-for="IdPrivileges" class="text-danger"></span>
+                            <label asp-for="HashIdPrivileges" class="control-label required">Назва пільги</label><br />
+                            <select asp-for="HashIdPrivileges" asp-items="@ViewBag.Privilegies" class="custom-select" style="width: 100%"></select>
+                            <span asp-validation-for="HashIdPrivileges" class="text-danger"></span>
                         </div>
                     </div>
                     <div class="row">
                         <div class="form-group col-lg-12 col-xl-12">
                             <label asp-for="NotePrivileges">Примітка</label>
-                            <textarea asp-for="NotePrivileges" class="form-control" rows="4" class="textarea"></textarea>
+                            <textarea asp-for="NotePrivileges" class="form-control" rows="4"></textarea>
                         </div>
                     </div>
                     <hr>

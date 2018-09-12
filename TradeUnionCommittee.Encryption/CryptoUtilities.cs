@@ -78,6 +78,8 @@ namespace TradeUnionCommittee.Encryption
                     return "DepartmentalService";
                 case EnumCryptoUtilities.Dormitory:
                     return "DormitoryService";
+                case EnumCryptoUtilities.Employee:
+                    return "EmployeeService";
                 default:
                     return string.Empty;
             }
@@ -108,6 +110,7 @@ namespace TradeUnionCommittee.Encryption
         Cultural = 13,
         Subdivision = 14,
         Departmental = 15,
-        Dormitory = 16
+        Dormitory = 16,
+        Employee = 17
     }
 }

@@ -14,7 +14,7 @@ namespace TradeUnionCommittee.Web.GUI.FluentValidation
 
             //------------------------------------------------------------------------------------------------------------------------------------------
 
-            RuleFor(x => x.BasicProfission).NotNull().WithMessage("Професія за дипломом не може бути порожнім");
+            RuleFor(x => x.BasicProfession).NotNull().WithMessage("Професія за дипломом не може бути порожнім");
             RuleFor(x => x.BirthDate).NotNull().WithMessage("Дата народження не може бути порожнім");
             RuleFor(x => x.StartYearWork).NotNull().WithMessage("Рік початку роботи в ОНУ не може бути порожнім");
             RuleFor(x => x.StartYearWork).NotNull().InclusiveBetween(1900, 2200).WithMessage("Неприпустимий Рік початку роботи в ОНУ");
@@ -28,8 +28,8 @@ namespace TradeUnionCommittee.Web.GUI.FluentValidation
 
             //------------------------------------------------------------------------------------------------------------------------------------------
 
-            RuleFor(x => x.Position).NotNull().WithMessage("Посада не може бути порожнім");
-            RuleFor(x => x.MainSubdivision).NotNull().WithMessage("Структурний пiдроздiл не може бути порожнім");
+            RuleFor(x => x.HashIdPosition).NotNull().WithMessage("Посада не може бути порожнім");
+            RuleFor(x => x.HashIdMainSubdivision).NotNull().WithMessage("Структурний пiдроздiл не може бути порожнім");
 
             //------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -42,10 +42,10 @@ namespace TradeUnionCommittee.Web.GUI.FluentValidation
             RuleFor(x => x.StreetHouseUniversity).NotNull().When(x => x.TypeAccommodation == "fromUniversity").WithMessage("Вулиця не може бути порожнім");
             RuleFor(x => x.DateReceivingHouseFromUniversity).NotNull().When(x => x.TypeAccommodation == "fromUniversity").WithMessage("Дата розподiлу не може бути порожнім");
 
-            RuleFor(x => x.IdDormitory).NotNull().When(x => x.TypeAccommodation == "dormitory").WithMessage("Номер гуртожитку не може бути порожнім");
+            RuleFor(x => x.HashIdDormitory).NotNull().When(x => x.TypeAccommodation == "dormitory").WithMessage("Номер гуртожитку не може бути порожнім");
             RuleFor(x => x.NumberRoomDormitory).NotNull().When(x => x.TypeAccommodation == "dormitory").WithMessage("Номер кiмнати не може бути порожнім");
 
-            RuleFor(x => x.IdDepartmental).NotNull().When(x => x.TypeAccommodation == "departmental").WithMessage("Адреса вiдомчого не може бути порожнім");
+            RuleFor(x => x.HashIdDepartmental).NotNull().When(x => x.TypeAccommodation == "departmental").WithMessage("Адреса вiдомчого не може бути порожнім");
             RuleFor(x => x.NumberRoomDepartmental).NotNull().When(x => x.TypeAccommodation == "departmental").WithMessage("Номер кiмнати не може бути порожнім");
 
             //------------------------------------------------------------------------------------------------------------------------------------------
@@ -55,11 +55,11 @@ namespace TradeUnionCommittee.Web.GUI.FluentValidation
 
             //------------------------------------------------------------------------------------------------------------------------------------------
 
-            RuleFor(x => x.IdSocialActivity).NotNull().When(x => x.SocialActivity).WithMessage("Назва посади не може бути порожнім");
+            RuleFor(x => x.HashIdSocialActivity).NotNull().When(x => x.SocialActivity).WithMessage("Назва посади не може бути порожнім");
 
             //------------------------------------------------------------------------------------------------------------------------------------------
 
-            RuleFor(x => x.IdPrivileges).NotNull().When(x => x.Privileges).WithMessage("Назва пільги не може бути порожнім");
+            RuleFor(x => x.HashIdPrivileges).NotNull().When(x => x.Privileges).WithMessage("Назва пільги не може бути порожнім");
 
             //------------------------------------------------------------------------------------------------------------------------------------------
 
