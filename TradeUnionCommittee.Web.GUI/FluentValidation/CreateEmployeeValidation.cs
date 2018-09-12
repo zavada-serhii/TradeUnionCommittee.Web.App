@@ -4,9 +4,9 @@ using TradeUnionCommittee.Web.GUI.Models;
 
 namespace TradeUnionCommittee.Web.GUI.FluentValidation
 {
-    public class AddEmployeeValidation : AbstractValidator<CreateEmployeeViewModel>
+    public class CreateEmployeeValidation : AbstractValidator<CreateEmployeeViewModel>
     {
-        public AddEmployeeValidation()
+        public CreateEmployeeValidation()
         {
             RuleFor(x => x.FirstName).NotNull().WithMessage("Прізвище не може бути порожнім");
             RuleFor(x => x.SecondName).NotNull().WithMessage("Ім'я не може бути порожнім");
