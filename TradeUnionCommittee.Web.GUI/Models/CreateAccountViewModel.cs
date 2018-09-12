@@ -5,14 +5,12 @@ namespace TradeUnionCommittee.Web.GUI.Models
 {
     public class CreateAccountViewModel
     {
-        public long? IdUser { get; set; }
-
         [Required(ErrorMessage = "Email не може бути порожнім")]
         [EmailAddress(ErrorMessage = "Некоректний Email")]
         [Remote("CheckEmail", "Account", ErrorMessage = "Цей email вже використовується!")]
         public string Email { get; set; }
 
-        public long IdRole { get; set; }
+        public string HashIdRole { get; set; }
 
         [DataType(DataType.Password)]
         [Required(ErrorMessage = "Пароль не може бути порожнім")]

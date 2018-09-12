@@ -1,37 +1,45 @@
 ﻿@model TradeUnionCommittee.BLL.DTO.DirectoryDTO
 @{
-    ViewData["Title"] = "Delete";
+    ViewData["Title"] = "Видалення матеріального заохочення";
+    Layout = "_Layout";
 }
 
-<div class="row align-items-center">
-    <div class="col-md-6">
-        <h2>Видалення</h2>
+<section class="add-user container-fluid">
+    <div class="row justify-content-center">
+        <div class="col-md-12 add-user_block">
 
-        <h3>Ви впевнені, що хочете видалити матеріальне заохочення?</h3>
+            <div class="row align-items-center mt-3">
+                <div class="col-md-10">
+                    <h1>Видалення матеріального заохочення</h1>
+                    <h3 class="text-muted">Ви впевнені, що хочете видалити матеріальне заохочення?</h3>
+                </div>
+            </div>
+            <hr>
+            <form asp-action="Delete">
+
+                <input type="hidden" asp-for="HashId" />
+
+                <dl class="row">
+                    <dt class="col-md-3">
+                        <a>Назва заохочення</a>
+                    </dt>
+                    <dd class="col-md-5">
+                        <p class="lead" style="font-size: 15px;">@Model.Name</p>
+                    </dd>
+                </dl>
+
+                <div class="row justify-content-between">
+                    <div class="form-group col-lg-3">
+                        <div>
+                            <a asp-action="Index">Повернутися</a>
+                        </div>
+                    </div>
+                    <div class="col-md-6 text-right">
+                        <input type="submit" value="Видалити" class="btn btn-danger" />
+                    </div>
+                </div>
+
+            </form>
+        </div>
     </div>
-    <div class="col-md-6 text-right">
-        <form asp-action="Delete">
-            <input type="submit" value="Видалити" class="btn btn-danger" />
-        </form>
-    </div>
-</div>
-
-<div>
-    <hr />
-    <dl class="row">
-
-        <input type="hidden" asp-for="Id" />
-        <dt class="col-md-3">
-            <h6>Назва матеріального заохочення</h6>
-        </dt>
-        <dd class="col-md-5">
-            <p class="lead" style="font-size: 15px;">@Html.DisplayFor(model => model.Name)</p>
-        </dd>
-    </dl>
-
-
-    <div class="form-actions no-color">
-        <a asp-action="Index">Повернутися до списку матеріальних заохочень</a>
-    </div>
-
-</div>
+</section>

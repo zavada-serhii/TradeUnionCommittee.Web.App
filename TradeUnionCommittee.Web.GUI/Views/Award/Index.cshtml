@@ -1,45 +1,56 @@
 ﻿@model IEnumerable<TradeUnionCommittee.BLL.DTO.DirectoryDTO>
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Матеріальні заохочення";
+    Layout = "_Layout";
 }
 
-<div class="row">
-    <a asp-controller="Home" asp-action="Directory" class="back-link">Повернутися до списку довідників</a>
-    <hr />
-    <div class="form-group">
-        <a asp-action="Create" class="btn btn-success">Додати матеріальне заохочення</a>
+<section class="add-user container-fluid">
+    <div class="row justify-content-center">
+        <div class="col-md-12 add-user_block">
+            <div class="row">
+                <a asp-controller="Home" asp-action="Directory" class="back-link">Повернутися</a>
+                <hr />
+                <div class="form-group">
+                    <a asp-action="Create" class="btn btn-success">Додати матеріальне заохочення</a>
+                </div>
+            </div>
+            <div class="row main-block">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>
+                            Матеріальні заохочення
+                        </th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @item.Name
+                            </td>
+
+                            <td class="text-right">
+                                <div class="btn-group">
+                                    <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown"></button>
+                                    <div class="dropdown-menu">
+                                        <a class="dropdown-item" asp-action="Update" asp-route-id="@item.HashId">Редагувати назву</a>
+
+                                        @if (User.IsInRole("Admin"))
+                                        {
+                                            <a class="dropdown-item" asp-action="Delete" asp-route-id="@item.HashId">Видалити</a>
+                                        }
+                                    </div>
+                                </div>
+                            </td>
+
+                        </tr>
+                    }
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
-</div>
-
-<div class="row main-block">
-
-    <table class="table">
-        <thead>
-            <tr>
-                <th>
-                    Матеріальні заохочення
-                </th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model)
-            {
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Name)
-                    </td>
-
-                    <td class="text-right">
-                        <a asp-action="Update" asp-route-id="@item.Id">Редагувати</a>
-                        @if (User.IsInRole("Admin"))
-                        {
-                            <a asp-action="Delete" asp-route-id="@item.Id">Видалити</a>
-                        }
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
-
-</div>
+</section>

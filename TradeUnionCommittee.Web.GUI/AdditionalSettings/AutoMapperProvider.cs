@@ -14,14 +14,16 @@ namespace TradeUnionCommittee.Web.GUI.AdditionalSettings
         {
             return new MapperConfiguration(map =>
             {
+                //-- Controller Mapper ---------------------------------------------------------------------------------------------------------
+
                 map.CreateMap<AccountDTO, CreateAccountViewModel>().ReverseMap();
                 map.CreateMap<AccountDTO, UpdateEmailAccountViewModel>().ReverseMap();
                 map.CreateMap<AccountDTO, UpdateRoleAccountViewModel>().ReverseMap();
                 map.CreateMap<AccountDTO, UpdatePasswordAccountViewModel>().ReverseMap();
 
                 map.CreateMap<AddEmployeeViewModel, AddEmployeeDTO>()
-                .ForMember("IdSubdivision",opt => opt.MapFrom(c => c.SubordinateSubdivision ?? c.MainSubdivision))
-                .ForMember("CityPhone", opt => opt.MapFrom(c => c.CityPhoneAdditional ?? c.CityPhone));
+                .ForMember(d => d.HashIdSubdivision, opt => opt.MapFrom(c => c.HashIdSubordinateSubdivision ?? c.HashIdMainSubdivision))
+                .ForMember(d => d.CityPhone, opt => opt.MapFrom(c => c.CityPhoneAdditional ?? c.CityPhone));
 
                 map.CreateMap<DirectoryDTO, PositionViewModel>().ReverseMap();
                 map.CreateMap<DirectoryDTO, SocialActivityViewModel>().ReverseMap();
@@ -29,18 +31,21 @@ namespace TradeUnionCommittee.Web.GUI.AdditionalSettings
                 map.CreateMap<DirectoryDTO, AwardViewModel>().ReverseMap();
                 map.CreateMap<DirectoryDTO, MaterialAidViewModel>().ReverseMap();
                 map.CreateMap<DirectoryDTO, HobbyViewModel>().ReverseMap();
-                map.CreateMap<DirectoryDTO, TravelViewModel>().ReverseMap();
-                map.CreateMap<DirectoryDTO, WellnessViewModel>().ReverseMap();
-                map.CreateMap<DirectoryDTO, TourViewModel>().ReverseMap();
+                map.CreateMap<TravelDTO, TravelViewModel>().ReverseMap();
+                map.CreateMap<WellnessDTO, WellnessViewModel>().ReverseMap();
+                map.CreateMap<TourDTO, TourViewModel>().ReverseMap();
                 map.CreateMap<DirectoryDTO, ActivitiesViewModel>().ReverseMap();
                 map.CreateMap<DirectoryDTO, CulturalViewModel>().ReverseMap();
                 map.CreateMap<DepartmentalDTO, DepartmentalViewModel>().ReverseMap();
                 map.CreateMap<DormitoryDTO, DormitoryViewModel>().ReverseMap();
-                map.CreateMap<SubdivisionDTO, SubdivisionViewModel>().ForMember("Name", c => c.MapFrom(x => x.DeptName)).ReverseMap();
-                map.CreateMap<SubdivisionDTO, UpdateSubdivisionViewModel>().ForMember("Name", c => c.MapFrom(x => x.DeptName)).ReverseMap();
-                map.CreateMap<SubdivisionDTO, UpdateAbbreviationSubdivisionViewModel>().ReverseMap();
 
-                map.CreateMap<EducationDTO, UpdateEducationViewModel>().ForMember("YearReceiving", c => c.MapFrom(x => x.DateReceiving)).ReverseMap();
+                map.CreateMap<SubdivisionDTO, CreateMainSubdivisionViewModel>().ReverseMap();
+                map.CreateMap<SubdivisionDTO, UpdateNameSubdivisionViewModel>().ReverseMap();
+                map.CreateMap<SubdivisionDTO, UpdateAbbreviationSubdivisionViewModel>().ReverseMap();
+                map.CreateMap<SubdivisionDTO, CreateSubordinateSubdivisionViewModel>().ReverseMap();
+                map.CreateMap<SubdivisionDTO, RestructuringViewModel>().ReverseMap();
+
+                map.CreateMap<EducationDTO, UpdateEducationViewModel>().ReverseMap();
                 map.CreateMap<QualificationDTO, QualificationViewModel>().ReverseMap();
 
                 map.CreateMap<MainInfoEmployeeDTO, MainInfoEmployeeViewModel>().ReverseMap();

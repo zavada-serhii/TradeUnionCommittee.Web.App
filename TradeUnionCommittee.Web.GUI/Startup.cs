@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using FluentValidation;
+﻿using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
@@ -9,16 +8,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using TradeUnionCommittee.BLL.Infrastructure;
-using TradeUnionCommittee.BLL.Interfaces.Account;
-using TradeUnionCommittee.BLL.Interfaces.Directory;
-using TradeUnionCommittee.BLL.Interfaces.Employee;
-using TradeUnionCommittee.BLL.Interfaces.Login;
-using TradeUnionCommittee.BLL.Interfaces.Search;
-using TradeUnionCommittee.BLL.Services.Account;
-using TradeUnionCommittee.BLL.Services.Directory;
-using TradeUnionCommittee.BLL.Services.Employee;
-using TradeUnionCommittee.BLL.Services.Login;
-using TradeUnionCommittee.BLL.Services.Search;
 using TradeUnionCommittee.Web.GUI.AdditionalSettings;
 using TradeUnionCommittee.Web.GUI.AdditionalSettings.DropDownLists;
 using TradeUnionCommittee.Web.GUI.AdditionalSettings.Oops;
@@ -49,17 +38,17 @@ namespace TradeUnionCommittee.Web.GUI
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(options =>
                 {
-                    options.LoginPath = new PathString("/Login/Login");
-                    options.LogoutPath = new PathString("/Login/Login");
-                    options.AccessDeniedPath = new PathString("/Login/AccessDenied");
+                    options.LoginPath = new PathString("/Account/Login");
+                    options.LogoutPath = new PathString("/Account/Login");
+                    options.AccessDeniedPath = new PathString("/Account/AccessDenied");
                 });
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1).AddFluentValidation();
+            services
+                .AddTradeUnionCommitteeServiceModule(Configuration.GetConnectionString("DefaultConnection"))
+                .AddMvc()
+                .SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
+                .AddFluentValidation();
 
-            new ServiceModule(Configuration.GetConnectionString("DefaultConnection"), services);
-
-            DependencyInjectionService(services);
-            DependencyInjectionSearch(services);
             DependencyInjectionSystem(services);
             DependencyInjectionFluentValidation(services);
         }
@@ -89,35 +78,6 @@ namespace TradeUnionCommittee.Web.GUI
                     name: "default",
                     template: "{controller=Home}/{action=Directory}/{id?}");
             });
-        }
-
-        private void DependencyInjectionService(IServiceCollection services)
-        {
-            services.AddScoped<ILoginService, LoginService>();
-            services.AddScoped<IAccountService, AccountService>();
-
-            services.AddScoped<IEmployeeService, EmployeeService>();
-            services.AddScoped<IEducationService, EducationService>();
-            services.AddScoped<IQualificationService, QualificationService>();
-            services.AddScoped<IPositionService, PositionService>();
-            services.AddScoped<ISocialActivityService, SocialActivityService>();
-            services.AddScoped<IPrivilegesService, PrivilegesService>();
-            services.AddScoped<IAwardService, AwardService>();
-            services.AddScoped<IMaterialAidService, MaterialAidService>();
-            services.AddScoped<IHobbyService, HobbyService>();
-            services.AddScoped<ITravelService, TravelService>();
-            services.AddScoped<IWellnessService, WellnessService>();
-            services.AddScoped<ITourService, TourService>();
-            services.AddScoped<IActivitiesService, ActivitiesService>();
-            services.AddScoped<ICulturalService, CulturalService>();
-            services.AddScoped<ISubdivisionsService, SubdivisionsService>();
-            services.AddScoped<IDormitoryService, DormitoryService>();
-            services.AddScoped<IDepartmentalService, DepartmentalService>();
-        }
-
-        private void DependencyInjectionSearch(IServiceCollection services)
-        {
-            services.AddScoped<ISearchService, SearchService>();
         }
 
         private void DependencyInjectionSystem(IServiceCollection services)

@@ -3,7 +3,7 @@ CREATE TABLE "Roles"(
     "Name"              VARCHAR     NOT NULL    UNIQUE
 );
 ALTER TABLE "Roles"
-OWNER TO AdminTradeUnionCommitteeEmployees;
+OWNER TO postgres;
 
 CREATE TABLE "Users"(
 	"Id" 			    BIGSERIAL 	NOT NULL 	PRIMARY KEY,
@@ -13,7 +13,7 @@ CREATE TABLE "Users"(
 	UNIQUE("Email")
 );
 ALTER TABLE "Users"
-OWNER TO AdminTradeUnionCommitteeEmployees;
+OWNER TO postgres;
 
 INSERT INTO "Roles" ("Name") VALUES
 ('Admin'),

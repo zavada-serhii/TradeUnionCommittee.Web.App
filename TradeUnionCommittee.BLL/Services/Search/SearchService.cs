@@ -41,9 +41,9 @@ namespace TradeUnionCommittee.BLL.Services.Search
                             BirthDate = e.BirthDate,
                             MobilePhone = e.MobilePhone,
                             CityPhone = e.CityPhone,
-                            MainSubdivision = s.DeptName,
+                            MainSubdivision = s.Name,
                             MainSubdivisionAbbreviation = s.Abbreviation,
-                            SubordinateSubdivision = s.Id == ss.Id ? null : ss.DeptName,
+                            SubordinateSubdivision = s.Id == ss.Id ? null : ss.Name,
                             SubordinateSubdivisionAbbreviation = s.Id == ss.Id ? null : ss.Abbreviation
                         }).ToList();
 

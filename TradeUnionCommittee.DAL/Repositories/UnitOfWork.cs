@@ -1,14 +1,14 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
+using System.Linq;
 using System.Threading.Tasks;
 using TradeUnionCommittee.Common.ActualResults;
 using TradeUnionCommittee.DAL.EF;
 using TradeUnionCommittee.DAL.Entities;
 using TradeUnionCommittee.DAL.Interfaces;
-using TradeUnionCommittee.DAL.Interfaces.Login;
 using TradeUnionCommittee.DAL.Repositories.Account;
 using TradeUnionCommittee.DAL.Repositories.Directories;
 using TradeUnionCommittee.DAL.Repositories.Lists;
-using TradeUnionCommittee.DAL.Repositories.Login;
 using TradeUnionCommittee.DAL.Repositories.Main;
 
 namespace TradeUnionCommittee.DAL.Repositories
@@ -21,6 +21,10 @@ namespace TradeUnionCommittee.DAL.Repositories
         {
             _context = new TradeUnionCommitteeEmployeesCoreContext(connectionString);
         }
+
+        //------------------------------------------------------------------------------------------------------------------------------------------
+
+        private UsersRepository _usersRepository;
 
         //------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -79,9 +83,7 @@ namespace TradeUnionCommittee.DAL.Repositories
 
         //------------------------------------------------------------------------------------------------------------------------------------------
 
-        private LoginRepository _loginRepository;
-        private RolesRepository _rolesRepository;
-        private UsersRepository _usersRepository;
+        public IUsersRepository UsersRepository => _usersRepository ?? (_usersRepository = new UsersRepository(_context));
 
         //------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -140,26 +142,30 @@ namespace TradeUnionCommittee.DAL.Repositories
 
         //------------------------------------------------------------------------------------------------------------------------------------------
 
-        public ILoginRepository LoginRepository => _loginRepository ?? (_loginRepository = new LoginRepository(_context));
-        public IRepository<Users> UsersRepository => _usersRepository ?? (_usersRepository = new UsersRepository(_context));
-        public IRepository<Roles> RolesRepository => _rolesRepository ?? (_rolesRepository = new RolesRepository(_context));
-
-        //------------------------------------------------------------------------------------------------------------------------------------------
-
         public async Task<ActualResult> SaveAsync()
         {
-            var result = new ActualResult();
             try
             {
-                await _context.SaveChangesAsync();
+               await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException ex)
+            {
+                var entity = ex.Entries.Single().GetDatabaseValues();
+                if (entity == null)
+                {
+                    _context.UndoChanges();
+                    return new ActualResult(Errors.TupleDeleted);
+                }
+                var data = ex.Entries.Single();
+                data.OriginalValues.SetValues(data.GetDatabaseValues());
+                return new ActualResult(Errors.TupleUpdated);
             }
             catch (Exception e)
             {
                 _context.UndoChanges();
-                result.IsValid = false;
-                result.ErrorsList.Add(e.Message);
+                return new ActualResult(e.Message);
             }
-            return result;
+            return new ActualResult();
         }
 
         //------------------------------------------------------------------------------------------------------------------------------------------

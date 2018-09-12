@@ -5,7 +5,7 @@ namespace TradeUnionCommittee.Web.GUI.Models
 {
     public class ActivitiesViewModel : BaseDirectoryViewModel
     {
-        public override long? Id { get; set; }
+        public override string HashId { get; set; }
 
         [Required(ErrorMessage = "Назва не може бути порожньою!")]
         [Remote("CheckName", "Activities", ErrorMessage = "Ця назва вже використовується!")]

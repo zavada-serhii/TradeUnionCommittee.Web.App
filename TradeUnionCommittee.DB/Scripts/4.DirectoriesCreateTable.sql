@@ -3,7 +3,7 @@ CREATE TABLE "Award"(
 	"Name"		VARCHAR		NOT NULL	UNIQUE
 );
 ALTER TABLE "Award"
-OWNER TO AdminTradeUnionCommitteeEmployees;
+OWNER TO postgres;
 
 -----------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -12,7 +12,7 @@ CREATE TABLE "MaterialAid"(
 	"Name"		VARCHAR		NOT NULL	UNIQUE
 );
 ALTER TABLE "MaterialAid"
-OWNER TO AdminTradeUnionCommitteeEmployees;	
+OWNER TO postgres;	
 
 -----------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -21,7 +21,7 @@ CREATE TABLE "Hobby"(
 	"Name"		VARCHAR		NOT NULL	UNIQUE
 );
 ALTER TABLE "Hobby"
-OWNER TO AdminTradeUnionCommitteeEmployees;
+OWNER TO postgres;
 
 -----------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -30,7 +30,7 @@ CREATE TABLE "TypeEvent" (
 	"Name"		VARCHAR		NOT NULL	UNIQUE
 );
 ALTER TABLE "TypeEvent"
-OWNER TO AdminTradeUnionCommitteeEmployees;
+OWNER TO postgres;
 
 INSERT INTO  "TypeEvent" ("Name") VALUES
 ('Travel'),
@@ -46,7 +46,7 @@ CREATE TABLE "Event" (
 	UNIQUE("Name", "TypeId")
 );
 ALTER TABLE "Event"
-OWNER TO AdminTradeUnionCommitteeEmployees;
+OWNER TO postgres;
 
 -----------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -55,7 +55,7 @@ CREATE TABLE "Cultural"(
 	"Name"		VARCHAR		NOT NULL	UNIQUE
 );
 ALTER TABLE "Cultural"
-OWNER TO AdminTradeUnionCommitteeEmployees;
+OWNER TO postgres;
 
 -----------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -64,7 +64,7 @@ CREATE TABLE "Activities"(
 	"Name"		VARCHAR		NOT NULL	UNIQUE
 );
 ALTER TABLE  "Activities"
-OWNER TO AdminTradeUnionCommitteeEmployees;
+OWNER TO postgres;
 
 -----------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -73,7 +73,7 @@ CREATE TABLE "Privileges"(
 	"Name"		VARCHAR		NOT NULL	UNIQUE
 );
 ALTER TABLE  "Privileges"
-OWNER TO AdminTradeUnionCommitteeEmployees;
+OWNER TO postgres;
 
 -----------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -82,7 +82,7 @@ CREATE TABLE "SocialActivity"(
 	"Name"		VARCHAR		NOT NULL	UNIQUE
 );
 ALTER TABLE "SocialActivity"
-OWNER TO AdminTradeUnionCommitteeEmployees;
+OWNER TO postgres;
 
 -----------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -91,18 +91,18 @@ CREATE TABLE "Position"(
 	"Name"		VARCHAR		NOT NULL	UNIQUE
 );
 ALTER TABLE "Position"
-OWNER TO AdminTradeUnionCommitteeEmployees;
+OWNER TO postgres;
 
 -----------------------------------------------------------------------------------------------------------------------------------------------
 
 CREATE TABLE "Subdivisions"(
 	"Id" 		BIGSERIAL 	NOT NULL 	PRIMARY KEY,
 	"IdSubordinate" BIGINT 				REFERENCES "Subdivisions"("Id"),
-	"DeptName" 	VARCHAR 	NOT NULL 	UNIQUE,
+	"Name" 	VARCHAR 	NOT NULL 	UNIQUE,
 	"Abbreviation" VARCHAR  NOT NULL 	UNIQUE
 );
 ALTER TABLE "Subdivisions"
-OWNER TO AdminTradeUnionCommitteeEmployees;
+OWNER TO postgres;
 
 -----------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -111,7 +111,7 @@ CREATE TABLE "TypeHouse" (
 	"Name"		VARCHAR		NOT NULL 		UNIQUE
 );
 ALTER TABLE "TypeHouse"
-OWNER TO AdminTradeUnionCommitteeEmployees;
+OWNER TO postgres;
 
 INSERT INTO  "TypeHouse" ("Name") VALUES 
 ('Dormitory'),
@@ -129,4 +129,4 @@ CREATE TABLE "AddressPublicHouse"(
 	UNIQUE("City","Street","NumberHouse","Type")
 );
 ALTER TABLE "AddressPublicHouse"
-OWNER TO AdminTradeUnionCommitteeEmployees;
+OWNER TO postgres;

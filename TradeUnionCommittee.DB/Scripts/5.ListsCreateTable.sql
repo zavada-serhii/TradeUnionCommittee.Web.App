@@ -7,7 +7,7 @@
 	UNIQUE("IdEmployee","IdAward","DateIssue")
 );
 ALTER TABLE "AwardEmployees"
-OWNER TO AdminTradeUnionCommitteeEmployees;
+OWNER TO postgres;
 
 -----------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -20,7 +20,7 @@ CREATE TABLE "MaterialAidEmployees"(
 	UNIQUE("IdEmployee","IdMaterialAid","DateIssue")
 );
 ALTER TABLE "MaterialAidEmployees"
-OWNER TO AdminTradeUnionCommitteeEmployees;	
+OWNER TO postgres;	
 
 -----------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -31,7 +31,7 @@ CREATE TABLE "HobbyEmployees"(
 	UNIQUE("IdEmployee", "IdHobby")
 );
 ALTER TABLE "HobbyEmployees"
-OWNER TO AdminTradeUnionCommitteeEmployees;
+OWNER TO postgres;
 
 -----------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -44,7 +44,7 @@ CREATE TABLE "FluorographyEmployees"(
 	UNIQUE ("IdEmployee","Result","DatePassage")
 );
 ALTER TABLE "FluorographyEmployees"
-OWNER TO AdminTradeUnionCommitteeEmployees;
+OWNER TO postgres;
 
 -----------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -59,7 +59,7 @@ CREATE TABLE "EventEmployees"(
 	UNIQUE("IdEmployee","IdEvent","StartDate")
 );
 ALTER TABLE "EventEmployees"
-OWNER TO AdminTradeUnionCommitteeEmployees;
+OWNER TO postgres;
 
 -----------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -73,7 +73,7 @@ CREATE TABLE "CulturalEmployees"(
 	UNIQUE("IdEmployee","IdCultural","DateVisit")
 );
 ALTER TABLE "CulturalEmployees"
-OWNER TO AdminTradeUnionCommitteeEmployees;
+OWNER TO postgres;
 
 -----------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -85,7 +85,7 @@ CREATE TABLE "ActivityEmployees"(
 	UNIQUE("IdEmployee","IdActivities","DateEvent")
 );
 ALTER TABLE "ActivityEmployees"
-OWNER TO AdminTradeUnionCommitteeEmployees;
+OWNER TO postgres;
 
 -----------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -100,7 +100,7 @@ CREATE TABLE "GiftEmployees"(
  	UNIQUE("IdEmployee","NameEvent","NameGift","DateGift")
 );
 ALTER TABLE "GiftEmployees"
-OWNER TO AdminTradeUnionCommitteeEmployees;
+OWNER TO postgres;
 
 -----------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -113,7 +113,7 @@ CREATE TABLE "PrivilegeEmployees"(
 	UNIQUE("IdEmployee")
 );
 ALTER TABLE "PrivilegeEmployees"
-OWNER TO AdminTradeUnionCommitteeEmployees;
+OWNER TO postgres;
 
 -----------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -126,7 +126,7 @@ CREATE TABLE "SocialActivityEmployees"(
 	UNIQUE("IdEmployee")
 );
 ALTER TABLE "SocialActivityEmployees"
-OWNER TO AdminTradeUnionCommitteeEmployees;
+OWNER TO postgres;
 
 -----------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -141,7 +141,7 @@ CREATE TABLE "PositionEmployees"(
 	UNIQUE("IdEmployee")
 );
 ALTER TABLE "PositionEmployees"
-OWNER TO AdminTradeUnionCommitteeEmployees;
+OWNER TO postgres;
 
 -----------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -152,7 +152,7 @@ CREATE TABLE "PublicHouseEmployees"(
 	PRIMARY KEY ("IdAddressPublicHouse", "IdEmployee")
 );
 ALTER TABLE "PublicHouseEmployees"
-OWNER TO AdminTradeUnionCommitteeEmployees;
+OWNER TO postgres;
 
 -----------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -166,7 +166,7 @@ CREATE TABLE "PrivateHouseEmployees"(
 	"DateReceiving" 	DATE
 );
 ALTER TABLE "PrivateHouseEmployees"
-OWNER TO AdminTradeUnionCommitteeEmployees;
+OWNER TO postgres;
 
 -----------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -183,7 +183,7 @@ CREATE TABLE "ApartmentAccountingEmployees"(
 	UNIQUE("IdEmployee","FamilyComposition","NameAdministration","PriorityType","DateAdoption","Position","StartYearWork")
 );
 ALTER TABLE "ApartmentAccountingEmployees"
-OWNER TO AdminTradeUnionCommitteeEmployees;
+OWNER TO postgres;
 
 -----------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -198,7 +198,7 @@ CREATE TABLE "EventChildrens"(
 	UNIQUE("IdChildren","IdEvent","StartDate")
 );
 ALTER TABLE "EventChildrens"
-OWNER TO AdminTradeUnionCommitteeEmployees;
+OWNER TO postgres;
 
 -----------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -212,7 +212,7 @@ CREATE TABLE "CulturalChildrens"(
 	UNIQUE("IdChildren","IdCultural","DateVisit")
 );
 ALTER TABLE "CulturalChildrens"
-OWNER TO AdminTradeUnionCommitteeEmployees;
+OWNER TO postgres;
 
 -----------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -223,7 +223,7 @@ CREATE TABLE "HobbyChildrens"(
 	UNIQUE("IdChildren","IdHobby")
 );
 ALTER TABLE "HobbyChildrens"
-OWNER TO AdminTradeUnionCommitteeEmployees;
+OWNER TO postgres;
 
 -----------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -235,7 +235,7 @@ CREATE TABLE "ActivityChildrens"(
 	UNIQUE("IdChildren","IdActivities","DateEvent")
 );
 ALTER TABLE "ActivityChildrens"
-OWNER TO AdminTradeUnionCommitteeEmployees;
+OWNER TO postgres;
 
 -----------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -250,7 +250,7 @@ CREATE TABLE "GiftChildrens"(
  	UNIQUE("IdChildren","NameEvent","NameGift","DateGift")
 );
 ALTER TABLE "GiftChildrens"
-OWNER TO AdminTradeUnionCommitteeEmployees;
+OWNER TO postgres;
 
 -----------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -265,7 +265,7 @@ CREATE TABLE "EventGrandChildrens"(
 	UNIQUE("IdGrandChildren","IdEvent","StartDate")
 );
 ALTER TABLE "EventGrandChildrens"
-OWNER TO AdminTradeUnionCommitteeEmployees;
+OWNER TO postgres;
 
 -----------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -279,7 +279,7 @@ CREATE TABLE "CulturalGrandChildrens"(
 	UNIQUE("IdGrandChildren","IdCultural","DateVisit")
 );
 ALTER TABLE "CulturalGrandChildrens"
-  OWNER TO AdminTradeUnionCommitteeEmployees;
+  OWNER TO postgres;
 
 -----------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -290,7 +290,7 @@ CREATE TABLE "HobbyGrandChildrens"(
 	UNIQUE("IdGrandChildren", "IdHobby")
 );
 ALTER TABLE "HobbyGrandChildrens"
-OWNER TO AdminTradeUnionCommitteeEmployees;
+OWNER TO postgres;
 
 -----------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -302,7 +302,7 @@ CREATE TABLE "ActivityGrandChildrens"(
 	UNIQUE("IdGrandChildren","IdActivities","DateEvent")
 );
 ALTER TABLE "ActivityGrandChildrens"
-OWNER TO AdminTradeUnionCommitteeEmployees;	
+OWNER TO postgres;	
 
 -----------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -317,7 +317,7 @@ CREATE TABLE "GiftGrandChildrens"(
  	UNIQUE("IdGrandChildren","NameEvent","NameGifts","DateGift")
 );
 ALTER TABLE "GiftGrandChildrens"
-OWNER TO AdminTradeUnionCommitteeEmployees;
+OWNER TO postgres;
 
 -----------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -332,7 +332,7 @@ CREATE TABLE "EventFamily"(
 	UNIQUE("IdFamily","IdEvent","StartDate")
 );
 ALTER TABLE "EventFamily"
-OWNER TO AdminTradeUnionCommitteeEmployees;
+OWNER TO postgres;
 
 -----------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -346,7 +346,7 @@ CREATE TABLE "CulturalFamily"(
 	UNIQUE("IdFamily","IdCultural","DateVisit")
 );
 ALTER TABLE "CulturalFamily"
-OWNER TO AdminTradeUnionCommitteeEmployees;
+OWNER TO postgres;
 
 -----------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -358,4 +358,4 @@ CREATE TABLE "ActivityFamily"(
 	UNIQUE("IdFamily","IdActivities","DateEvent")
 );
 ALTER TABLE "ActivityFamily"
-OWNER TO AdminTradeUnionCommitteeEmployees;
+OWNER TO postgres;

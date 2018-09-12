@@ -3,34 +3,60 @@ using System.ComponentModel.DataAnnotations;
 
 namespace TradeUnionCommittee.Web.GUI.Models
 {
-    public class SubdivisionViewModel : BaseDirectoryViewModel
+    public class CreateMainSubdivisionViewModel
     {
-        public override long? Id { get; set; }
-
         [Required(ErrorMessage = "Назва не може бути порожньою!")]
         [Remote("CheckName", "Subdivision", ErrorMessage = "Ця назва вже використовується!")]
-        public override string Name { get; set; }
+        public string Name { get; set; }
 
         [Required(ErrorMessage = "Aбревіатура не може бути порожньою!")]
         [Remote("CheckAbbreviation", "Subdivision", ErrorMessage = "Ця aбревіатура вже використовується!")]
         public string Abbreviation { get; set; }
     }
 
-    public class UpdateSubdivisionViewModel : BaseDirectoryViewModel
+    public class CreateSubordinateSubdivisionViewModel
     {
-        public override long? Id { get; set; }
+        public string HashIdSubordinate { get; set; }
 
         [Required(ErrorMessage = "Назва не може бути порожньою!")]
         [Remote("CheckName", "Subdivision", ErrorMessage = "Ця назва вже використовується!")]
-        public override string Name { get; set; }
-    }
-
-    public class UpdateAbbreviationSubdivisionViewModel : BaseDirectoryViewModel
-    {
-        public override long? Id { get; set; }
+        public string Name { get; set; }
 
         [Required(ErrorMessage = "Aбревіатура не може бути порожньою!")]
         [Remote("CheckAbbreviation", "Subdivision", ErrorMessage = "Ця aбревіатура вже використовується!")]
         public string Abbreviation { get; set; }
+    }
+
+    public class UpdateNameSubdivisionViewModel 
+    {
+        public string HashId { get; set; }
+
+        [Required(ErrorMessage = "Назва не може бути порожньою!")]
+        [Remote("CheckName", "Subdivision", ErrorMessage = "Ця назва вже використовується!")]
+        public string Name { get; set; }
+    }
+
+    public class UpdateAbbreviationSubdivisionViewModel
+    {
+        public string HashId { get; set; }
+
+        [Required(ErrorMessage = "Aбревіатура не може бути порожньою!")]
+        [Remote("CheckAbbreviation", "Subdivision", ErrorMessage = "Ця aбревіатура вже використовується!")]
+        public string Abbreviation { get; set; }
+    }
+
+    public class DeleteSubdivisionViewModel
+    {
+        public string HashId { get; set; }
+        public string Name { get; set; }
+        public string Abbreviation { get; set; }
+    }
+
+    public class RestructuringViewModel
+    {
+        [Required]
+        public string HashId { get; set; }
+        [Required]
+        public string HashIdSubordinate { get; set; }
     }
 }

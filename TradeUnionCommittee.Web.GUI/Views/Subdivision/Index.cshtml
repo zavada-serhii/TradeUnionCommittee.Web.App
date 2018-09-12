@@ -32,25 +32,25 @@
                     {
                         <tr>
                             <td>
-                                @Html.DisplayFor(modelItem => item.DeptName)
+                                @item.Name
                             </td>
 
                             <td>
-                                @Html.DisplayFor(modelItem => item.Abbreviation)
+                                @item.Abbreviation
                             </td>
                             
                             <td class="text-right">
                                 <div class="btn-group">
                                     <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown"></button>
                                     <div class="dropdown-menu">
-                                        <a class="dropdown-item" asp-action="Update" asp-route-id="@item.Id">Редагувати назву</a>
-                                        <a class="dropdown-item" asp-action="UpdateAbbreviation" asp-route-id="@item.Id">Редагувати абревіатуру</a>
-                                        <a class="dropdown-item" asp-action="Details" asp-route-id="@item.Id">Підрозділи</a>
-                                        <a class="dropdown-item" asp-action="CreateSubordinate" asp-route-id="@item.Id">Додати підрозділ</a>
-                                        <a class="dropdown-item" asp-action="Restructuring" asp-route-id="@item.Id">Реструктуризація</a>
+                                        <a class="dropdown-item" asp-action="UpdateName" asp-route-id="@item.HashId">Редагувати назву</a>
+                                        <a class="dropdown-item" asp-action="UpdateAbbreviation" asp-route-id="@item.HashId">Редагувати абревіатуру</a>
+                                        <a class="dropdown-item" asp-action="Details" asp-route-id="@item.HashId">Підрозділи</a>
+                                        <a class="dropdown-item" asp-action="CreateSubordinate" asp-route-id="@item.HashId">Додати підрозділ</a>
+                                        <a class="dropdown-item" asp-action="Restructuring" asp-route-id="@item.HashId">Реструктуризація</a>
                                         @if (User.IsInRole("Admin"))
                                         {
-                                            <a class="dropdown-item" asp-action="Delete" asp-route-id="@item.Id">Видалити</a>
+                                            <a class="dropdown-item" asp-action="Delete" asp-route-id="@item.HashId">Видалити</a>
                                         }
                                     </div>
                                 </div>

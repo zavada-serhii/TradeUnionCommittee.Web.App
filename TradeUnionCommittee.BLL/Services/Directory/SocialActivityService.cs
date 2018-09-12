@@ -1,8 +1,9 @@
-﻿using AutoMapper;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TradeUnionCommittee.BLL.BL;
 using TradeUnionCommittee.BLL.DTO;
+using TradeUnionCommittee.BLL.Infrastructure;
 using TradeUnionCommittee.BLL.Interfaces.Directory;
 using TradeUnionCommittee.Common.ActualResults;
 using TradeUnionCommittee.DAL.Entities;
@@ -13,84 +14,70 @@ namespace TradeUnionCommittee.BLL.Services.Directory
     public class SocialActivityService : ISocialActivityService
     {
         private readonly IUnitOfWork _database;
+        private readonly IAutoMapperService _mapperService;
+        private readonly ICheckerService _checkerService;
 
-        public SocialActivityService(IUnitOfWork database)
+        public SocialActivityService(IUnitOfWork database, IAutoMapperService mapperService, ICheckerService checkerService)
         {
             _database = database;
+            _mapperService = mapperService;
+            _checkerService = checkerService;
         }
 
-        public async Task<ActualResult<IEnumerable<DirectoryDTO>>> GetAllAsync()
+        public async Task<ActualResult<IEnumerable<DirectoryDTO>>> GetAllAsync() =>
+            await Task.Run(() => _mapperService.Mapper.Map<ActualResult<IEnumerable<DirectoryDTO>>>(_database.SocialActivityRepository.GetAll()));
+
+        public async Task<ActualResult<DirectoryDTO>> GetAsync(string hashId)
         {
-            return await Task.Run(() =>
-            {
-                var mapper = new MapperConfiguration(cfg => cfg.CreateMap<SocialActivity, DirectoryDTO>()).CreateMapper();
-                return mapper.Map<ActualResult<IEnumerable<SocialActivity>>, ActualResult<IEnumerable<DirectoryDTO>>>(_database.SocialActivityRepository.GetAll());
-            });
+            var check = await _checkerService.CheckDecryptAndTupleInDbWithId(hashId, BL.Services.SocialActivity);
+            return check.IsValid
+                ? _mapperService.Mapper.Map<ActualResult<DirectoryDTO>>(_database.SocialActivityRepository.Get(check.Result))
+                : new ActualResult<DirectoryDTO>(check.ErrorsList);
         }
 
-        public async Task<ActualResult<DirectoryDTO>> GetAsync(long id)
+        public async Task<ActualResult> CreateAsync(DirectoryDTO dto)
         {
-            return await Task.Run(() =>
+            if (!await CheckNameAsync(dto.Name))
             {
-                var socialActivity = _database.SocialActivityRepository.Get(id);
-                if (socialActivity.IsValid == false && socialActivity.ErrorsList.Count > 0 || socialActivity.Result == null)
+                _database.SocialActivityRepository.Create(_mapperService.Mapper.Map<SocialActivity>(dto));
+                return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
+            }
+            return new ActualResult(Errors.DuplicateData);
+        }
+
+        public async Task<ActualResult> UpdateAsync(DirectoryDTO dto)
+        {
+            var check = await _checkerService.CheckDecryptAndTupleInDbWithId(dto.HashId, BL.Services.SocialActivity);
+            if (check.IsValid)
+            {
+                if (!await CheckNameAsync(dto.Name))
                 {
-                    return new ActualResult<DirectoryDTO> { IsValid = false, ErrorsList = socialActivity.ErrorsList };
+                    _database.SocialActivityRepository.Update(_mapperService.Mapper.Map<SocialActivity>(dto));
+                    return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
                 }
-                return new ActualResult<DirectoryDTO> { Result = new DirectoryDTO { Id = socialActivity.Result.Id, Name = socialActivity.Result.Name } };
-            });
-        }
-
-        public async Task<ActualResult> CreateAsync(DirectoryDTO item)
-        {
-            var socialActivity = _database.SocialActivityRepository.Create(new SocialActivity { Name = item.Name });
-            if (socialActivity.IsValid == false && socialActivity.ErrorsList.Count > 0)
-            {
-                return new ActualResult { IsValid = false, ErrorsList = socialActivity.ErrorsList };
+                return new ActualResult(Errors.DuplicateData);
             }
-            var dbState = await _database.SaveAsync();
-            socialActivity.IsValid = dbState.IsValid;
-            return socialActivity;
+            return new ActualResult(check.ErrorsList);
         }
 
-        public async Task<ActualResult> UpdateAsync(DirectoryDTO item)
+        public async Task<ActualResult> DeleteAsync(string hashId)
         {
-            var socialActivity = _database.SocialActivityRepository.Update(new SocialActivity { Id = item.Id, Name = item.Name });
-            if (socialActivity.IsValid == false && socialActivity.ErrorsList.Count > 0)
+            var check = await _checkerService.CheckDecryptAndTupleInDbWithId(hashId, BL.Services.SocialActivity, false);
+            if (check.IsValid)
             {
-                return new ActualResult { IsValid = false, ErrorsList = socialActivity.ErrorsList };
+                _database.SocialActivityRepository.Delete(check.Result);
+                return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
             }
-            var dbState = await _database.SaveAsync();
-            socialActivity.IsValid = dbState.IsValid;
-            return socialActivity;
+            return new ActualResult(check.ErrorsList);
         }
 
-        public async Task<ActualResult> DeleteAsync(long id)
-        {
-            var socialActivity = _database.SocialActivityRepository.Delete(id);
-            if (socialActivity.IsValid == false && socialActivity.ErrorsList.Count > 0)
-            {
-                return new ActualResult { IsValid = false, ErrorsList = socialActivity.ErrorsList };
-            }
-            var dbState = await _database.SaveAsync();
-            socialActivity.IsValid = dbState.IsValid;
-            return socialActivity;
-        }
-
-        public async Task<ActualResult> CheckNameAsync(string name)
-        {
-            return await Task.Run(() =>
-            {
-                var socialActivity = _database.SocialActivityRepository.Find(p => p.Name == name);
-                return socialActivity.Result.Any() ?
-                    new ActualResult { IsValid = false } :
-                    new ActualResult { IsValid = true };
-            });
-        }
+        public async Task<bool> CheckNameAsync(string name) =>
+            await Task.Run(() => _database.SocialActivityRepository.Find(p => p.Name == name).Result.Any());
 
         public void Dispose()
         {
             _database.Dispose();
+            _checkerService.Dispose();
         }
     }
 }

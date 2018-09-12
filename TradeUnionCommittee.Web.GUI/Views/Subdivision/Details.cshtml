@@ -29,7 +29,7 @@
                     {
                         <tr>
                             <td>
-                                @item.DeptName
+                                @item.Name
                             </td>
 
                             <td>
@@ -40,11 +40,11 @@
                                 <div class="btn-group">
                                     <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown"></button>
                                     <div class="dropdown-menu">
-                                        <a class="dropdown-item" asp-action="Update" asp-route-id="@item.Id">Редагувати назву</a>
-                                        <a class="dropdown-item" asp-action="UpdateAbbreviation" asp-route-id="@item.Id">Редагувати абревіатуру</a>
+                                        <a class="dropdown-item" asp-action="UpdateName" asp-route-id="@item.HashId">Редагувати назву</a>
+                                        <a class="dropdown-item" asp-action="UpdateAbbreviation" asp-route-id="@item.HashId">Редагувати абревіатуру</a>
                                         @if (User.IsInRole("Admin"))
                                         {
-                                            <a class="dropdown-item" asp-action="Delete" asp-route-id="@item.Id">Видалити</a>
+                                            <a class="dropdown-item" asp-action="Delete" asp-route-id="@item.HashId">Видалити</a>
                                         }
                                     </div>
                                 </div>

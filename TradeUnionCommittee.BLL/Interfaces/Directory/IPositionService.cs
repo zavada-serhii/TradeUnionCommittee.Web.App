@@ -4,5 +4,6 @@ namespace TradeUnionCommittee.BLL.Interfaces.Directory
 {
     public interface IPositionService : IService<DirectoryDTO>, IDirectoryService
     {
+        
     }
 }

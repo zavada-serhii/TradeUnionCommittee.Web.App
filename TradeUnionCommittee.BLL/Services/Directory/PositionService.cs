@@ -1,8 +1,9 @@
-﻿using AutoMapper;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TradeUnionCommittee.BLL.BL;
 using TradeUnionCommittee.BLL.DTO;
+using TradeUnionCommittee.BLL.Infrastructure;
 using TradeUnionCommittee.BLL.Interfaces.Directory;
 using TradeUnionCommittee.Common.ActualResults;
 using TradeUnionCommittee.DAL.Entities;
@@ -13,84 +14,70 @@ namespace TradeUnionCommittee.BLL.Services.Directory
     public class PositionService : IPositionService
     {
         private readonly IUnitOfWork _database;
+        private readonly IAutoMapperService _mapperService;
+        private readonly ICheckerService _checkerService;
 
-        public PositionService(IUnitOfWork database)
+        public PositionService(IUnitOfWork database, IAutoMapperService mapperService, ICheckerService checkerService)
         {
             _database = database;
+            _mapperService = mapperService;
+            _checkerService = checkerService;
         }
 
-        public async Task<ActualResult<IEnumerable<DirectoryDTO>>> GetAllAsync()
+        public async Task<ActualResult<IEnumerable<DirectoryDTO>>> GetAllAsync() => 
+            await Task.Run(() => _mapperService.Mapper.Map<ActualResult<IEnumerable<DirectoryDTO>>>(_database.PositionRepository.GetAll()));
+
+        public async Task<ActualResult<DirectoryDTO>> GetAsync(string hashId)
         {
-            return await Task.Run(() =>
-            {
-                var mapper = new MapperConfiguration(cfg => cfg.CreateMap<Position, DirectoryDTO>()).CreateMapper();
-                return mapper.Map<ActualResult<IEnumerable<Position>>, ActualResult<IEnumerable<DirectoryDTO>>>(_database.PositionRepository.GetAll());
-            });
+            var check = await _checkerService.CheckDecryptAndTupleInDbWithId(hashId, BL.Services.Position);
+            return check.IsValid 
+                ? _mapperService.Mapper.Map<ActualResult<DirectoryDTO>>(_database.PositionRepository.Get(check.Result)) 
+                : new ActualResult<DirectoryDTO>(check.ErrorsList);
         }
 
-        public async Task<ActualResult<DirectoryDTO>> GetAsync(long id)
+        public async Task<ActualResult> CreateAsync(DirectoryDTO dto)
         {
-            return await Task.Run(() =>
+            if (!await CheckNameAsync(dto.Name))
             {
-                var position = _database.PositionRepository.Get(id);
-                if (position.IsValid == false && position.ErrorsList.Count > 0 || position.Result == null)
+                _database.PositionRepository.Create(_mapperService.Mapper.Map<Position>(dto));
+                return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
+            }
+            return new ActualResult(Errors.DuplicateData);
+        }
+
+        public async Task<ActualResult> UpdateAsync(DirectoryDTO dto)
+        {
+            var check = await _checkerService.CheckDecryptAndTupleInDbWithId(dto.HashId, BL.Services.Position);
+            if (check.IsValid)
+            {
+                if (!await CheckNameAsync(dto.Name))
                 {
-                    return new ActualResult<DirectoryDTO> { IsValid = false, ErrorsList = position.ErrorsList };
+                    _database.PositionRepository.Update(_mapperService.Mapper.Map<Position>(dto));
+                    return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
                 }
-                return new ActualResult<DirectoryDTO> { Result = new DirectoryDTO { Id = position.Result.Id, Name = position.Result.Name } };
-            });
-        }
-
-        public async Task<ActualResult> CreateAsync(DirectoryDTO item)
-        {
-            var position = _database.PositionRepository.Create(new Position { Name = item.Name });
-            if (position.IsValid == false && position.ErrorsList.Count > 0)
-            {
-                return new ActualResult { IsValid = false, ErrorsList = position.ErrorsList };
+                return new ActualResult(Errors.DuplicateData);
             }
-            var dbState = await _database.SaveAsync();
-            position.IsValid = dbState.IsValid;
-            return position;
+            return new ActualResult(check.ErrorsList);
         }
 
-        public async Task<ActualResult> UpdateAsync(DirectoryDTO item)
+        public async Task<ActualResult> DeleteAsync(string hashId)
         {
-            var position = _database.PositionRepository.Update(new Position { Id = item.Id, Name = item.Name });
-            if (position.IsValid == false && position.ErrorsList.Count > 0)
+            var check = await _checkerService.CheckDecryptAndTupleInDbWithId(hashId, BL.Services.Position, false);
+            if (check.IsValid)
             {
-                return new ActualResult { IsValid = false, ErrorsList = position.ErrorsList };
+                _database.PositionRepository.Delete(check.Result);
+                return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
             }
-            var dbState = await _database.SaveAsync();
-            position.IsValid = dbState.IsValid;
-            return position;
+            return new ActualResult(check.ErrorsList);
         }
 
-        public async Task<ActualResult> DeleteAsync(long id)
-        {
-            var position = _database.PositionRepository.Delete(id);
-            if (position.IsValid == false && position.ErrorsList.Count > 0)
-            {
-                return new ActualResult { IsValid = false, ErrorsList = position.ErrorsList };
-            }
-            var dbState = await _database.SaveAsync();
-            position.IsValid = dbState.IsValid;
-            return position;
-        }
-
-        public async Task<ActualResult> CheckNameAsync(string name)
-        {
-            return await Task.Run(() =>
-            {
-                var position = _database.PositionRepository.Find(p => p.Name == name);
-                return position.Result.Any() ?
-                    new ActualResult { IsValid = false} :
-                    new ActualResult { IsValid = true};
-            });
-        }
+        public async Task<bool> CheckNameAsync(string name) => 
+            await Task.Run(() => _database.PositionRepository.Find(p => p.Name == name).Result.Any());
 
         public void Dispose()
         {
             _database.Dispose();
+            _checkerService.Dispose();
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using TradeUnionCommittee.DAL.Entities;
 
@@ -8,18 +9,19 @@ namespace TradeUnionCommittee.DAL.EF
     {
         public static void UndoChanges(this TradeUnionCommitteeEmployeesCoreContext dbContext)
         {
-            foreach (var entry in dbContext.ChangeTracker.Entries())
+            foreach (var entry in dbContext.ChangeTracker.Entries().Where(x => x.State != EntityState.Unchanged).ToList())
             {
                 switch (entry.State)
                 {
                     case EntityState.Modified:
+                        entry.CurrentValues.SetValues(entry.OriginalValues);
                         entry.State = EntityState.Unchanged;
-                        break;
-                    case EntityState.Deleted:
-                        entry.Reload();
                         break;
                     case EntityState.Added:
                         entry.State = EntityState.Detached;
+                        break;
+                    case EntityState.Deleted:
+                        entry.State = EntityState.Unchanged;
                         break;
                 }
             }
@@ -1004,11 +1006,11 @@ namespace TradeUnionCommittee.DAL.EF
 
             modelBuilder.Entity<Subdivisions>(entity =>
             {
-                entity.HasIndex(e => e.DeptName)
-                    .HasName("Subdivisions_DeptName_key")
+                entity.HasIndex(e => e.Name)
+                    .HasName("Subdivisions_Name_key")
                     .IsUnique();
 
-                entity.Property(e => e.DeptName)
+                entity.Property(e => e.Name)
                     .IsRequired()
                     .HasColumnType("character varying");
 

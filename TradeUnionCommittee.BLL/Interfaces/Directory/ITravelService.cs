@@ -2,7 +2,7 @@
 
 namespace TradeUnionCommittee.BLL.Interfaces.Directory
 {
-    public interface ITravelService : IService<DirectoryDTO>, IDirectoryService
+    public interface ITravelService : IService<TravelDTO>, IDirectoryService
     {
     }
 }

@@ -1,8 +1,9 @@
-﻿using AutoMapper;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TradeUnionCommittee.BLL.BL;
 using TradeUnionCommittee.BLL.DTO;
+using TradeUnionCommittee.BLL.Infrastructure;
 using TradeUnionCommittee.BLL.Interfaces.Directory;
 using TradeUnionCommittee.Common.ActualResults;
 using TradeUnionCommittee.DAL.Entities;
@@ -13,84 +14,70 @@ namespace TradeUnionCommittee.BLL.Services.Directory
     public class CulturalService : ICulturalService
     {
         private readonly IUnitOfWork _database;
+        private readonly IAutoMapperService _mapperService;
+        private readonly ICheckerService _checkerService;
 
-        public CulturalService(IUnitOfWork database)
+        public CulturalService(IUnitOfWork database, IAutoMapperService mapperService, ICheckerService checkerService)
         {
             _database = database;
+            _mapperService = mapperService;
+            _checkerService = checkerService;
         }
 
-        public async Task<ActualResult<IEnumerable<DirectoryDTO>>> GetAllAsync()
+        public async Task<ActualResult<IEnumerable<DirectoryDTO>>> GetAllAsync() =>
+            await Task.Run(() => _mapperService.Mapper.Map<ActualResult<IEnumerable<DirectoryDTO>>>(_database.CulturalRepository.GetAll()));
+
+        public async Task<ActualResult<DirectoryDTO>> GetAsync(string hashId)
         {
-            return await Task.Run(() =>
-            {
-                var mapper = new MapperConfiguration(cfg => cfg.CreateMap<Cultural, DirectoryDTO>()).CreateMapper();
-                return mapper.Map<ActualResult<IEnumerable<Cultural>>, ActualResult<IEnumerable<DirectoryDTO>>>(_database.CulturalRepository.GetAll());
-            });
+            var check = await _checkerService.CheckDecryptAndTupleInDbWithId(hashId, BL.Services.Cultural);
+            return check.IsValid
+                ? _mapperService.Mapper.Map<ActualResult<DirectoryDTO>>(_database.CulturalRepository.Get(check.Result))
+                : new ActualResult<DirectoryDTO>(check.ErrorsList);
         }
 
-        public async Task<ActualResult<DirectoryDTO>> GetAsync(long id)
+        public async Task<ActualResult> CreateAsync(DirectoryDTO dto)
         {
-            return await Task.Run(() =>
+            if (!await CheckNameAsync(dto.Name))
             {
-                var cultural = _database.CulturalRepository.Get(id);
-                if (cultural.IsValid == false && cultural.ErrorsList.Count > 0 || cultural.Result == null)
+                _database.CulturalRepository.Create(_mapperService.Mapper.Map<Cultural>(dto));
+                return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
+            }
+            return new ActualResult(Errors.DuplicateData);
+        }
+
+        public async Task<ActualResult> UpdateAsync(DirectoryDTO dto)
+        {
+            var check = await _checkerService.CheckDecryptAndTupleInDbWithId(dto.HashId, BL.Services.Cultural);
+            if (check.IsValid)
+            {
+                if (!await CheckNameAsync(dto.Name))
                 {
-                    return new ActualResult<DirectoryDTO> { IsValid = false, ErrorsList = cultural.ErrorsList };
+                    _database.CulturalRepository.Update(_mapperService.Mapper.Map<Cultural>(dto));
+                    return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
                 }
-                return new ActualResult<DirectoryDTO> { Result = new DirectoryDTO { Id = cultural.Result.Id, Name = cultural.Result.Name } };
-            });
-        }
-
-        public async Task<ActualResult> CreateAsync(DirectoryDTO item)
-        {
-            var cultural = _database.CulturalRepository.Create(new Cultural { Name = item.Name });
-            if (cultural.IsValid == false && cultural.ErrorsList.Count > 0)
-            {
-                return new ActualResult { IsValid = false, ErrorsList = cultural.ErrorsList };
+                return new ActualResult(Errors.DuplicateData);
             }
-            var dbState = await _database.SaveAsync();
-            cultural.IsValid = dbState.IsValid;
-            return cultural;
+            return new ActualResult(check.ErrorsList);
         }
 
-        public async Task<ActualResult> UpdateAsync(DirectoryDTO item)
+        public async Task<ActualResult> DeleteAsync(string hashId)
         {
-            var cultural = _database.CulturalRepository.Update(new Cultural { Id = item.Id, Name = item.Name });
-            if (cultural.IsValid == false && cultural.ErrorsList.Count > 0)
+            var check = await _checkerService.CheckDecryptAndTupleInDbWithId(hashId, BL.Services.Cultural, false);
+            if (check.IsValid)
             {
-                return new ActualResult { IsValid = false, ErrorsList = cultural.ErrorsList };
+                _database.CulturalRepository.Delete(check.Result);
+                return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
             }
-            var dbState = await _database.SaveAsync();
-            cultural.IsValid = dbState.IsValid;
-            return cultural;
+            return new ActualResult(check.ErrorsList);
         }
 
-        public async Task<ActualResult> DeleteAsync(long id)
-        {
-            var cultural = _database.CulturalRepository.Delete(id);
-            if (cultural.IsValid == false && cultural.ErrorsList.Count > 0)
-            {
-                return new ActualResult { IsValid = false, ErrorsList = cultural.ErrorsList };
-            }
-            var dbState = await _database.SaveAsync();
-            cultural.IsValid = dbState.IsValid;
-            return cultural;
-        }
-
-        public async Task<ActualResult> CheckNameAsync(string name)
-        {
-            return await Task.Run(() =>
-            {
-                var cultural = _database.CulturalRepository.Find(p => p.Name == name);
-                return cultural.Result.Any() ?
-                    new ActualResult { IsValid = false } :
-                    new ActualResult { IsValid = true };
-            });
-        }
+        public async Task<bool> CheckNameAsync(string name) =>
+            await Task.Run(() => _database.CulturalRepository.Find(p => p.Name == name).Result.Any());
 
         public void Dispose()
         {
             _database.Dispose();
+            _checkerService.Dispose();
         }
     }
 }

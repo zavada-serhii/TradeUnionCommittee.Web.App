@@ -1,232 +1,133 @@
-﻿using AutoMapper;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TradeUnionCommittee.BLL.BL;
 using TradeUnionCommittee.BLL.DTO;
+using TradeUnionCommittee.BLL.Infrastructure;
 using TradeUnionCommittee.BLL.Interfaces.Account;
 using TradeUnionCommittee.Common.ActualResults;
 using TradeUnionCommittee.DAL.Entities;
 using TradeUnionCommittee.DAL.Interfaces;
-using TradeUnionCommittee.Encryption;
 
 namespace TradeUnionCommittee.BLL.Services.Account
 {
     public class AccountService : IAccountService
     {
         private readonly IUnitOfWork _database;
-        private readonly ICryptoUtilities _cryptoUtilities;
+        private readonly IAutoMapperService _mapperService;
+        private readonly ICheckerService _checkerService;
 
-        public AccountService(IUnitOfWork database, ICryptoUtilities cryptoUtilities)
+        public AccountService(IUnitOfWork database, IAutoMapperService mapperService, ICheckerService checkerService)
         {
             _database = database;
-            _cryptoUtilities = cryptoUtilities;
+            _mapperService = mapperService;
+            _checkerService = checkerService;
         }
 
-        public async Task<ActualResult<IEnumerable<AccountDTO>>> GetAllAsync()
+        public async Task<ActualResult<string>> Login(string email, string password)
         {
-            return await Task.Run(() =>
+            var role = await _database.UsersRepository.Login(email, password);
+            return role.IsValid ? new ActualResult<string> { Result = role.Result } : new ActualResult<string>(Errors.InvalidLoginOrPassword);
+        }
+
+        public async Task<ActualResult<IEnumerable<AccountDTO>>> GetAllUsersAsync() => 
+            await Task.Run(() => _mapperService.Mapper.Map<ActualResult<IEnumerable<AccountDTO>>>(_database.UsersRepository.GetAllUsers()));
+
+
+        public async Task<ActualResult<AccountDTO>> GetUserAsync(string hashId)
+        {
+            var check = await _checkerService.CheckDecryptAndTupleInDbWithId(hashId, BL.Services.Account);
+            return check.IsValid
+                ? _mapperService.Mapper.Map<ActualResult<AccountDTO>>(_database.UsersRepository.GetUser(check.Result))
+                : new ActualResult<AccountDTO>(check.ErrorsList);
+        }
+
+        public async Task<ActualResult> CreateUserAsync(AccountDTO dto)
+        {
+            var checkRole = await _checkerService.CheckDecryptAndTupleInDb(dto.HashIdRole, BL.Services.Role, false);
+            if (!await CheckEmailAsync(dto.Email))
             {
-                var actualResults = new ActualResult<IEnumerable<AccountDTO>>();
-
-                var roles =  _database.RolesRepository.GetAll();
-                var users = _database.UsersRepository.GetAll();
-
-                actualResults.Result = (from r in roles.Result
-                    join u in users.Result
-                    on r.Id equals u.IdRole
-                    select new AccountDTO
-                    {
-                        HashIdUser = _cryptoUtilities.EncryptLong(u.Id,EnumCryptoUtilities.AccountService),
-                        Email = u.Email,
-                        Role = ConvertRoleToUkrainianLang(r.Name)
-                    }).ToList();
-
-                return actualResults;
-            });
-        }
-
-        public Task<ActualResult<AccountDTO>> GetAsync(long id)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public async Task<ActualResult<AccountDTO>> GetAsync(string hashId)
-        {
-            return await Task.Run(() =>
-            {
-                var id = _cryptoUtilities.DecryptLong(hashId,EnumCryptoUtilities.AccountService);
-
-                var user = _database.UsersRepository.Get(id);
-                if (user.IsValid == false && user.ErrorsList.Count > 0 || user.Result == null)
+                if (checkRole.IsValid)
                 {
-                    return new ActualResult<AccountDTO> { IsValid = false, ErrorsList = user.ErrorsList };
+                    _database.UsersRepository.CreateUser(_mapperService.Mapper.Map<Users>(dto));
+                    return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
                 }
-                return new ActualResult<AccountDTO>
+                return new ActualResult(checkRole.ErrorsList);
+            }
+            return new ActualResult(Errors.DuplicateData);
+        }
+
+        public async Task<ActualResult> UpdateUserEmailAsync(AccountDTO dto)
+        {
+            var check = await _checkerService.CheckDecryptAndTupleInDb(dto.HashIdUser, BL.Services.Account);
+            if (check.IsValid)
+            {
+                if (!await CheckEmailAsync(dto.Email))
                 {
-                    Result = new AccountDTO
-                    {
-                        HashIdUser = _cryptoUtilities.EncryptLong(user.Result.Id,EnumCryptoUtilities.AccountService),
-                        Email = user.Result.Email,
-                        IdRole = user.Result.IdRole
-                    }
-                };
-            });
+                    _database.UsersRepository.UpdateUserEmail(_mapperService.Mapper.Map<Users>(dto));
+                    return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
+                }
+                return new ActualResult(Errors.DuplicateData);
+            }
+            return new ActualResult(check.ErrorsList);
         }
 
-        public async Task<ActualResult> CreateAsync(AccountDTO item)
+        public async Task<ActualResult> UpdateUserPasswordAsync(AccountDTO dto)
         {
-            var users = _database.UsersRepository.Create(new Users
+            var check = await _checkerService.CheckDecryptAndTupleInDb(dto.HashIdUser, BL.Services.Account);
+            if (check.IsValid)
             {
-                Email = item.Email,
-                Password = HashingPassword.HashPassword(item.Password),
-                IdRole = item.IdRole
-            });
-
-            if (users.IsValid && users.ErrorsList.Count > 0)
-            {
-                return new ActualResult { IsValid = false, ErrorsList = users.ErrorsList };
+                _database.UsersRepository.UpdateUserPassword(_mapperService.Mapper.Map<Users>(dto));
+                return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
             }
-            var dbState = await _database.SaveAsync();
-            users.IsValid = dbState.IsValid;
-            return users;
+            return new ActualResult(check.ErrorsList);
         }
 
-        public async Task<ActualResult> UpdateAsync(AccountDTO item)
+        public async Task<ActualResult> UpdateUserRoleAsync(AccountDTO dto)
         {
-            var result = new ActualResult();
-
-            var id = _cryptoUtilities.DecryptLong(item.HashIdUser,EnumCryptoUtilities.AccountService);
-
-            if (item.IdRole != 0)
+            var checkUser = await _checkerService.CheckDecryptAndTupleInDb(dto.HashIdUser, BL.Services.Account);
+            var checkRole = await _checkerService.CheckDecryptAndTupleInDb(dto.HashIdRole, BL.Services.Role, false);
+            if (checkUser.IsValid && checkRole.IsValid)
             {
-                var user = await GetAsync(item.HashIdUser);
-                result = _database.UsersRepository.Update(new Users
-                {
-                    Id = id,
-                    IdRole = item.IdRole,
-                    Email = user.Result.Email,
-                    Password = user.Result.Password
-                });
+                _database.UsersRepository.UpdateUserRole(_mapperService.Mapper.Map<Users>(dto));
+                return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
             }
-
-            if (item.Email != null)
-            {
-                var user = await GetAsync(item.HashIdUser);
-                result = _database.UsersRepository.Update(new Users
-                {
-                    Id = id,
-                    Email = item.Email,
-                    Password = user.Result.Password,
-                    IdRole = user.Result.IdRole
-                });
-            }
-
-            if (item.Password != null)
-            {
-                var user = await GetAsync(item.HashIdUser);
-                result = _database.UsersRepository.Update(new Users
-                {
-                    Id = id,
-                    Password = HashingPassword.HashPassword(item.Password),
-                    Email = user.Result.Email,
-                    IdRole = user.Result.IdRole
-                });
-            }
-
-            if (result.IsValid == false && result.ErrorsList.Count > 0)
-            {
-                return new ActualResult { IsValid = false, ErrorsList = result.ErrorsList };
-            }
-            var dbState = await _database.SaveAsync();
-            result.IsValid = dbState.IsValid;
-            return result;
+            return new ActualResult(new List<string> { checkUser.ErrorsList.FirstOrDefault(), checkRole.ErrorsList.FirstOrDefault() });
         }
 
-        public Task<ActualResult> DeleteAsync(long id)
+        public async Task<ActualResult> DeleteUserAsync(string hashId)
         {
-            throw new System.NotImplementedException();
-        }
-
-        public async Task<ActualResult> DeleteAsync(string hashId)
-        {
-            var id = _cryptoUtilities.DecryptLong(hashId,EnumCryptoUtilities.AccountService);
-            var user = _database.UsersRepository.Delete(id);
-            if (user.IsValid == false && user.ErrorsList.Count > 0)
+            var check = await _checkerService.CheckDecryptAndTupleInDbWithId(hashId, BL.Services.Account, false);
+            if (check.IsValid)
             {
-                return new ActualResult { IsValid = false, ErrorsList = user.ErrorsList };
+                _database.UsersRepository.DeleteUser(check.Result);
+                return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
             }
-            var dbState = await _database.SaveAsync();
-            user.IsValid = dbState.IsValid;
-            return user;
+            return new ActualResult(check.ErrorsList);
         }
 
-        public async Task<ActualResult> CheckEmail(string email)
-        {
-            return await Task.Run(() =>
-            {
-                var res = _database.UsersRepository.Find(p => p.Email == email);
-                return res.Result.Any() ?
-                    new ActualResult { IsValid = false } :
-                    new ActualResult { IsValid = true };
-            });
-        }
+        public async Task<bool> CheckEmailAsync(string email) =>
+            await Task.Run(() => _database.UsersRepository.FindUsers(p => p.Email == email).Result.Any());
 
         //------------------------------------------------------------------------------------------------------------------------------------------
 
-        public async Task<ActualResult<IEnumerable<RolesDTO>>> GetRoles()
-        {
-            return await Task.Run(() =>
-            {
-                var dtos = new List<RolesDTO>();
-                var collection = _database.RolesRepository.GetAll().Result;
-                foreach (var v in collection)
-                {
-                    switch (v.Name)
-                    {
-                        case "Admin":
-                            dtos.Add(new RolesDTO { Id = v.Id, Name = "Адміністратор" });
-                            break;
-                        case "Accountant":
-                            dtos.Add(new RolesDTO { Id = v.Id, Name = "Бухгалтер" });
-                            break;
-                        case "Deputy":
-                            dtos.Add(new RolesDTO { Id = v.Id, Name = "Заступник" });
-                            break;
-                    }
-                }
-                return new ActualResult<IEnumerable<RolesDTO>> {Result = dtos};
-            });
-        }
+        public async Task<ActualResult<IEnumerable<RolesDTO>>> GetRoles() => 
+            await Task.Run(() => _mapperService.Mapper.Map<ActualResult<IEnumerable<RolesDTO>>>(_database.UsersRepository.GetAllRoles()));
 
-        public async Task<ActualResult<RolesDTO>> GetRoleId(long id)
+        public async Task<ActualResult<RolesDTO>> GetRoleId(string hashId)
         {
-            return await Task.Run(() =>
-            {
-                var mapper = new MapperConfiguration(cfg => cfg.CreateMap<Roles, RolesDTO>()).CreateMapper();
-                return mapper.Map<ActualResult<Roles>, ActualResult<RolesDTO>>(_database.RolesRepository.Get(id));
-            });
+            var check = await _checkerService.CheckDecryptAndTupleInDbWithId(hashId, BL.Services.Role, false);
+            return check.IsValid
+                ? _mapperService.Mapper.Map<ActualResult<RolesDTO>>(_database.UsersRepository.GetRole(check.Result))
+                : new ActualResult<RolesDTO>(check.ErrorsList);
         }
 
         //------------------------------------------------------------------------------------------------------------------------------------------
-
-        private string ConvertRoleToUkrainianLang(string s)
-        {
-            switch (s)
-            {
-                case "Admin":
-                    return "Адміністратор";
-                case "Accountant":
-                    return "Бухгалтер";
-                case "Deputy":
-                    return "Заступник";
-                default:
-                    return string.Empty;
-            }
-        }
-
+       
         public void Dispose()
         {
             _database.Dispose();
+            _checkerService.Dispose();
         }
     }
 }

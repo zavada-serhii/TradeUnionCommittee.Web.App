@@ -12,7 +12,7 @@ namespace TradeUnionCommittee.DAL.Entities
 
         public long Id { get; set; }
         public long? IdSubordinate { get; set; }
-        public string DeptName { get; set; }
+        public string Name { get; set; }
         public string Abbreviation { get; set; }
 
         public Subdivisions IdSubordinateNavigation { get; set; }

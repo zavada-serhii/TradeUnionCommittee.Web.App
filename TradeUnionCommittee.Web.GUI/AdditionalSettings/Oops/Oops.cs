@@ -9,6 +9,7 @@ namespace TradeUnionCommittee.Web.GUI.AdditionalSettings.Oops
         {
             ViewData["BackController"] = backController;
             ViewData["BackAction"] = backAction;
+            ViewBag.Errors = errors;
             return View("Oops");
         }
     }

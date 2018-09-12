@@ -69,7 +69,7 @@ namespace TradeUnionCommittee.Web.GUI.AdditionalSettings.DropDownLists
         public async Task<SelectList> GetRoles()
         {
             var roles = await _accountService.GetRoles();
-            return roles.IsValid ? new SelectList(roles.Result, "Id", "Name") : null;
+            return roles.IsValid ? new SelectList(roles.Result, "HashId", "Name") : null;
         }
 
         public async Task<SelectList> GetLevelEducation()
@@ -87,12 +87,12 @@ namespace TradeUnionCommittee.Web.GUI.AdditionalSettings.DropDownLists
         public async Task<SelectList> GetMainSubdivision()
         {
             var subdivision = await _subdivisionsService.GetAllAsync();
-            return subdivision.IsValid ? new SelectList(subdivision.Result, "Id", "DeptName") : null;
+            return subdivision.IsValid ? new SelectList(subdivision.Result, "HashId", "Name") : null;
         }
 
-        public async Task<List<SubdivisionDTO>> GetSubordinateSubdivisions(long id)
+        public async Task<List<SubdivisionDTO>> GetSubordinateSubdivisions(string hashId)
         {
-            var subordinateSubdivision = await _subdivisionsService.GetSubordinateSubdivisions(id);
+            var subordinateSubdivision = await _subdivisionsService.GetSubordinateSubdivisions(hashId);
             List<SubdivisionDTO> listSubordinateSubdivision = null;
             if (subordinateSubdivision.IsValid && subordinateSubdivision.Result.Any())
             {
@@ -105,13 +105,13 @@ namespace TradeUnionCommittee.Web.GUI.AdditionalSettings.DropDownLists
         public async Task<SelectList> GetPosition()
         {
             var position = await _positionService.GetAllAsync();
-            return position.IsValid ? new SelectList(position.Result, "Id", "Name") : null;
+            return position.IsValid ? new SelectList(position.Result, "HashId", "Name") : null;
         }
 
         public async Task<SelectList> GetDormitory()
         {
             var dormitory = await _dormitoryService.GetAllAsync();
-            return dormitory.IsValid ? new SelectList(dormitory.Result, "Id", "NumberDormitory") : null;
+            return dormitory.IsValid ? new SelectList(dormitory.Result, "HashId", "NumberDormitory") : null;
         }
 
         public async Task<SelectList> GetDepartmental()
@@ -135,61 +135,61 @@ namespace TradeUnionCommittee.Web.GUI.AdditionalSettings.DropDownLists
         public async Task<SelectList> GetSocialActivity()
         {
             var socialActivity = await _socialActivity.GetAllAsync();
-            return socialActivity.IsValid ? new SelectList(socialActivity.Result, "Id", "Name") : null;
+            return socialActivity.IsValid ? new SelectList(socialActivity.Result, "HashId", "Name") : null;
         }
 
         public async Task<SelectList> GetPrivilegies()
         {
             var privilegies = await _privilegesService.GetAllAsync();
-            return privilegies.IsValid ? new SelectList(privilegies.Result, "Id", "Name") : null;
+            return privilegies.IsValid ? new SelectList(privilegies.Result, "HashId", "Name") : null;
         }
 
         public async Task<SelectList> GetHobby()
         {
             var hobby = await _hobbyService.GetAllAsync();
-            return hobby.IsValid ? new SelectList(hobby.Result, "Id", "Name") : null;
+            return hobby.IsValid ? new SelectList(hobby.Result, "HashId", "Name") : null;
         }
 
         public async Task<SelectList> GetTravel()
         {
             var travel = await _travelService.GetAllAsync();
-            return travel.IsValid ? new SelectList(travel.Result, "Id", "Name") : null;
+            return travel.IsValid ? new SelectList(travel.Result, "HashId", "Name") : null;
         }
 
         public async Task<SelectList> GetWellness()
         {
             var wellness = await _wellnessService.GetAllAsync();
-            return wellness.IsValid ? new SelectList(wellness.Result, "Id", "Name") : null;
+            return wellness.IsValid ? new SelectList(wellness.Result, "HashId", "Name") : null;
         }
 
         public async Task<SelectList> GetTour()
         {
             var tour = await _tourService.GetAllAsync();
-            return tour.IsValid ? new SelectList(tour.Result, "Id", "Name") : null;
+            return tour.IsValid ? new SelectList(tour.Result, "HashId", "Name") : null;
         }
 
         public async Task<SelectList> GetCultural()
         {
             var cultural = await _culturalService.GetAllAsync();
-            return cultural.IsValid ? new SelectList(cultural.Result, "Id", "Name") : null;
+            return cultural.IsValid ? new SelectList(cultural.Result, "HashId", "Name") : null;
         }
 
         public async Task<SelectList> GetActivities()
         {
             var activities = await _activitiesService.GetAllAsync();
-            return activities.IsValid ? new SelectList(activities.Result, "Id", "Name") : null;
+            return activities.IsValid ? new SelectList(activities.Result, "HashId", "Name") : null;
         }
 
         public async Task<SelectList> GetAward()
         {
             var award = await _awardService.GetAllAsync();
-            return award.IsValid ? new SelectList(award.Result, "Id", "Name") : null;
+            return award.IsValid ? new SelectList(award.Result, "HashId", "Name") : null;
         }
 
         public async Task<SelectList> GetMaterialAid()
         {
             var materialAid = await _materialAidService.GetAllAsync();
-            return materialAid.IsValid ? new SelectList(materialAid.Result, "Id", "Name") : null;
+            return materialAid.IsValid ? new SelectList(materialAid.Result, "HashId", "Name") : null;
         }
     }
 }

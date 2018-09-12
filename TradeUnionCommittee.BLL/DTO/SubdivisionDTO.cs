@@ -2,9 +2,9 @@
 {
     public class SubdivisionDTO
     {
-        public long Id { get; set; }
-        public long? IdSubordinate { get; set; }
-        public string DeptName { get; set; }
+        public string HashId { get; set; }
+        public string HashIdSubordinate { get; set; }
+        public string Name { get; set; }
         public string Abbreviation { get; set; }
     }
 }

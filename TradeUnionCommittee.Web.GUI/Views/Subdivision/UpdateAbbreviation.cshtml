@@ -14,6 +14,7 @@
             <hr>
             <form asp-action="UpdateAbbreviation">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input asp-for="HashId" type="hidden"/>
                 <div class="row">
                     <div class="form-group col-lg-4 col-xl-6">
                         <label asp-for="Abbreviation" class="info-label">Абревіатура підрозділу</label>

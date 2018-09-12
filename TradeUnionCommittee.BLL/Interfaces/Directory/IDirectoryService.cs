@@ -5,6 +5,6 @@ namespace TradeUnionCommittee.BLL.Interfaces.Directory
 {
     public interface IDirectoryService
     {
-        Task<ActualResult> CheckNameAsync(string name);
+        Task<bool> CheckNameAsync(string name);
     }
 }
