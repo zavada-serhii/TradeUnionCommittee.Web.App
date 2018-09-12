@@ -27,7 +27,7 @@ namespace TradeUnionCommittee.BLL.Services.Employee
 
         #region CheckHashIdInDto
 
-        private async Task<ActualResult> CheckHashIdInDto(AddEmployeeDTO dto)
+        private async Task<ActualResult> CheckHashIdInDto(CreateEmployeeDTO dto)
         {
             var checkPosition = await _checkerService.CheckDecryptAndTupleInDbWithId(dto.HashIdPosition, BL.Services.Position);
             if (checkPosition != null)
@@ -106,7 +106,7 @@ namespace TradeUnionCommittee.BLL.Services.Employee
 
         #endregion
 
-        public async Task<ActualResult> AddEmployeeAsync(AddEmployeeDTO dto)
+        public async Task<ActualResult> AddEmployeeAsync(CreateEmployeeDTO dto)
         {
             var checkHashIdInDto = await CheckHashIdInDto(dto);
             if (!checkHashIdInDto.IsValid)
@@ -162,16 +162,16 @@ namespace TradeUnionCommittee.BLL.Services.Employee
 
         //------------------------------------------------------------------------------------------------------------------------------------------
 
-        public async Task<ActualResult<MainInfoEmployeeDTO>> GetMainInfoEmployeeAsync(long id)
+        public async Task<ActualResult<GeneralInfoEmployeeDTO>> GetMainInfoEmployeeAsync(long id)
         {
             return await Task.Run(() =>
             {
-                var mapper = new MapperConfiguration(cfg => cfg.CreateMap<DAL.Entities.Employee, MainInfoEmployeeDTO>()
+                var mapper = new MapperConfiguration(cfg => cfg.CreateMap<DAL.Entities.Employee, GeneralInfoEmployeeDTO>()
                 .ForMember("IdEmployee", opt => opt.MapFrom(c => c.Id))
                 .ForMember("CountYear", opt => opt.MapFrom(c => CalculateAge(c.BirthDate)))
                 .ForMember("Sex", opt => opt.MapFrom(c => ConvertToUkraine(c.Sex)))
                 ).CreateMapper();
-                var employee =  mapper.Map<ActualResult<DAL.Entities.Employee>, ActualResult<MainInfoEmployeeDTO>>(_database.EmployeeRepository.Get(id));
+                var employee =  mapper.Map<ActualResult<DAL.Entities.Employee>, ActualResult<GeneralInfoEmployeeDTO>>(_database.EmployeeRepository.Get(id));
 
                 var education = _database.EducationRepository.Get(id).Result;
                 var scientifick = _database.ScientificRepository.Get(id).Result;
@@ -214,7 +214,7 @@ namespace TradeUnionCommittee.BLL.Services.Employee
 
         //------------------------------------------------------------------------------------------------------------------------------------------
 
-        public async Task<ActualResult> UpdateMainInfoEmployeeAsync(MainInfoEmployeeDTO dto)
+        public async Task<ActualResult> UpdateMainInfoEmployeeAsync(GeneralInfoEmployeeDTO dto)
         {
             return await Task.Run(() =>
             {

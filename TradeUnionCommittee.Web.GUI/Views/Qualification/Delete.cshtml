@@ -14,7 +14,7 @@
                 </div>
             </div>
             <hr>
-            <form asp-action="DeleteQualification">
+            <form asp-action="Delete">
 
                 <input type="hidden" asp-for="IdEmployee" />
 
@@ -39,7 +39,7 @@
                 <div class="row justify-content-between">
                     <div class="form-group col-lg-3">
                         <div>
-                            <a asp-action="Index" asp-route-id="@Model.IdEmployee">Повернутися</a>
+                            <a asp-action="Index" asp-controller="Employee" asp-route-id="@Model.IdEmployee">Повернутися</a>
                         </div>
                     </div>
                     <div class="col-md-6 text-right">

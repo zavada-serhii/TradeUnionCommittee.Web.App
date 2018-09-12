@@ -4,7 +4,7 @@ using TradeUnionCommittee.Web.GUI.Models;
 
 namespace TradeUnionCommittee.Web.GUI.FluentValidation
 {
-    public class AddEmployeeValidation : AbstractValidator<AddEmployeeViewModel>
+    public class AddEmployeeValidation : AbstractValidator<CreateEmployeeViewModel>
     {
         public AddEmployeeValidation()
         {

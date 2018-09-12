@@ -89,7 +89,7 @@ namespace TradeUnionCommittee.Web.GUI
 
         private void DependencyInjectionFluentValidation(IServiceCollection services)
         {
-            services.AddScoped<IValidator<AddEmployeeViewModel>, AddEmployeeValidation>();
+            services.AddScoped<IValidator<CreateEmployeeViewModel>, AddEmployeeValidation>();
         }
     }
 }

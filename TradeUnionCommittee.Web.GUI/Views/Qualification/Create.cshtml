@@ -12,7 +12,7 @@
                 </div>
             </div>
             <hr>
-            <form asp-action="CreateQualification">
+            <form asp-action="Create">
                 <div class="row">
 
                     <input type="hidden" asp-for="IdEmployee" />
@@ -34,7 +34,7 @@
                 <div class="row justify-content-between">
                     <div class="form-group col-lg-3">
                         <div>
-                            <a asp-action="Index" asp-route-id="@Model.IdEmployee">Повернутися</a>
+                            <a asp-controller="Employee" asp-action="Index" asp-route-id="@Model.IdEmployee">Повернутися</a>
                         </div>
                     </div>
 

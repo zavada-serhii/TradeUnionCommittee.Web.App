@@ -60,10 +60,10 @@ $(function ()
 
 $(document).ready(function ()
 {
-    if (window.location.pathname === "/AddEmployee/Index")
+    if (window.location.pathname === "/Employee/Create")
     {
         var idSubordinateSubdivision = { id: $("#selectMain").val() };
-        $.post("/AddEmployee/GetSubordinateSubdivision", idSubordinateSubdivision, getSubordinateSubdivision);
+        $.post("/Employee/GetSubordinateSubdivision", idSubordinateSubdivision, getSubordinateSubdivision);
     }
     if (window.location.pathname === "/Search")
     {
@@ -82,7 +82,7 @@ $(document).ready(function ()
 $("#selectMain").change(function ()
 {
     var idSubordinateSubdivision = { id: $(this).val() };
-    $.post("/AddEmployee/GetSubordinateSubdivision", idSubordinateSubdivision, getSubordinateSubdivision);
+    $.post("/Employee/GetSubordinateSubdivision", idSubordinateSubdivision, getSubordinateSubdivision);
 });
 
 function getSubordinateSubdivision(subordinateSubdivision)

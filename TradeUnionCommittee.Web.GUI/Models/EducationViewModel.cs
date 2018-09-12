@@ -1,6 +1,6 @@
 ﻿namespace TradeUnionCommittee.Web.GUI.Models
 {
-    public class UpdateEducationViewModel
+    public class EducationViewModel
     {
         public long? IdEmployee { get; set; }
         public string LevelEducation { get; set; }

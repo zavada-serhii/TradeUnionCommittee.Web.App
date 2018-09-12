@@ -123,13 +123,13 @@ namespace TradeUnionCommittee.BLL.Infrastructure
 
                     // -- Mapping for create employee
 
-                    map.CreateMap<Employee, AddEmployeeDTO>().ReverseMap();
+                    map.CreateMap<Employee, CreateEmployeeDTO>().ReverseMap();
 
-                    map.CreateMap<Education, AddEmployeeDTO>()
+                    map.CreateMap<Education, CreateEmployeeDTO>()
                         .ReverseMap()
                         .ForMember(d => d.IdEmployee, c => c.MapFrom(x => x.IdEmployee));
 
-                    map.CreateMap<PositionEmployees, AddEmployeeDTO>()
+                    map.CreateMap<PositionEmployees, CreateEmployeeDTO>()
                         .ReverseMap()
                         .ForMember(d => d.IdEmployee, c => c.MapFrom(x => x.IdEmployee))
                         .ForMember(d => d.IdSubdivision, c => c.MapFrom(x => x.IdSubdivision))
@@ -137,7 +137,7 @@ namespace TradeUnionCommittee.BLL.Infrastructure
                         .ForMember(d => d.StartDate, c=> c.MapFrom(x => x.StartDatePosition))
                         .ForMember(d => d.CheckPosition, c => c.UseValue(true));
 
-                    map.CreateMap<PrivateHouseEmployees, AddEmployeeDTO>()
+                    map.CreateMap<PrivateHouseEmployees, CreateEmployeeDTO>()
                         .ReverseMap()
                         .ForMember(x => x.IdEmployee, c => c.MapFrom(x => x.IdEmployee))
                         .ForMember(x => x.City, c => c.MapFrom(x => x.TypeAccommodation == "privateHouse" ? x.CityPrivateHouse : x.CityHouseUniversity))
@@ -146,26 +146,26 @@ namespace TradeUnionCommittee.BLL.Infrastructure
                         .ForMember(x => x.NumberApartment, c => c.MapFrom(x => x.TypeAccommodation == "privateHouse" ? x.NumberApartmentPrivateHouse : x.NumberApartmentHouseUniversity))
                         .ForMember(x => x.DateReceiving, c => c.MapFrom(x => x.TypeAccommodation == "fromUniversity" ? x.DateReceivingHouseFromUniversity : null));
 
-                    map.CreateMap<PublicHouseEmployees, AddEmployeeDTO>()
+                    map.CreateMap<PublicHouseEmployees, CreateEmployeeDTO>()
                         .ReverseMap()
                         .ForMember(x => x.IdEmployee, c => c.MapFrom(x => x.IdEmployee))
                         .ForMember(x => x.IdAddressPublicHouse, c => c.MapFrom(x => x.TypeAccommodation == "dormitory" ? x.IdDormitory : x.IdDepartmental))
                         .ForMember(x => x.NumberRoom, c => c.MapFrom(x => x.TypeAccommodation == "dormitory" ? x.NumberRoomDormitory : x.NumberRoomDepartmental));
 
-                    map.CreateMap<Scientific, AddEmployeeDTO>()
+                    map.CreateMap<Scientific, CreateEmployeeDTO>()
                         .ReverseMap()
                         .ForMember(x => x.IdEmployee, c => c.MapFrom(x => x.IdEmployee))
                         .ForMember(x => x.ScientificDegree, c => c.MapFrom(x => x.ScientifickDegree))
                         .ForMember(x => x.ScientificTitle, c => c.MapFrom(x => x.ScientifickTitle));
 
-                    map.CreateMap<SocialActivityEmployees, AddEmployeeDTO>()
+                    map.CreateMap<SocialActivityEmployees, CreateEmployeeDTO>()
                         .ReverseMap()
                         .ForMember(x => x.IdEmployee, c => c.MapFrom(x => x.IdEmployee))
                         .ForMember(x => x.IdSocialActivity, c => c.MapFrom(x => x.IdSocialActivity))
                         .ForMember(x => x.Note, c => c.MapFrom(x => x.NoteSocialActivity))
                         .ForMember(d => d.CheckSocialActivity, c => c.UseValue(true));
 
-                    map.CreateMap<PrivilegeEmployees, AddEmployeeDTO>()
+                    map.CreateMap<PrivilegeEmployees, CreateEmployeeDTO>()
                         .ReverseMap()
                         .ForMember(x => x.IdEmployee, c => c.MapFrom(x => x.IdEmployee))
                         .ForMember(x => x.IdPrivileges, c => c.MapFrom(x => x.IdPrivileges))

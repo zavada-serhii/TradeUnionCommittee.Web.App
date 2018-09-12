@@ -1,4 +1,4 @@
-﻿@model UpdateEducationViewModel
+﻿@model EducationViewModel
 @{
     ViewData["Title"] = "UpdateEducation";
 }
@@ -12,11 +12,11 @@
                 </div>
             </div>
             <hr>
-            <form asp-action="UpdateEducation">
+            <form asp-action="Update">
                 <div class="row">
-                
-                    <input type="hidden" asp-for="IdEmployee"/>
-                    
+
+                    <input type="hidden" asp-for="IdEmployee" />
+
                     <div class="form-group col-lg-4 col-xl-3">
                         <label asp-for="LevelEducation" class="control-label required">Рiвень освiти</label><br>
                         <select asp-for="LevelEducation" id="editable-select-LevelEducation" class="custom-select" style="width: 100%" asp-items="@ViewBag.LevelEducation"></select>
@@ -40,12 +40,12 @@
                 <div class="row justify-content-between">
                     <div class="form-group col-lg-3">
                         <div>
-                            <a asp-action="Index" asp-route-id="@Model.IdEmployee">Повернутися</a>
+                            <a asp-action="Index" asp-controller="Employee" asp-route-id="@Model.IdEmployee">Повернутися</a>
                         </div>
                     </div>
 
                     <div class="col-md-6 text-right">
-                        <input type="submit" value="Зберегти" class="btn btn-success btn-default" />
+                        <input type="submit" value="Зберегти (No Logic)" class="btn btn-success btn-default" />
                     </div>
                 </div>
             </form>

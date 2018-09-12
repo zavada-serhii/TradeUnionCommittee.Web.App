@@ -21,7 +21,7 @@ namespace TradeUnionCommittee.Web.GUI.AdditionalSettings
                 map.CreateMap<AccountDTO, UpdateRoleAccountViewModel>().ReverseMap();
                 map.CreateMap<AccountDTO, UpdatePasswordAccountViewModel>().ReverseMap();
 
-                map.CreateMap<AddEmployeeViewModel, AddEmployeeDTO>()
+                map.CreateMap<CreateEmployeeViewModel, CreateEmployeeDTO>()
                 .ForMember(d => d.HashIdSubdivision, opt => opt.MapFrom(c => c.HashIdSubordinateSubdivision ?? c.HashIdMainSubdivision))
                 .ForMember(d => d.CityPhone, opt => opt.MapFrom(c => c.CityPhoneAdditional ?? c.CityPhone));
 
@@ -45,10 +45,10 @@ namespace TradeUnionCommittee.Web.GUI.AdditionalSettings
                 map.CreateMap<SubdivisionDTO, CreateSubordinateSubdivisionViewModel>().ReverseMap();
                 map.CreateMap<SubdivisionDTO, RestructuringViewModel>().ReverseMap();
 
-                map.CreateMap<EducationDTO, UpdateEducationViewModel>().ReverseMap();
+                map.CreateMap<EducationDTO, EducationViewModel>().ReverseMap();
                 map.CreateMap<QualificationDTO, QualificationViewModel>().ReverseMap();
 
-                map.CreateMap<MainInfoEmployeeDTO, MainInfoEmployeeViewModel>().ReverseMap();
+                map.CreateMap<GeneralInfoEmployeeDTO, UpdateEmployeeViewModel>().ReverseMap();
 
             }).CreateMapper();
         }
