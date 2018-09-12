@@ -111,5 +111,10 @@ namespace TradeUnionCommittee.BLL.Services.Directory
             qualification.IsValid = dbState.IsValid;
             return qualification;
         }
+
+        public void Dispose()
+        {
+            _database.Dispose();
+        }
     }
 }

@@ -64,5 +64,13 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Employee
             ViewBag.LevelEducation = await _dropDownList.GetLevelEducation();
             ViewBag.Study = await _dropDownList.GetStudy();
         }
+
+        //------------------------------------------------------------------------------------------------------------------------------------------
+
+        protected override void Dispose(bool disposing)
+        {
+            _educationService.Dispose();
+            base.Dispose(disposing);
+        }
     }
 }

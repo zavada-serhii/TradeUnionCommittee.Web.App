@@ -114,5 +114,13 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Employee
             ViewBag.AcademicDegree = await _dropDownList.GetAcademicDegree();
             ViewBag.ScientificTitle = await _dropDownList.GetScientificTitle();
         }
+
+        //------------------------------------------------------------------------------------------------------------------------------------------
+
+        protected override void Dispose(bool disposing)
+        {
+            _qualificationService.Dispose();
+            base.Dispose(disposing);
+        }
     }
 }

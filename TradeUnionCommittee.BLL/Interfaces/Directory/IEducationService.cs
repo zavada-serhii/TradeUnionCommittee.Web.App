@@ -11,5 +11,6 @@ namespace TradeUnionCommittee.BLL.Interfaces.Directory
         Task<ActualResult<IEnumerable<string>>> GetAllNameInstitutionAsync();
         Task<ActualResult<EducationDTO>> GetEducationEmployeeAsync(long idEmployee);
         Task<ActualResult> UpdateEducationEmployeeAsync(EducationDTO dto);
+        void Dispose();
     }
 }

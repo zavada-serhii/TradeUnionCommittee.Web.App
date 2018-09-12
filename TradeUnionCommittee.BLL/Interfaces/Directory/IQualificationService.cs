@@ -13,5 +13,6 @@ namespace TradeUnionCommittee.BLL.Interfaces.Directory
         Task<ActualResult> UpdateQualificationEmployeeAsync(QualificationDTO dto);
         Task<ActualResult> CreateQualificationEmployeeAsync(QualificationDTO dto);
         Task<ActualResult> DeleteQualificationEmployeeAsync(long idEmployee);
+        void Dispose();
     }
 }

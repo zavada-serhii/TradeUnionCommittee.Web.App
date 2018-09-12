@@ -63,5 +63,10 @@ namespace TradeUnionCommittee.BLL.Services.Directory
         {
             throw new System.NotImplementedException();
         }
+
+        public void Dispose()
+        {
+            _database.Dispose();
+        }
     }
 }
