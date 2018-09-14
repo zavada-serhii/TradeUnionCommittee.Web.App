@@ -1068,6 +1068,8 @@ namespace TradeUnionCommittee.DAL.EF
                     .IsRequired()
                     .HasColumnType("character varying");
             });
+
+            base.OnModelCreating(modelBuilder);
         }
     }
 }

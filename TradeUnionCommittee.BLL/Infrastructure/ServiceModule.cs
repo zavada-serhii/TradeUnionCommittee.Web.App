@@ -17,8 +17,9 @@ namespace TradeUnionCommittee.BLL.Infrastructure
     {
         public static IServiceCollection AddTradeUnionCommitteeServiceModule(this IServiceCollection services, string connectionString)
         {
-            // Injection CryptoUtilities, AutoMapper && CheckerService 
+            // Injection UnitOfWork, CryptoUtilities, AutoMapper && CheckerService 
 
+            services.AddUnitOfWork(connectionString);
             services.AddSingleton<ICryptoUtilities, CryptoUtilities>();
             services.AddSingleton<IAutoMapperService, AutoMapperService>();
             services.AddScoped<ICheckerService, CheckerService>();
@@ -50,7 +51,7 @@ namespace TradeUnionCommittee.BLL.Infrastructure
 
             //---------------------------------------------------------------------------------------------
 
-            return services.AddUnitOfWork(connectionString);
+            return services;
         }
     }
 }
