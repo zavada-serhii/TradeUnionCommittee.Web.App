@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -16,15 +17,24 @@ namespace TradeUnionCommittee.DAL.Repositories
     public class UnitOfWork : IUnitOfWork
     {
         private readonly TradeUnionCommitteeEmployeesCoreContext _context;
+        private readonly UserManager<User> _userManager;
+        private readonly SignInManager<User> _signInManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
 
-        public UnitOfWork(string connectionString)
+        public UnitOfWork(TradeUnionCommitteeEmployeesCoreContext context, UserManager<User> userManager,
+            SignInManager<User> signInManager, RoleManager<IdentityRole> roleManager)
         {
-            _context = new TradeUnionCommitteeEmployeesCoreContext(connectionString);
+            _context = context;
+            _userManager = userManager;
+            _signInManager = signInManager;
+            _roleManager = roleManager;
         }
 
         //------------------------------------------------------------------------------------------------------------------------------------------
 
         private UsersRepository _usersRepository;
+        private AccountRepository _accountRepository;
+        private RoleRepository _roleRepository;
 
         //------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -84,6 +94,8 @@ namespace TradeUnionCommittee.DAL.Repositories
         //------------------------------------------------------------------------------------------------------------------------------------------
 
         public IUsersRepository UsersRepository => _usersRepository ?? (_usersRepository = new UsersRepository(_context));
+        public IAccountRepository AccountRepository => _accountRepository ?? (_accountRepository = new AccountRepository(_userManager, _signInManager));
+        public IRoleRepository RoleRepository => _roleRepository ?? (_roleRepository = new RoleRepository(_roleManager));
 
         //------------------------------------------------------------------------------------------------------------------------------------------
 
