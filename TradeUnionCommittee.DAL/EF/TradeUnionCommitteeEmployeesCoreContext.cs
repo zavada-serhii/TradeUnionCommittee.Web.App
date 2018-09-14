@@ -30,24 +30,7 @@ namespace TradeUnionCommittee.DAL.EF
 
     public class TradeUnionCommitteeEmployeesCoreContext : IdentityDbContext<User>
     {
-        public TradeUnionCommitteeEmployeesCoreContext(DbContextOptions options) : base(options)
-        {
-        }
-
-        //private readonly string _connectionString;
-
-        //public TradeUnionCommitteeEmployeesCoreContext(string connectionString)
-        //{
-        //    _connectionString = connectionString;
-        //}
-
-        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        //{
-        //    if (!optionsBuilder.IsConfigured)
-        //    {
-        //        optionsBuilder.UseNpgsql(_connectionString);
-        //    }
-        //}
+        public TradeUnionCommitteeEmployeesCoreContext(DbContextOptions options) : base(options) { }
 
         public virtual DbSet<Activities> Activities { get; set; }
         public virtual DbSet<ActivityChildrens> ActivityChildrens { get; set; }
@@ -97,9 +80,6 @@ namespace TradeUnionCommittee.DAL.EF
         public virtual DbSet<TypeHouse> TypeHouse { get; set; }
 
         //------------------------------------------------
-
-        public virtual DbSet<Users> Users { get; set; }
-        public virtual DbSet<Roles> Roles { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -1031,37 +1011,6 @@ namespace TradeUnionCommittee.DAL.EF
             {
                 entity.HasIndex(e => e.Name)
                     .HasName("TypeHouse_Name_key")
-                    .IsUnique();
-
-                entity.Property(e => e.Name)
-                    .IsRequired()
-                    .HasColumnType("character varying");
-            });
-
-            //------------------------------------------------
-
-            modelBuilder.Entity<Users>(entity =>
-            {
-                entity.HasIndex(e => e.Email)
-                    .HasName("Users_Email_key")
-                    .IsUnique();
-
-                entity.Property(e => e.Email)
-                    .IsRequired()
-                    .HasColumnType("character varying");
-
-                entity.Property(e => e.Password).IsRequired();
-
-                entity.HasOne(d => d.IdRoleNavigation)
-                    .WithMany(p => p.Users)
-                    .HasForeignKey(d => d.IdRole)
-                    .HasConstraintName("Users_IdRole_fkey");
-            });
-
-            modelBuilder.Entity<Roles>(entity =>
-            {
-                entity.HasIndex(e => e.Name)
-                    .HasName("Roles_Name_key")
                     .IsUnique();
 
                 entity.Property(e => e.Name)

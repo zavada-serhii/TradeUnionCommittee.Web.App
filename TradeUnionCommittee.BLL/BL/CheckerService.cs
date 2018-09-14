@@ -16,8 +16,6 @@ namespace TradeUnionCommittee.BLL.BL
 
     public enum Services
     {
-        Account = 1,
-        Role = 2,
         Position = 3,
         SocialActivity = 4,
         Privileges = 5,
@@ -91,12 +89,6 @@ namespace TradeUnionCommittee.BLL.BL
         {
             switch (crypto)
             {
-                case EnumCryptoUtilities.Account:
-                    return _database.UsersRepository.FindUsers(x => x.Id == id).Result.Any();
-
-                case EnumCryptoUtilities.Role:
-                    return true;
-
                 case EnumCryptoUtilities.Position:
                     return _database.PositionRepository.Find(x => x.Id == id).Result.Any();
 

@@ -1,11 +1,7 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
 using System.Linq;
-using System.Security.Claims;
 using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.DTO;
 using TradeUnionCommittee.BLL.Interfaces.Account;
@@ -33,9 +29,9 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Account
         //------------------------------------------------------------------------------------------------------------------------------------------
 
         [HttpGet]
-        public IActionResult Login()
+        public IActionResult Login(string returnUrl = null)
         {
-            return View();
+            return View(new LoginViewModel { ReturnUrl = returnUrl });
         }
 
         [HttpPost]
@@ -44,14 +40,17 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Account
         {
             if (ModelState.IsValid)
             {
-                var role = await _accountService.Login(model.Email, model.Password);
-                if (role.IsValid)
+                var result = await _accountService.Login(model.Email, model.Password);
+                if (result.IsValid)
                 {
-                    await Authenticate(model.Email, role.Result); // аутентификация
+                    if (!string.IsNullOrEmpty(model.ReturnUrl) && Url.IsLocalUrl(model.ReturnUrl))
+                    {
+                        return Redirect(model.ReturnUrl);
+                    }
                     return RedirectToAction("Directory", "Home");
                 }
-                ViewBag.IncorectLoginPassword = role.ErrorsList.FirstOrDefault();
-                return View();
+                ViewBag.IncorectLoginPassword = result.ErrorsList.FirstOrDefault();
+                return View(model);
             }
             return View(model);
         }
@@ -60,8 +59,12 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Account
         [Authorize(Roles = "Admin,Accountant,Deputy")]
         public async Task<IActionResult> SignOut()
         {
-            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            return RedirectToAction("Login", "Account");
+            var result = await _accountService.LogOff();
+            if (result.IsValid)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            return BadRequest();
         }
 
         [HttpGet]
@@ -228,23 +231,6 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Account
         public async Task<IActionResult> CheckEmail(string email)
         {
             return Json(!await _accountService.CheckEmailAsync(email));
-        }
-
-        //------------------------------------------------------------------------------------------------------------------------------------------
-
-        private async Task Authenticate(string email, string role)
-        {
-            // создаем один claim
-            var claims = new List<Claim>
-            {
-                new Claim(ClaimsIdentity.DefaultNameClaimType, email),
-                new Claim(ClaimsIdentity.DefaultRoleClaimType, role)
-            };
-            // создаем объект ClaimsIdentity
-            var id = new ClaimsIdentity(claims, "ApplicationCookie", ClaimsIdentity.DefaultNameClaimType,
-                ClaimsIdentity.DefaultRoleClaimType);
-            // установка аутентификационных куки
-            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(id));
         }
 
         //------------------------------------------------------------------------------------------------------------------------------------------

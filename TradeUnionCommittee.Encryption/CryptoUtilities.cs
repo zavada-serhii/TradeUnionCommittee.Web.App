@@ -46,10 +46,6 @@ namespace TradeUnionCommittee.Encryption
         {
             switch (crypto)
             {
-                case EnumCryptoUtilities.Account:
-                    return "AccountService";
-                case EnumCryptoUtilities.Role:
-                    return "RoleService";
                 case EnumCryptoUtilities.Position:
                     return "PositionService";
                 case EnumCryptoUtilities.SocialActivity:
@@ -95,8 +91,6 @@ namespace TradeUnionCommittee.Encryption
 
     public enum EnumCryptoUtilities
     {
-        Account = 1,
-        Role = 2,
         Position = 3,
         SocialActivity = 4,
         Privileges = 5,

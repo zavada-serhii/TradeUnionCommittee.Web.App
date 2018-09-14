@@ -31,8 +31,7 @@ namespace TradeUnionCommittee.DAL.Repositories
         }
 
         //------------------------------------------------------------------------------------------------------------------------------------------
-
-        private UsersRepository _usersRepository;
+        
         private AccountRepository _accountRepository;
         private RoleRepository _roleRepository;
 
@@ -93,7 +92,6 @@ namespace TradeUnionCommittee.DAL.Repositories
 
         //------------------------------------------------------------------------------------------------------------------------------------------
 
-        public IUsersRepository UsersRepository => _usersRepository ?? (_usersRepository = new UsersRepository(_context));
         public IAccountRepository AccountRepository => _accountRepository ?? (_accountRepository = new AccountRepository(_userManager, _signInManager));
         public IRoleRepository RoleRepository => _roleRepository ?? (_roleRepository = new RoleRepository(_roleManager));
 

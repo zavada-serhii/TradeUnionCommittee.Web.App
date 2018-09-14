@@ -78,7 +78,7 @@
 
 <div class="login">
     <h1>Авторизація</h1>
-    <form method="post" asp-action="Login">
+    <form method="post" asp-controller="Account" asp-action="Login" asp-route-returnUrl="@Model.ReturnUrl">
 
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
         

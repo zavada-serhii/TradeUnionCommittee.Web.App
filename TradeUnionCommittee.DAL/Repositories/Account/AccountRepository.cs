@@ -27,7 +27,7 @@ namespace TradeUnionCommittee.DAL.Repositories.Account
             try
             {
                 var result = await _signInManager.PasswordSignInAsync(email, password, false, false);
-                return result.Succeeded ? new ActualResult() : new ActualResult(Errors.DataBaseError);
+                return result.Succeeded ? new ActualResult() : new ActualResult(Errors.InvalidLoginOrPassword);
             }
             catch (Exception e)
             {

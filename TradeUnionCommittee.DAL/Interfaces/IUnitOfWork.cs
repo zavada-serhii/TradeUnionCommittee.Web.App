@@ -62,7 +62,8 @@ namespace TradeUnionCommittee.DAL.Interfaces
 
         //------------------------------------------------------------------------------------------------------------------------------------------
         
-        IUsersRepository UsersRepository { get; }
+        IAccountRepository AccountRepository { get; }
+        IRoleRepository RoleRepository { get; }
 
         //------------------------------------------------------------------------------------------------------------------------------------------
 

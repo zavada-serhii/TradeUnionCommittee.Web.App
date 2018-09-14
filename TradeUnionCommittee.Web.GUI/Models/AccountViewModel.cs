@@ -12,6 +12,8 @@ namespace TradeUnionCommittee.Web.GUI.Models
         [DataType(DataType.Password)]
         [Required(ErrorMessage = "Пароль не може бути порожнім")]
         public string Password { get; set; }
+
+        public string ReturnUrl { get; set; }
     }
 
     public class CreateAccountViewModel
