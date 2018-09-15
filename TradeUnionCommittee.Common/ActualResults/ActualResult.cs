@@ -10,7 +10,8 @@ namespace TradeUnionCommittee.Common.ActualResults
         TupleUpdated = 2,
         InvalidId = 3,
         DuplicateData = 4,
-        InvalidLoginOrPassword = 5
+        InvalidLoginOrPassword = 5,
+        DataBaseError = 6
     }
 
     public class ActualResult
@@ -69,6 +70,8 @@ namespace TradeUnionCommittee.Common.ActualResults
                 case Errors.InvalidLoginOrPassword:
                     return "Не правильний логін або пароль!";
 
+                case Errors.DataBaseError:
+                    return "Сталась помилка в базі даних!";
                 default:
                     throw new ArgumentOutOfRangeException(nameof(error), error, "Ви зламали систему. Вітаю:)");
             }

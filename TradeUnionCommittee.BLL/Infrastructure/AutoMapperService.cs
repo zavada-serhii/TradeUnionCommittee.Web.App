@@ -27,19 +27,16 @@ namespace TradeUnionCommittee.BLL.Infrastructure
             {
                 return new MapperConfiguration(map =>
                 {
-                    map.CreateMap<Users, AccountDTO>()
-                        .ForMember(d => d.HashIdUser, c => c.MapFrom(x => _cryptoUtilities.EncryptLong(x.Id, EnumCryptoUtilities.Account)))
-                        .ForMember(d => d.Role, c => c.MapFrom(x => ConvertToUkrainianLang(x.IdRoleNavigation.Name)))
-                        .ReverseMap()
-                        .ForMember(d => d.Id, c => c.MapFrom(x => _cryptoUtilities.DecryptLong(x.HashIdUser, EnumCryptoUtilities.Account)))
-                        .ForMember(d => d.IdRole, c => c.MapFrom(x => _cryptoUtilities.DecryptLong(x.HashIdRole, EnumCryptoUtilities.Role)));
+                    //------------------------------------------------------------------------------
 
-                    map.CreateMap<Roles, RolesDTO>()
-                        .ForMember(d => d.HashId, c => c.MapFrom(x => _cryptoUtilities.EncryptLong(x.Id, EnumCryptoUtilities.Role)))
-                        .ForMember(d => d.Name, c => c.MapFrom(x => ConvertToUkrainianLang(x.Name)))
+                    map.CreateMap<User, AccountDTO>()
+                        .ForMember(d => d.HashIdUser, c => c.MapFrom(x => x.Id))
+                        .ForMember(d => d.Role, c => c.MapFrom(x => ConvertToUkrainianLang(x.UserRole)))
                         .ReverseMap();
 
-                    //------------------------------------------------------------------------------
+                    map.CreateMap<Role, RolesDTO>()
+                        .ForMember(d => d.Name, c => c.MapFrom(x => ConvertToUkrainianLang(x.Name)))
+                        .ReverseMap();
 
                     // -- Mapping for directory
 
