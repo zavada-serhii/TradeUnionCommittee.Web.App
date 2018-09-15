@@ -17,7 +17,7 @@
 
 $('input[name=TypeAccommodation]').change( function() 
 { 
-    if(($('fieldset.appartment:not(.form-group.appartment.invisible)')[0]) != undefined) 
+    if(($('fieldset.appartment:not(.form-group.appartment.invisible)')[0]) !== undefined) 
     {
         $('fieldset.appartment:not(.form-group.appartment.invisible)')[0].classList.add('invisible');
     }
