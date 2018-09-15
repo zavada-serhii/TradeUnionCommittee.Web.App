@@ -15,7 +15,11 @@ namespace TradeUnionCommittee.DAL.Interfaces
         Task<ActualResult> CreateUserAsync(User model);
         Task<ActualResult> UpdateUserEmailAsync(User model);
         Task<ActualResult> UpdateUserPasswordAsync(User model);
-        Task<ActualResult> UpdateUserRoleAsync(string idUser, List<string> roles);
+        Task<ActualResult> UpdateUserRoleAsync(string idUser, string role);
         Task<ActualResult> DeleteUserAsync(string idUser);
+        Task<ActualResult> CheckEmailAsync(string email);
+        Task<ActualResult<IEnumerable<Role>>> GetAllRolesAsync();
+        Task<ActualResult> CreateRoleAsync(string name);
+        Task<ActualResult> DeleteRoleAsync(string id);
     }
 }

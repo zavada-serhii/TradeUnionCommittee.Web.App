@@ -29,6 +29,15 @@ namespace TradeUnionCommittee.BLL.Infrastructure
                 {
                     //------------------------------------------------------------------------------
 
+                    map.CreateMap<User, AccountDTO>()
+                        .ForMember(d => d.HashIdUser, c => c.MapFrom(x => x.Id))
+                        .ForMember(d => d.Role, c => c.MapFrom(x => ConvertToUkrainianLang(x.UserRole)))
+                        .ReverseMap();
+
+                    map.CreateMap<Role, RolesDTO>()
+                        .ForMember(d => d.Name, c => c.MapFrom(x => ConvertToUkrainianLang(x.Name)))
+                        .ReverseMap();
+
                     // -- Mapping for directory
 
                     map.CreateMap<Position, DirectoryDTO>()

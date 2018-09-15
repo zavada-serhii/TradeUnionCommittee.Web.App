@@ -9,7 +9,6 @@ namespace TradeUnionCommittee.BLL.Interfaces.Account
     {
         Task<ActualResult> Login(string email, string password);
         Task<ActualResult> LogOff();
-
         Task<ActualResult<IEnumerable<AccountDTO>>> GetAllUsersAsync();
         Task<ActualResult<AccountDTO>> GetUserAsync(string hashId);
         Task<ActualResult> CreateUserAsync(AccountDTO dto);
@@ -18,10 +17,7 @@ namespace TradeUnionCommittee.BLL.Interfaces.Account
         Task<ActualResult> UpdateUserRoleAsync(AccountDTO dto);
         Task<ActualResult> DeleteUserAsync(string hashId);
         Task<bool> CheckEmailAsync(string email);
-
         Task<ActualResult<IEnumerable<RolesDTO>>> GetRoles();
-        Task<ActualResult<RolesDTO>> GetRoleId(string hashId);
-
         void Dispose();
     }
 }

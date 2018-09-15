@@ -69,7 +69,7 @@ namespace TradeUnionCommittee.Web.GUI.AdditionalSettings.DropDownLists
         public async Task<SelectList> GetRoles()
         {
             var roles = await _accountService.GetRoles();
-            return roles.IsValid ? new SelectList(roles.Result, "HashId", "Name") : null;
+            return roles.IsValid ? new SelectList(roles.Result, "Name", "Name") : null;
         }
 
         public async Task<SelectList> GetLevelEducation()

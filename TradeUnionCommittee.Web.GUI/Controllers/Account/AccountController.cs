@@ -145,6 +145,33 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Account
 
         [HttpGet]
         [Authorize(Roles = "Admin")]
+        public IActionResult UpdatePassword(string id)
+        {
+            if (id == null) return NotFound();
+            var model = new UpdatePasswordAccountViewModel { HashIdUser = id };
+            return View(model);
+        }
+
+        [HttpPost, ActionName("UpdatePassword")]
+        [Authorize(Roles = "Admin")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> UpdatePasswordConfirmed(UpdatePasswordAccountViewModel vm)
+        {
+            if (ModelState.IsValid)
+            {
+                if (vm.HashIdUser == null) return NotFound();
+                var result = await _accountService.UpdateUserPasswordAsync(_mapper.Map<AccountDTO>(vm));
+                return result.IsValid
+                    ? RedirectToAction("Index")
+                    : _oops.OutPutError("Account", "Index", result.ErrorsList);
+            }
+            return View(vm);
+        }
+
+        //------------------------------------------------------------------------------------------------------------------------------------------
+
+        [HttpGet]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdateRole(string id)
         {
             if (id == null) return NotFound();
@@ -167,33 +194,6 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Account
             {
                 if (vm.HashIdUser == null) return NotFound();
                 var result = await _accountService.UpdateUserRoleAsync(_mapper.Map<AccountDTO>(vm));
-                return result.IsValid
-                    ? RedirectToAction("Index")
-                    : _oops.OutPutError("Account", "Index", result.ErrorsList);
-            }
-            return View(vm);
-        }
-
-        //------------------------------------------------------------------------------------------------------------------------------------------
-
-        [HttpGet]
-        [Authorize(Roles = "Admin")]
-        public IActionResult UpdatePassword(string id)
-        {
-            if (id == null) return NotFound();
-            var model = new UpdatePasswordAccountViewModel { HashIdUser = id};
-            return View(model);
-        }
-
-        [HttpPost, ActionName("UpdatePassword")]
-        [Authorize(Roles = "Admin")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> UpdatePasswordConfirmed(UpdatePasswordAccountViewModel vm)
-        {
-            if (ModelState.IsValid)
-            {
-                if (vm.HashIdUser == null) return NotFound();
-                var result = await _accountService.UpdateUserPasswordAsync(_mapper.Map<AccountDTO>(vm));
                 return result.IsValid
                     ? RedirectToAction("Index")
                     : _oops.OutPutError("Account", "Index", result.ErrorsList);

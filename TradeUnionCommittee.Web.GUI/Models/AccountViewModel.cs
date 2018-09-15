@@ -23,7 +23,7 @@ namespace TradeUnionCommittee.Web.GUI.Models
         [Remote("CheckEmail", "Account", ErrorMessage = "Цей email вже використовується!")]
         public string Email { get; set; }
 
-        public string HashIdRole { get; set; }
+        public string Role { get; set; }
 
         [DataType(DataType.Password)]
         [Required(ErrorMessage = "Пароль не може бути порожнім")]
@@ -49,7 +49,11 @@ namespace TradeUnionCommittee.Web.GUI.Models
         public string HashIdUser { get; set; }
 
         [DataType(DataType.Password)]
-        [Required(ErrorMessage = "Пароль не може бути порожнім")]
+        [Required(ErrorMessage = "Старий пароль не може бути порожнім")]
+        public string OldPassword { get; set; }
+
+        [DataType(DataType.Password)]
+        [Required(ErrorMessage = "Новий пароль не може бути порожнім")]
         public string Password { get; set; }
 
         [Compare("Password", ErrorMessage = "Паролі не співпадають")]
@@ -73,6 +77,6 @@ namespace TradeUnionCommittee.Web.GUI.Models
     {
         public string HashIdUser { get; set; }
 
-        public string HashIdRole { get; set; }
+        public string Role { get; set; }
     }
 }

@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TradeUnionCommittee.DAL.Entities
@@ -11,6 +10,6 @@ namespace TradeUnionCommittee.DAL.Entities
         [NotMapped]
         public string OldPassword { get; set; }
         [NotMapped]
-        public IList<string> UserRoles { get; set; } = new List<string>();
+        public string UserRole { get; set; }
     }
 }

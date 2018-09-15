@@ -13,11 +13,13 @@ namespace TradeUnionCommittee.DAL.Repositories.Account
     {
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
 
-        public AccountRepository(UserManager<User> userManager, SignInManager<User> signInManager)
+        public AccountRepository(UserManager<User> userManager, SignInManager<User> signInManager, RoleManager<IdentityRole> roleManager)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _roleManager = roleManager;
         }
 
         //-----------------------------------------------------------------------------------
@@ -52,17 +54,31 @@ namespace TradeUnionCommittee.DAL.Repositories.Account
 
         public async Task<ActualResult<IEnumerable<User>>> GetAllUsersAsync()
         {
-            return await Task.Run(() =>
+            try
             {
-                try
+                var users = _userManager.Users.ToList();
+                if (users.Count > 0)
                 {
-                    return new ActualResult<IEnumerable<User>> { Result = _userManager.Users.ToList() };
+                    var result = new List<User>();
+                    foreach (var user in users)
+                    {
+                        var userRole = await _userManager.GetRolesAsync(user);
+                        var model = new User
+                        {
+                            Id = user.Id,
+                            Email = user.Email,
+                            UserRole = userRole.FirstOrDefault()
+                        };
+                        result.Add(model);
+                    }
+                    return new ActualResult<IEnumerable<User>> { Result = result };
                 }
-                catch (Exception e)
-                {
-                    return new ActualResult<IEnumerable<User>>(e.Message);
-                }
-            });
+                return new ActualResult<IEnumerable<User>>(Errors.TupleDeleted);
+            }
+            catch (Exception e)
+            {
+                return new ActualResult<IEnumerable<User>>(e.Message);
+            }
         }
 
         //-----------------------------------------------------------------------------------
@@ -72,7 +88,13 @@ namespace TradeUnionCommittee.DAL.Repositories.Account
             try
             {
                 var user = await _userManager.FindByIdAsync(id);
-                return user != null ? new ActualResult<User> { Result = user } : new ActualResult<User>(Errors.TupleDeleted);
+                if (user != null)
+                {
+                    var userRole = await _userManager.GetRolesAsync(user);
+                    user.UserRole = userRole.FirstOrDefault();
+                    return new ActualResult<User> {Result = user};
+                }
+                return new ActualResult<User>(Errors.TupleDeleted);
             }
             catch (Exception e)
             {
@@ -94,7 +116,7 @@ namespace TradeUnionCommittee.DAL.Repositories.Account
                     {
                         Id = user.Id,
                         Email = user.Email,
-                        UserRoles = userRoles
+                        UserRole = userRoles.FirstOrDefault()
                     };
                     return new ActualResult<User> { Result = model };
                 }
@@ -116,6 +138,7 @@ namespace TradeUnionCommittee.DAL.Repositories.Account
                 if (result.Succeeded)
                 {
                     //await _signInManager.SignInAsync(model, false);
+                    await UpdateUserRoleAsync(model.Id, model.UserRole);
                     return new ActualResult();
                 }
                 return new ActualResult(Errors.DataBaseError);
@@ -170,23 +193,19 @@ namespace TradeUnionCommittee.DAL.Repositories.Account
 
         //-----------------------------------------------------------------------------------
 
-        public async Task<ActualResult> UpdateUserRoleAsync(string idUser, List<string> roles)
+        public async Task<ActualResult> UpdateUserRoleAsync(string idUser, string role)
         {
             try
             {
-                // получаем пользователя
                 var user = await _userManager.FindByIdAsync(idUser);
                 if (user != null)
                 {
-                    // получем список ролей пользователя
+                    var roles = new List<string> {role};
                     var userRoles = await _userManager.GetRolesAsync(user);
-                    // получаем список ролей, которые были добавлены
                     var addedRoles = roles.Except(userRoles);
-                    // получаем роли, которые были удалены
                     var removedRoles = userRoles.Except(roles);
                     await _userManager.AddToRolesAsync(user, addedRoles);
                     await _userManager.RemoveFromRolesAsync(user, removedRoles);
-
                     return new ActualResult();
                 }
                 return new ActualResult(Errors.TupleDeleted);
@@ -207,6 +226,82 @@ namespace TradeUnionCommittee.DAL.Repositories.Account
                 if (user != null)
                 {
                     var result = await _userManager.DeleteAsync(user);
+                    return result.Succeeded ? new ActualResult() : new ActualResult(result.Errors.Select(identityError => identityError.Description).ToList());
+                }
+                return new ActualResult(Errors.TupleDeleted);
+            }
+            catch (Exception e)
+            {
+                return new ActualResult(e.Message);
+            }
+        }
+
+        //-----------------------------------------------------------------------------------
+
+        public async Task<ActualResult> CheckEmailAsync(string email)
+        {
+            try
+            {
+                var user = await _userManager.FindByEmailAsync(email);
+                return user == null ? new ActualResult(Errors.DuplicateData)  : new ActualResult();
+            }
+            catch (Exception e)
+            {
+                return new ActualResult(e.Message);
+            }
+        }
+
+        //-----------------------------------------------------------------------------------
+
+        public async Task<ActualResult<IEnumerable<Role>>> GetAllRolesAsync()
+        {
+            return await Task.Run(() =>
+            {
+                try
+                {
+                    return new ActualResult<IEnumerable<Role>>
+                    {
+                        Result = _roleManager.Roles.ToList().Select(identityRole => new Role { HashId = identityRole.Id, Name = identityRole.Name }).ToList()
+                    };
+                }
+                catch (Exception e)
+                {
+                    return new ActualResult<IEnumerable<Role>>(e.Message);
+                }
+            });
+        }
+
+        //-----------------------------------------------------------------------------------
+
+        public async Task<ActualResult> CreateRoleAsync(string name)
+        {
+            try
+            {
+                var result = await _roleManager.CreateAsync(new IdentityRole(name));
+                if (result.Succeeded)
+                {
+                    return new ActualResult();
+                }
+                return result.Succeeded
+                    ? new ActualResult()
+                    : new ActualResult(result.Errors.Select(identityError => identityError.Description).ToList());
+            }
+            catch (Exception e)
+            {
+                return new ActualResult(e.Message);
+            }
+        }
+
+        //-----------------------------------------------------------------------------------
+
+        public async Task<ActualResult> DeleteRoleAsync(string id)
+        {
+            try
+            {
+                var role = await _roleManager.FindByIdAsync(id);
+                if (role != null)
+                {
+                    var result = await _roleManager.DeleteAsync(role);
                     return result.Succeeded ? new ActualResult() : new ActualResult(result.Errors.Select(identityError => identityError.Description).ToList());
                 }
                 return new ActualResult(Errors.TupleDeleted);
