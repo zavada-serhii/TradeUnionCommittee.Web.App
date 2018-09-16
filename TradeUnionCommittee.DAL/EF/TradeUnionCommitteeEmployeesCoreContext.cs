@@ -1,33 +1,9 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using System.Linq;
 using TradeUnionCommittee.DAL.Entities;
 
 namespace TradeUnionCommittee.DAL.EF
 {
-    public static class ExtensionDbContext
-    {
-        public static void UndoChanges(this TradeUnionCommitteeEmployeesCoreContext dbContext)
-        {
-            foreach (var entry in dbContext.ChangeTracker.Entries().Where(x => x.State != EntityState.Unchanged).ToList())
-            {
-                switch (entry.State)
-                {
-                    case EntityState.Modified:
-                        entry.CurrentValues.SetValues(entry.OriginalValues);
-                        entry.State = EntityState.Unchanged;
-                        break;
-                    case EntityState.Added:
-                        entry.State = EntityState.Detached;
-                        break;
-                    case EntityState.Deleted:
-                        entry.State = EntityState.Unchanged;
-                        break;
-                }
-            }
-        }
-    }
-
     public class TradeUnionCommitteeEmployeesCoreContext : IdentityDbContext<User>
     {
         public TradeUnionCommitteeEmployeesCoreContext(DbContextOptions options) : base(options) { }

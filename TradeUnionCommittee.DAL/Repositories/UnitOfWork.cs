@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using TradeUnionCommittee.Common.ActualResults;
 using TradeUnionCommittee.DAL.EF;
 using TradeUnionCommittee.DAL.Entities;
+using TradeUnionCommittee.DAL.Extensions;
 using TradeUnionCommittee.DAL.Interfaces;
 using TradeUnionCommittee.DAL.Repositories.Account;
 using TradeUnionCommittee.DAL.Repositories.Directories;

@@ -12,7 +12,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\TradeUnionCommittee.Common\TradeUnionCommittee.Common.csproj" />
-    <ProjectReference Include="..\TradeUnionCommittee.Encryption\TradeUnionCommittee.Encryption.csproj" />
   </ItemGroup>
 
   <ItemGroup>
