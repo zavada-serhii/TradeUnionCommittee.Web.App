@@ -171,6 +171,8 @@ namespace TradeUnionCommittee.BLL.Infrastructure
 
                     //------------------------------------------------------------------------------
 
+                    map.CreateMap<Education, EducationDTO>().ReverseMap();
+
                 }).CreateMapper();
             }
         }

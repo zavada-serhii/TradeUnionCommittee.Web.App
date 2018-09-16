@@ -2,8 +2,10 @@
 using System.Linq;
 using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.DTO;
+using TradeUnionCommittee.BLL.Infrastructure;
 using TradeUnionCommittee.BLL.Interfaces.Directory;
 using TradeUnionCommittee.Common.ActualResults;
+using TradeUnionCommittee.DAL.Entities;
 using TradeUnionCommittee.DAL.Interfaces;
 
 namespace TradeUnionCommittee.BLL.Services.Directory
@@ -11,10 +13,12 @@ namespace TradeUnionCommittee.BLL.Services.Directory
     public class EducationService : IEducationService
     {
         private readonly IUnitOfWork _database;
+        private readonly IAutoMapperService _mapperService;
 
-        public EducationService(IUnitOfWork database)
+        public EducationService(IUnitOfWork database, IAutoMapperService mapperService)
         {
             _database = database;
+            _mapperService = mapperService;
         }
 
         public async Task<ActualResult<IEnumerable<string>>> GetAllLevelEducationAsync()
@@ -46,22 +50,14 @@ namespace TradeUnionCommittee.BLL.Services.Directory
             return await Task.Run(() =>
             {
                 var education = _database.EducationRepository.GetWithInclude(x => x.IdEmployee == idEmployee).Result.FirstOrDefault();
-                return new ActualResult<EducationDTO>
-                {
-                    Result = new EducationDTO
-                    {
-                        IdEmployee = education.IdEmployee,
-                        YearReceiving = education.YearReceiving,
-                        NameInstitution = education.NameInstitution,
-                        LevelEducation = education.LevelEducation
-                    }
-                };
+                return new ActualResult<EducationDTO> {Result = _mapperService.Mapper.Map<EducationDTO>(education) };
             });
         }
 
-        public Task<ActualResult> UpdateEducationEmployeeAsync(EducationDTO dto)
+        public async Task<ActualResult> UpdateEducationEmployeeAsync(EducationDTO dto)
         {
-            throw new System.NotImplementedException();
+            _database.EducationRepository.Update(_mapperService.Mapper.Map<Education>(dto));
+            return await _database.SaveAsync();
         }
 
         public void Dispose()
