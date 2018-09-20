@@ -29,7 +29,7 @@ namespace TradeUnionCommittee.BLL.Services.Directory
 
         public async Task<ActualResult<WellnessDTO>> GetAsync(string hashId)
         {
-            var check = await _checkerService.CheckDecryptAndTupleInDbWithId(hashId, BL.Services.Wellness);
+            var check = await _checkerService.CheckDecryptAndTupleInDbWithId(hashId, Enums.Services.Wellness);
             return check.IsValid
                 ? _mapperService.Mapper.Map<ActualResult<WellnessDTO>>(_database.EventRepository.Get(check.Result))
                 : new ActualResult<WellnessDTO>(check.ErrorsList);
@@ -47,7 +47,7 @@ namespace TradeUnionCommittee.BLL.Services.Directory
 
         public async Task<ActualResult> UpdateAsync(WellnessDTO dto)
         {
-            var check = await _checkerService.CheckDecryptAndTupleInDbWithId(dto.HashId, BL.Services.Wellness);
+            var check = await _checkerService.CheckDecryptAndTupleInDbWithId(dto.HashId, Enums.Services.Wellness);
             if (check.IsValid)
             {
                 if (!await CheckNameAsync(dto.Name))
@@ -62,7 +62,7 @@ namespace TradeUnionCommittee.BLL.Services.Directory
 
         public async Task<ActualResult> DeleteAsync(string hashId)
         {
-            var check = await _checkerService.CheckDecryptAndTupleInDbWithId(hashId, BL.Services.Wellness, false);
+            var check = await _checkerService.CheckDecryptAndTupleInDbWithId(hashId, Enums.Services.Wellness, false);
             if (check.IsValid)
             {
                 _database.EventRepository.Delete(check.Result);
@@ -77,7 +77,6 @@ namespace TradeUnionCommittee.BLL.Services.Directory
         public void Dispose()
         {
             _database.Dispose();
-            _checkerService.Dispose();
         }
     }
 }

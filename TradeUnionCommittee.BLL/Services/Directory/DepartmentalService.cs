@@ -1,15 +1,14 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography;
 using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.BL;
 using TradeUnionCommittee.BLL.DTO;
 using TradeUnionCommittee.BLL.Infrastructure;
 using TradeUnionCommittee.BLL.Interfaces.Directory;
+using TradeUnionCommittee.BLL.Utilities;
 using TradeUnionCommittee.Common.ActualResults;
 using TradeUnionCommittee.DAL.Entities;
 using TradeUnionCommittee.DAL.Interfaces;
-using TradeUnionCommittee.Encryption;
 
 namespace TradeUnionCommittee.BLL.Services.Directory
 {
@@ -18,14 +17,14 @@ namespace TradeUnionCommittee.BLL.Services.Directory
         private readonly IUnitOfWork _database;
         private readonly IAutoMapperService _mapperService;
         private readonly ICheckerService _checkerService;
-        private readonly ICryptoUtilities _cryptoUtilities;
+        private readonly IHashIdUtilities _hashIdUtilities;
 
-        public DepartmentalService(IUnitOfWork database, IAutoMapperService mapperService, ICheckerService checkerService, ICryptoUtilities cryptoUtilities)
+        public DepartmentalService(IUnitOfWork database, IAutoMapperService mapperService, ICheckerService checkerService, IHashIdUtilities hashIdUtilities)
         {
             _database = database;
             _mapperService = mapperService;
             _checkerService = checkerService;
-            _cryptoUtilities = cryptoUtilities;
+            _hashIdUtilities = hashIdUtilities;
         }
 
         public async Task<ActualResult<IEnumerable<DepartmentalDTO>>> GetAllAsync() =>
@@ -36,14 +35,14 @@ namespace TradeUnionCommittee.BLL.Services.Directory
             return await Task.Run(() =>
             {
                 var departmental = _database.AddressPublicHouseRepository.Find(x => x.Type == 2);
-                var dictionary = departmental.Result.ToDictionary(result => _cryptoUtilities.EncryptLong(result.Id, EnumCryptoUtilities.Departmental), result => result.City + " " + result.Street + " " + result.NumberHouse);
+                var dictionary = departmental.Result.ToDictionary(result => _hashIdUtilities.EncryptLong(result.Id, Enums.Services.Departmental), result => result.City + " " + result.Street + " " + result.NumberHouse);
                 return new ActualResult<Dictionary<string, string>> {Result = dictionary};
             });
         }
 
         public async Task<ActualResult<DepartmentalDTO>> GetAsync(string hashId)
         {
-            var check = await _checkerService.CheckDecryptAndTupleInDbWithId(hashId, BL.Services.Departmental);
+            var check = await _checkerService.CheckDecryptAndTupleInDbWithId(hashId, Enums.Services.Departmental);
             return check.IsValid
                 ? _mapperService.Mapper.Map<ActualResult<DepartmentalDTO>>(_database.AddressPublicHouseRepository.Get(check.Result))
                 : new ActualResult<DepartmentalDTO>(check.ErrorsList);
@@ -57,7 +56,7 @@ namespace TradeUnionCommittee.BLL.Services.Directory
 
         public async Task<ActualResult> UpdateAsync(DepartmentalDTO dto)
         {
-            var check = await _checkerService.CheckDecryptAndTupleInDbWithId(dto.HashId, BL.Services.Departmental);
+            var check = await _checkerService.CheckDecryptAndTupleInDbWithId(dto.HashId, Enums.Services.Departmental);
             if (check.IsValid)
             {
                 _database.AddressPublicHouseRepository.Update(_mapperService.Mapper.Map<AddressPublicHouse>(dto));
@@ -68,7 +67,7 @@ namespace TradeUnionCommittee.BLL.Services.Directory
 
         public async Task<ActualResult> DeleteAsync(string hashId)
         {
-            var check = await _checkerService.CheckDecryptAndTupleInDbWithId(hashId, BL.Services.Departmental, false);
+            var check = await _checkerService.CheckDecryptAndTupleInDbWithId(hashId, Enums.Services.Departmental, false);
             if (check.IsValid)
             {
                 _database.AddressPublicHouseRepository.Delete(check.Result);
@@ -80,7 +79,6 @@ namespace TradeUnionCommittee.BLL.Services.Directory
         public void Dispose()
         {
             _database.Dispose();
-            _checkerService.Dispose();
         }
     }
 }

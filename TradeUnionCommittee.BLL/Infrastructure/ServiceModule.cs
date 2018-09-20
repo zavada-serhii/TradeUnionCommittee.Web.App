@@ -8,8 +8,8 @@ using TradeUnionCommittee.BLL.Services.Account;
 using TradeUnionCommittee.BLL.Services.Directory;
 using TradeUnionCommittee.BLL.Services.Employee;
 using TradeUnionCommittee.BLL.Services.Search;
+using TradeUnionCommittee.BLL.Utilities;
 using TradeUnionCommittee.DAL.Extensions;
-using TradeUnionCommittee.Encryption;
 
 namespace TradeUnionCommittee.BLL.Infrastructure
 {
@@ -20,7 +20,7 @@ namespace TradeUnionCommittee.BLL.Infrastructure
             // Injection UnitOfWork, CryptoUtilities, AutoMapper && CheckerService 
 
             services.AddUnitOfWork(connectionString);
-            services.AddSingleton<ICryptoUtilities, CryptoUtilities>();
+            services.AddSingleton<IHashIdUtilities, HashIdUtilities>();
             services.AddSingleton<IAutoMapperService, AutoMapperService>();
             services.AddScoped<ICheckerService, CheckerService>();
 

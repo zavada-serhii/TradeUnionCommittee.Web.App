@@ -1,60 +1,38 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using TradeUnionCommittee.BLL.Utilities;
 using TradeUnionCommittee.Common.ActualResults;
 using TradeUnionCommittee.DAL.Interfaces;
-using TradeUnionCommittee.Encryption;
 
 namespace TradeUnionCommittee.BLL.BL
 {
     public interface ICheckerService
     {
-        Task<ActualResult> CheckDecryptAndTupleInDb(string hashId, Services service, bool checkTuple = true);
-        Task<ActualResult<long>> CheckDecryptAndTupleInDbWithId(string hashId, Services service, bool checkTuple = true);
-        void Dispose();
-    }
-
-    public enum Services
-    {
-        Position = 3,
-        SocialActivity = 4,
-        Privileges = 5,
-        Award = 6,
-        MaterialAid = 7,
-        Hobby = 8,
-        Travel = 9,
-        Wellness = 10,
-        Tour = 11,
-        Activities = 12,
-        Cultural = 13,
-        Subdivision = 14,
-        Departmental = 15,
-        Dormitory = 16,
-        Employee = 17
+        Task<ActualResult> CheckDecryptAndTupleInDb(string hashId, Enums.Services service, bool checkTuple = true);
+        Task<ActualResult<long>> CheckDecryptAndTupleInDbWithId(string hashId, Enums.Services service, bool checkTuple = true);
     }
 
     internal class CheckerService : ICheckerService
     {
         private readonly IUnitOfWork _database;
-        private readonly ICryptoUtilities _cryptoUtilities;
+        private readonly IHashIdUtilities _hashIdUtilities;
 
-        public CheckerService(IUnitOfWork database, ICryptoUtilities cryptoUtilities)
+        public CheckerService(IUnitOfWork database, IHashIdUtilities hashIdUtilities)
         {
             _database = database;
-            _cryptoUtilities = cryptoUtilities;
+            _hashIdUtilities = hashIdUtilities;
         }
 
-        public async Task<ActualResult> CheckDecryptAndTupleInDb(string hashId, Services service, bool checkTuple = true)
+        public async Task<ActualResult> CheckDecryptAndTupleInDb(string hashId, Enums.Services service, bool checkTuple = true)
         {
             return await Task.Run(() =>
             {
-                var crypto = (EnumCryptoUtilities) service;
-
-                if (_cryptoUtilities.CheckDecrypt(hashId, crypto, out long id))
+                if (_hashIdUtilities.CheckDecrypt(hashId, service, out long id))
                 {
                     if (checkTuple)
                     {
-                        return CheckTupleInDb(id, crypto) ? new ActualResult() : new ActualResult(Errors.TupleDeleted);
+                        return CheckTupleInDb(id, service) ? new ActualResult() : new ActualResult(Errors.TupleDeleted);
                     }
                     return new ActualResult();
                 }
@@ -62,17 +40,15 @@ namespace TradeUnionCommittee.BLL.BL
             });
         }
 
-        public async Task<ActualResult<long>> CheckDecryptAndTupleInDbWithId(string hashId, Services service, bool checkTuple = true)
+        public async Task<ActualResult<long>> CheckDecryptAndTupleInDbWithId(string hashId, Enums.Services service, bool checkTuple = true)
         {
             return await Task.Run(() =>
             {
-                var crypto = (EnumCryptoUtilities)service;
-
-                if (_cryptoUtilities.CheckDecrypt(hashId, crypto, out long id))
+                if (_hashIdUtilities.CheckDecrypt(hashId, service, out long id))
                 {
                     if (checkTuple)
                     {
-                        return CheckTupleInDb(id, crypto) ? new ActualResult<long> { Result = id } : new ActualResult<long>(Errors.TupleDeleted);
+                        return CheckTupleInDb(id, service) ? new ActualResult<long> { Result = id } : new ActualResult<long>(Errors.TupleDeleted);
                     }
                     return new ActualResult<long> {Result = id};
                 }
@@ -85,57 +61,57 @@ namespace TradeUnionCommittee.BLL.BL
             _database.Dispose();
         }
 
-        private bool CheckTupleInDb(long id, EnumCryptoUtilities crypto)
+        private bool CheckTupleInDb(long id, Enums.Services service)
         {
-            switch (crypto)
+            switch (service)
             {
-                case EnumCryptoUtilities.Position:
+                case Enums.Services.Position:
                     return _database.PositionRepository.Find(x => x.Id == id).Result.Any();
 
-                case EnumCryptoUtilities.SocialActivity:
+                case Enums.Services.SocialActivity:
                     return _database.SocialActivityRepository.Find(x => x.Id == id).Result.Any();
 
-                case EnumCryptoUtilities.Privileges:
+                case Enums.Services.Privileges:
                     return _database.PrivilegesRepository.Find(x => x.Id == id).Result.Any();
 
-                case EnumCryptoUtilities.Award:
+                case Enums.Services.Award:
                     return _database.AwardRepository.Find(x => x.Id == id).Result.Any();
 
-                case EnumCryptoUtilities.MaterialAid:
+                case Enums.Services.MaterialAid:
                     return _database.MaterialAidRepository.Find(x => x.Id == id).Result.Any();
 
-                case EnumCryptoUtilities.Hobby:
+                case Enums.Services.Hobby:
                     return _database.HobbyRepository.Find(x => x.Id == id).Result.Any();
 
-                case EnumCryptoUtilities.Travel:
+                case Enums.Services.Travel:
                     return _database.EventRepository.Find(x => x.Id == id && x.TypeId == 1).Result.Any();
 
-                case EnumCryptoUtilities.Wellness:
+                case Enums.Services.Wellness:
                     return _database.EventRepository.Find(x => x.Id == id && x.TypeId == 2).Result.Any();
 
-                case EnumCryptoUtilities.Tour:
+                case Enums.Services.Tour:
                     return _database.EventRepository.Find(x => x.Id == id && x.TypeId == 3).Result.Any();
 
-                case EnumCryptoUtilities.Activities:
+                case Enums.Services.Activities:
                     return _database.ActivitiesRepository.Find(x => x.Id == id).Result.Any();
 
-                case EnumCryptoUtilities.Cultural:
+                case Enums.Services.Cultural:
                     return _database.CulturalRepository.Find(x => x.Id == id).Result.Any();
 
-                case EnumCryptoUtilities.Subdivision:
+                case Enums.Services.Subdivision:
                     return _database.SubdivisionsRepository.Find(x => x.Id == id).Result.Any();
 
-                case EnumCryptoUtilities.Dormitory:
+                case Enums.Services.Dormitory:
                     return _database.AddressPublicHouseRepository.Find(x => x.Id == id && x.Type == 1).Result.Any();
 
-                case EnumCryptoUtilities.Departmental:
+                case Enums.Services.Departmental:
                     return _database.AddressPublicHouseRepository.Find(x => x.Id == id && x.Type == 2).Result.Any();
 
-                case EnumCryptoUtilities.Employee:
+                case Enums.Services.Employee:
                     return _database.EmployeeRepository.Find(x => x.Id == id).Result.Any();
 
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(crypto), crypto, null);
+                    throw new ArgumentOutOfRangeException(nameof(service), service, null);
             }
         }
     }

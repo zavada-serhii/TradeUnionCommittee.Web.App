@@ -29,7 +29,7 @@ namespace TradeUnionCommittee.BLL.Services.Directory
 
         public async Task<ActualResult<DirectoryDTO>> GetAsync(string hashId)
         {
-            var check = await _checkerService.CheckDecryptAndTupleInDbWithId(hashId, BL.Services.MaterialAid);
+            var check = await _checkerService.CheckDecryptAndTupleInDbWithId(hashId, Enums.Services.MaterialAid);
             return check.IsValid
                 ? _mapperService.Mapper.Map<ActualResult<DirectoryDTO>>(_database.MaterialAidRepository.Get(check.Result))
                 : new ActualResult<DirectoryDTO>(check.ErrorsList);
@@ -47,7 +47,7 @@ namespace TradeUnionCommittee.BLL.Services.Directory
 
         public async Task<ActualResult> UpdateAsync(DirectoryDTO dto)
         {
-            var check = await _checkerService.CheckDecryptAndTupleInDbWithId(dto.HashId, BL.Services.MaterialAid);
+            var check = await _checkerService.CheckDecryptAndTupleInDbWithId(dto.HashId, Enums.Services.MaterialAid);
             if (check.IsValid)
             {
                 if (!await CheckNameAsync(dto.Name))
@@ -62,7 +62,7 @@ namespace TradeUnionCommittee.BLL.Services.Directory
 
         public async Task<ActualResult> DeleteAsync(string hashId)
         {
-            var check = await _checkerService.CheckDecryptAndTupleInDbWithId(hashId, BL.Services.MaterialAid, false);
+            var check = await _checkerService.CheckDecryptAndTupleInDbWithId(hashId, Enums.Services.MaterialAid, false);
             if (check.IsValid)
             {
                 _database.MaterialAidRepository.Delete(check.Result);
@@ -77,7 +77,6 @@ namespace TradeUnionCommittee.BLL.Services.Directory
         public void Dispose()
         {
             _database.Dispose();
-            _checkerService.Dispose();
         }
     }
 }
