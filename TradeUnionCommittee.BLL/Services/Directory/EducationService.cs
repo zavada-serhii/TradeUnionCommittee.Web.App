@@ -2,8 +2,8 @@
 using System.Linq;
 using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.DTO;
-using TradeUnionCommittee.BLL.Infrastructure;
 using TradeUnionCommittee.BLL.Interfaces.Directory;
+using TradeUnionCommittee.BLL.Utilities;
 using TradeUnionCommittee.Common.ActualResults;
 using TradeUnionCommittee.DAL.Entities;
 using TradeUnionCommittee.DAL.Interfaces;
@@ -13,9 +13,9 @@ namespace TradeUnionCommittee.BLL.Services.Directory
     public class EducationService : IEducationService
     {
         private readonly IUnitOfWork _database;
-        private readonly IAutoMapperService _mapperService;
+        private readonly IAutoMapperUtilities _mapperService;
 
-        public EducationService(IUnitOfWork database, IAutoMapperService mapperService)
+        public EducationService(IUnitOfWork database, IAutoMapperUtilities mapperService)
         {
             _database = database;
             _mapperService = mapperService;

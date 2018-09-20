@@ -4,7 +4,7 @@ using TradeUnionCommittee.DAL.EF;
 
 namespace TradeUnionCommittee.DAL.Extensions
 {
-    public static class ExtensionDbContext
+    public static class ExtensionsDbContext
     {
         public static void UndoChanges(this TradeUnionCommitteeEmployeesCoreContext dbContext)
         {

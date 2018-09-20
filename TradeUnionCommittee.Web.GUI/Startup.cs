@@ -10,7 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
 using System.IO;
-using TradeUnionCommittee.BLL.Infrastructure;
+using TradeUnionCommittee.BLL.Extensions;
 using TradeUnionCommittee.Web.GUI.AdditionalSettings;
 using TradeUnionCommittee.Web.GUI.AdditionalSettings.DropDownLists;
 using TradeUnionCommittee.Web.GUI.AdditionalSettings.Oops;

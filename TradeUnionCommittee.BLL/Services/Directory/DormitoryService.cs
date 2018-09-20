@@ -2,8 +2,8 @@
 using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.BL;
 using TradeUnionCommittee.BLL.DTO;
-using TradeUnionCommittee.BLL.Infrastructure;
 using TradeUnionCommittee.BLL.Interfaces.Directory;
+using TradeUnionCommittee.BLL.Utilities;
 using TradeUnionCommittee.Common.ActualResults;
 using TradeUnionCommittee.DAL.Entities;
 using TradeUnionCommittee.DAL.Interfaces;
@@ -13,10 +13,10 @@ namespace TradeUnionCommittee.BLL.Services.Directory
     public class DormitoryService : IDormitoryService
     {
         private readonly IUnitOfWork _database;
-        private readonly IAutoMapperService _mapperService;
+        private readonly IAutoMapperUtilities _mapperService;
         private readonly ICheckerService _checkerService;
 
-        public DormitoryService(IUnitOfWork database, IAutoMapperService mapperService, ICheckerService checkerService)
+        public DormitoryService(IUnitOfWork database, IAutoMapperUtilities mapperService, ICheckerService checkerService)
         {
             _database = database;
             _mapperService = mapperService;

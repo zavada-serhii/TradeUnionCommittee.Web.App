@@ -1,22 +1,21 @@
 ﻿using AutoMapper;
 using TradeUnionCommittee.BLL.DTO;
-using TradeUnionCommittee.BLL.Utilities;
 using TradeUnionCommittee.DAL.Entities;
 
-namespace TradeUnionCommittee.BLL.Infrastructure
+namespace TradeUnionCommittee.BLL.Utilities
 {
-    public interface IAutoMapperService
+    public interface IAutoMapperUtilities
     {
         IMapper Mapper { get; }
     }
 
     //------------------------------------------------------------------------------
 
-    internal sealed class AutoMapperService : IAutoMapperService
+    internal sealed class AutoMapperUtilities : IAutoMapperUtilities
     {
         private readonly IHashIdUtilities _hashIdUtilities;
 
-        public AutoMapperService(IHashIdUtilities hashIdUtilities)
+        public AutoMapperUtilities(IHashIdUtilities hashIdUtilities)
         {
             _hashIdUtilities = hashIdUtilities;
         }

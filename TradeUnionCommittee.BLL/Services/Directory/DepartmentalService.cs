@@ -3,7 +3,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.BL;
 using TradeUnionCommittee.BLL.DTO;
-using TradeUnionCommittee.BLL.Infrastructure;
 using TradeUnionCommittee.BLL.Interfaces.Directory;
 using TradeUnionCommittee.BLL.Utilities;
 using TradeUnionCommittee.Common.ActualResults;
@@ -15,11 +14,11 @@ namespace TradeUnionCommittee.BLL.Services.Directory
     public class DepartmentalService : IDepartmentalService
     {
         private readonly IUnitOfWork _database;
-        private readonly IAutoMapperService _mapperService;
+        private readonly IAutoMapperUtilities _mapperService;
         private readonly ICheckerService _checkerService;
         private readonly IHashIdUtilities _hashIdUtilities;
 
-        public DepartmentalService(IUnitOfWork database, IAutoMapperService mapperService, ICheckerService checkerService, IHashIdUtilities hashIdUtilities)
+        public DepartmentalService(IUnitOfWork database, IAutoMapperUtilities mapperService, ICheckerService checkerService, IHashIdUtilities hashIdUtilities)
         {
             _database = database;
             _mapperService = mapperService;

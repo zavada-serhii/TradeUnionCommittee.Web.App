@@ -11,9 +11,9 @@ using TradeUnionCommittee.BLL.Services.Search;
 using TradeUnionCommittee.BLL.Utilities;
 using TradeUnionCommittee.DAL.Extensions;
 
-namespace TradeUnionCommittee.BLL.Infrastructure
+namespace TradeUnionCommittee.BLL.Extensions
 {
-    public static class ServiceModule
+    public static class ExtensionsServiceCollection
     {
         public static IServiceCollection AddTradeUnionCommitteeServiceModule(this IServiceCollection services, string connectionString)
         {
@@ -21,7 +21,7 @@ namespace TradeUnionCommittee.BLL.Infrastructure
 
             services.AddUnitOfWork(connectionString);
             services.AddSingleton<IHashIdUtilities, HashIdUtilities>();
-            services.AddSingleton<IAutoMapperService, AutoMapperService>();
+            services.AddSingleton<IAutoMapperUtilities, AutoMapperUtilities>();
             services.AddScoped<ICheckerService, CheckerService>();
 
             // Injection All Service

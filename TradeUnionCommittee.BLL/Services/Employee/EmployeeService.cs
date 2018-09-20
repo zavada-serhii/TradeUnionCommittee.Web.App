@@ -4,8 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.BL;
 using TradeUnionCommittee.BLL.DTO;
-using TradeUnionCommittee.BLL.Infrastructure;
 using TradeUnionCommittee.BLL.Interfaces.Employee;
+using TradeUnionCommittee.BLL.Utilities;
 using TradeUnionCommittee.Common.ActualResults;
 using TradeUnionCommittee.DAL.Entities;
 using TradeUnionCommittee.DAL.Interfaces;
@@ -15,10 +15,10 @@ namespace TradeUnionCommittee.BLL.Services.Employee
     public class EmployeeService : IEmployeeService
     {
         private readonly IUnitOfWork _database;
-        private readonly IAutoMapperService _mapperService;
+        private readonly IAutoMapperUtilities _mapperService;
         private readonly ICheckerService _checkerService;
 
-        public EmployeeService(IUnitOfWork database, IAutoMapperService mapperService, ICheckerService checkerService)
+        public EmployeeService(IUnitOfWork database, IAutoMapperUtilities mapperService, ICheckerService checkerService)
         {
             _database = database;
             _mapperService = mapperService;
