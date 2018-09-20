@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.Utilities;
 using TradeUnionCommittee.Common.ActualResults;
+using TradeUnionCommittee.Common.Enums;
 using TradeUnionCommittee.DAL.Interfaces;
 
 namespace TradeUnionCommittee.BLL.BL

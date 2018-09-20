@@ -1,19 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
+using TradeUnionCommittee.Common.Enums;
+using TradeUnionCommittee.Common.Helpers;
 
 namespace TradeUnionCommittee.Common.ActualResults
 {
-    public enum Errors
-    {
-        TupleDeleted = 1,
-        TupleUpdated = 2,
-        InvalidId = 3,
-        DuplicateData = 4,
-        InvalidLoginOrPassword = 5,
-        DataBaseError = 6
-    }
-
     public class ActualResult
     {
         public List<string> ErrorsList { get; set; }
@@ -40,77 +30,13 @@ namespace TradeUnionCommittee.Common.ActualResults
         public ActualResult(Errors error)
         {
             IsValid = false;
-            ErrorsList = new List<string> { DescriptionError(error) };
+            ErrorsList = new List<string> { DescriptionErrorsHelper.DescriptionError(error) };
         }
 
         public ActualResult(IEnumerable<Errors> errors)
         {
             IsValid = false;
-            ErrorsList = DescriptionErrors(errors);
-        }
-
-        //----------------------------------------------------------------------------
-
-        private string DescriptionError(Errors error)
-        {
-            switch (error)
-            {
-                case Errors.TupleDeleted:
-                    return "Запис вже видалено іншим користувачем!";
-
-                case Errors.TupleUpdated:
-                    return "Запис вже був оновлений іншим користувачем!";
-
-                case Errors.InvalidId:
-                    return "Недійсний ідентифікатор!";
-
-                case Errors.DuplicateData:
-                   return "Такий запис вже існує!";
-
-                case Errors.InvalidLoginOrPassword:
-                    return "Не правильний логін або пароль!";
-
-                case Errors.DataBaseError:
-                    return "Сталась помилка в базі даних!";
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(error), error, "Ви зламали систему. Вітаю:)");
-            }
-        }
-
-        private List<string> DescriptionErrors(IEnumerable<Errors> errors)
-        {
-            return errors.Select(DescriptionError).ToList();
-        }
-
-        //----------------------------------------------------------------------------
-    }
-
-    public class ActualResult<T> : ActualResult
-    {
-        public T Result { get; set; }
-
-        public ActualResult()
-        {
-        }
-
-        public ActualResult(string error) : base(error)
-        {
-
-        }
-
-        public ActualResult(List<string> errors) : base(errors)
-        {
-
-        }
-
-        public ActualResult(Errors error) : base(error)
-        {
-
-        }
-
-        public ActualResult(IEnumerable<Errors> errors) : base(errors)
-        {
-
+            ErrorsList = DescriptionErrorsHelper.DescriptionErrors(errors);
         }
     }
 }
