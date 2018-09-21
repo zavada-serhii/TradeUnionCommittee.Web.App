@@ -16,7 +16,7 @@ namespace TradeUnionCommittee.Common.ActualResults
 
         }
 
-        public ActualResult(List<string> errors) : base(errors)
+        public ActualResult(IEnumerable<string> errors) : base(errors)
         {
 
         }

@@ -26,13 +26,13 @@ namespace TradeUnionCommittee.BLL.Services.Directory
         }
 
         public async Task<ActualResult<IEnumerable<DirectoryDTO>>> GetAllAsync() =>
-            await Task.Run(() => _mapperService.Mapper.Map<ActualResult<IEnumerable<DirectoryDTO>>>(_database.HobbyRepository.GetAll()));
+            _mapperService.Mapper.Map<ActualResult<IEnumerable<DirectoryDTO>>>(await _database.HobbyRepository.GetAll());
 
         public async Task<ActualResult<DirectoryDTO>> GetAsync(string hashId)
         {
             var check = await _checkerService.CheckDecryptAndTupleInDbWithId(hashId, Enums.Services.Hobby);
             return check.IsValid
-                ? _mapperService.Mapper.Map<ActualResult<DirectoryDTO>>(_database.HobbyRepository.Get(check.Result))
+                ? _mapperService.Mapper.Map<ActualResult<DirectoryDTO>>(await _database.HobbyRepository.Get(check.Result))
                 : new ActualResult<DirectoryDTO>(check.ErrorsList);
         }
 
@@ -40,7 +40,7 @@ namespace TradeUnionCommittee.BLL.Services.Directory
         {
             if (!await CheckNameAsync(dto.Name))
             {
-                _database.HobbyRepository.Create(_mapperService.Mapper.Map<Hobby>(dto));
+                await _database.HobbyRepository.Create(_mapperService.Mapper.Map<Hobby>(dto));
                 return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
             }
             return new ActualResult(Errors.DuplicateData);
@@ -53,7 +53,7 @@ namespace TradeUnionCommittee.BLL.Services.Directory
             {
                 if (!await CheckNameAsync(dto.Name))
                 {
-                    _database.HobbyRepository.Update(_mapperService.Mapper.Map<Hobby>(dto));
+                    await _database.HobbyRepository.Update(_mapperService.Mapper.Map<Hobby>(dto));
                     return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
                 }
                 return new ActualResult(Errors.DuplicateData);
@@ -63,17 +63,20 @@ namespace TradeUnionCommittee.BLL.Services.Directory
 
         public async Task<ActualResult> DeleteAsync(string hashId)
         {
-            var check = await _checkerService.CheckDecryptAndTupleInDbWithId(hashId, Enums.Services.Hobby, false);
+            var check = await _checkerService.CheckDecryptAndTupleInDbWithId(hashId, Enums.Services.Hobby);
             if (check.IsValid)
             {
-                _database.HobbyRepository.Delete(check.Result);
+                await _database.HobbyRepository.Delete(check.Result);
                 return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
             }
             return new ActualResult(check.ErrorsList);
         }
 
-        public async Task<bool> CheckNameAsync(string name) =>
-            await Task.Run(() => _database.HobbyRepository.Find(p => p.Name == name).Result.Any());
+        public async Task<bool> CheckNameAsync(string name)
+        {
+            var result = await _database.HobbyRepository.Find(p => p.Name == name);
+            return result.Result.Any();
+        }
 
         public void Dispose()
         {

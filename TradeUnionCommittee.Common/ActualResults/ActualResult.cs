@@ -6,7 +6,7 @@ namespace TradeUnionCommittee.Common.ActualResults
 {
     public class ActualResult
     {
-        public List<string> ErrorsList { get; set; }
+        public IEnumerable<string> ErrorsList { get; set; }
         public bool IsValid { get; set; }
 
         public ActualResult()
@@ -21,7 +21,7 @@ namespace TradeUnionCommittee.Common.ActualResults
             ErrorsList = new List<string> { error };
         }
 
-        public ActualResult(List<string> errors)
+        public ActualResult(IEnumerable<string> errors)
         {
             IsValid = false;
             ErrorsList = errors;

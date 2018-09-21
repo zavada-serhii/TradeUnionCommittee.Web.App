@@ -26,13 +26,13 @@ namespace TradeUnionCommittee.BLL.Services.Directory
         }
 
         public async Task<ActualResult<IEnumerable<DirectoryDTO>>> GetAllAsync() =>
-            await Task.Run(() => _mapperService.Mapper.Map<ActualResult<IEnumerable<DirectoryDTO>>>(_database.MaterialAidRepository.GetAll()));
+            _mapperService.Mapper.Map<ActualResult<IEnumerable<DirectoryDTO>>>(await _database.MaterialAidRepository.GetAll());
 
         public async Task<ActualResult<DirectoryDTO>> GetAsync(string hashId)
         {
             var check = await _checkerService.CheckDecryptAndTupleInDbWithId(hashId, Enums.Services.MaterialAid);
             return check.IsValid
-                ? _mapperService.Mapper.Map<ActualResult<DirectoryDTO>>(_database.MaterialAidRepository.Get(check.Result))
+                ? _mapperService.Mapper.Map<ActualResult<DirectoryDTO>>(await _database.MaterialAidRepository.Get(check.Result))
                 : new ActualResult<DirectoryDTO>(check.ErrorsList);
         }
 
@@ -40,7 +40,7 @@ namespace TradeUnionCommittee.BLL.Services.Directory
         {
             if (!await CheckNameAsync(dto.Name))
             {
-                _database.MaterialAidRepository.Create(_mapperService.Mapper.Map<MaterialAid>(dto));
+                await _database.MaterialAidRepository.Create(_mapperService.Mapper.Map<MaterialAid>(dto));
                 return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
             }
             return new ActualResult(Errors.DuplicateData);
@@ -53,7 +53,7 @@ namespace TradeUnionCommittee.BLL.Services.Directory
             {
                 if (!await CheckNameAsync(dto.Name))
                 {
-                    _database.MaterialAidRepository.Update(_mapperService.Mapper.Map<MaterialAid>(dto));
+                    await _database.MaterialAidRepository.Update(_mapperService.Mapper.Map<MaterialAid>(dto));
                     return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
                 }
                 return new ActualResult(Errors.DuplicateData);
@@ -63,17 +63,20 @@ namespace TradeUnionCommittee.BLL.Services.Directory
 
         public async Task<ActualResult> DeleteAsync(string hashId)
         {
-            var check = await _checkerService.CheckDecryptAndTupleInDbWithId(hashId, Enums.Services.MaterialAid, false);
+            var check = await _checkerService.CheckDecryptAndTupleInDbWithId(hashId, Enums.Services.MaterialAid);
             if (check.IsValid)
             {
-                _database.MaterialAidRepository.Delete(check.Result);
+                await _database.MaterialAidRepository.Delete(check.Result);
                 return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
             }
             return new ActualResult(check.ErrorsList);
         }
 
-        public async Task<bool> CheckNameAsync(string name) =>
-            await Task.Run(() => _database.MaterialAidRepository.Find(p => p.Name == name).Result.Any());
+        public async Task<bool> CheckNameAsync(string name)
+        {
+            var result = await _database.MaterialAidRepository.Find(p => p.Name == name);
+            return result.Result.Any();
+        }
 
         public void Dispose()
         {

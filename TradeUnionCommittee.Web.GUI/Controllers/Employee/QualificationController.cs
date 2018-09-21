@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System;
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
@@ -101,7 +102,7 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Employee
         public async Task<IActionResult> DeleteConfirmed(long? id)
         {
             if (id == null) return NotFound();
-            var result = await _qualificationService.DeleteQualificationEmployeeAsync(id.Value);
+            var result = await _qualificationService.DeleteQualificationEmployeeAsync(string.Empty);
             return result.IsValid
                 ? RedirectToAction("Index", "Employee", new { id })
                 : _oops.OutPutError("MainInfoEmployee", "Index", result.ErrorsList);

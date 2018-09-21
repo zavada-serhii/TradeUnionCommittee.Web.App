@@ -3,7 +3,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.DTO;
 using TradeUnionCommittee.BLL.Interfaces.Directory;
+using TradeUnionCommittee.BLL.Utilities;
 using TradeUnionCommittee.Common.ActualResults;
+using TradeUnionCommittee.Common.Enums;
 using TradeUnionCommittee.DAL.Entities;
 using TradeUnionCommittee.DAL.Interfaces;
 
@@ -12,104 +14,53 @@ namespace TradeUnionCommittee.BLL.Services.Directory
     public class QualificationService : IQualificationService
     {
         private readonly IUnitOfWork _database;
+        private readonly IAutoMapperUtilities _mapper;
 
-        public QualificationService(IUnitOfWork database)
+        public QualificationService(IUnitOfWork database, IAutoMapperUtilities mapper)
         {
             _database = database;
+            _mapper = mapper;
         }
 
         public async Task<ActualResult<IEnumerable<string>>> GetAllScientificDegreeAsync()
         {
-            return await Task.Run(() =>
-            {
-                return new ActualResult<IEnumerable<string>>
-                {
-                    Result = _database.ScientificRepository.GetAll().Result.Select(x => x.ScientificDegree).Distinct().ToList()
-                };
-            });
+            var result = await _database.ScientificRepository.GetAll();
+            return new ActualResult<IEnumerable<string>> {Result = result.Result.Select(x => x.ScientificDegree).Distinct().ToList()};
         }
 
         public async Task<ActualResult<IEnumerable<string>>> GetAllScientificTitleAsync()
         {
-            return await Task.Run(() =>
-            {
-                return new ActualResult<IEnumerable<string>>
-                {
-                    Result = _database.ScientificRepository.GetAll().Result.Select(x => x.ScientificTitle).Distinct().ToList()
-                };
-            });
+            var result = await _database.ScientificRepository.GetAll();
+            return new ActualResult<IEnumerable<string>> { Result = result.Result.Select(x => x.ScientificTitle).Distinct().ToList() };
         }
 
         //------------------------------------------------------------------------------------------------------------------------------------------
    
         public async Task<ActualResult<QualificationDTO>> GetQualificationEmployeeAsync(long idEmployee)
         {
-            return await Task.Run(() =>
-            {
-                var scientific = _database.ScientificRepository.GetWithInclude(x => x.IdEmployee == idEmployee).Result.FirstOrDefault();
-                var result = new ActualResult<QualificationDTO>();
-                if (scientific != null)
-                {
-                    result.Result = new QualificationDTO
-                    {
-                        IdEmployee = scientific.IdEmployee,
-                        ScientificDegree = scientific.ScientificDegree,
-                        ScientificTitle = scientific.ScientificTitle,
-                    };
-                    return result;
-                }
-                result.IsValid = false;
-                return result;
-            });
+            var scientific = await _database.ScientificRepository.Find(x => x.IdEmployee == idEmployee);
+            return scientific.Result != null 
+                ? _mapper.Mapper.Map<ActualResult<QualificationDTO>>(scientific) 
+                : new ActualResult<QualificationDTO>(Errors.TupleDeleted);
         }
 
         public async Task<ActualResult> CreateQualificationEmployeeAsync(QualificationDTO dto)
         {
-            var qualification = _database.ScientificRepository.Create(new Scientific
-            {
-                IdEmployee = dto.IdEmployee,
-                ScientificDegree = dto.ScientificDegree,
-                ScientificTitle = dto.ScientificTitle
-            });
-            if (qualification.IsValid == false && qualification.ErrorsList.Count > 0)
-            {
-                return new ActualResult { IsValid = false, ErrorsList = qualification.ErrorsList };
-            }
-            var dbState = await _database.SaveAsync();
-            qualification.IsValid = dbState.IsValid;
-            return qualification;
+            await _database.ScientificRepository.Create(_mapper.Mapper.Map<Scientific>(dto));
+            return _mapper.Mapper.Map<ActualResult>(await _database.SaveAsync());
         }
 
         public async Task<ActualResult> UpdateQualificationEmployeeAsync(QualificationDTO dto)
         {
-            var oldData = _database.ScientificRepository.GetWithInclude(x => x.IdEmployee == dto.IdEmployee).Result.FirstOrDefault();
-
-            oldData.ScientificDegree = dto.ScientificDegree;
-            oldData.ScientificTitle = dto.ScientificTitle;
-
-            var qualification = _database.ScientificRepository.Update(oldData);
-
-            if (qualification.IsValid == false && qualification.ErrorsList.Count > 0)
-            {
-                return new ActualResult { IsValid = false, ErrorsList = qualification.ErrorsList };
-            }
-            var dbState = await _database.SaveAsync();
-            qualification.IsValid = dbState.IsValid;
-            return qualification;
+            await _database.ScientificRepository.Update(_mapper.Mapper.Map<Scientific>(dto));
+            return _mapper.Mapper.Map<ActualResult>(await _database.SaveAsync());
         }
 
-        public async Task<ActualResult> DeleteQualificationEmployeeAsync(long idEmployee)
+        public async Task<ActualResult> DeleteQualificationEmployeeAsync(string hashId)
         {
-            var id = _database.ScientificRepository.GetWithInclude(x => x.IdEmployee == idEmployee).Result.FirstOrDefault().Id;
-
-            var qualification = _database.ScientificRepository.Delete(id);
-            if (qualification.IsValid == false && qualification.ErrorsList.Count > 0)
-            {
-                return new ActualResult { IsValid = false, ErrorsList = qualification.ErrorsList };
-            }
-            var dbState = await _database.SaveAsync();
-            qualification.IsValid = dbState.IsValid;
-            return qualification;
+            // TODO : use hash id 
+            await _database.ActivitiesRepository.Delete(int.MinValue);
+            return _mapper.Mapper.Map<ActualResult>(await _database.SaveAsync());
         }
 
         public void Dispose()

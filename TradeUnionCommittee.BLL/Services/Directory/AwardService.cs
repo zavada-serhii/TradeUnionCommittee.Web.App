@@ -26,13 +26,13 @@ namespace TradeUnionCommittee.BLL.Services.Directory
         }
 
         public async Task<ActualResult<IEnumerable<DirectoryDTO>>> GetAllAsync() =>
-            await Task.Run(() => _mapperService.Mapper.Map<ActualResult<IEnumerable<DirectoryDTO>>>(_database.AwardRepository.GetAll()));
+            _mapperService.Mapper.Map<ActualResult<IEnumerable<DirectoryDTO>>>(await _database.AwardRepository.GetAll());
 
         public async Task<ActualResult<DirectoryDTO>> GetAsync(string hashId)
         {
             var check = await _checkerService.CheckDecryptAndTupleInDbWithId(hashId, Enums.Services.Award);
             return check.IsValid
-                ? _mapperService.Mapper.Map<ActualResult<DirectoryDTO>>(_database.AwardRepository.Get(check.Result))
+                ? _mapperService.Mapper.Map<ActualResult<DirectoryDTO>>(await _database.AwardRepository.Get(check.Result))
                 : new ActualResult<DirectoryDTO>(check.ErrorsList);
         }
 
@@ -40,7 +40,7 @@ namespace TradeUnionCommittee.BLL.Services.Directory
         {
             if (!await CheckNameAsync(dto.Name))
             {
-                _database.AwardRepository.Create(_mapperService.Mapper.Map<Award>(dto));
+                await _database.AwardRepository.Create(_mapperService.Mapper.Map<Award>(dto));
                 return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
             }
             return new ActualResult(Errors.DuplicateData);
@@ -53,7 +53,7 @@ namespace TradeUnionCommittee.BLL.Services.Directory
             {
                 if (!await CheckNameAsync(dto.Name))
                 {
-                    _database.AwardRepository.Update(_mapperService.Mapper.Map<Award>(dto));
+                    await _database.AwardRepository.Update(_mapperService.Mapper.Map<Award>(dto));
                     return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
                 }
                 return new ActualResult(Errors.DuplicateData);
@@ -63,17 +63,20 @@ namespace TradeUnionCommittee.BLL.Services.Directory
 
         public async Task<ActualResult> DeleteAsync(string hashId)
         {
-            var check = await _checkerService.CheckDecryptAndTupleInDbWithId(hashId, Enums.Services.Award, false);
+            var check = await _checkerService.CheckDecryptAndTupleInDbWithId(hashId, Enums.Services.Award);
             if (check.IsValid)
             {
-                _database.AwardRepository.Delete(check.Result);
+                await _database.AwardRepository.Delete(check.Result);
                 return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
             }
             return new ActualResult(check.ErrorsList);
         }
 
-        public async Task<bool> CheckNameAsync(string name) =>
-            await Task.Run(() => _database.AwardRepository.Find(p => p.Name == name).Result.Any());
+        public async Task<bool> CheckNameAsync(string name)
+        {
+            var result = await _database.AwardRepository.Find(p => p.Name == name);
+            return result.Result.Any();
+        }
 
         public void Dispose()
         {

@@ -25,14 +25,14 @@ namespace TradeUnionCommittee.BLL.Services.Directory
             _checkerService = checkerService;
         }
 
-        public async Task<ActualResult<IEnumerable<DirectoryDTO>>> GetAllAsync() => 
-            await Task.Run(() => _mapperService.Mapper.Map<ActualResult<IEnumerable<DirectoryDTO>>>(_database.PositionRepository.GetAll()));
+        public async Task<ActualResult<IEnumerable<DirectoryDTO>>> GetAllAsync() =>
+            _mapperService.Mapper.Map<ActualResult<IEnumerable<DirectoryDTO>>>(await _database.PositionRepository.GetAll());
 
         public async Task<ActualResult<DirectoryDTO>> GetAsync(string hashId)
         {
             var check = await _checkerService.CheckDecryptAndTupleInDbWithId(hashId, Enums.Services.Position);
             return check.IsValid 
-                ? _mapperService.Mapper.Map<ActualResult<DirectoryDTO>>(_database.PositionRepository.Get(check.Result)) 
+                ? _mapperService.Mapper.Map<ActualResult<DirectoryDTO>>(await _database.PositionRepository.Get(check.Result)) 
                 : new ActualResult<DirectoryDTO>(check.ErrorsList);
         }
 
@@ -40,7 +40,7 @@ namespace TradeUnionCommittee.BLL.Services.Directory
         {
             if (!await CheckNameAsync(dto.Name))
             {
-                _database.PositionRepository.Create(_mapperService.Mapper.Map<Position>(dto));
+                await _database.PositionRepository.Create(_mapperService.Mapper.Map<Position>(dto));
                 return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
             }
             return new ActualResult(Errors.DuplicateData);
@@ -53,7 +53,7 @@ namespace TradeUnionCommittee.BLL.Services.Directory
             {
                 if (!await CheckNameAsync(dto.Name))
                 {
-                    _database.PositionRepository.Update(_mapperService.Mapper.Map<Position>(dto));
+                    await _database.PositionRepository.Update(_mapperService.Mapper.Map<Position>(dto));
                     return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
                 }
                 return new ActualResult(Errors.DuplicateData);
@@ -63,17 +63,21 @@ namespace TradeUnionCommittee.BLL.Services.Directory
 
         public async Task<ActualResult> DeleteAsync(string hashId)
         {
-            var check = await _checkerService.CheckDecryptAndTupleInDbWithId(hashId, Enums.Services.Position, false);
+            var check = await _checkerService.CheckDecryptAndTupleInDbWithId(hashId, Enums.Services.Position);
             if (check.IsValid)
             {
-                _database.PositionRepository.Delete(check.Result);
+                await _database.PositionRepository.Delete(check.Result);
                 return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
             }
             return new ActualResult(check.ErrorsList);
         }
 
-        public async Task<bool> CheckNameAsync(string name) => 
-            await Task.Run(() => _database.PositionRepository.Find(p => p.Name == name).Result.Any());
+        public async Task<bool> CheckNameAsync(string name)
+        {
+            var result = await _database.PositionRepository.Find(p => p.Name == name);
+            return result.Result.Any();
+        }
+
 
         public void Dispose()
         {

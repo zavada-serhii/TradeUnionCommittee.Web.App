@@ -26,13 +26,13 @@ namespace TradeUnionCommittee.BLL.Services.Directory
         }
 
         public async Task<ActualResult<IEnumerable<WellnessDTO>>> GetAllAsync() =>
-            await Task.Run(() => _mapperService.Mapper.Map<ActualResult<IEnumerable<WellnessDTO>>>(_database.EventRepository.Find(x => x.TypeId == 2)));
+            _mapperService.Mapper.Map<ActualResult<IEnumerable<WellnessDTO>>>(await _database.EventRepository.Find(x => x.TypeId == 2));
 
         public async Task<ActualResult<WellnessDTO>> GetAsync(string hashId)
         {
             var check = await _checkerService.CheckDecryptAndTupleInDbWithId(hashId, Enums.Services.Wellness);
             return check.IsValid
-                ? _mapperService.Mapper.Map<ActualResult<WellnessDTO>>(_database.EventRepository.Get(check.Result))
+                ? _mapperService.Mapper.Map<ActualResult<WellnessDTO>>(await _database.EventRepository.Get(check.Result))
                 : new ActualResult<WellnessDTO>(check.ErrorsList);
         }
 
@@ -40,7 +40,7 @@ namespace TradeUnionCommittee.BLL.Services.Directory
         {
             if (!await CheckNameAsync(dto.Name))
             {
-                _database.EventRepository.Create(_mapperService.Mapper.Map<Event>(dto));
+                await _database.EventRepository.Create(_mapperService.Mapper.Map<Event>(dto));
                 return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
             }
             return new ActualResult(Errors.DuplicateData);
@@ -53,7 +53,7 @@ namespace TradeUnionCommittee.BLL.Services.Directory
             {
                 if (!await CheckNameAsync(dto.Name))
                 {
-                    _database.EventRepository.Update(_mapperService.Mapper.Map<Event>(dto));
+                    await _database.EventRepository.Update(_mapperService.Mapper.Map<Event>(dto));
                     return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
                 }
                 return new ActualResult(Errors.DuplicateData);
@@ -63,17 +63,20 @@ namespace TradeUnionCommittee.BLL.Services.Directory
 
         public async Task<ActualResult> DeleteAsync(string hashId)
         {
-            var check = await _checkerService.CheckDecryptAndTupleInDbWithId(hashId, Enums.Services.Wellness, false);
+            var check = await _checkerService.CheckDecryptAndTupleInDbWithId(hashId, Enums.Services.Wellness);
             if (check.IsValid)
             {
-                _database.EventRepository.Delete(check.Result);
+                await _database.EventRepository.Delete(check.Result);
                 return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
             }
             return new ActualResult(check.ErrorsList);
         }
 
-        public async Task<bool> CheckNameAsync(string name) =>
-            await Task.Run(() => _database.EventRepository.Find(p => p.Name == name).Result.Any());
+        public async Task<bool> CheckNameAsync(string name)
+        {
+            var result = await _database.EventRepository.Find(p => p.Name == name && p.TypeId == 2);
+            return result.Result.Any();
+        }
 
         public void Dispose()
         {

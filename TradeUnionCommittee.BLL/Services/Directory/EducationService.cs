@@ -23,40 +23,32 @@ namespace TradeUnionCommittee.BLL.Services.Directory
 
         public async Task<ActualResult<IEnumerable<string>>> GetAllLevelEducationAsync()
         {
-            return await Task.Run(() =>
-            {
-                return new ActualResult<IEnumerable<string>>
-                {
-                    Result = _database.EducationRepository.GetAll().Result.Select(x => x.LevelEducation).Distinct().ToList()
-                };
-            });
+            var result = await GetEducation();
+            return new ActualResult<IEnumerable<string>> { Result = result.Result.Select(x => x.LevelEducation).Distinct() };
         }
 
         public async Task<ActualResult<IEnumerable<string>>> GetAllNameInstitutionAsync()
         {
-            return await Task.Run(() =>
-            {
-                return new ActualResult<IEnumerable<string>>
-                {
-                    Result = _database.EducationRepository.GetAll().Result.Select(x => x.NameInstitution).Distinct().ToList()
-                };
-            });
+            var result = await GetEducation();
+            return new ActualResult<IEnumerable<string>> { Result = result.Result.Select(x => x.NameInstitution).Distinct() };
+        }
+
+        private async Task<ActualResult<IEnumerable<Education>>> GetEducation()
+        {
+            return await _database.EducationRepository.GetAll();
         }
 
         //------------------------------------------------------------------------------------------------------------------------------------------
 
         public async Task<ActualResult<EducationDTO>> GetEducationEmployeeAsync(long idEmployee)
         {
-            return await Task.Run(() =>
-            {
-                var education = _database.EducationRepository.GetWithInclude(x => x.IdEmployee == idEmployee).Result.FirstOrDefault();
-                return new ActualResult<EducationDTO> {Result = _mapperService.Mapper.Map<EducationDTO>(education) };
-            });
+            var education = await _database.EducationRepository.Find(x => x.IdEmployee == idEmployee);
+            return new ActualResult<EducationDTO> { Result = _mapperService.Mapper.Map<EducationDTO>(education.Result.FirstOrDefault()) };
         }
 
         public async Task<ActualResult> UpdateEducationEmployeeAsync(EducationDTO dto)
         {
-            _database.EducationRepository.Update(_mapperService.Mapper.Map<Education>(dto));
+            await _database.EducationRepository.Update(_mapperService.Mapper.Map<Education>(dto));
             return await _database.SaveAsync();
         }
 
