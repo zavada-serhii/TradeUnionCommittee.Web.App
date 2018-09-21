@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace TradeUnionCommittee.DAL.Entities
 {
@@ -13,10 +14,15 @@ namespace TradeUnionCommittee.DAL.Entities
         }
 
         public long Id { get; set; }
+        [ConcurrencyCheck]
         public long IdEmployee { get; set; }
+        [ConcurrencyCheck]
         public string FirstName { get; set; }
+        [ConcurrencyCheck]
         public string SecondName { get; set; }
+        [ConcurrencyCheck]
         public string Patronymic { get; set; }
+        [ConcurrencyCheck]
         public DateTime? BirthDate { get; set; }
 
         public Employee IdEmployeeNavigation { get; set; }
