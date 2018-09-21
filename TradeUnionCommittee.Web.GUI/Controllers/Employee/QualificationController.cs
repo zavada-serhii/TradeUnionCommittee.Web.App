@@ -102,7 +102,7 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Employee
         public async Task<IActionResult> DeleteConfirmed(long? id)
         {
             if (id == null) return NotFound();
-            var result = await _qualificationService.DeleteQualificationEmployeeAsync(string.Empty);
+            var result = await _qualificationService.DeleteQualificationEmployeeAsync(id.Value);
             return result.IsValid
                 ? RedirectToAction("Index", "Employee", new { id })
                 : _oops.OutPutError("MainInfoEmployee", "Index", result.ErrorsList);

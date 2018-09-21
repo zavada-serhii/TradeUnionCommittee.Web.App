@@ -38,10 +38,24 @@ namespace TradeUnionCommittee.BLL.Services.Directory
    
         public async Task<ActualResult<QualificationDTO>> GetQualificationEmployeeAsync(long idEmployee)
         {
-            var scientific = await _database.ScientificRepository.Find(x => x.IdEmployee == idEmployee);
-            return scientific.Result != null 
-                ? _mapper.Mapper.Map<ActualResult<QualificationDTO>>(scientific) 
-                : new ActualResult<QualificationDTO>(Errors.TupleDeleted);
+            var scientific = await _database.ScientificRepository.Get(idEmployee);
+            if (scientific.Result != null)
+            {
+                return _mapper.Mapper.Map<ActualResult<QualificationDTO>>(scientific);
+            }
+            return new ActualResult<QualificationDTO>(Errors.TupleDeleted);
+            //if (scientific.Result != null)
+            //{
+            //    var dto = new QualificationDTO();
+            //    foreach (var result in scientific.Result)
+            //    {
+            //        dto.IdEmployee = result.IdEmployee;
+            //        dto.ScientificDegree = result.ScientificDegree;
+            //        dto.ScientificTitle = result.ScientificTitle;
+            //    }
+            //    return new ActualResult<QualificationDTO> {Result = dto};
+            //}
+            //return new ActualResult<QualificationDTO>(Errors.TupleDeleted);
         }
 
         public async Task<ActualResult> CreateQualificationEmployeeAsync(QualificationDTO dto)
@@ -52,14 +66,16 @@ namespace TradeUnionCommittee.BLL.Services.Directory
 
         public async Task<ActualResult> UpdateQualificationEmployeeAsync(QualificationDTO dto)
         {
+            var idScientific = await _database.ScientificRepository.Get(dto.IdEmployee);
+            dto.Id = idScientific.Result.Id;
             await _database.ScientificRepository.Update(_mapper.Mapper.Map<Scientific>(dto));
             return _mapper.Mapper.Map<ActualResult>(await _database.SaveAsync());
         }
 
-        public async Task<ActualResult> DeleteQualificationEmployeeAsync(string hashId)
+        public async Task<ActualResult> DeleteQualificationEmployeeAsync(long idEmployee)
         {
-            // TODO : use hash id 
-            await _database.ActivitiesRepository.Delete(int.MinValue);
+            var idScientific = await _database.ScientificRepository.Get(idEmployee);
+            await _database.ScientificRepository.Delete(idScientific.Result.Id);
             return _mapper.Mapper.Map<ActualResult>(await _database.SaveAsync());
         }
 

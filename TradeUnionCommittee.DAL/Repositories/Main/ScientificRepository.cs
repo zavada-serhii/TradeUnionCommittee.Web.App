@@ -21,7 +21,7 @@ namespace TradeUnionCommittee.DAL.Repositories.Main
             var result = new ActualResult<Scientific>();
             try
             {
-                result.Result = await _db.Scientific.FirstOrDefaultAsync(x => x.IdEmployee == id);
+                result.Result = await _db.Scientific.AsNoTracking().FirstOrDefaultAsync(x => x.IdEmployee == id);
 
                 if (result.Result == null)
                 {
