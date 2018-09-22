@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Logging;
 
 namespace TradeUnionCommittee.Web.GUI
 {
@@ -13,7 +12,6 @@ namespace TradeUnionCommittee.Web.GUI
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
-                .UseStartup<Startup>()
-                .ConfigureLogging(logging => logging.SetMinimumLevel(LogLevel.Trace));
+                .UseStartup<Startup>();
     }
 }
