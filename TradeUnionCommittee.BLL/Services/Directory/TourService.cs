@@ -30,7 +30,7 @@ namespace TradeUnionCommittee.BLL.Services.Directory
 
         public async Task<ActualResult<TourDTO>> GetAsync(string hashId)
         {
-            var check = await _checkerService.CheckDecryptAndTupleInDbWithId(hashId, Enums.Services.Tour);
+            var check = await _checkerService.CheckDecryptWithId(hashId, Enums.Services.Tour);
             return check.IsValid
                 ? _mapperService.Mapper.Map<ActualResult<TourDTO>>(await _database.EventRepository.Get(check.Result))
                 : new ActualResult<TourDTO>(check.ErrorsList);
@@ -48,7 +48,7 @@ namespace TradeUnionCommittee.BLL.Services.Directory
 
         public async Task<ActualResult> UpdateAsync(TourDTO dto)
         {
-            var check = await _checkerService.CheckDecryptAndTupleInDbWithId(dto.HashId, Enums.Services.Tour);
+            var check = await _checkerService.CheckDecryptWithId(dto.HashId, Enums.Services.Tour);
             if (check.IsValid)
             {
                 if (!await CheckNameAsync(dto.Name))
@@ -63,7 +63,7 @@ namespace TradeUnionCommittee.BLL.Services.Directory
 
         public async Task<ActualResult> DeleteAsync(string hashId)
         {
-            var check = await _checkerService.CheckDecryptAndTupleInDbWithId(hashId, Enums.Services.Tour);
+            var check = await _checkerService.CheckDecryptWithId(hashId, Enums.Services.Tour);
             if (check.IsValid)
             {
                 await _database.EventRepository.Delete(check.Result);

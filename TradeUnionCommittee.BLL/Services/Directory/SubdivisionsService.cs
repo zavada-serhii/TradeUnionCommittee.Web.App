@@ -31,7 +31,7 @@ namespace TradeUnionCommittee.BLL.Services.Directory
 
         public async Task<ActualResult<IEnumerable<SubdivisionDTO>>> GetSubordinateSubdivisions(string hashId)
         {
-            var check = await _checkerService.CheckDecryptAndTupleInDbWithId(hashId, Enums.Services.Subdivision);
+            var check = await _checkerService.CheckDecryptWithId(hashId, Enums.Services.Subdivision);
             return check.IsValid
                 ? _mapperService.Mapper.Map<ActualResult<IEnumerable<SubdivisionDTO>>>(await _database.SubdivisionsRepository.Find(x => x.IdSubordinate == check.Result))
                 : new ActualResult<IEnumerable<SubdivisionDTO>>(check.ErrorsList);
@@ -39,7 +39,7 @@ namespace TradeUnionCommittee.BLL.Services.Directory
 
         public async Task<ActualResult<SubdivisionDTO>> GetAsync(string hashId)
         {
-            var check = await _checkerService.CheckDecryptAndTupleInDbWithId(hashId, Enums.Services.Subdivision);
+            var check = await _checkerService.CheckDecryptWithId(hashId, Enums.Services.Subdivision);
             return check.IsValid
                 ? _mapperService.Mapper.Map<ActualResult<SubdivisionDTO>>(await _database.SubdivisionsRepository.Get(check.Result))
                 : new ActualResult<SubdivisionDTO>(check.ErrorsList);
@@ -57,7 +57,7 @@ namespace TradeUnionCommittee.BLL.Services.Directory
 
         public async Task<ActualResult> CreateSubordinateSubdivisionAsync(SubdivisionDTO dto)
         {
-            var check = await _checkerService.CheckDecryptAndTupleInDb(dto.HashIdSubordinate, Enums.Services.Subdivision);
+            var check = await _checkerService.CheckDecrypt(dto.HashIdSubordinate, Enums.Services.Subdivision);
             if (check.IsValid)
             {
                 if (!await CheckNameAsync(dto.Name) && !await CheckAbbreviationAsync(dto.Name))
@@ -72,7 +72,7 @@ namespace TradeUnionCommittee.BLL.Services.Directory
 
         public async Task<ActualResult> UpdateNameSubdivisionAsync(SubdivisionDTO dto)
         {
-            var check = await _checkerService.CheckDecryptAndTupleInDbWithId(dto.HashId, Enums.Services.Subdivision);
+            var check = await _checkerService.CheckDecryptWithId(dto.HashId, Enums.Services.Subdivision);
             if (check.IsValid)
             {
                 if (!await CheckNameAsync(dto.Name))
@@ -94,7 +94,7 @@ namespace TradeUnionCommittee.BLL.Services.Directory
 
         public async Task<ActualResult> UpdateAbbreviationSubdivisionAsync(SubdivisionDTO dto)
         {
-            var check = await _checkerService.CheckDecryptAndTupleInDbWithId(dto.HashId, Enums.Services.Subdivision);
+            var check = await _checkerService.CheckDecryptWithId(dto.HashId, Enums.Services.Subdivision);
             if (check.IsValid)
             {
                 if (!await CheckNameAsync(dto.Name))
@@ -116,7 +116,7 @@ namespace TradeUnionCommittee.BLL.Services.Directory
 
         public async Task<ActualResult> DeleteAsync(string hashId)
         {
-            var check = await _checkerService.CheckDecryptAndTupleInDbWithId(hashId, Enums.Services.Subdivision);
+            var check = await _checkerService.CheckDecryptWithId(hashId, Enums.Services.Subdivision);
             if (check.IsValid)
             {
                 await _database.SubdivisionsRepository.Delete(check.Result);
@@ -127,8 +127,8 @@ namespace TradeUnionCommittee.BLL.Services.Directory
 
         public async Task<ActualResult> RestructuringUnits(SubdivisionDTO dto)
         {
-            var checkMainSubdivisions = await _checkerService.CheckDecryptAndTupleInDbWithId(dto.HashId, Enums.Services.Subdivision);
-            var checkSubordinateSubdivisions = await _checkerService.CheckDecryptAndTupleInDbWithId(dto.HashIdSubordinate, Enums.Services.Subdivision);
+            var checkMainSubdivisions = await _checkerService.CheckDecryptWithId(dto.HashId, Enums.Services.Subdivision);
+            var checkSubordinateSubdivisions = await _checkerService.CheckDecryptWithId(dto.HashIdSubordinate, Enums.Services.Subdivision);
 
             if (checkMainSubdivisions.IsValid && checkSubordinateSubdivisions.IsValid)
             {

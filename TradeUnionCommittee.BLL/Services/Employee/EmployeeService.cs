@@ -30,7 +30,7 @@ namespace TradeUnionCommittee.BLL.Services.Employee
 
         private async Task<ActualResult> CheckHashIdInDto(CreateEmployeeDTO dto)
         {
-            var checkPosition = await _checkerService.CheckDecryptAndTupleInDbWithId(dto.HashIdPosition, Enums.Services.Position);
+            var checkPosition = await _checkerService.CheckDecryptWithId(dto.HashIdPosition, Enums.Services.Position);
             if (checkPosition != null)
             {
                 dto.IdPosition = checkPosition.Result;
@@ -40,7 +40,7 @@ namespace TradeUnionCommittee.BLL.Services.Employee
                 return new ActualResult(Errors.InvalidId);
             }
 
-            var checkSubdivision = await _checkerService.CheckDecryptAndTupleInDbWithId(dto.HashIdSubdivision, Enums.Services.Subdivision);
+            var checkSubdivision = await _checkerService.CheckDecryptWithId(dto.HashIdSubdivision, Enums.Services.Subdivision);
             if (checkSubdivision != null)
             {
                 dto.IdSubdivision = checkSubdivision.Result;
@@ -52,7 +52,7 @@ namespace TradeUnionCommittee.BLL.Services.Employee
 
             if (dto.TypeAccommodation == "dormitory")
             {
-                var checkDormitory = await _checkerService.CheckDecryptAndTupleInDbWithId(dto.HashIdDormitory, Enums.Services.Dormitory);
+                var checkDormitory = await _checkerService.CheckDecryptWithId(dto.HashIdDormitory, Enums.Services.Dormitory);
                 if (checkDormitory != null)
                 {
                     dto.IdDormitory = checkDormitory.Result;
@@ -65,7 +65,7 @@ namespace TradeUnionCommittee.BLL.Services.Employee
 
             if (dto.TypeAccommodation == "departmental")
             {
-                var checkDepartmental = await _checkerService.CheckDecryptAndTupleInDbWithId(dto.HashIdDepartmental, Enums.Services.Departmental);
+                var checkDepartmental = await _checkerService.CheckDecryptWithId(dto.HashIdDepartmental, Enums.Services.Departmental);
                 if (checkDepartmental != null)
                 {
                     dto.IdDepartmental = checkDepartmental.Result;
@@ -78,7 +78,7 @@ namespace TradeUnionCommittee.BLL.Services.Employee
 
             if (dto.SocialActivity)
             {
-                var checkSocialActivity = await _checkerService.CheckDecryptAndTupleInDbWithId(dto.HashIdSocialActivity, Enums.Services.SocialActivity);
+                var checkSocialActivity = await _checkerService.CheckDecryptWithId(dto.HashIdSocialActivity, Enums.Services.SocialActivity);
                 if (checkSocialActivity != null)
                 {
                     dto.IdSocialActivity = checkSocialActivity.Result;
@@ -91,7 +91,7 @@ namespace TradeUnionCommittee.BLL.Services.Employee
 
             if (dto.Privileges)
             {
-                var checkPrivileges = await _checkerService.CheckDecryptAndTupleInDbWithId(dto.HashIdPrivileges, Enums.Services.Privileges);
+                var checkPrivileges = await _checkerService.CheckDecryptWithId(dto.HashIdPrivileges, Enums.Services.Privileges);
                 if (checkPrivileges != null)
                 {
                     dto.IdPrivileges = checkPrivileges.Result;
@@ -224,7 +224,7 @@ namespace TradeUnionCommittee.BLL.Services.Employee
 
         public async Task<ActualResult> DeleteAsync(string hashId)
         {
-            var check = await _checkerService.CheckDecryptAndTupleInDbWithId(hashId, Enums.Services.Employee);
+            var check = await _checkerService.CheckDecryptWithId(hashId, Enums.Services.Employee);
             if (check.IsValid)
             {
                 return _mapperService.Mapper.Map<ActualResult>(await DeleteAsync(check.Result));

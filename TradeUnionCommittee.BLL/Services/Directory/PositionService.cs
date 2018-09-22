@@ -30,7 +30,7 @@ namespace TradeUnionCommittee.BLL.Services.Directory
 
         public async Task<ActualResult<DirectoryDTO>> GetAsync(string hashId)
         {
-            var check = await _checkerService.CheckDecryptAndTupleInDbWithId(hashId, Enums.Services.Position);
+            var check = await _checkerService.CheckDecryptWithId(hashId, Enums.Services.Position);
             return check.IsValid 
                 ? _mapperService.Mapper.Map<ActualResult<DirectoryDTO>>(await _database.PositionRepository.Get(check.Result)) 
                 : new ActualResult<DirectoryDTO>(check.ErrorsList);
@@ -48,7 +48,7 @@ namespace TradeUnionCommittee.BLL.Services.Directory
 
         public async Task<ActualResult> UpdateAsync(DirectoryDTO dto)
         {
-            var check = await _checkerService.CheckDecryptAndTupleInDbWithId(dto.HashId, Enums.Services.Position);
+            var check = await _checkerService.CheckDecryptWithId(dto.HashId, Enums.Services.Position);
             if (check.IsValid)
             {
                 if (!await CheckNameAsync(dto.Name))
@@ -63,7 +63,7 @@ namespace TradeUnionCommittee.BLL.Services.Directory
 
         public async Task<ActualResult> DeleteAsync(string hashId)
         {
-            var check = await _checkerService.CheckDecryptAndTupleInDbWithId(hashId, Enums.Services.Position);
+            var check = await _checkerService.CheckDecryptWithId(hashId, Enums.Services.Position);
             if (check.IsValid)
             {
                 await _database.PositionRepository.Delete(check.Result);
