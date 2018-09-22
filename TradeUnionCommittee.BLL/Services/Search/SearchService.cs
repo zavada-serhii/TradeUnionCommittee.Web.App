@@ -43,7 +43,7 @@ namespace TradeUnionCommittee.BLL.Services.Search
                     MainSubdivisionAbbreviation = s.Abbreviation,
                     SubordinateSubdivision = s.Id == ss.Id ? null : ss.Name,
                     SubordinateSubdivisionAbbreviation = s.Id == ss.Id ? null : ss.Abbreviation
-                }).ToList();
+                }).OrderBy(x =>x.IdUser).ToList();
 
             return new ActualResult<IEnumerable<ResultSearchDTO>> { Result = result };
         }

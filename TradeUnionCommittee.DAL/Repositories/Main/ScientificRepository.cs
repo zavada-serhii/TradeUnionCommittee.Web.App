@@ -18,21 +18,17 @@ namespace TradeUnionCommittee.DAL.Repositories.Main
 
         public override async  Task<ActualResult<Scientific>> Get(long id)
         {
-            var result = new ActualResult<Scientific>();
             try
             {
-                result.Result = await _db.Scientific.AsNoTracking().FirstOrDefaultAsync(x => x.IdEmployee == id);
-
-                if (result.Result == null)
+                return new ActualResult<Scientific>
                 {
-                    return new ActualResult<Scientific>("Data has been deleted or changed!");
-                }
+                    Result = await _db.Scientific.AsNoTracking().FirstOrDefaultAsync(x => x.IdEmployee == id)
+                };
             }
             catch (Exception e)
             {
                 return new ActualResult<Scientific>(e.Message);
             }
-            return result;
         }
     }
 }

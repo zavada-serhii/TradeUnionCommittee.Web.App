@@ -99,7 +99,7 @@ function getSubordinateSubdivision(subordinateSubdivision)
     }
     else
     {
-        $("#subordinateSubdivision").append("<option>Кафедри відсутні</option>");
+        $("#subordinateSubdivision").append("<option value value = null >Кафедри відсутні</option>");
     }
 }
 

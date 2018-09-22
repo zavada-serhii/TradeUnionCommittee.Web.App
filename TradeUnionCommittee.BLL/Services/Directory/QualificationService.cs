@@ -44,18 +44,6 @@ namespace TradeUnionCommittee.BLL.Services.Directory
                 return _mapper.Mapper.Map<ActualResult<QualificationDTO>>(scientific);
             }
             return new ActualResult<QualificationDTO>(Errors.TupleDeleted);
-            //if (scientific.Result != null)
-            //{
-            //    var dto = new QualificationDTO();
-            //    foreach (var result in scientific.Result)
-            //    {
-            //        dto.IdEmployee = result.IdEmployee;
-            //        dto.ScientificDegree = result.ScientificDegree;
-            //        dto.ScientificTitle = result.ScientificTitle;
-            //    }
-            //    return new ActualResult<QualificationDTO> {Result = dto};
-            //}
-            //return new ActualResult<QualificationDTO>(Errors.TupleDeleted);
         }
 
         public async Task<ActualResult> CreateQualificationEmployeeAsync(QualificationDTO dto)

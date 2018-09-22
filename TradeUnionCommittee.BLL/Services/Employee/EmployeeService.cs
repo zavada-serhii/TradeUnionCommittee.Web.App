@@ -179,7 +179,7 @@ namespace TradeUnionCommittee.BLL.Services.Employee
             employee.Result.NameInstitution = education.Result.NameInstitution;
             employee.Result.YearReceiving = education.Result.YearReceiving;
 
-            if (scientifick != null)
+            if (scientifick.Result != null)
             {
                 employee.Result.ScientifickDegree = scientifick.Result.ScientificDegree;
                 employee.Result.ScientifickTitle = scientifick.Result.ScientificTitle;
