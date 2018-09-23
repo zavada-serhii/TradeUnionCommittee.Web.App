@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using TradeUnionCommittee.BLL.BL;
 using TradeUnionCommittee.BLL.DTO;
 using TradeUnionCommittee.BLL.Interfaces.Directory;
 using TradeUnionCommittee.BLL.Utilities;
 using TradeUnionCommittee.Common.ActualResults;
+using TradeUnionCommittee.Common.Enums;
 using TradeUnionCommittee.DAL.Entities;
 using TradeUnionCommittee.DAL.Interfaces;
 
@@ -15,23 +15,23 @@ namespace TradeUnionCommittee.BLL.Services.Directory
     {
         private readonly IUnitOfWork _database;
         private readonly IAutoMapperUtilities _mapperService;
-        private readonly ICheckerService _checkerService;
+        private readonly IHashIdUtilities _hashIdUtilities;
 
-        public TravelService(IUnitOfWork database, IAutoMapperUtilities mapperService, ICheckerService checkerService)
+        public TravelService(IUnitOfWork database, IAutoMapperUtilities mapperService, IHashIdUtilities hashIdUtilities)
         {
             _database = database;
             _mapperService = mapperService;
-            _checkerService = checkerService;
+            _hashIdUtilities = hashIdUtilities;
         }
 
         public async Task<ActualResult<IEnumerable<TravelDTO>>> GetAllAsync() =>
-            await Task.Run(() => _mapperService.Mapper.Map<ActualResult<IEnumerable<TravelDTO>>>(_database.EventRepository.Find(x => x.TypeId == 1)));
+            _mapperService.Mapper.Map<ActualResult<IEnumerable<TravelDTO>>>(await _database.EventRepository.Find(x => x.TypeId == 1));
 
         public async Task<ActualResult<TravelDTO>> GetAsync(string hashId)
         {
-            var check = await _checkerService.CheckDecryptAndTupleInDbWithId(hashId, Enums.Services.Travel);
+            var check = await _hashIdUtilities.CheckDecryptWithId(hashId, Enums.Services.Travel);
             return check.IsValid
-                ? _mapperService.Mapper.Map<ActualResult<TravelDTO>>(_database.EventRepository.Get(check.Result))
+                ? _mapperService.Mapper.Map<ActualResult<TravelDTO>>(await _database.EventRepository.Get(check.Result))
                 : new ActualResult<TravelDTO>(check.ErrorsList);
         }
 
@@ -39,7 +39,7 @@ namespace TradeUnionCommittee.BLL.Services.Directory
         {
             if (!await CheckNameAsync(dto.Name))
             {
-                _database.EventRepository.Create(_mapperService.Mapper.Map<Event>(dto));
+                await _database.EventRepository.Create(_mapperService.Mapper.Map<Event>(dto));
                 return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
             }
             return new ActualResult(Errors.DuplicateData);
@@ -47,12 +47,12 @@ namespace TradeUnionCommittee.BLL.Services.Directory
 
         public async Task<ActualResult> UpdateAsync(TravelDTO dto)
         {
-            var check = await _checkerService.CheckDecryptAndTupleInDbWithId(dto.HashId, Enums.Services.Travel);
+            var check = await _hashIdUtilities.CheckDecryptWithId(dto.HashId, Enums.Services.Travel);
             if (check.IsValid)
             {
                 if (!await CheckNameAsync(dto.Name))
                 {
-                    _database.EventRepository.Update(_mapperService.Mapper.Map<Event>(dto));
+                    await _database.EventRepository.Update(_mapperService.Mapper.Map<Event>(dto));
                     return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
                 }
                 return new ActualResult(Errors.DuplicateData);
@@ -62,17 +62,20 @@ namespace TradeUnionCommittee.BLL.Services.Directory
 
         public async Task<ActualResult> DeleteAsync(string hashId)
         {
-            var check = await _checkerService.CheckDecryptAndTupleInDbWithId(hashId, Enums.Services.Travel, false);
+            var check = await _hashIdUtilities.CheckDecryptWithId(hashId, Enums.Services.Travel);
             if (check.IsValid)
             {
-                _database.EventRepository.Delete(check.Result);
+                await _database.EventRepository.Delete(check.Result);
                 return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
             }
             return new ActualResult(check.ErrorsList);
         }
 
-        public async Task<bool> CheckNameAsync(string name) =>
-            await Task.Run(() => _database.EventRepository.Find(p => p.Name == name).Result.Any());
+        public async Task<bool> CheckNameAsync(string name)
+        {
+            var result = await _database.EventRepository.Find(p => p.Name == name && p.TypeId == 1);
+            return result.Result.Any();
+        }
 
         public void Dispose()
         {

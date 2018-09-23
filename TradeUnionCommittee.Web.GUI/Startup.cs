@@ -7,15 +7,13 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using System;
-using System.IO;
 using TradeUnionCommittee.BLL.Extensions;
+using TradeUnionCommittee.BLL.Utilities;
 using TradeUnionCommittee.Web.GUI.AdditionalSettings;
 using TradeUnionCommittee.Web.GUI.AdditionalSettings.DropDownLists;
 using TradeUnionCommittee.Web.GUI.AdditionalSettings.Oops;
 using TradeUnionCommittee.Web.GUI.FluentValidation;
-using TradeUnionCommittee.Web.GUI.Logger;
 using TradeUnionCommittee.Web.GUI.Models;
 
 namespace TradeUnionCommittee.Web.GUI
@@ -51,7 +49,7 @@ namespace TradeUnionCommittee.Web.GUI
             });
 
             services
-                .AddTradeUnionCommitteeServiceModule(Configuration.GetConnectionString("DefaultConnection"))
+                .AddTradeUnionCommitteeServiceModule(Configuration.GetConnectionString("DefaultConnection"), Configuration.GetSection("HashIdUtilitiesSettings").Get<HashIdUtilitiesSetting>())
                 .AddMvc()
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
                 .AddFluentValidation();
@@ -61,11 +59,8 @@ namespace TradeUnionCommittee.Web.GUI
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-            loggerFactory.AddFile(Path.Combine(Directory.GetCurrentDirectory(), "logger.json"));
-            loggerFactory.CreateLogger("FileLogger");
-
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

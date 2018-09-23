@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using TradeUnionCommittee.Common.ActualResults;
 using TradeUnionCommittee.DAL.EF;
 using TradeUnionCommittee.DAL.Entities;
@@ -14,14 +15,14 @@ namespace TradeUnionCommittee.DAL.Repositories.Directories
             _dbContext = db;
         }
 
-        public override ActualResult Create(Subdivisions item)
+        public override async Task<ActualResult> Create(Subdivisions item)
         {
             var result = new ActualResult();
             try
             {
                 if (item.IdSubordinate == null || item.IdSubordinate == 0)
                 {
-                    _dbContext.Subdivisions.Add(new Subdivisions
+                    await _dbContext.Subdivisions.AddAsync(new Subdivisions
                     {
                         Name = item.Name,
                         Abbreviation = item.Abbreviation
@@ -29,7 +30,7 @@ namespace TradeUnionCommittee.DAL.Repositories.Directories
                 }
                 else
                 {
-                    _dbContext.Subdivisions.Add(new Subdivisions
+                    await _dbContext.Subdivisions.AddAsync(new Subdivisions
                     {
                         Name = item.Name,
                         Abbreviation = item.Abbreviation,
@@ -40,12 +41,9 @@ namespace TradeUnionCommittee.DAL.Repositories.Directories
             }
             catch (Exception e)
             {
-                result.IsValid = false;
-                result.ErrorsList.Add(e.Message);
+               return new ActualResult(e.Message);
             }
             return result;
         }
-
-        
     }
 }

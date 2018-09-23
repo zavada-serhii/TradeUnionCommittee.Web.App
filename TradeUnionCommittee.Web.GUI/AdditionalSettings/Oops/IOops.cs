@@ -5,6 +5,6 @@ namespace TradeUnionCommittee.Web.GUI.AdditionalSettings.Oops
 {
     public interface IOops
     {
-        IActionResult OutPutError(string backController, string backAction, List<string> errors);
+        IActionResult OutPutError(string backController, string backAction, IEnumerable<string> errors);
     }
 }

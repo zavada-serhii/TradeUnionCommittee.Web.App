@@ -115,6 +115,11 @@ namespace TradeUnionCommittee.BLL.Utilities
                         .ForMember(d => d.Id, c => c.MapFrom(x => _hashIdUtilities.DecryptLong(x.HashId, Enums.Services.Departmental)))
                         .ForMember(d => d.Type, c => c.UseValue(2));
 
+                    map.CreateMap<Scientific, QualificationDTO>()
+                        .ReverseMap()
+                        .ForMember(d => d.Id, c => c.MapFrom(x => x.Id));
+
+
                     //------------------------------------------------------------------------------
 
                     // -- Mapping for create employee

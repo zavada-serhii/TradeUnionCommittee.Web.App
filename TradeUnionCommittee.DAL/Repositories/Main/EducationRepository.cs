@@ -1,5 +1,6 @@
-﻿using System;
-using System.Linq;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
+using System.Threading.Tasks;
 using TradeUnionCommittee.Common.ActualResults;
 using TradeUnionCommittee.DAL.EF;
 using TradeUnionCommittee.DAL.Entities;
@@ -15,17 +16,16 @@ namespace TradeUnionCommittee.DAL.Repositories.Main
             _db = db;
         }
 
-        public override ActualResult<Education> Get(long id)
+        public override async Task<ActualResult<Education>> Get(long id)
         {
             var result = new ActualResult<Education>();
             try
             {
-                result.Result = _db.Education.FirstOrDefault(x => x.IdEmployee == id);
+                result.Result = await _db.Education.FirstOrDefaultAsync(x => x.IdEmployee == id);
             }
             catch (Exception e)
             {
-                result.IsValid = false;
-                result.ErrorsList.Add(e.Message);
+                return new ActualResult<Education>(e.Message);
             }
             return result;
         }

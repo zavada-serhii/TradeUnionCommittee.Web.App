@@ -1,5 +1,6 @@
-﻿using System;
-using System.Linq;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
+using System.Threading.Tasks;
 using TradeUnionCommittee.Common.ActualResults;
 using TradeUnionCommittee.DAL.EF;
 using TradeUnionCommittee.DAL.Entities;
@@ -15,25 +16,19 @@ namespace TradeUnionCommittee.DAL.Repositories.Main
             _db = db;
         }
 
-        public override ActualResult<Scientific> Get(long id)
+        public override async  Task<ActualResult<Scientific>> Get(long id)
         {
-            var result = new ActualResult<Scientific>();
             try
             {
-                result.Result = _db.Scientific.FirstOrDefault(x => x.IdEmployee == id);
-
-                if (result.Result == null)
+                return new ActualResult<Scientific>
                 {
-                    result.IsValid = false;
-                    result.ErrorsList.Add("Data has been deleted or changed!");
-                }
+                    Result = await _db.Scientific.AsNoTracking().FirstOrDefaultAsync(x => x.IdEmployee == id)
+                };
             }
             catch (Exception e)
             {
-                result.IsValid = false;
-                result.ErrorsList.Add(e.Message);
+                return new ActualResult<Scientific>(e.Message);
             }
-            return result;
         }
     }
 }
