@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using TradeUnionCommittee.BLL.BL;
 using TradeUnionCommittee.BLL.DTO;
 using TradeUnionCommittee.BLL.Interfaces.Directory;
 using TradeUnionCommittee.BLL.Utilities;
@@ -14,13 +13,13 @@ namespace TradeUnionCommittee.BLL.Services.Directory
     {
         private readonly IUnitOfWork _database;
         private readonly IAutoMapperUtilities _mapperService;
-        private readonly ICheckerService _checkerService;
+        private readonly IHashIdUtilities _hashIdUtilities;
 
-        public DormitoryService(IUnitOfWork database, IAutoMapperUtilities mapperService, ICheckerService checkerService)
+        public DormitoryService(IUnitOfWork database, IAutoMapperUtilities mapperService, IHashIdUtilities hashIdUtilities)
         {
             _database = database;
             _mapperService = mapperService;
-            _checkerService = checkerService;
+            _hashIdUtilities = hashIdUtilities;
         }
 
         public async Task<ActualResult<IEnumerable<DormitoryDTO>>> GetAllAsync() =>
@@ -28,7 +27,7 @@ namespace TradeUnionCommittee.BLL.Services.Directory
 
         public async Task<ActualResult<DormitoryDTO>> GetAsync(string hashId)
         {
-            var check = await _checkerService.CheckDecryptWithId(hashId, Enums.Services.Dormitory);
+            var check = await _hashIdUtilities.CheckDecryptWithId(hashId, Enums.Services.Dormitory);
             return check.IsValid
                 ? _mapperService.Mapper.Map<ActualResult<DormitoryDTO>>(await _database.AddressPublicHouseRepository.Get(check.Result))
                 : new ActualResult<DormitoryDTO>(check.ErrorsList);
@@ -42,7 +41,7 @@ namespace TradeUnionCommittee.BLL.Services.Directory
 
         public async Task<ActualResult> UpdateAsync(DormitoryDTO dto)
         {
-            var check = await _checkerService.CheckDecryptWithId(dto.HashId, Enums.Services.Dormitory);
+            var check = await _hashIdUtilities.CheckDecryptWithId(dto.HashId, Enums.Services.Dormitory);
             if (check.IsValid)
             {
                 await _database.AddressPublicHouseRepository.Update(_mapperService.Mapper.Map<AddressPublicHouse>(dto));
@@ -53,7 +52,7 @@ namespace TradeUnionCommittee.BLL.Services.Directory
 
         public async Task<ActualResult> DeleteAsync(string hashId)
         {
-            var check = await _checkerService.CheckDecryptWithId(hashId, Enums.Services.Dormitory);
+            var check = await _hashIdUtilities.CheckDecryptWithId(hashId, Enums.Services.Dormitory);
             if (check.IsValid)
             {
                 await _database.AddressPublicHouseRepository.Delete(check.Result);

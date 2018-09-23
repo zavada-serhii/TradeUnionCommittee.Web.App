@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using TradeUnionCommittee.BLL.BL;
 using TradeUnionCommittee.BLL.DTO;
 using TradeUnionCommittee.BLL.Interfaces.Directory;
 using TradeUnionCommittee.BLL.Utilities;
@@ -16,13 +15,13 @@ namespace TradeUnionCommittee.BLL.Services.Directory
     {
         private readonly IUnitOfWork _database;
         private readonly IAutoMapperUtilities _mapperService;
-        private readonly ICheckerService _checkerService;
+        private readonly IHashIdUtilities _hashIdUtilities;
 
-        public TravelService(IUnitOfWork database, IAutoMapperUtilities mapperService, ICheckerService checkerService)
+        public TravelService(IUnitOfWork database, IAutoMapperUtilities mapperService, IHashIdUtilities hashIdUtilities)
         {
             _database = database;
             _mapperService = mapperService;
-            _checkerService = checkerService;
+            _hashIdUtilities = hashIdUtilities;
         }
 
         public async Task<ActualResult<IEnumerable<TravelDTO>>> GetAllAsync() =>
@@ -30,7 +29,7 @@ namespace TradeUnionCommittee.BLL.Services.Directory
 
         public async Task<ActualResult<TravelDTO>> GetAsync(string hashId)
         {
-            var check = await _checkerService.CheckDecryptWithId(hashId, Enums.Services.Travel);
+            var check = await _hashIdUtilities.CheckDecryptWithId(hashId, Enums.Services.Travel);
             return check.IsValid
                 ? _mapperService.Mapper.Map<ActualResult<TravelDTO>>(await _database.EventRepository.Get(check.Result))
                 : new ActualResult<TravelDTO>(check.ErrorsList);
@@ -48,7 +47,7 @@ namespace TradeUnionCommittee.BLL.Services.Directory
 
         public async Task<ActualResult> UpdateAsync(TravelDTO dto)
         {
-            var check = await _checkerService.CheckDecryptWithId(dto.HashId, Enums.Services.Travel);
+            var check = await _hashIdUtilities.CheckDecryptWithId(dto.HashId, Enums.Services.Travel);
             if (check.IsValid)
             {
                 if (!await CheckNameAsync(dto.Name))
@@ -63,7 +62,7 @@ namespace TradeUnionCommittee.BLL.Services.Directory
 
         public async Task<ActualResult> DeleteAsync(string hashId)
         {
-            var check = await _checkerService.CheckDecryptWithId(hashId, Enums.Services.Travel);
+            var check = await _hashIdUtilities.CheckDecryptWithId(hashId, Enums.Services.Travel);
             if (check.IsValid)
             {
                 await _database.EventRepository.Delete(check.Result);
