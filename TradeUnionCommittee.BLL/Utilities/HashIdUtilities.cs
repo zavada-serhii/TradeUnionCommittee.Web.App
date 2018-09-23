@@ -2,6 +2,14 @@
 
 namespace TradeUnionCommittee.BLL.Utilities
 {
+    public class HashIdUtilitiesSetting
+    {
+        public string Salt { get; set; }
+        public int MinHashLenght { get; set; }
+        public string Alphabet { get; set; }
+        public string Seps { get; set; }
+    }
+
     public interface IHashIdUtilities
     {
         long DecryptLong(string cipherText, Enums.Services service);
@@ -11,14 +19,22 @@ namespace TradeUnionCommittee.BLL.Utilities
 
     internal sealed class HashIdUtilities : IHashIdUtilities
     {
-        private const string Salt = "Development Salt";
-        private const int MinHashLenght = 5;
-        private const string Alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
-        private const string Seps = "TradeUnionCommittee.BLL.Assembly.Development.Seps";
+        private readonly string _salt;
+        private readonly int _minHashLenght;
+        private readonly string _alphabet;
+        private readonly string _seps;
+
+        public HashIdUtilities(HashIdUtilitiesSetting setting)
+        {
+            _salt = setting.Salt;
+            _minHashLenght = setting.MinHashLenght;
+            _alphabet = setting.Alphabet;
+            _seps = setting.Seps;
+        }
 
         private Hashids ObjectHashids(Enums.Services service)
         {
-            return new Hashids($"{Salt} {AdditionalSalt(service)}", MinHashLenght, Alphabet, Seps);
+            return new Hashids($"{_salt} {AdditionalSalt(service)}", _minHashLenght, _alphabet, _seps);
         }
 
         public string EncryptLong(long plainLong, Enums.Services service)

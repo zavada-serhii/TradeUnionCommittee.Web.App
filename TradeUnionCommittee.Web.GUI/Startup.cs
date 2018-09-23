@@ -9,6 +9,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using TradeUnionCommittee.BLL.Extensions;
+using TradeUnionCommittee.BLL.Utilities;
 using TradeUnionCommittee.Web.GUI.AdditionalSettings;
 using TradeUnionCommittee.Web.GUI.AdditionalSettings.DropDownLists;
 using TradeUnionCommittee.Web.GUI.AdditionalSettings.Oops;
@@ -48,7 +49,7 @@ namespace TradeUnionCommittee.Web.GUI
             });
 
             services
-                .AddTradeUnionCommitteeServiceModule(Configuration.GetConnectionString("DefaultConnection"))
+                .AddTradeUnionCommitteeServiceModule(Configuration.GetConnectionString("DefaultConnection"), Configuration.GetSection("HashIdUtilitiesSettings").Get<HashIdUtilitiesSetting>())
                 .AddMvc()
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
                 .AddFluentValidation();
