@@ -21,6 +21,15 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Search
 
         [HttpGet]
         [Authorize(Roles = "Admin,Accountant,Deputy")]
+        public IActionResult Index()
+        {
+            return View();
+        }
+
+        //------------------------------------------------------------------------------------------------------------------------------------------
+
+        [HttpGet]
+        [Authorize(Roles = "Admin,Accountant,Deputy")]
         public async Task<IActionResult> ResultSearch()
         {
             var result = await _services.ListAddedEmployeesTemp();
