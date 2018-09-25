@@ -13,6 +13,7 @@ using TradeUnionCommittee.DAL.Repositories.Account;
 using TradeUnionCommittee.DAL.Repositories.Directories;
 using TradeUnionCommittee.DAL.Repositories.Lists;
 using TradeUnionCommittee.DAL.Repositories.Main;
+using TradeUnionCommittee.DAL.Repositories.Search;
 
 namespace TradeUnionCommittee.DAL.Repositories
 {
@@ -35,6 +36,7 @@ namespace TradeUnionCommittee.DAL.Repositories
         //------------------------------------------------------------------------------------------------------------------------------------------
         
         private AccountRepository _accountRepository;
+        private SearchRepository _searchRepository;
 
         //------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -94,6 +96,7 @@ namespace TradeUnionCommittee.DAL.Repositories
         //------------------------------------------------------------------------------------------------------------------------------------------
 
         public IAccountRepository AccountRepository => _accountRepository ?? (_accountRepository = new AccountRepository(_userManager, _signInManager, _roleManager));
+        public ISearchRepository SearchRepository => _searchRepository ?? (_searchRepository = new SearchRepository(_context));
 
         //------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -149,7 +152,7 @@ namespace TradeUnionCommittee.DAL.Repositories
         public IRepository<EventFamily> EventFamilyRepository => _eventFamilyRepository ?? (_eventFamilyRepository = new EventFamilyRepository(_context));
         public IRepository<CulturalFamily> CulturalFamilyRepository => _culturalFamilyRepository ?? (_culturalFamilyRepository = new CulturalFamilyRepository(_context));
         public IRepository<ActivityFamily> ActivityFamilyRepository => _activityFamilyRepository ?? (_activityFamilyRepository = new ActivityFamilyRepository(_context));
-
+        
         //------------------------------------------------------------------------------------------------------------------------------------------
 
         public async Task<ActualResult> SaveAsync()

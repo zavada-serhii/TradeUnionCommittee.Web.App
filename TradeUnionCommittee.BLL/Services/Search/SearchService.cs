@@ -47,5 +47,10 @@ namespace TradeUnionCommittee.BLL.Services.Search
 
             return new ActualResult<IEnumerable<ResultSearchDTO>> { Result = result };
         }
+
+        public async Task SearchFullName(string fullName)
+        {
+            await _database.SearchRepository.SearchByFullName(fullName);
+        }
     }
 }
