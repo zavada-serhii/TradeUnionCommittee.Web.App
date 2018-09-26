@@ -34,16 +34,16 @@
             </div>
 
             <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordionLeft">
-                @*<form asp-action="SearchFullName">*@
+                <form asp-action="SearchFullName">
                     <div class="card-body">
                         <div class="input-group col-md-12 pb-4 pt-4">
-                            <input name="fullname" type="text" class="form-control" placeholder="Иванов Иван Иванович" aria-label="Recipient's username" aria-describedby="basic-addon2" required>
+                            <input name="fullname" type="text" class="form-control" placeholder="Иванов Иван Иванович" aria-label="Recipient's username" aria-describedby="basic-addon2" required oninvalid="this.setCustomValidity('Будь ласка, введіть ПІБ')" oninput="setCustomValidity('')">
                             <div class="input-group-append">
                                 <input type="submit" value="Знайти" class="btn btn-success btn-block" />
                             </div>
                         </div>
                     </div>
-                @*</form>*@
+                </form>
             </div>
         </div>
 

@@ -7,7 +7,7 @@ namespace TradeUnionCommittee.BLL.Interfaces.Search
 {
     public interface ISearchService
     {
-        Task<ActualResult<IEnumerable<ResultSearchDTO>>> ListAddedEmployeesTemp();
         Task<ActualResult<IEnumerable<ResultSearchDTO>>> SearchFullName(string fullName);
+        void Dispose();
     }
 }

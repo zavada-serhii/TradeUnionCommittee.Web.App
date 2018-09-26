@@ -1,13 +1,13 @@
-﻿using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Internal;
-using Microsoft.EntityFrameworkCore.Storage;
-using Npgsql;
+﻿using Npgsql;
+using System;
 using System.Collections.Generic;
 using System.Data.Common;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using TradeUnionCommittee.DAL.EF;
+using TradeUnionCommittee.DAL.Enums;
+using TradeUnionCommittee.DAL.Extensions;
 using TradeUnionCommittee.DAL.Interfaces;
 
 namespace TradeUnionCommittee.DAL.Repositories.Search
@@ -21,10 +21,23 @@ namespace TradeUnionCommittee.DAL.Repositories.Search
             _dbContext = db;
         }
 
-        public async Task<IEnumerable<long>> SearchByFullName(string fullName)
+        public async Task<IEnumerable<long>> SearchByFullName(string fullName, AlgorithmSearchFullName algorithm)
         {
+            string sqlQuery;
+
+            switch (algorithm)
+            {
+                case AlgorithmSearchFullName.Gist:
+                    sqlQuery = "SELECT e.\"Id\", public.\"TrigramFullName\"(e) <-> @fullName AS \"ResultIds\" FROM public.\"Employee\" AS e ORDER BY \"ResultIds\" ASC LIMIT 10;"; ;
+                    break;
+                case AlgorithmSearchFullName.Gin:
+                    sqlQuery = "SELECT e.\"Id\", similarity(public.\"TrigramFullName\"(e), @fullName ) AS \"ResultIds\" FROM public.\"Employee\" AS e WHERE TRUE AND public.\"TrigramFullName\"(e) % @fullName ORDER BY \"ResultIds\" DESC LIMIT 10;";
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(algorithm), algorithm, null);
+            }
+
             var result = new List<long>();
-            const string sqlQuery = "SELECT e.\"Id\", public.\"TrigramFullName\"(e) <-> @fullName AS \"ResultIds\" FROM public.\"Employee\" AS e ORDER BY \"ResultIds\" ASC LIMIT 10;";
             var parameter = new NpgsqlParameter("@fullName", fullName);
             using (var dr = await _dbContext.Database.ExecuteSqlQueryAsync(sqlQuery, default(CancellationToken), parameter))
             {
@@ -32,30 +45,6 @@ namespace TradeUnionCommittee.DAL.Repositories.Search
                 result.AddRange(from DbDataRecord dbDataRecord in reader select (long) dbDataRecord["Id"]);
             }
             return result;
-        }
-    }
-
-    public static class DatabaseFacadeExtensions
-    {
-        public static RelationalDataReader ExecuteSqlQuery(this DatabaseFacade databaseFacade, string sql, params object[] parameters)
-        {
-            var concurrencyDetector = databaseFacade.GetService<IConcurrencyDetector>();
-            using (concurrencyDetector.EnterCriticalSection())
-            {
-                var rawSqlCommand = databaseFacade.GetService<IRawSqlCommandBuilder>().Build(sql, parameters);
-                return rawSqlCommand.RelationalCommand.ExecuteReader(databaseFacade.GetService<IRelationalConnection>(), rawSqlCommand.ParameterValues);
-            }
-        }
-
-        public static async Task<RelationalDataReader> ExecuteSqlQueryAsync(this DatabaseFacade databaseFacade, string sql,
-            CancellationToken cancellationToken = default(CancellationToken), params object[] parameters)
-        {
-            var concurrencyDetector = databaseFacade.GetService<IConcurrencyDetector>();
-            using (concurrencyDetector.EnterCriticalSection())
-            {
-                var rawSqlCommand = databaseFacade.GetService<IRawSqlCommandBuilder>().Build(sql, parameters);
-                return await rawSqlCommand.RelationalCommand.ExecuteReaderAsync(databaseFacade.GetService<IRelationalConnection>(), rawSqlCommand.ParameterValues, cancellationToken);
-            }
         }
     }
 }

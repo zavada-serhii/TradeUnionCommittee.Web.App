@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.DTO;
 using TradeUnionCommittee.BLL.Interfaces.Search;
 using TradeUnionCommittee.Common.ActualResults;
+using TradeUnionCommittee.DAL.Enums;
 using TradeUnionCommittee.DAL.Interfaces;
 
 namespace TradeUnionCommittee.BLL.Services.Search
@@ -17,54 +18,31 @@ namespace TradeUnionCommittee.BLL.Services.Search
             _database = database;
         }
 
-        public async Task<ActualResult<IEnumerable<ResultSearchDTO>>> ListAddedEmployeesTemp()
-        {
-            var subdivisions = await _database.SubdivisionsRepository.GetAll();
-            var positionEmployees = await _database.PositionEmployeesRepository.GetAll();
-            var employee = await _database.EmployeeRepository.GetAll();
-
-            var result = (from s in subdivisions.Result
-                from ss in subdivisions.Result
-                where s.Id == ss.Id || s.Id == ss.IdSubordinate
-                join pe in positionEmployees.Result
-                on ss.Id equals pe.IdSubdivision
-                join e in employee.Result
-                on pe.IdEmployee equals e.Id
-                where s.IdSubordinate == null
-                select new ResultSearchDTO
-                {
-                    IdUser = e.Id,
-                    FullName = e.FirstName + " " + e.SecondName + " " + e.Patronymic,
-                    SurnameAndInitials = e.FirstName + " " + e.SecondName[0] + ". " + e.Patronymic[0] + ".",
-                    BirthDate = e.BirthDate,
-                    MobilePhone = e.MobilePhone,
-                    CityPhone = e.CityPhone,
-                    MainSubdivision = s.Name,
-                    MainSubdivisionAbbreviation = s.Abbreviation,
-                    SubordinateSubdivision = s.Id == ss.Id ? null : ss.Name,
-                    SubordinateSubdivisionAbbreviation = s.Id == ss.Id ? null : ss.Abbreviation
-                }).OrderBy(x =>x.IdUser).ToList();
-
-            return new ActualResult<IEnumerable<ResultSearchDTO>> { Result = result };
-        }
+        //------------------------------------------------------------------------------------------------------------------------------------------
 
         public async Task<ActualResult<IEnumerable<ResultSearchDTO>>> SearchFullName(string fullName)
         {
-            var ids = await _database.SearchRepository.SearchByFullName(fullName);
-            var enumerable = ids as IList<long> ?? ids.ToList();
-            if (!enumerable.Any()) return new ActualResult<IEnumerable<ResultSearchDTO>>();
+            var ids = await _database.SearchRepository.SearchByFullName(fullName, AlgorithmSearchFullName.Gist);
+            if (!ids.Any()) return new ActualResult<IEnumerable<ResultSearchDTO>>();
 
             var listEmployee = new List<DAL.Entities.Employee>();
 
-            foreach (var id in enumerable)
+            foreach (var id in ids)
             {
                 var employees = await _database.EmployeeRepository.GetWithInclude(x => x.Id == id, p => p.PositionEmployees.IdSubdivisionNavigation.InverseIdSubordinateNavigation);
                 listEmployee.Add(employees.Result.FirstOrDefault());
             }
 
+            return new ActualResult<IEnumerable<ResultSearchDTO>> { Result = ResultFormation(listEmployee) };
+        }
+
+        //------------------------------------------------------------------------------------------------------------------------------------------
+        
+        private IEnumerable<ResultSearchDTO> ResultFormation(IEnumerable<DAL.Entities.Employee> employees)
+        {
             var result = new List<ResultSearchDTO>();
 
-            foreach (var e in listEmployee)
+            foreach (var employee in employees)
             {
                 string mainSubdivision;
                 string mainSubdivisionAbbreviation;
@@ -72,34 +50,47 @@ namespace TradeUnionCommittee.BLL.Services.Search
                 string subordinateSubdivision = null;
                 string subordinateSubdivisionAbbreviation = null;
 
-                if (e.PositionEmployees.IdSubdivisionNavigation.IdSubordinateNavigation != null)
+                if (employee.PositionEmployees.IdSubdivisionNavigation.IdSubordinateNavigation != null)
                 {
-                    mainSubdivision = e.PositionEmployees.IdSubdivisionNavigation.IdSubordinateNavigation.Name;
-                    mainSubdivisionAbbreviation = e.PositionEmployees.IdSubdivisionNavigation.IdSubordinateNavigation.Abbreviation;
-                    subordinateSubdivision = e.PositionEmployees.IdSubdivisionNavigation.Name;
-                    subordinateSubdivisionAbbreviation = e.PositionEmployees.IdSubdivisionNavigation.Abbreviation;
+                    mainSubdivision = employee.PositionEmployees.IdSubdivisionNavigation.IdSubordinateNavigation.Name;
+                    mainSubdivisionAbbreviation = employee.PositionEmployees.IdSubdivisionNavigation.IdSubordinateNavigation.Abbreviation;
+                    subordinateSubdivision = employee.PositionEmployees.IdSubdivisionNavigation.Name;
+                    subordinateSubdivisionAbbreviation = employee.PositionEmployees.IdSubdivisionNavigation.Abbreviation;
                 }
                 else
                 {
-                    mainSubdivision = e.PositionEmployees.IdSubdivisionNavigation.Name;
-                    mainSubdivisionAbbreviation = e.PositionEmployees.IdSubdivisionNavigation.Abbreviation;
+                    mainSubdivision = employee.PositionEmployees.IdSubdivisionNavigation.Name;
+                    mainSubdivisionAbbreviation = employee.PositionEmployees.IdSubdivisionNavigation.Abbreviation;
+                }
+
+                var patronymic = string.Empty;
+                if (!string.IsNullOrEmpty(employee.Patronymic))
+                {
+                    patronymic = $"{employee.Patronymic[0]}.";
                 }
 
                 result.Add(new ResultSearchDTO
                 {
-                    IdUser = e.Id,
-                    FullName = e.FirstName + " " + e.SecondName + " " + e.Patronymic,
-                    SurnameAndInitials = e.FirstName + " " + e.SecondName[0] + ". " + e.Patronymic[0] + ".",
-                    BirthDate = e.BirthDate,
-                    MobilePhone = e.MobilePhone,
-                    CityPhone = e.CityPhone,
+                    IdUser = employee.Id,
+                    FullName = $"{employee.FirstName} {employee.SecondName} {employee.Patronymic}",
+                    SurnameAndInitials = $"{employee.FirstName} {employee.SecondName[0]}. {patronymic}",
+                    BirthDate = employee.BirthDate,
+                    MobilePhone = employee.MobilePhone,
+                    CityPhone = employee.CityPhone,
                     MainSubdivision = mainSubdivision,
                     MainSubdivisionAbbreviation = mainSubdivisionAbbreviation,
                     SubordinateSubdivision = subordinateSubdivision,
                     SubordinateSubdivisionAbbreviation = subordinateSubdivisionAbbreviation
                 });
             }
-            return new ActualResult<IEnumerable<ResultSearchDTO>> { Result = result };
+            return result;
+        }
+
+        //------------------------------------------------------------------------------------------------------------------------------------------
+
+        public void Dispose()
+        {
+            _database.Dispose();
         }
     }
 }
