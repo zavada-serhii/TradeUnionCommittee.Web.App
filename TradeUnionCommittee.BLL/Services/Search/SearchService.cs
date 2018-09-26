@@ -50,7 +50,15 @@ namespace TradeUnionCommittee.BLL.Services.Search
 
         public async Task SearchFullName(string fullName)
         {
-            await _database.SearchRepository.SearchByFullName(fullName);
+            var ids = await _database.SearchRepository.SearchByFullName(fullName);
+
+            var listEmployee = new List<DAL.Entities.Employee>();
+
+            foreach (var id in ids)
+            {
+                var employee2 = await _database.EmployeeRepository.GetWithInclude(x => x.Id == id, p => p.PositionEmployees.IdSubdivisionNavigation.InverseIdSubordinateNavigation);
+                listEmployee.Add(employee2.Result.FirstOrDefault());
+            }
         }
     }
 }
