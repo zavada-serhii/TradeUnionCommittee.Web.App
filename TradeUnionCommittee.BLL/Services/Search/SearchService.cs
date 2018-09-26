@@ -35,7 +35,7 @@ namespace TradeUnionCommittee.BLL.Services.Search
                 {
                     IdUser = e.Id,
                     FullName = e.FirstName + " " + e.SecondName + " " + e.Patronymic,
-                    SurnameAndInitials = e.FirstName + " " + e.SecondName[0] + ". " + e.Patronymic[0] + ". ",
+                    SurnameAndInitials = e.FirstName + " " + e.SecondName[0] + ". " + e.Patronymic[0] + ".",
                     BirthDate = e.BirthDate,
                     MobilePhone = e.MobilePhone,
                     CityPhone = e.CityPhone,
@@ -48,17 +48,58 @@ namespace TradeUnionCommittee.BLL.Services.Search
             return new ActualResult<IEnumerable<ResultSearchDTO>> { Result = result };
         }
 
-        public async Task SearchFullName(string fullName)
+        public async Task<ActualResult<IEnumerable<ResultSearchDTO>>> SearchFullName(string fullName)
         {
             var ids = await _database.SearchRepository.SearchByFullName(fullName);
+            var enumerable = ids as IList<long> ?? ids.ToList();
+            if (!enumerable.Any()) return new ActualResult<IEnumerable<ResultSearchDTO>>();
 
             var listEmployee = new List<DAL.Entities.Employee>();
 
-            foreach (var id in ids)
+            foreach (var id in enumerable)
             {
-                var employee2 = await _database.EmployeeRepository.GetWithInclude(x => x.Id == id, p => p.PositionEmployees.IdSubdivisionNavigation.InverseIdSubordinateNavigation);
-                listEmployee.Add(employee2.Result.FirstOrDefault());
+                var employees = await _database.EmployeeRepository.GetWithInclude(x => x.Id == id, p => p.PositionEmployees.IdSubdivisionNavigation.InverseIdSubordinateNavigation);
+                listEmployee.Add(employees.Result.FirstOrDefault());
             }
+
+            var result = new List<ResultSearchDTO>();
+
+            foreach (var e in listEmployee)
+            {
+                string mainSubdivision;
+                string mainSubdivisionAbbreviation;
+
+                string subordinateSubdivision = null;
+                string subordinateSubdivisionAbbreviation = null;
+
+                if (e.PositionEmployees.IdSubdivisionNavigation.IdSubordinateNavigation != null)
+                {
+                    mainSubdivision = e.PositionEmployees.IdSubdivisionNavigation.IdSubordinateNavigation.Name;
+                    mainSubdivisionAbbreviation = e.PositionEmployees.IdSubdivisionNavigation.IdSubordinateNavigation.Abbreviation;
+                    subordinateSubdivision = e.PositionEmployees.IdSubdivisionNavigation.Name;
+                    subordinateSubdivisionAbbreviation = e.PositionEmployees.IdSubdivisionNavigation.Abbreviation;
+                }
+                else
+                {
+                    mainSubdivision = e.PositionEmployees.IdSubdivisionNavigation.Name;
+                    mainSubdivisionAbbreviation = e.PositionEmployees.IdSubdivisionNavigation.Abbreviation;
+                }
+
+                result.Add(new ResultSearchDTO
+                {
+                    IdUser = e.Id,
+                    FullName = e.FirstName + " " + e.SecondName + " " + e.Patronymic,
+                    SurnameAndInitials = e.FirstName + " " + e.SecondName[0] + ". " + e.Patronymic[0] + ".",
+                    BirthDate = e.BirthDate,
+                    MobilePhone = e.MobilePhone,
+                    CityPhone = e.CityPhone,
+                    MainSubdivision = mainSubdivision,
+                    MainSubdivisionAbbreviation = mainSubdivisionAbbreviation,
+                    SubordinateSubdivision = subordinateSubdivision,
+                    SubordinateSubdivisionAbbreviation = subordinateSubdivisionAbbreviation
+                });
+            }
+            return new ActualResult<IEnumerable<ResultSearchDTO>> { Result = result };
         }
     }
 }
