@@ -12,7 +12,7 @@
         <a class="nav-link active" id="pills-home-tab" data-toggle="pill" href="#pills-home" role="tab" aria-controls="pills-home" aria-selected="true">Пошуки</a>
     </li>
     <li class="nav-item">
-        <a class="nav-link" id="pills-profile-tab" data-toggle="pill" href="#pills-profile" role="tab" aria-controls="pills-profile" aria-selected="false">Пошуки в форматі PDF</a>
+        <a class="nav-link" id="pills-profile-tab" data-toggle="pill" href="#pills-profile" role="tab" aria-controls="pills-profile" aria-selected="false">Пошуки в форматі PDF(In the future)</a>
     </li>
 </ul>
 <hr>
@@ -58,26 +58,26 @@
                 </h5>
             </div>
             <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionLeft">
-                @*<form asp-action="SearchSex">*@
+                <form asp-action="SearchGender">
                     <div class="card-body pb-3 pt-3">
                         <div class="form-group col-lg-12">
                             <label>Стать</label>
-                            <select class="custom-select" name="sex">
-                                <option value="Чоловіча">Чоловіча</option>
-                                <option value="Жіноча">Жіноча</option>
+                            <select class="custom-select" name="gender">
+                                <option value="Male">Чоловіча</option>
+                                <option value="Female">Жіноча</option>
                             </select>
                         </div>
                         <div class="form-group col-lg-12">
                             <label>Структурний пiдроздiл</label><br>
-                            <select class="custom-select" name="subdivisionsex" asp-items="@ViewBag.MainSubdivision">
-                                <option>Виберіть підрозділ</option>
+                            <select class="custom-select" name="subdivisiongender" asp-items="@ViewBag.MainSubdivision">
+                                <option value="" >Оберіть підрозділ</option>
                             </select>
                         </div>
                         <div class="input-group-append col-md-12">
                             <input type="submit" value="Знайти" class="btn btn-success btn-block" />
                         </div>
                     </div>
-                @*</form>*@
+                </form>
             </div>
         </div>
 
@@ -92,7 +92,7 @@
                 </h5>
             </div>
             <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordionLeft">
-                @*<form asp-action="SearchPosition">*@
+                <form asp-action="SearchPosition">
                     <div class="card-body pb-3 pt-3">
                         <div class="form-group col-lg-12">
                             <label>Посада</label>
@@ -101,14 +101,14 @@
                         <div class="form-group col-lg-12">
                             <label>Структурний пiдроздiл</label><br>
                             <select class="custom-select" name="subdivisionposition" asp-items="@ViewBag.MainSubdivision">
-                                <option>Виберіть підрозділ</option>
+                                <option value="">Оберіть підрозділ</option>
                             </select>
                         </div>
                         <div class="input-group-append col-md-12">
                             <input type="submit" value="Знайти" class="btn btn-success btn-block"/>
                         </div>
                     </div>
-                @*</form>*@
+                </form>
             </div>
         </div>
 
@@ -123,23 +123,23 @@
                 </h5>
             </div>
             <div id="collapseFour" class="collapse" aria-labelledby="headingFour" data-parent="#accordionLeft">
-                @*<form asp-action="SearchPrivileges">*@
+                <form asp-action="SearchPrivilege">
                     <div class="card-body pb-3 pt-3">
                         <div class="form-group col-lg-12">
                             <label>Пiльгова категорiя</label>
-                            <select class="custom-select" name="privileges" asp-items="@ViewBag.Privilegies"></select>
+                            <select class="custom-select" name="privilege" asp-items="@ViewBag.Privilegies"></select>
                         </div>
                         <div class="form-group col-lg-12">
                             <label>Структурний пiдроздiл</label><br>
-                            <select class="custom-select" name="subdivisionprivileges" asp-items="@ViewBag.MainSubdivision">
-                                <option>Виберіть підрозділ</option>
+                            <select class="custom-select" name="subdivisionprivilege" asp-items="@ViewBag.MainSubdivision">
+                                <option value="">Оберіть підрозділ</option>
                             </select>
                         </div>
                         <div class="input-group-append col-md-12">
                             <input type="submit" value="Знайти" class="btn btn-success btn-block"/>
                         </div>
                     </div>
-                @*</form>*@
+                </form>
             </div>
         </div>
 

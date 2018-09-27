@@ -1,6 +1,6 @@
 ﻿namespace TradeUnionCommittee.DAL.Enums
 {
-    public enum AlgorithmSearchFullName
+    public enum TrigramSearch
     {
         Gist = 0,
         Gin = 1

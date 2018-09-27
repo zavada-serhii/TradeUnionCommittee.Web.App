@@ -6,6 +6,6 @@ namespace TradeUnionCommittee.DAL.Interfaces
 {
     public interface ISearchRepository
     {
-        Task<IEnumerable<long>> SearchByFullName(string fullName, AlgorithmSearchFullName algorithm);
+        Task<IEnumerable<long>> SearchByFullName(string fullName, TrigramSearch algorithm);
     }
 }
