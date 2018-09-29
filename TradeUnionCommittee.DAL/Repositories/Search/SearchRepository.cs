@@ -28,7 +28,7 @@ namespace TradeUnionCommittee.DAL.Repositories.Search
             switch (algorithm)
             {
                 case TrigramSearch.Gist:
-                    sqlQuery = "SELECT e.\"Id\", public.\"TrigramFullName\"(e) <-> @fullName AS \"ResultIds\" FROM public.\"Employee\" AS e ORDER BY \"ResultIds\" ASC LIMIT 10;"; ;
+                    sqlQuery = "SELECT e.\"Id\", public.\"TrigramFullName\"(e) <-> @fullName AS \"ResultIds\" FROM public.\"Employee\" AS e ORDER BY \"ResultIds\" ASC LIMIT 10;";
                     break;
                 case TrigramSearch.Gin:
                     sqlQuery = "SELECT e.\"Id\", similarity(public.\"TrigramFullName\"(e), @fullName ) AS \"ResultIds\" FROM public.\"Employee\" AS e WHERE TRUE AND public.\"TrigramFullName\"(e) % @fullName ORDER BY \"ResultIds\" DESC LIMIT 10;";

@@ -149,7 +149,7 @@
             <div class="card-header" id="headingTen">
                 <h5 class="mb-0">
                     <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseTen" aria-expanded="false" aria-controls="collapseNine">
-                        Пошук по пенciонерам та звiльненим
+                        Пошук по пенciонерам та звiльненим(In the future)
                     </button>
                 </h5>
             </div>
@@ -188,10 +188,10 @@
                 </h5>
             </div>
             <div id="collapseNine" class="collapse" aria-labelledby="headingNine" data-parent="#accordionLeft">
-                @*<form asp-action="SearchAccommodation">*@
+                <form asp-action="SearchAccommodation">
                     <div class="card-body pb-3 pt-3">
                         <div class="form-group col-lg-12">
-                            @*@foreach (var item in ViewBag.Accommodation)
+                            @foreach (var item in ViewBag.Accommodation)
                             {
                                 <label class="custom-control custom-radio">
                                     <input value="@item.Key" id="@item.Key" name="typeAccommodation" type="radio" class="custom-control-input">
@@ -199,9 +199,8 @@
                                     <span class="custom-control-description">@item.Value</span>
                                 </label>
                                 <br>
-                            }*@
+                            }
                         </div>
-
                         <div class="form-group col-lg-12">
                             <label>Номер гуртожитку</label><br>
                             <select class="custom-select" id="idDormitory" name="idDormitory" asp-items="@ViewBag.Dormitory"></select>
@@ -214,7 +213,7 @@
                             <input type="submit" value="Знайти" class="btn btn-success btn-block" />
                         </div>
                     </div>
-                @*</form>*@
+                </form>
             </div>
         </div>
     </div>
@@ -235,10 +234,10 @@
                 </h5>
             </div>
             <div id="collapseSix" class="collapse" aria-labelledby="headingSix" data-parent="#accordionExample">
-                @*<form asp-action="SearchBirthDate">*@
+                <form asp-action="SearchBirthDate">
                     <div class="card-body pb-3 pt-3">
                         <div class="form-group col-lg-6">
-                            @*@foreach (var item in ViewBag.TypeBirthDate)
+                            @foreach (var item in ViewBag.TypeBirthDate)
                             {
                                 <label class="custom-control custom-radio">
                                     <input value="@item.Key" id="@item.Key" name="typeBirthDate" type="radio" class="custom-control-input">
@@ -246,7 +245,7 @@
                                     <span class="custom-control-description">@item.Value</span>
                                 </label>
                                 <br>
-                            }*@
+                            }
                         </div>
                         <div class="form-group col-lg-12">
                             <label>Дата з</label><br>
@@ -260,7 +259,7 @@
                             <input type="submit" value="Знайти" class="btn btn-success btn-block" />
                         </div>
                     </div>
-                @*</form>*@
+                </form>
             </div>
         </div>
 
@@ -278,7 +277,7 @@
                 @*<form asp-action="SearchHobby">*@
                     <div class="card-body pb-3 pt-3">
                         <div class="form-group col-lg-6">
-                            @*@foreach (var item in ViewBag.TypeHobby)
+                            @foreach (var item in ViewBag.TypeHobby)
                             {
                                 <label class="custom-control custom-radio">
                                     <input value="@item.Key" id="@item.Key" name="typeHobby" type="radio" class="custom-control-input">
@@ -286,7 +285,7 @@
                                     <span class="custom-control-description">@item.Value</span>
                                 </label>
                                 <br>
-                            }*@
+                            }
                         </div>
                         <div class="form-group col-lg-12">
                             <label>Назва хобi</label><br>

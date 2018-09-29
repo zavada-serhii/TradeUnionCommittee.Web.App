@@ -65,7 +65,7 @@ $(document).ready(function ()
         var idSubordinateSubdivision = { id: $("#selectMain").val() };
         $.post("/Employee/GetSubordinateSubdivision", idSubordinateSubdivision, getSubordinateSubdivision);
     }
-    if (window.location.pathname === "/Search")
+    if (window.location.pathname === "/Search/Index")
     {
         document.getElementById("dormitory").checked = true;
         document.getElementById("idDepartmental").disabled = true;
@@ -90,7 +90,6 @@ function getSubordinateSubdivision(subordinateSubdivision)
     document.getElementById("subordinateSubdivision").innerHTML = " ";
     if (subordinateSubdivision !== null)
     {
-        //$("#subordinateSubdivision").append("<option>Виберіть кафедру</option>");
         $("#subordinateSubdivision").append("<option value value = null >Виберіть кафедру</option>");
         $.each(subordinateSubdivision, function ()
         {

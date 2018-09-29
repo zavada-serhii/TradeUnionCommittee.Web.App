@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.DTO;
@@ -122,6 +123,106 @@ namespace TradeUnionCommittee.BLL.Services.Search
                                 p => p.PrivilegeEmployees);
 
             return new ActualResult<IEnumerable<ResultSearchDTO>> { Result = ResultFormation(searchByGender.Result) };
+        }
+
+        //------------------------------------------------------------------------------------------------------------------------------------------
+
+        
+        public async Task<ActualResult<IEnumerable<ResultSearchDTO>>> SearchAccommodation(string typeAccommodation, string dormitory, string departmental)
+        {
+            switch (typeAccommodation)
+            {
+                case "dormitory":
+                    var idDormitory = _hashIdUtilities.DecryptLong(dormitory, Enums.Services.Dormitory);
+                    var searchByDormitory = await _database
+                        .EmployeeRepository
+                        .GetWithInclude(x => x.PublicHouseEmployees.Any(t => t.IdAddressPublicHouse == idDormitory),
+                                        p => p.PositionEmployees.IdSubdivisionNavigation.InverseIdSubordinateNavigation,
+                                        p => p.PublicHouseEmployees);
+                    return new ActualResult<IEnumerable<ResultSearchDTO>> { Result = ResultFormation(searchByDormitory.Result) };
+                case "departmental":
+                    var idDepartmental = _hashIdUtilities.DecryptLong(departmental, Enums.Services.Departmental);
+                    var searchByDepartmental = await _database
+                        .EmployeeRepository
+                        .GetWithInclude(x => x.PublicHouseEmployees.Any(t => t.IdAddressPublicHouse == idDepartmental),
+                                        p => p.PositionEmployees.IdSubdivisionNavigation.InverseIdSubordinateNavigation,
+                                        p => p.PublicHouseEmployees);
+                    return new ActualResult<IEnumerable<ResultSearchDTO>> { Result = ResultFormation(searchByDepartmental.Result) };
+                case "from-university":
+                    var searchByFromUniversity = await _database
+                        .EmployeeRepository
+                        .GetWithInclude(x => x.PrivateHouseEmployees.Any(t => t.DateReceiving != null),
+                                        p => p.PositionEmployees.IdSubdivisionNavigation.InverseIdSubordinateNavigation,
+                                        p => p.PrivateHouseEmployees);
+                    return new ActualResult<IEnumerable<ResultSearchDTO>> { Result = ResultFormation(searchByFromUniversity.Result) };
+                default:
+                    return new ActualResult<IEnumerable<ResultSearchDTO>>();
+            }
+        }
+
+        //------------------------------------------------------------------------------------------------------------------------------------------
+        
+        public async Task<ActualResult<IEnumerable<ResultSearchDTO>>> SearchBirthDate(string typeBirthDate, DateTime startDate, DateTime endDate)
+        {
+            switch (typeBirthDate)
+            {
+                case "employeeBirthDate":
+                    var searchByEmployeeBirthDate = await _database
+                        .EmployeeRepository
+                        .GetWithInclude(x => x.BirthDate >= startDate && x.BirthDate <= endDate,
+                                        p => p.PositionEmployees.IdSubdivisionNavigation.InverseIdSubordinateNavigation);
+                    return new ActualResult<IEnumerable<ResultSearchDTO>> { Result = ResultFormation(searchByEmployeeBirthDate.Result) };
+                case "childrenBirthDate":
+                    var searchByChildrenBirthDate = await _database
+                        .EmployeeRepository
+                        .GetWithInclude(x => x.Children.Any(t => t.BirthDate >= startDate && t.BirthDate <= endDate),
+                                        p => p.PositionEmployees.IdSubdivisionNavigation.InverseIdSubordinateNavigation,
+                                        p => p.Children);
+                    return new ActualResult<IEnumerable<ResultSearchDTO>> { Result = ResultFormation(searchByChildrenBirthDate.Result) };
+                case "grandChildrenBirthDate":
+                    var searchByGrandChildrenBirthDate = await _database
+                        .EmployeeRepository
+                        .GetWithInclude(x => x.GrandChildren.Any(t => t.BirthDate >= startDate && t.BirthDate <= endDate),
+                                        p => p.PositionEmployees.IdSubdivisionNavigation.InverseIdSubordinateNavigation,
+                                        p => p.GrandChildren);
+                    return new ActualResult<IEnumerable<ResultSearchDTO>> { Result = ResultFormation(searchByGrandChildrenBirthDate.Result) };
+                default:
+                    return new ActualResult<IEnumerable<ResultSearchDTO>>();
+            }
+        }
+
+        //------------------------------------------------------------------------------------------------------------------------------------------
+        
+        public async Task<ActualResult<IEnumerable<ResultSearchDTO>>> SearchHobby(string typeHobby, string hobby)
+        {
+            var idHobby = _hashIdUtilities.DecryptLong(hobby, Enums.Services.Hobby);
+
+            switch (typeHobby)
+            {
+                case "employeeHobby":
+                    var searchByEmployeeHobby = await _database
+                        .EmployeeRepository
+                        .GetWithInclude(x => x.HobbyEmployees.Any(t => t.Id == idHobby),
+                                        p => p.PositionEmployees.IdSubdivisionNavigation.InverseIdSubordinateNavigation,
+                                        p => p.HobbyEmployees);
+                    return new ActualResult<IEnumerable<ResultSearchDTO>> { Result = ResultFormation(searchByEmployeeHobby.Result) };
+                case "childrenHobby":
+                    var searchByChildrenHobby = await _database
+                        .EmployeeRepository
+                        .GetWithInclude(x => x.Children.Any(t => t.HobbyChildrens.Any(g => g.Id == idHobby)),
+                                        p => p.PositionEmployees.IdSubdivisionNavigation.InverseIdSubordinateNavigation,
+                                        p => p.Children);
+                    return new ActualResult<IEnumerable<ResultSearchDTO>> { Result = ResultFormation(searchByChildrenHobby.Result) };
+                case "grandChildrenHobby":
+                    var searchByGrandChildrenHobby = await _database
+                        .EmployeeRepository
+                        .GetWithInclude(x => x.GrandChildren.Any(t => t.HobbyGrandChildrens.Any(g => g.Id == idHobby)),
+                                        p => p.PositionEmployees.IdSubdivisionNavigation.InverseIdSubordinateNavigation,
+                                        p => p.GrandChildren);
+                    return new ActualResult<IEnumerable<ResultSearchDTO>> { Result = ResultFormation(searchByGrandChildrenHobby.Result) };
+                default:
+                    return new ActualResult<IEnumerable<ResultSearchDTO>>();
+            }
         }
 
         //------------------------------------------------------------------------------------------------------------------------------------------

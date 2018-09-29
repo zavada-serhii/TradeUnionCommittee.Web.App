@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System;
+using System.Collections.Generic;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.Interfaces.Search;
@@ -31,6 +33,7 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Search
 
         [HttpPost]
         [Authorize(Roles = "Admin,Accountant,Deputy")]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> SearchFullName([Bind("fullname")] string fullname)
         {
             var result = await _searchService.SearchFullName(fullname);
@@ -41,6 +44,7 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Search
 
         [HttpPost]
         [Authorize(Roles = "Admin,Accountant,Deputy")]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> SearchGender([Bind("gender,subdivisiongender")] string gender, string subdivisiongender)
         {
             var result = await _searchService.SearchGender(gender, subdivisiongender);
@@ -51,6 +55,7 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Search
 
         [HttpPost]
         [Authorize(Roles = "Admin,Accountant,Deputy")]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> SearchPosition([Bind("position,subdivisionposition")] string position, string subdivisionposition)
         {
             var result = await _searchService.SearchPosition(position, subdivisionposition);
@@ -61,9 +66,32 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Search
 
         [HttpPost]
         [Authorize(Roles = "Admin,Accountant,Deputy")]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> SearchPrivilege([Bind("privilege,subdivisionprivilege")] string privilege, string subdivisionprivilege)
         {
             var result = await _searchService.SearchPrivilege(privilege, subdivisionprivilege);
+            return View("ResultSearch", result.Result);
+        }
+
+        //------------------------------------------------------------------------------------------------------------------------------------------
+
+        [HttpPost]
+        [Authorize(Roles = "Admin,Accountant,Deputy")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> SearchAccommodation([Bind("typeAccommodation,idDormitory,idDepartmental")] string typeAccommodation, string idDormitory, string idDepartmental)
+        {
+            var result = await _searchService.SearchAccommodation(typeAccommodation, idDormitory, idDepartmental);
+            return View("ResultSearch", result.Result);
+        }
+
+        //------------------------------------------------------------------------------------------------------------------------------------------
+
+        [HttpPost]
+        [Authorize(Roles = "Admin,Accountant,Deputy")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> SearchBirthDate([Bind("typeBirthDate,startDateBirth,endDateBirth")] string typeBirthDate, DateTime startDateBirth, DateTime endDateBirth)
+        {
+            var result = await _searchService.SearchBirthDate(typeBirthDate, startDateBirth, endDateBirth);
             return View("ResultSearch", result.Result);
         }
 
@@ -77,6 +105,27 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Search
             ViewBag.Hobby = await _dropDownList.GetHobby();
             ViewBag.Dormitory = await _dropDownList.GetDormitory();
             ViewBag.Departmental = await _dropDownList.GetDepartmental();
+
+            ViewBag.Accommodation = new Dictionary<string, string>
+            {
+                { "dormitory", "Гуртожиток" },
+                { "departmental", "Вiдомче житло" },
+                { "from-university", "Житло надане унiверситетом" }
+            };
+
+            ViewBag.TypeBirthDate = new Dictionary<string, string>
+            {
+                { "employeeBirthDate", "Член профспілки" },
+                { "childrenBirthDate", "Дiти" },
+                { "grandChildrenBirthDate", "Онуки" }
+            };
+
+            ViewBag.TypeHobby = new Dictionary<string, string>
+            {
+                { "employeeHobby", "Член профспілки" },
+                { "childrenHobby", "Дiти" },
+                { "grandChildrenHobby", "Онуки" }
+            };
         }
 
         //------------------------------------------------------------------------------------------------------------------------------------------
