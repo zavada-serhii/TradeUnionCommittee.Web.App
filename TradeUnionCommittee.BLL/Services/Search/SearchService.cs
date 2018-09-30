@@ -208,24 +208,27 @@ namespace TradeUnionCommittee.BLL.Services.Search
                     return new ActualResult<IEnumerable<ResultSearchDTO>> { Result = ResultFormation(searchByEmployeeHobby.Result) };
                 case "childrenHobby":
                     var searchByChildrenHobby = await _database
-                        .EmployeeRepository
-                        .GetWithInclude(x => x.Children.Any(t => t.HobbyChildrens.Any(g => g.IdHobby == idHobby)),
-                                        p => p.PositionEmployees.IdSubdivisionNavigation.InverseIdSubordinateNavigation,
-                                        p => p.Children.Select(m => m.HobbyChildrens));
-                    return new ActualResult<IEnumerable<ResultSearchDTO>> { Result = ResultFormation(searchByChildrenHobby.Result) };
+                        .ChildrenRepository
+                        .GetWithInclude(x => x.HobbyChildrens.Any(t => t.IdHobby == idHobby),
+                                        p => p.HobbyChildrens,
+                                        p => p.IdEmployeeNavigation.PositionEmployees.IdSubdivisionNavigation.InverseIdSubordinateNavigation);
+                    return new ActualResult<IEnumerable<ResultSearchDTO>> { Result = ResultFormation(searchByChildrenHobby.Result.Select(x => x.IdEmployeeNavigation)) };
+
                 case "grandChildrenHobby":
                     var searchByGrandChildrenHobby = await _database
-                        .EmployeeRepository
-                        .GetWithInclude(x => x.GrandChildren.Any(t => t.HobbyGrandChildrens.Any(g => g.Id == idHobby)),
-                                        p => p.PositionEmployees.IdSubdivisionNavigation.InverseIdSubordinateNavigation,
-                                        p => p.GrandChildren);
-                    return new ActualResult<IEnumerable<ResultSearchDTO>> { Result = ResultFormation(searchByGrandChildrenHobby.Result) };
+                        .GrandChildrenRepository
+                        .GetWithInclude(x => x.HobbyGrandChildrens.Any(t => t.IdHobby == idHobby),
+                            p => p.HobbyGrandChildrens,
+                            p => p.IdEmployeeNavigation.PositionEmployees.IdSubdivisionNavigation.InverseIdSubordinateNavigation);
+                    return new ActualResult<IEnumerable<ResultSearchDTO>> { Result = ResultFormation(searchByGrandChildrenHobby.Result.Select(x => x.IdEmployeeNavigation)) };
                 default:
                     return new ActualResult<IEnumerable<ResultSearchDTO>>();
             }
         }
 
         //------------------------------------------------------------------------------------------------------------------------------------------
+
+        
 
         private IEnumerable<ResultSearchDTO> ResultFormation(IEnumerable<DAL.Entities.Employee> employees)
         {
