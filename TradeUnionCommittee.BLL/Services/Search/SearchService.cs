@@ -202,16 +202,16 @@ namespace TradeUnionCommittee.BLL.Services.Search
                 case "employeeHobby":
                     var searchByEmployeeHobby = await _database
                         .EmployeeRepository
-                        .GetWithInclude(x => x.HobbyEmployees.Any(t => t.Id == idHobby),
+                        .GetWithInclude(x => x.HobbyEmployees.Any(t => t.IdHobby == idHobby),
                                         p => p.PositionEmployees.IdSubdivisionNavigation.InverseIdSubordinateNavigation,
                                         p => p.HobbyEmployees);
                     return new ActualResult<IEnumerable<ResultSearchDTO>> { Result = ResultFormation(searchByEmployeeHobby.Result) };
                 case "childrenHobby":
                     var searchByChildrenHobby = await _database
                         .EmployeeRepository
-                        .GetWithInclude(x => x.Children.Any(t => t.HobbyChildrens.Any(g => g.Id == idHobby)),
+                        .GetWithInclude(x => x.Children.Any(t => t.HobbyChildrens.Any(g => g.IdHobby == idHobby)),
                                         p => p.PositionEmployees.IdSubdivisionNavigation.InverseIdSubordinateNavigation,
-                                        p => p.Children);
+                                        p => p.Children.Select(m => m.HobbyChildrens));
                     return new ActualResult<IEnumerable<ResultSearchDTO>> { Result = ResultFormation(searchByChildrenHobby.Result) };
                 case "grandChildrenHobby":
                     var searchByGrandChildrenHobby = await _database

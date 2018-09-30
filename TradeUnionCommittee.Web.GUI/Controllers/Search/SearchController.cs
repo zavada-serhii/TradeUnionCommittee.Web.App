@@ -97,6 +97,17 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Search
 
         //------------------------------------------------------------------------------------------------------------------------------------------
 
+        [HttpPost]
+        [Authorize(Roles = "Admin,Accountant,Deputy")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> SearchHobby([Bind("typeHobby,idHobby")] string typeHobby, string idHobby)
+        {
+            var result = await _searchService.SearchHobby(typeHobby, idHobby);
+            return View("ResultSearch", result.Result);
+        }
+
+        //------------------------------------------------------------------------------------------------------------------------------------------
+
         private async Task FillingDropDownLists()
         {
             ViewBag.MainSubdivision = await _dropDownList.GetMainSubdivision();
