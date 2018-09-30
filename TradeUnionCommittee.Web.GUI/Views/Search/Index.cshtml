@@ -194,9 +194,9 @@
                             @foreach (var item in ViewBag.Accommodation)
                             {
                                 <label class="custom-control custom-radio">
-                                    <input value="@item.Key" id="@item.Key" name="typeAccommodation" type="radio" class="custom-control-input">
+                                    <input id="@item[0]" value="@item[1]"  name="typeAccommodation" type="radio" class="custom-control-input">
                                     <span class="custom-control-indicator"></span>
-                                    <span class="custom-control-description">@item.Value</span>
+                                    <span class="custom-control-description">@item[2]</span>
                                 </label>
                                 <br>
                             }
@@ -240,9 +240,9 @@
                             @foreach (var item in ViewBag.TypeBirthDate)
                             {
                                 <label class="custom-control custom-radio">
-                                    <input value="@item.Key" id="@item.Key" name="typeBirthDate" type="radio" class="custom-control-input">
+                                    <input id="@item[0]" value="@item[1]"  name="typeBirthDate" type="radio" class="custom-control-input">
                                     <span class="custom-control-indicator"></span>
-                                    <span class="custom-control-description">@item.Value</span>
+                                    <span class="custom-control-description">@item[2]</span>
                                 </label>
                                 <br>
                             }
@@ -280,9 +280,9 @@
                             @foreach (var item in ViewBag.TypeHobby)
                             {
                                 <label class="custom-control custom-radio">
-                                    <input value="@item.Key" id="@item.Key" name="typeHobby" type="radio" class="custom-control-input">
+                                    <input id="@item[0]" value="@item[1]" name="typeHobby" type="radio" class="custom-control-input">
                                     <span class="custom-control-indicator"></span>
-                                    <span class="custom-control-description">@item.Value</span>
+                                    <span class="custom-control-description">@item[2]</span>
                                 </label>
                                 <br>
                             }
@@ -310,7 +310,7 @@
             </div>
 
             <div id="collapseTest" class="collapse" aria-labelledby="headingTest" data-parent="#accordionExample">
-                @*<form asp-action="SearchMobilePhone">*@
+                <form asp-action="SearchMobilePhone">
                     <div class="card-body pb-4 pt-4">
                         <div class="col-md-12">
                             <label>Номер мобільного</label><br>
@@ -322,7 +322,7 @@
                             </div>
                         </div>
                     </div>
-                @*</form>*@
+                </form>
             </div>
         </div>
 
@@ -337,21 +337,17 @@
                 </h5>
             </div>
             <div id="collapseCityPhone" class="collapse" aria-labelledby="headingCityPhone" data-parent="#accordionExample">
-                @*<form asp-action="SearchCityPhone">*@
+                <form asp-action="SearchCityPhone">
                     <div class="card-body pb-3 pt-3">
                         <div class="form-group col-lg-12">
                             <label>Міський номер</label>
-                            <input type="text" class="form-control" id="home-phone" name="CityPhone" placeholder="777-77-7" aria-label="Recipient's username" aria-describedby="basic-addon2" required>
-                        </div>
-                        <div class="form-group col-lg-12">
-                            <label>Міський номер</label>
-                            <input type="text" class="form-control" id="home-phone1" name="CityPhoneAdditional" placeholder="777-77-77" aria-label="Recipient's username" aria-describedby="basic-addon2" required>
+                            <input type="text" class="form-control" id="home-phone1" name="cityPhone" placeholder="777-77-77" aria-label="Recipient's username" aria-describedby="basic-addon2" required>
                         </div>
                         <div class="input-group-append col-md-12">
                             <input type="submit" value="Знайти" class="btn btn-success btn-block" />
                         </div>
                     </div>
-                @*</form>*@
+                </form>
             </div>
         </div>
 
@@ -367,7 +363,7 @@
             </div>
 
             <div id="collapseEight" class="collapse" aria-labelledby="headingEight" data-parent="#accordionExample">
-                @*<form asp-action="SearchIdentificationCode">*@
+                <form asp-action="SearchIdentificationСode">
                     <div class="card-body pb-4 pt-4">
                         <div class="col-md-12">
                             <label>Номер IНН</label><br>
@@ -379,7 +375,7 @@
                             </div>
                         </div>
                     </div>
-                @*</form>*@
+                </form>
             </div>
         </div>
 
@@ -395,7 +391,7 @@
             </div>
 
             <div id="collapseSeven" class="collapse" aria-labelledby="headingSeven" data-parent="#accordionExample">
-                @*<form asp-action="SearchMechnikovCard">*@
+                <form asp-action="SearchMechnikovCard">
                     <div class="card-body pb-4 pt-4">
                         <div class="col-md-12">
                             <label>Номер карти</label><br>
@@ -407,7 +403,7 @@
                             </div>
                         </div>
                     </div>
-                @*</form>*@
+                </form>
             </div>
         </div>
     </div>

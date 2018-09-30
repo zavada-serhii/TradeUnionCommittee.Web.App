@@ -23,7 +23,7 @@ namespace TradeUnionCommittee.DAL.Repositories
         {
             try
             {
-                return new ActualResult<IEnumerable<T>> { Result = await _db.Set<T>().ToListAsync() };
+                return new ActualResult<IEnumerable<T>> { Result = await _db.Set<T>().AsNoTracking().ToListAsync() };
             }
             catch (Exception e)
             {

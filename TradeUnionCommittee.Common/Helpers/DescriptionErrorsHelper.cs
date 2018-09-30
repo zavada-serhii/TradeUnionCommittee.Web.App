@@ -28,6 +28,9 @@ namespace TradeUnionCommittee.Common.Helpers
 
                 case Errors.DataBaseError:
                     return "Сталась помилка в базі даних!";
+
+                case Errors.NotFound:
+                    return "За вашим запитом нічого не знайдено!";
                 default:
                     throw new ArgumentOutOfRangeException(nameof(error), error, "Ви зламали систему. Вітаю:)");
             }

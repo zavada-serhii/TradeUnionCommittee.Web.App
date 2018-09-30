@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.DTO;
+using TradeUnionCommittee.BLL.Enums;
 using TradeUnionCommittee.BLL.Interfaces.Search;
 using TradeUnionCommittee.BLL.Utilities;
 using TradeUnionCommittee.Common.ActualResults;
+using TradeUnionCommittee.Common.Enums;
 using TradeUnionCommittee.DAL.Enums;
 using TradeUnionCommittee.DAL.Interfaces;
 
@@ -128,11 +130,11 @@ namespace TradeUnionCommittee.BLL.Services.Search
         //------------------------------------------------------------------------------------------------------------------------------------------
 
         
-        public async Task<ActualResult<IEnumerable<ResultSearchDTO>>> SearchAccommodation(string typeAccommodation, string dormitory, string departmental)
+        public async Task<ActualResult<IEnumerable<ResultSearchDTO>>> SearchAccommodation(AccommodationType type, string dormitory, string departmental)
         {
-            switch (typeAccommodation)
+            switch (type)
             {
-                case "dormitory":
+                case AccommodationType.Dormitory:
                     var idDormitory = _hashIdUtilities.DecryptLong(dormitory, Enums.Services.Dormitory);
                     var searchByDormitory = await _database
                         .EmployeeRepository
@@ -140,7 +142,7 @@ namespace TradeUnionCommittee.BLL.Services.Search
                                         p => p.PositionEmployees.IdSubdivisionNavigation.InverseIdSubordinateNavigation,
                                         p => p.PublicHouseEmployees);
                     return new ActualResult<IEnumerable<ResultSearchDTO>> { Result = ResultFormation(searchByDormitory.Result) };
-                case "departmental":
+                case AccommodationType.Departmental:
                     var idDepartmental = _hashIdUtilities.DecryptLong(departmental, Enums.Services.Departmental);
                     var searchByDepartmental = await _database
                         .EmployeeRepository
@@ -148,7 +150,7 @@ namespace TradeUnionCommittee.BLL.Services.Search
                                         p => p.PositionEmployees.IdSubdivisionNavigation.InverseIdSubordinateNavigation,
                                         p => p.PublicHouseEmployees);
                     return new ActualResult<IEnumerable<ResultSearchDTO>> { Result = ResultFormation(searchByDepartmental.Result) };
-                case "from-university":
+                case AccommodationType.FromUniversity:
                     var searchByFromUniversity = await _database
                         .EmployeeRepository
                         .GetWithInclude(x => x.PrivateHouseEmployees.Any(t => t.DateReceiving != null),
@@ -162,24 +164,24 @@ namespace TradeUnionCommittee.BLL.Services.Search
 
         //------------------------------------------------------------------------------------------------------------------------------------------
         
-        public async Task<ActualResult<IEnumerable<ResultSearchDTO>>> SearchBirthDate(string typeBirthDate, DateTime startDate, DateTime endDate)
+        public async Task<ActualResult<IEnumerable<ResultSearchDTO>>> SearchBirthDate(CoverageType type, DateTime startDate, DateTime endDate)
         {
-            switch (typeBirthDate)
+            switch (type)
             {
-                case "employeeBirthDate":
+                case CoverageType.Employee:
                     var searchByEmployeeBirthDate = await _database
                         .EmployeeRepository
                         .GetWithInclude(x => x.BirthDate >= startDate && x.BirthDate <= endDate,
                                         p => p.PositionEmployees.IdSubdivisionNavigation.InverseIdSubordinateNavigation);
                     return new ActualResult<IEnumerable<ResultSearchDTO>> { Result = ResultFormation(searchByEmployeeBirthDate.Result) };
-                case "childrenBirthDate":
+                case CoverageType.Children:
                     var searchByChildrenBirthDate = await _database
                         .EmployeeRepository
                         .GetWithInclude(x => x.Children.Any(t => t.BirthDate >= startDate && t.BirthDate <= endDate),
                                         p => p.PositionEmployees.IdSubdivisionNavigation.InverseIdSubordinateNavigation,
                                         p => p.Children);
                     return new ActualResult<IEnumerable<ResultSearchDTO>> { Result = ResultFormation(searchByChildrenBirthDate.Result) };
-                case "grandChildrenBirthDate":
+                case CoverageType.GrandChildren:
                     var searchByGrandChildrenBirthDate = await _database
                         .EmployeeRepository
                         .GetWithInclude(x => x.GrandChildren.Any(t => t.BirthDate >= startDate && t.BirthDate <= endDate),
@@ -193,20 +195,20 @@ namespace TradeUnionCommittee.BLL.Services.Search
 
         //------------------------------------------------------------------------------------------------------------------------------------------
         
-        public async Task<ActualResult<IEnumerable<ResultSearchDTO>>> SearchHobby(string typeHobby, string hobby)
+        public async Task<ActualResult<IEnumerable<ResultSearchDTO>>> SearchHobby(CoverageType type, string hobby)
         {
             var idHobby = _hashIdUtilities.DecryptLong(hobby, Enums.Services.Hobby);
 
-            switch (typeHobby)
+            switch (type)
             {
-                case "employeeHobby":
+                case CoverageType.Employee:
                     var searchByEmployeeHobby = await _database
                         .EmployeeRepository
                         .GetWithInclude(x => x.HobbyEmployees.Any(t => t.IdHobby == idHobby),
                                         p => p.PositionEmployees.IdSubdivisionNavigation.InverseIdSubordinateNavigation,
                                         p => p.HobbyEmployees);
                     return new ActualResult<IEnumerable<ResultSearchDTO>> { Result = ResultFormation(searchByEmployeeHobby.Result) };
-                case "childrenHobby":
+                case CoverageType.Children:
                     var searchByChildrenHobby = await _database
                         .ChildrenRepository
                         .GetWithInclude(x => x.HobbyChildrens.Any(t => t.IdHobby == idHobby),
@@ -214,12 +216,12 @@ namespace TradeUnionCommittee.BLL.Services.Search
                                         p => p.IdEmployeeNavigation.PositionEmployees.IdSubdivisionNavigation.InverseIdSubordinateNavigation);
                     return new ActualResult<IEnumerable<ResultSearchDTO>> { Result = ResultFormation(searchByChildrenHobby.Result.Select(x => x.IdEmployeeNavigation)) };
 
-                case "grandChildrenHobby":
+                case CoverageType.GrandChildren:
                     var searchByGrandChildrenHobby = await _database
                         .GrandChildrenRepository
                         .GetWithInclude(x => x.HobbyGrandChildrens.Any(t => t.IdHobby == idHobby),
-                            p => p.HobbyGrandChildrens,
-                            p => p.IdEmployeeNavigation.PositionEmployees.IdSubdivisionNavigation.InverseIdSubordinateNavigation);
+                                        p => p.HobbyGrandChildrens,
+                                        p => p.IdEmployeeNavigation.PositionEmployees.IdSubdivisionNavigation.InverseIdSubordinateNavigation);
                     return new ActualResult<IEnumerable<ResultSearchDTO>> { Result = ResultFormation(searchByGrandChildrenHobby.Result.Select(x => x.IdEmployeeNavigation)) };
                 default:
                     return new ActualResult<IEnumerable<ResultSearchDTO>>();
@@ -228,7 +230,52 @@ namespace TradeUnionCommittee.BLL.Services.Search
 
         //------------------------------------------------------------------------------------------------------------------------------------------
 
-        
+        public async Task<ActualResult<long>> SearchEmployee(EmployeeType type, string value)
+        {
+            switch (type)
+            {
+                case EmployeeType.MobilePhone:
+                    var searchByMobilePhone = await _database.EmployeeRepository.Find(x => x.MobilePhone == value);
+                    var firstOrDefaultMobilePhone = searchByMobilePhone.Result.FirstOrDefault();
+                    if (firstOrDefaultMobilePhone != null)
+                    {
+                        return new ActualResult<long> { Result = firstOrDefaultMobilePhone.Id };
+                    }
+                    return new ActualResult<long>(Errors.NotFound);
+
+                case EmployeeType.CityPhone:
+                    var searchByCityPhone = await _database.EmployeeRepository.Find(x => x.CityPhone == value);
+                    var firstOrDefaultCityPhone = searchByCityPhone.Result.FirstOrDefault();
+                    if (firstOrDefaultCityPhone != null)
+                    {
+                        return new ActualResult<long> { Result = firstOrDefaultCityPhone.Id };
+                    }
+                    return new ActualResult<long>(Errors.NotFound);
+
+                case EmployeeType.IdentificationСode:
+                    var searchByIdentificationСode = await _database.EmployeeRepository.Find(x => x.IdentificationСode == value);
+                    var firstOrDefaultIdentificationСode = searchByIdentificationСode.Result.FirstOrDefault();
+                    if (firstOrDefaultIdentificationСode != null)
+                    {
+                        return new ActualResult<long> { Result = firstOrDefaultIdentificationСode.Id };
+                    }
+                    return new ActualResult<long>(Errors.NotFound);
+
+                case EmployeeType.MechnikovCard:
+                    var searchByMechnikovCard = await _database.EmployeeRepository.Find(x => x.MechnikovCard == value);
+                    var firstOrDefaultMechnikovCard = searchByMechnikovCard.Result.FirstOrDefault();
+                    if (firstOrDefaultMechnikovCard != null)
+                    {
+                        return new ActualResult<long> { Result = firstOrDefaultMechnikovCard.Id };
+                    }
+                    return new ActualResult<long>(Errors.NotFound);
+
+                default:
+                    return new ActualResult<long>(Errors.NotFound);
+            }
+        }
+
+        //------------------------------------------------------------------------------------------------------------------------------------------
 
         private IEnumerable<ResultSearchDTO> ResultFormation(IEnumerable<DAL.Entities.Employee> employees)
         {

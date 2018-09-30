@@ -1,8 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using TradeUnionCommittee.BLL.Enums;
 using TradeUnionCommittee.BLL.Interfaces.Search;
 using TradeUnionCommittee.Web.GUI.AdditionalSettings.DropDownLists;
 
@@ -78,9 +80,9 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Search
         [HttpPost]
         [Authorize(Roles = "Admin,Accountant,Deputy")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> SearchAccommodation([Bind("typeAccommodation,idDormitory,idDepartmental")] string typeAccommodation, string idDormitory, string idDepartmental)
+        public async Task<IActionResult> SearchAccommodation([Bind("typeAccommodation,idDormitory,idDepartmental")] int typeAccommodation, string idDormitory, string idDepartmental)
         {
-            var result = await _searchService.SearchAccommodation(typeAccommodation, idDormitory, idDepartmental);
+            var result = await _searchService.SearchAccommodation((AccommodationType)typeAccommodation, idDormitory, idDepartmental);
             return View("ResultSearch", result.Result);
         }
 
@@ -89,9 +91,9 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Search
         [HttpPost]
         [Authorize(Roles = "Admin,Accountant,Deputy")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> SearchBirthDate([Bind("typeBirthDate,startDateBirth,endDateBirth")] string typeBirthDate, DateTime startDateBirth, DateTime endDateBirth)
+        public async Task<IActionResult> SearchBirthDate([Bind("typeBirthDate,startDateBirth,endDateBirth")] int typeBirthDate, DateTime startDateBirth, DateTime endDateBirth)
         {
-            var result = await _searchService.SearchBirthDate(typeBirthDate, startDateBirth, endDateBirth);
+            var result = await _searchService.SearchBirthDate((CoverageType)typeBirthDate, startDateBirth, endDateBirth);
             return View("ResultSearch", result.Result);
         }
 
@@ -100,10 +102,74 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Search
         [HttpPost]
         [Authorize(Roles = "Admin,Accountant,Deputy")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> SearchHobby([Bind("typeHobby,idHobby")] string typeHobby, string idHobby)
+        public async Task<IActionResult> SearchHobby([Bind("typeHobby,idHobby")] int typeHobby, string idHobby)
         {
-            var result = await _searchService.SearchHobby(typeHobby, idHobby);
+            var result = await _searchService.SearchHobby((CoverageType)typeHobby, idHobby);
             return View("ResultSearch", result.Result);
+        }
+
+        //------------------------------------------------------------------------------------------------------------------------------------------
+
+        [HttpPost]
+        [Authorize(Roles = "Admin,Accountant,Deputy")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> SearchMobilePhone([Bind("mobilePhone")] string mobilePhone)
+        {
+            var result = await _searchService.SearchEmployee(EmployeeType.MobilePhone, mobilePhone);
+
+            if (result.IsValid)
+            {
+                return RedirectToAction("Index", "Employee", new { id = result.Result });
+            }
+            return NotFound();
+        }
+
+        //------------------------------------------------------------------------------------------------------------------------------------------
+        
+        [HttpPost]
+        [Authorize(Roles = "Admin,Accountant,Deputy")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> SearchCityPhone([Bind("cityPhone")] string cityPhone)
+        {
+            var result = await _searchService.SearchEmployee(EmployeeType.CityPhone, cityPhone);
+
+            if (result.IsValid)
+            {
+                return RedirectToAction("Index", "Employee", new { id = result.Result });
+            }
+            return NotFound();
+        }
+
+        //------------------------------------------------------------------------------------------------------------------------------------------
+        
+        [HttpPost]
+        [Authorize(Roles = "Admin,Accountant,Deputy")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> SearchIdentificationСode([Bind("identificationCode")] string identificationCode)
+        {
+            var result = await _searchService.SearchEmployee(EmployeeType.IdentificationСode, identificationCode);
+
+            if (result.IsValid)
+            {
+                return RedirectToAction("Index", "Employee", new { id = result.Result });
+            }
+            return NotFound();
+        }
+
+        //------------------------------------------------------------------------------------------------------------------------------------------
+        
+        [HttpPost]
+        [Authorize(Roles = "Admin,Accountant,Deputy")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> SearchMechnikovCard([Bind("mechnikovCard")] string mechnikovCard)
+        {
+            var result = await _searchService.SearchEmployee(EmployeeType.MechnikovCard, mechnikovCard);
+
+            if (result.IsValid)
+            {
+                return RedirectToAction("Index", "Employee", new { id = result.Result });
+            }
+            return NotFound();
         }
 
         //------------------------------------------------------------------------------------------------------------------------------------------
@@ -117,25 +183,25 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Search
             ViewBag.Dormitory = await _dropDownList.GetDormitory();
             ViewBag.Departmental = await _dropDownList.GetDepartmental();
 
-            ViewBag.Accommodation = new Dictionary<string, string>
+            ViewBag.Accommodation = new List<ArrayList>
             {
-                { "dormitory", "Гуртожиток" },
-                { "departmental", "Вiдомче житло" },
-                { "from-university", "Житло надане унiверситетом" }
+                new ArrayList { "dormitory", 0, "Гуртожиток" },
+                new ArrayList { "departmental", 1, "Вiдомче житло" },
+                new ArrayList { "from-university", 2, "Житло надане унiверситетом" }
             };
 
-            ViewBag.TypeBirthDate = new Dictionary<string, string>
+            ViewBag.TypeBirthDate = new List<ArrayList>
             {
-                { "employeeBirthDate", "Член профспілки" },
-                { "childrenBirthDate", "Дiти" },
-                { "grandChildrenBirthDate", "Онуки" }
+                new ArrayList { "employeeBirthDate", 0, "Член профспілки" },
+                new ArrayList { "childrenBirthDate", 1, "Дiти" },
+                new ArrayList { "grandChildrenBirthDate", 2, "Онуки" }
             };
 
-            ViewBag.TypeHobby = new Dictionary<string, string>
+            ViewBag.TypeHobby = new List<ArrayList>
             {
-                { "employeeHobby", "Член профспілки" },
-                { "childrenHobby", "Дiти" },
-                { "grandChildrenHobby", "Онуки" }
+                new ArrayList { "employeeHobby", 0, "Член профспілки" },
+                new ArrayList { "childrenHobby", 1, "Дiти" },
+                new ArrayList { "grandChildrenHobby", 2, "Онуки" }
             };
         }
 

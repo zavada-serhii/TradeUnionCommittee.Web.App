@@ -74,7 +74,7 @@ $(document).ready(function ()
         document.getElementById("employeeBirthDate").checked = true;
         document.getElementById("employeeHobby").checked = true;
 
-        document.getElementById("home-phone").value = "";
+        //document.getElementById("home-phone").value = "";
         document.getElementById("home-phone1").value = "";
     }
 });
