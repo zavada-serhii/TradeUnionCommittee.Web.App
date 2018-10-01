@@ -25,25 +25,17 @@ OWNER TO postgres;
 
 -----------------------------------------------------------------------------------------------------------------------------------------------
 
-CREATE TABLE "TypeEvent" (
-	"Id" 		BIGSERIAL	NOT NULL	PRIMARY KEY,
-	"Name"		VARCHAR		NOT NULL	UNIQUE
-);
-ALTER TABLE "TypeEvent"
+CREATE TYPE "TypeEvent" AS ENUM ('Travel', 'Wellness', 'Tour');
+ALTER TYPE "TypeEvent"
 OWNER TO postgres;
-
-INSERT INTO  "TypeEvent" ("Name") VALUES
-('Travel'),
-('Wellness'),
-('Tour');
 
 -----------------------------------------------------------------------------------------------------------------------------------------------
 
 CREATE TABLE "Event" (
 	"Id" 		BIGSERIAL	NOT NULL	PRIMARY KEY,
 	"Name"		VARCHAR		NOT NULL,
-	"TypeId" 	BIGINT 		NOT NULL 	REFERENCES "TypeEvent"("Id"),
-	UNIQUE("Name", "TypeId")
+	"Type" 		"TypeEvent" NOT NULL,
+	UNIQUE("Name", "Type")
 );
 ALTER TABLE "Event"
 OWNER TO postgres;
@@ -106,26 +98,18 @@ OWNER TO postgres;
 
 -----------------------------------------------------------------------------------------------------------------------------------------------
 
-CREATE TABLE "TypeHouse" (
-	"Id" 		BIGSERIAL	NOT NULL		PRIMARY KEY,
-	"Name"		VARCHAR		NOT NULL 		UNIQUE
-);
-ALTER TABLE "TypeHouse"
+CREATE TYPE "TypeHouse" AS ENUM ('Dormitory', 'Departmental');
+ALTER TYPE "TypeHouse"
 OWNER TO postgres;
-
-INSERT INTO  "TypeHouse" ("Name") VALUES 
-('Dormitory'),
-('Departmental');
-
 -----------------------------------------------------------------------------------------------------------------------------------------------
 
 CREATE TABLE "AddressPublicHouse"(
-	"Id" 			BIGSERIAL 	NOT NULL 	PRIMARY KEY,
-	"City" 			VARCHAR 	NOT NULL,
-	"Street" 		VARCHAR 	NOT NULL,
-	"NumberHouse" 		VARCHAR 	NOT NULL,
-	"NumberDormitory" 	VARCHAR 	NULL,
-	"Type" 			BIGINT 		NOT NULL 	REFERENCES "TypeHouse"("Id"),
+	"Id" 				BIGSERIAL 		NOT NULL 	PRIMARY KEY,
+	"City" 				VARCHAR 		NOT NULL,
+	"Street" 			VARCHAR 		NOT NULL,
+	"NumberHouse" 		VARCHAR 		NOT NULL,
+	"NumberDormitory" 	VARCHAR 		NULL,
+	"Type" 				"TypeHouse" 	NOT NULL,
 	UNIQUE("City","Street","NumberHouse","Type")
 );
 ALTER TABLE "AddressPublicHouse"
