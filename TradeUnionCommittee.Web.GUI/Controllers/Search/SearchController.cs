@@ -80,9 +80,9 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Search
         [HttpPost]
         [Authorize(Roles = "Admin,Accountant,Deputy")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> SearchAccommodation([Bind("typeAccommodation,idDormitory,idDepartmental")] int typeAccommodation, string idDormitory, string idDepartmental)
+        public async Task<IActionResult> SearchAccommodation([Bind("typeAccommodation,idDormitory,idDepartmental")] string typeAccommodation, string idDormitory, string idDepartmental)
         {
-            var result = await _searchService.SearchAccommodation((AccommodationType)typeAccommodation, idDormitory, idDepartmental);
+            var result = await _searchService.SearchAccommodation((AccommodationType)TemporaryConverterAccommodation(typeAccommodation), idDormitory, idDepartmental);
             return View("ResultSearch", result.Result);
         }
 
@@ -203,6 +203,21 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Search
                 new ArrayList { "childrenHobby", 1, "Дiти" },
                 new ArrayList { "grandChildrenHobby", 2, "Онуки" }
             };
+        }
+
+        public int TemporaryConverterAccommodation(string value)
+        {
+            switch (value)
+            {
+                case "dormitory":
+                    return 0;
+                case "departmental":
+                    return 1;
+                case "from-university":
+                    return 2;
+                default:
+                    return -1;
+            }
         }
 
         //------------------------------------------------------------------------------------------------------------------------------------------
