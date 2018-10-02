@@ -65,6 +65,9 @@ namespace TradeUnionCommittee.DAL.EF
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.ForNpgsqlHasEnum(null, "TypeEvent", new[] { "Travel", "Wellness", "Tour" })
+                        .ForNpgsqlHasEnum(null, "TypeHouse", new[] { "Dormitory", "Departmental" });
+
             modelBuilder.Entity<Activities>(entity =>
             {
                 entity.HasIndex(e => e.Name)

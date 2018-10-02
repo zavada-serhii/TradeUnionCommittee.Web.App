@@ -107,13 +107,13 @@ namespace TradeUnionCommittee.BLL.Utilities
                         .ForMember(d => d.HashId, c => c.MapFrom(x => _hashIdUtilities.EncryptLong(x.Id, Enums.Services.Dormitory)))
                         .ReverseMap()
                         .ForMember(d => d.Id, c => c.MapFrom(x => _hashIdUtilities.DecryptLong(x.HashId, Enums.Services.Dormitory)))
-                        .ForMember(d => d.Type, c => c.UseValue(1));
+                        .ForMember(d => d.Type, c => c.UseValue(TypeHouse.Dormitory));
 
                     map.CreateMap<AddressPublicHouse, DepartmentalDTO>()
                         .ForMember(d => d.HashId, c => c.MapFrom(x => _hashIdUtilities.EncryptLong(x.Id, Enums.Services.Departmental)))
                         .ReverseMap()
                         .ForMember(d => d.Id, c => c.MapFrom(x => _hashIdUtilities.DecryptLong(x.HashId, Enums.Services.Departmental)))
-                        .ForMember(d => d.Type, c => c.UseValue(2));
+                        .ForMember(d => d.Type, c => c.UseValue(TypeHouse.Departmental));
 
                     map.CreateMap<Scientific, QualificationDTO>()
                         .ReverseMap()
