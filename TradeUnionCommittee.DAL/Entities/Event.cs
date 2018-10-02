@@ -16,10 +16,8 @@ namespace TradeUnionCommittee.DAL.Entities
         public long Id { get; set; }
         [ConcurrencyCheck]
         public string Name { get; set; }
-        [ConcurrencyCheck]
-        public long TypeId { get; set; }
-
         public TypeEvent Type { get; set; }
+
         public ICollection<EventChildrens> EventChildrens { get; set; }
         public ICollection<EventEmployees> EventEmployees { get; set; }
         public ICollection<EventFamily> EventFamily { get; set; }

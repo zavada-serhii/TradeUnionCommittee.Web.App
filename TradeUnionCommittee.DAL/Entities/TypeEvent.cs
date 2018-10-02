@@ -1,13 +1,14 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using NpgsqlTypes;
 
 namespace TradeUnionCommittee.DAL.Entities
 {
-    public class TypeEvent
+    public enum TypeEvent
     {
-        public long Id { get; set; }
-        [ConcurrencyCheck]
-        public string Name { get; set; }
-
-        public Event Event { get; set; }
+        [PgName("Travel")]
+        Travel = 0,
+        [PgName("Wellness")]
+        Wellness = 1,
+        [PgName("Tour")]
+        Tour = 2
     }
 }

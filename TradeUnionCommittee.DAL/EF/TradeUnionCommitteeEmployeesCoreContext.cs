@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Npgsql;
+using Npgsql.NameTranslation;
 using TradeUnionCommittee.DAL.Entities;
 
 namespace TradeUnionCommittee.DAL.EF
@@ -7,6 +9,12 @@ namespace TradeUnionCommittee.DAL.EF
     public class TradeUnionCommitteeEmployeesCoreContext : IdentityDbContext<User>
     {
         public TradeUnionCommitteeEmployeesCoreContext(DbContextOptions options) : base(options) { }
+
+        static TradeUnionCommitteeEmployeesCoreContext()
+        {
+            NpgsqlConnection.GlobalTypeMapper.MapEnum<TypeEvent>("TypeEvent", new NpgsqlNullNameTranslator());
+            NpgsqlConnection.GlobalTypeMapper.MapEnum<TypeHouse>("TypeHouse", new NpgsqlNullNameTranslator());
+        }
 
         public virtual DbSet<Activities> Activities { get; set; }
         public virtual DbSet<ActivityChildrens> ActivityChildrens { get; set; }
@@ -52,8 +60,6 @@ namespace TradeUnionCommittee.DAL.EF
         public virtual DbSet<SocialActivity> SocialActivity { get; set; }
         public virtual DbSet<SocialActivityEmployees> SocialActivityEmployees { get; set; }
         public virtual DbSet<Subdivisions> Subdivisions { get; set; }
-        public virtual DbSet<TypeEvent> TypeEvent { get; set; }
-        public virtual DbSet<TypeHouse> TypeHouse { get; set; }
 
         //------------------------------------------------
 
@@ -152,10 +158,6 @@ namespace TradeUnionCommittee.DAL.EF
 
             modelBuilder.Entity<AddressPublicHouse>(entity =>
             {
-                entity.HasIndex(e => new { e.City, e.Street, e.NumberHouse, e.Type })
-                    .HasName("AddressPublicHouse_City_Street_NumberHouse_Type_key")
-                    .IsUnique();
-
                 entity.Property(e => e.City)
                     .IsRequired()
                     .HasColumnType("character varying");
@@ -169,12 +171,6 @@ namespace TradeUnionCommittee.DAL.EF
                 entity.Property(e => e.Street)
                     .IsRequired()
                     .HasColumnType("character varying");
-
-                entity.HasOne(d => d.TypeNavigation)
-                    .WithMany(p => p.AddressPublicHouse)
-                    .HasForeignKey(d => d.Type)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("AddressPublicHouse_Type_fkey");
             });
 
             modelBuilder.Entity<ApartmentAccountingEmployees>(entity =>
@@ -434,23 +430,9 @@ namespace TradeUnionCommittee.DAL.EF
 
             modelBuilder.Entity<Event>(entity =>
             {
-                entity.HasIndex(e => e.Name)
-                    .HasName("Event_Name_key")
-                    .IsUnique();
-
-                entity.HasIndex(e => e.TypeId)
-                    .HasName("Event_TypeId_key")
-                    .IsUnique();
-
                 entity.Property(e => e.Name)
                     .IsRequired()
                     .HasColumnType("character varying");
-
-                entity.HasOne(d => d.Type)
-                    .WithOne(p => p.Event)
-                    .HasForeignKey<Event>(d => d.TypeId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("Event_TypeId_fkey");
             });
 
             modelBuilder.Entity<EventChildrens>(entity =>
@@ -970,28 +952,6 @@ namespace TradeUnionCommittee.DAL.EF
                     .WithMany(p => p.InverseIdSubordinateNavigation)
                     .HasForeignKey(d => d.IdSubordinate)
                     .HasConstraintName("Subdivisions_IdSubordinate_fkey");
-            });
-
-            modelBuilder.Entity<TypeEvent>(entity =>
-            {
-                entity.HasIndex(e => e.Name)
-                    .HasName("TypeEvent_Name_key")
-                    .IsUnique();
-
-                entity.Property(e => e.Name)
-                    .IsRequired()
-                    .HasColumnType("character varying");
-            });
-
-            modelBuilder.Entity<TypeHouse>(entity =>
-            {
-                entity.HasIndex(e => e.Name)
-                    .HasName("TypeHouse_Name_key")
-                    .IsUnique();
-
-                entity.Property(e => e.Name)
-                    .IsRequired()
-                    .HasColumnType("character varying");
             });
 
             base.OnModelCreating(modelBuilder);

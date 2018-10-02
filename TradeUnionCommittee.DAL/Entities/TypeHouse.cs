@@ -1,19 +1,12 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using NpgsqlTypes;
 
 namespace TradeUnionCommittee.DAL.Entities
 {
-    public class TypeHouse
+    public enum TypeHouse
     {
-        public TypeHouse()
-        {
-            AddressPublicHouse = new HashSet<AddressPublicHouse>();
-        }
-
-        public long Id { get; set; }
-        [ConcurrencyCheck]
-        public string Name { get; set; }
-
-        public ICollection<AddressPublicHouse> AddressPublicHouse { get; set; }
+        [PgName("Dormitory")]
+        Dormitory = 0,
+        [PgName("Departmental")]
+        Departmental = 1
     }
 }

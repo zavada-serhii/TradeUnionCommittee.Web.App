@@ -73,19 +73,19 @@ namespace TradeUnionCommittee.BLL.Utilities
                         .ForMember(d => d.HashId, c => c.MapFrom(x => _hashIdUtilities.EncryptLong(x.Id, Enums.Services.Travel)))
                         .ReverseMap()
                         .ForMember(d => d.Id, c => c.MapFrom(x => _hashIdUtilities.DecryptLong(x.HashId, Enums.Services.Travel)))
-                        .ForMember(d => d.TypeId, c => c.UseValue(1));
+                        .ForMember(d => d.Type, c => c.UseValue(TypeEvent.Travel));
 
                     map.CreateMap<Event, WellnessDTO>()
                         .ForMember(d => d.HashId, c => c.MapFrom(x => _hashIdUtilities.EncryptLong(x.Id, Enums.Services.Wellness)))
                         .ReverseMap()
                         .ForMember(d => d.Id, c => c.MapFrom(x => _hashIdUtilities.DecryptLong(x.HashId, Enums.Services.Wellness)))
-                        .ForMember(d => d.TypeId, c => c.UseValue(2));
+                        .ForMember(d => d.Type, c => c.UseValue(TypeEvent.Wellness));
 
                     map.CreateMap<Event, TourDTO>()
                         .ForMember(d => d.HashId, c => c.MapFrom(x => _hashIdUtilities.EncryptLong(x.Id, Enums.Services.Tour)))
                         .ReverseMap()
                         .ForMember(d => d.Id, c => c.MapFrom(x => _hashIdUtilities.DecryptLong(x.HashId, Enums.Services.Tour)))
-                        .ForMember(d => d.TypeId, c => c.UseValue(3));
+                        .ForMember(d => d.Type, c => c.UseValue(TypeEvent.Tour));
 
                     map.CreateMap<Activities, DirectoryDTO>()
                         .ForMember(d => d.HashId, c => c.MapFrom(x => _hashIdUtilities.EncryptLong(x.Id, Enums.Services.Activities)))
