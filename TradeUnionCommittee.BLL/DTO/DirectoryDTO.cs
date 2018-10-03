@@ -24,7 +24,7 @@
 
     public class TravelDTO : DirectoryDTO
     {
-
+        public uint RowVersion { get; set; }
     }
 
     public class WellnessDTO : DirectoryDTO

@@ -71,6 +71,8 @@ namespace TradeUnionCommittee.Web.GUI.Models
         [Required(ErrorMessage = "Назва не може бути порожньою!")]
         [Remote("CheckName", "Travel", ErrorMessage = "Ця назва вже використовується!")]
         public override string Name { get; set; }
+
+        public uint RowVersion { get; set; }
     }
 
     public class WellnessViewModel : BaseDirectoryViewModel
