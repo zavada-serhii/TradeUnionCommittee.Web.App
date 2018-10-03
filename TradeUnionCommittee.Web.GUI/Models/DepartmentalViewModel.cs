@@ -11,5 +11,6 @@ namespace TradeUnionCommittee.Web.GUI.Models
         public string Street { get; set; }
         [Required(ErrorMessage = "Номер дому не може бути порожнім!")]
         public string NumberHouse { get; set; }
+        public uint RowVersion { get; set; }
     }
 }
