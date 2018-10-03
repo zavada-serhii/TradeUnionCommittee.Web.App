@@ -1,17 +1,14 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using NpgsqlTypes;
 
 namespace TradeUnionCommittee.DAL.Entities
 {
-    public class TypeEvent
+    public enum TypeEvent
     {
-        public long Id { get; set; }
-        public string Name { get; set; }
-        [Timestamp]
-        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
-        [Column("xmin", TypeName = "xid")]
-        public uint RowVersion { get; set; }
-
-        public Event Event { get; set; }
+        [PgName("Travel")]
+        Travel = 0,
+        [PgName("Wellness")]
+        Wellness = 1,
+        [PgName("Tour")]
+        Tour = 2
     }
 }

@@ -24,11 +24,11 @@ namespace TradeUnionCommittee.BLL.Services.Directory
         }
 
         public async Task<ActualResult<IEnumerable<DepartmentalDTO>>> GetAllAsync() =>
-            _mapperService.Mapper.Map<ActualResult<IEnumerable<DepartmentalDTO>>>(await _database.AddressPublicHouseRepository.Find(x => x.Type == 2));
+            _mapperService.Mapper.Map<ActualResult<IEnumerable<DepartmentalDTO>>>(await _database.AddressPublicHouseRepository.Find(x => x.Type == TypeHouse.Departmental));
 
         public async Task<ActualResult<Dictionary<string, string>>> GetAllShortcut()
         {
-            var departmental = await _database.AddressPublicHouseRepository.Find(x => x.Type == 2);
+            var departmental = await _database.AddressPublicHouseRepository.Find(x => x.Type == TypeHouse.Departmental);
             var dictionary = departmental.Result.ToDictionary(result => _hashIdUtilities.EncryptLong(result.Id, Enums.Services.Departmental), result => result.City + " " + result.Street + " " + result.NumberHouse);
             return new ActualResult<Dictionary<string, string>> { Result = dictionary };
         }

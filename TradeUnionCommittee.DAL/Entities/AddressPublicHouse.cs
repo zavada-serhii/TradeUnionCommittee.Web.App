@@ -16,13 +16,12 @@ namespace TradeUnionCommittee.DAL.Entities
         public string Street { get; set; }
         public string NumberHouse { get; set; }
         public string NumberDormitory { get; set; }
-        public long Type { get; set; }
+        public TypeHouse Type { get; set; }
         [Timestamp]
         [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         [Column("xmin", TypeName = "xid")]
         public uint RowVersion { get; set; }
 
-        public TypeHouse TypeNavigation { get; set; }
         public ICollection<PublicHouseEmployees> PublicHouseEmployees { get; set; }
     }
 }

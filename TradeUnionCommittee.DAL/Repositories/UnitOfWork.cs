@@ -52,7 +52,6 @@ namespace TradeUnionCommittee.DAL.Repositories
         private AwardRepository _awardRepository;
         private MaterialAidRepository _materialAidRepository;
         private HobbyRepository _hobbyRepository;
-        private TypeEventRepository _typeEventRepository;
         private EventRepository _eventRepository;
         private CulturalRepository _culturalRepository;
         private ActivitiesRepository _activitiesRepository;
@@ -60,7 +59,6 @@ namespace TradeUnionCommittee.DAL.Repositories
         private SocialActivityRepository _socialActivityRepository;
         private PositionRepository _positionRepository;
         private SubdivisionsRepository _subdivisionsRepository;
-        private TypeHouseRepository _typeHouseRepository;
         private AddressPublicHouseRepository _addressPublicHouseRepository;
 
         //------------------------------------------------------------------------------------------------------------------------------------------
@@ -112,7 +110,6 @@ namespace TradeUnionCommittee.DAL.Repositories
         public IRepository<Award> AwardRepository => _awardRepository ?? (_awardRepository = new AwardRepository(_context));
         public IRepository<MaterialAid> MaterialAidRepository => _materialAidRepository ?? (_materialAidRepository = new MaterialAidRepository(_context));
         public IRepository<Hobby> HobbyRepository => _hobbyRepository ?? (_hobbyRepository = new HobbyRepository(_context));
-        public IRepository<TypeEvent> TypeEventRepository => _typeEventRepository ?? (_typeEventRepository = new TypeEventRepository(_context));
         public IRepository<Event> EventRepository => _eventRepository ?? (_eventRepository = new EventRepository(_context));
         public IRepository<Cultural> CulturalRepository => _culturalRepository ?? (_culturalRepository = new CulturalRepository(_context));
         public IRepository<Activities> ActivitiesRepository => _activitiesRepository ?? (_activitiesRepository = new ActivitiesRepository(_context));
@@ -120,7 +117,6 @@ namespace TradeUnionCommittee.DAL.Repositories
         public IRepository<SocialActivity> SocialActivityRepository => _socialActivityRepository ?? (_socialActivityRepository = new SocialActivityRepository(_context));
         public IRepository<Position> PositionRepository => _positionRepository ?? (_positionRepository = new PositionRepository(_context));
         public IRepository<Subdivisions> SubdivisionsRepository => _subdivisionsRepository ?? (_subdivisionsRepository = new SubdivisionsRepository(_context));
-        public IRepository<TypeHouse> TypeHouseRepository => _typeHouseRepository ?? (_typeHouseRepository = new TypeHouseRepository(_context));
         public IRepository<AddressPublicHouse> AddressPublicHouseRepository => _addressPublicHouseRepository ?? (_addressPublicHouseRepository = new AddressPublicHouseRepository(_context));
 
         //------------------------------------------------------------------------------------------------------------------------------------------

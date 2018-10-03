@@ -23,7 +23,7 @@ namespace TradeUnionCommittee.BLL.Services.Directory
         }
 
         public async Task<ActualResult<IEnumerable<DormitoryDTO>>> GetAllAsync() =>
-            _mapperService.Mapper.Map<ActualResult<IEnumerable<DormitoryDTO>>>(await _database.AddressPublicHouseRepository.Find(x => x.Type == 1));
+            _mapperService.Mapper.Map<ActualResult<IEnumerable<DormitoryDTO>>>(await _database.AddressPublicHouseRepository.Find(x => x.Type == TypeHouse.Dormitory));
 
         public async Task<ActualResult<DormitoryDTO>> GetAsync(string hashId)
         {

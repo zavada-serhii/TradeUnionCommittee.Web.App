@@ -25,7 +25,7 @@ namespace TradeUnionCommittee.BLL.Services.Directory
         }
 
         public async Task<ActualResult<IEnumerable<TourDTO>>> GetAllAsync() =>
-            _mapperService.Mapper.Map<ActualResult<IEnumerable<TourDTO>>>(await _database.EventRepository.Find(x => x.TypeId == 3));
+            _mapperService.Mapper.Map<ActualResult<IEnumerable<TourDTO>>>(await _database.EventRepository.Find(x => x.Type == TypeEvent.Tour));
 
         public async Task<ActualResult<TourDTO>> GetAsync(string hashId)
         {
@@ -73,7 +73,7 @@ namespace TradeUnionCommittee.BLL.Services.Directory
 
         public async Task<bool> CheckNameAsync(string name)
         {
-            var result = await _database.EventRepository.Find(p => p.Name == name && p.TypeId == 3);
+            var result = await _database.EventRepository.Find(p => p.Name == name && p.Type == TypeEvent.Tour);
             return result.Result.Any();
         }
 

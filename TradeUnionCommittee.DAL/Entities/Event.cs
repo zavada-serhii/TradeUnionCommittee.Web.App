@@ -16,13 +16,12 @@ namespace TradeUnionCommittee.DAL.Entities
 
         public long Id { get; set; }
         public string Name { get; set; }
-        public long TypeId { get; set; }
+        public TypeEvent Type { get; set; }
         [Timestamp]
         [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         [Column("xmin", TypeName = "xid")]
         public uint RowVersion { get; set; }
 
-        public TypeEvent Type { get; set; }
         public ICollection<EventChildrens> EventChildrens { get; set; }
         public ICollection<EventEmployees> EventEmployees { get; set; }
         public ICollection<EventFamily> EventFamily { get; set; }
