@@ -1,18 +1,19 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TradeUnionCommittee.DAL.Entities
 {
     public class Education
     {
         public long Id { get; set; }
-        [ConcurrencyCheck]
         public long IdEmployee { get; set; }
-        [ConcurrencyCheck]
         public string LevelEducation { get; set; }
-        [ConcurrencyCheck]
         public string NameInstitution { get; set; }
-        [ConcurrencyCheck]
         public int? YearReceiving { get; set; }
+        [Timestamp]
+        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
+        [Column("xmin", TypeName = "xid")]
+        public uint RowVersion { get; set; }
 
         public Employee IdEmployeeNavigation { get; set; }
     }

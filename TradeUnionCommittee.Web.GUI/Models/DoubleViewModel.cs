@@ -8,6 +8,8 @@ namespace TradeUnionCommittee.Web.GUI.Models
         public virtual string HashId { get; set; }
 
         public virtual string Name { get; set; }
+
+        public virtual uint RowVersion { get; set; }
     }
 
     public class PositionViewModel : BaseDirectoryViewModel
@@ -17,6 +19,8 @@ namespace TradeUnionCommittee.Web.GUI.Models
         [Required(ErrorMessage = "Назва не може бути порожньою!")]
         [Remote("CheckName", "Position", ErrorMessage = "Ця назва вже використовується!")]
         public override string Name { get; set; }
+
+        public override uint RowVersion { get; set; }
     }
 
     public class SocialActivityViewModel : BaseDirectoryViewModel
@@ -26,6 +30,8 @@ namespace TradeUnionCommittee.Web.GUI.Models
         [Required(ErrorMessage = "Назва не може бути порожньою!")]
         [Remote("CheckName", "SocialActivity", ErrorMessage = "Ця назва вже використовується!")]
         public override string Name { get; set; }
+
+        public override uint RowVersion { get; set; }
     }
 
     public class PrivilegesViewModel : BaseDirectoryViewModel
@@ -35,6 +41,8 @@ namespace TradeUnionCommittee.Web.GUI.Models
         [Required(ErrorMessage = "Назва не може бути порожньою!")]
         [Remote("CheckName", "Privileges", ErrorMessage = "Ця назва вже використовується!")]
         public override string Name { get; set; }
+
+        public override uint RowVersion { get; set; }
     }
 
     public class AwardViewModel : BaseDirectoryViewModel
@@ -44,6 +52,8 @@ namespace TradeUnionCommittee.Web.GUI.Models
         [Required(ErrorMessage = "Назва не може бути порожньою!")]
         [Remote("CheckName", "Award", ErrorMessage = "Ця назва вже використовується!")]
         public override string Name { get; set; }
+
+        public override uint RowVersion { get; set; }
     }
 
     public class MaterialAidViewModel : BaseDirectoryViewModel
@@ -53,6 +63,8 @@ namespace TradeUnionCommittee.Web.GUI.Models
         [Required(ErrorMessage = "Назва не може бути порожньою!")]
         [Remote("CheckName", "MaterialAid", ErrorMessage = "Ця назва вже використовується!")]
         public override string Name { get; set; }
+
+        public override uint RowVersion { get; set; }
     }
 
     public class HobbyViewModel : BaseDirectoryViewModel
@@ -62,6 +74,8 @@ namespace TradeUnionCommittee.Web.GUI.Models
         [Required(ErrorMessage = "Назва не може бути порожньою!")]
         [Remote("CheckName", "Hobby", ErrorMessage = "Ця назва вже використовується!")]
         public override string Name { get; set; }
+
+        public override uint RowVersion { get; set; }
     }
 
     public class TravelViewModel : BaseDirectoryViewModel
@@ -71,6 +85,8 @@ namespace TradeUnionCommittee.Web.GUI.Models
         [Required(ErrorMessage = "Назва не може бути порожньою!")]
         [Remote("CheckName", "Travel", ErrorMessage = "Ця назва вже використовується!")]
         public override string Name { get; set; }
+
+        public override uint RowVersion { get; set; }
     }
 
     public class WellnessViewModel : BaseDirectoryViewModel
@@ -80,6 +96,8 @@ namespace TradeUnionCommittee.Web.GUI.Models
         [Required(ErrorMessage = "Назва не може бути порожньою!")]
         [Remote("CheckName", "Wellness", ErrorMessage = "Ця назва вже використовується!")]
         public override string Name { get; set; }
+
+        public override uint RowVersion { get; set; }
     }
 
     public class TourViewModel : BaseDirectoryViewModel
@@ -89,6 +107,8 @@ namespace TradeUnionCommittee.Web.GUI.Models
         [Required(ErrorMessage = "Назва не може бути порожньою!")]
         [Remote("CheckName", "Tour", ErrorMessage = "Ця назва вже використовується!")]
         public override string Name { get; set; }
+
+        public override uint RowVersion { get; set; }
     }
 
     public class ActivitiesViewModel : BaseDirectoryViewModel
@@ -98,6 +118,8 @@ namespace TradeUnionCommittee.Web.GUI.Models
         [Required(ErrorMessage = "Назва не може бути порожньою!")]
         [Remote("CheckName", "Activities", ErrorMessage = "Ця назва вже використовується!")]
         public override string Name { get; set; }
+
+        public override uint RowVersion { get; set; }
     }
 
     public class CulturalViewModel : BaseDirectoryViewModel
@@ -107,5 +129,7 @@ namespace TradeUnionCommittee.Web.GUI.Models
         [Required(ErrorMessage = "Назва не може бути порожньою!")]
         [Remote("CheckName", "Cultural", ErrorMessage = "Ця назва вже використовується!")]
         public override string Name { get; set; }
+
+        public override uint RowVersion { get; set; }
     }
 }

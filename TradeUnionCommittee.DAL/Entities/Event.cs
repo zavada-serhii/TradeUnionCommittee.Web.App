@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TradeUnionCommittee.DAL.Entities
 {
@@ -14,7 +15,6 @@ namespace TradeUnionCommittee.DAL.Entities
         }
 
         public long Id { get; set; }
-        [ConcurrencyCheck]
         public string Name { get; set; }
         public TypeEvent Type { get; set; }
 

@@ -4,6 +4,7 @@
     {
         public string HashId { get; set; }
         public string Name { get; set; }
+        public uint RowVersion { get; set; }
     }
 
     public class SubdivisionDTO : DirectoryDTO
