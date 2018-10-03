@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TradeUnionCommittee.DAL.Entities
 {
@@ -25,38 +26,26 @@ namespace TradeUnionCommittee.DAL.Entities
         }
 
         public long Id { get; set; }
-        [ConcurrencyCheck]
         public string FirstName { get; set; }
-        [ConcurrencyCheck]
         public string SecondName { get; set; }
-        [ConcurrencyCheck]
         public string Patronymic { get; set; }
-        [ConcurrencyCheck]
         public string Sex { get; set; }
-        [ConcurrencyCheck]
         public DateTime BirthDate { get; set; }
-        [ConcurrencyCheck]
         public string IdentificationСode { get; set; }
-        [ConcurrencyCheck]
         public string MechnikovCard { get; set; }
-        [ConcurrencyCheck]
         public string MobilePhone { get; set; }
-        [ConcurrencyCheck]
         public string CityPhone { get; set; }
-        [ConcurrencyCheck]
         public string BasicProfession { get; set; }
-        [ConcurrencyCheck]
         public int StartYearWork { get; set; }
-        [ConcurrencyCheck]
         public int? EndYearWork { get; set; }
-        [ConcurrencyCheck]
         public DateTime StartDateTradeUnion { get; set; }
-        [ConcurrencyCheck]
         public DateTime? EndDateTradeUnion { get; set; }
-        [ConcurrencyCheck]
         public string Note { get; set; }
-        [ConcurrencyCheck]
         public DateTime DateAdded { get; set; }
+        [Timestamp]
+        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
+        [Column("xmin", TypeName = "xid")]
+        public uint RowVersion { get; set; }
 
         public Education Education { get; set; }
         public PositionEmployees PositionEmployees { get; set; }
