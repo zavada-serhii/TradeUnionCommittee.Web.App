@@ -34,6 +34,8 @@ namespace TradeUnionCommittee.Web.GUI.Models
         [Required(ErrorMessage = "Назва не може бути порожньою!")]
         [Remote("CheckName", "Subdivision", ErrorMessage = "Ця назва вже використовується!")]
         public string Name { get; set; }
+
+        public uint RowVersion { get; set; }
     }
 
     public class UpdateAbbreviationSubdivisionViewModel
@@ -43,6 +45,8 @@ namespace TradeUnionCommittee.Web.GUI.Models
         [Required(ErrorMessage = "Aбревіатура не може бути порожньою!")]
         [Remote("CheckAbbreviation", "Subdivision", ErrorMessage = "Ця aбревіатура вже використовується!")]
         public string Abbreviation { get; set; }
+
+        public uint RowVersion { get; set; }
     }
 
     public class DeleteSubdivisionViewModel
@@ -58,5 +62,7 @@ namespace TradeUnionCommittee.Web.GUI.Models
         public string HashId { get; set; }
         [Required]
         public string HashIdSubordinate { get; set; }
+        public uint RowVersion { get; set; }
+
     }
 }

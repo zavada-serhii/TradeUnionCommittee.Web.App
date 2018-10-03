@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TradeUnionCommittee.DAL.Entities
 {
@@ -11,16 +12,15 @@ namespace TradeUnionCommittee.DAL.Entities
         }
 
         public long Id { get; set; }
-        [ConcurrencyCheck]
         public string City { get; set; }
-        [ConcurrencyCheck]
         public string Street { get; set; }
-        [ConcurrencyCheck]
         public string NumberHouse { get; set; }
-        [ConcurrencyCheck]
         public string NumberDormitory { get; set; }
-        [ConcurrencyCheck]
         public long Type { get; set; }
+        [Timestamp]
+        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
+        [Column("xmin", TypeName = "xid")]
+        public uint RowVersion { get; set; }
 
         public TypeHouse TypeNavigation { get; set; }
         public ICollection<PublicHouseEmployees> PublicHouseEmployees { get; set; }

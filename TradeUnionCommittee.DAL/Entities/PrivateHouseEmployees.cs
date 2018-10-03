@@ -1,23 +1,22 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TradeUnionCommittee.DAL.Entities
 {
     public class PrivateHouseEmployees
     {
         public long Id { get; set; }
-        [ConcurrencyCheck]
         public long IdEmployee { get; set; }
-        [ConcurrencyCheck]
         public string City { get; set; }
-        [ConcurrencyCheck]
         public string Street { get; set; }
-        [ConcurrencyCheck]
         public string NumberHouse { get; set; }
-        [ConcurrencyCheck]
         public string NumberApartment { get; set; }
-        [ConcurrencyCheck]
         public DateTime? DateReceiving { get; set; }
+        [Timestamp]
+        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
+        [Column("xmin", TypeName = "xid")]
+        public uint RowVersion { get; set; }
 
         public Employee IdEmployeeNavigation { get; set; }
     }

@@ -15,6 +15,7 @@
             <hr>
             <form asp-action="Restructuring">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="RowVersion" />
                 <div class="row">
                     <div class="form-group col-lg-4 col-xl-6">
                         <select asp-for="HashIdSubordinate" class="form-control" asp-items="ViewBag.SubordinateSubdivision"></select>
