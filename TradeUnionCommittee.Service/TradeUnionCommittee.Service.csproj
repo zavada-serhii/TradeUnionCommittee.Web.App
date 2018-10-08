@@ -5,9 +5,4 @@
     <LangVersion>7.3</LangVersion>
   </PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\TradeUnionCommittee.BLL\TradeUnionCommittee.BLL.csproj" />
-    <ProjectReference Include="..\TradeUnionCommittee.Common\TradeUnionCommittee.Common.csproj" />
-  </ItemGroup>
-
 </Project>
