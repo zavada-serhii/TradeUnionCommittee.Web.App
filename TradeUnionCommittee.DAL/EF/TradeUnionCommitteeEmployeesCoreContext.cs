@@ -6,9 +6,9 @@ using TradeUnionCommittee.DAL.Entities;
 
 namespace TradeUnionCommittee.DAL.EF
 {
-    public class TradeUnionCommitteeEmployeesCoreContext : IdentityDbContext<User>
+    public sealed class TradeUnionCommitteeEmployeesCoreContext : IdentityDbContext<User>
     {
-        public TradeUnionCommitteeEmployeesCoreContext(DbContextOptions options) : base(options) { }
+        public TradeUnionCommitteeEmployeesCoreContext(DbContextOptions options) : base(options) { Database.EnsureCreated(); }
 
         static TradeUnionCommitteeEmployeesCoreContext()
         {
@@ -16,50 +16,50 @@ namespace TradeUnionCommittee.DAL.EF
             NpgsqlConnection.GlobalTypeMapper.MapEnum<TypeHouse>("TypeHouse", new NpgsqlNullNameTranslator());
         }
 
-        public virtual DbSet<Activities> Activities { get; set; }
-        public virtual DbSet<ActivityChildrens> ActivityChildrens { get; set; }
-        public virtual DbSet<ActivityEmployees> ActivityEmployees { get; set; }
-        public virtual DbSet<ActivityFamily> ActivityFamily { get; set; }
-        public virtual DbSet<ActivityGrandChildrens> ActivityGrandChildrens { get; set; }
-        public virtual DbSet<AddressPublicHouse> AddressPublicHouse { get; set; }
-        public virtual DbSet<ApartmentAccountingEmployees> ApartmentAccountingEmployees { get; set; }
-        public virtual DbSet<Award> Award { get; set; }
-        public virtual DbSet<AwardEmployees> AwardEmployees { get; set; }
-        public virtual DbSet<Children> Children { get; set; }
-        public virtual DbSet<Cultural> Cultural { get; set; }
-        public virtual DbSet<CulturalChildrens> CulturalChildrens { get; set; }
-        public virtual DbSet<CulturalEmployees> CulturalEmployees { get; set; }
-        public virtual DbSet<CulturalFamily> CulturalFamily { get; set; }
-        public virtual DbSet<CulturalGrandChildrens> CulturalGrandChildrens { get; set; }
-        public virtual DbSet<Education> Education { get; set; }
-        public virtual DbSet<Employee> Employee { get; set; }
-        public virtual DbSet<Event> Event { get; set; }
-        public virtual DbSet<EventChildrens> EventChildrens { get; set; }
-        public virtual DbSet<EventEmployees> EventEmployees { get; set; }
-        public virtual DbSet<EventFamily> EventFamily { get; set; }
-        public virtual DbSet<EventGrandChildrens> EventGrandChildrens { get; set; }
-        public virtual DbSet<Family> Family { get; set; }
-        public virtual DbSet<FluorographyEmployees> FluorographyEmployees { get; set; }
-        public virtual DbSet<GiftChildrens> GiftChildrens { get; set; }
-        public virtual DbSet<GiftEmployees> GiftEmployees { get; set; }
-        public virtual DbSet<GiftGrandChildrens> GiftGrandChildrens { get; set; }
-        public virtual DbSet<GrandChildren> GrandChildren { get; set; }
-        public virtual DbSet<Hobby> Hobby { get; set; }
-        public virtual DbSet<HobbyChildrens> HobbyChildrens { get; set; }
-        public virtual DbSet<HobbyEmployees> HobbyEmployees { get; set; }
-        public virtual DbSet<HobbyGrandChildrens> HobbyGrandChildrens { get; set; }
-        public virtual DbSet<MaterialAid> MaterialAid { get; set; }
-        public virtual DbSet<MaterialAidEmployees> MaterialAidEmployees { get; set; }
-        public virtual DbSet<Position> Position { get; set; }
-        public virtual DbSet<PositionEmployees> PositionEmployees { get; set; }
-        public virtual DbSet<PrivateHouseEmployees> PrivateHouseEmployees { get; set; }
-        public virtual DbSet<PrivilegeEmployees> PrivilegeEmployees { get; set; }
-        public virtual DbSet<Privileges> Privileges { get; set; }
-        public virtual DbSet<PublicHouseEmployees> PublicHouseEmployees { get; set; }
-        public virtual DbSet<Scientific> Scientific { get; set; }
-        public virtual DbSet<SocialActivity> SocialActivity { get; set; }
-        public virtual DbSet<SocialActivityEmployees> SocialActivityEmployees { get; set; }
-        public virtual DbSet<Subdivisions> Subdivisions { get; set; }
+        public DbSet<Activities> Activities { get; set; }
+        public DbSet<ActivityChildrens> ActivityChildrens { get; set; }
+        public DbSet<ActivityEmployees> ActivityEmployees { get; set; }
+        public DbSet<ActivityFamily> ActivityFamily { get; set; }
+        public DbSet<ActivityGrandChildrens> ActivityGrandChildrens { get; set; }
+        public DbSet<AddressPublicHouse> AddressPublicHouse { get; set; }
+        public DbSet<ApartmentAccountingEmployees> ApartmentAccountingEmployees { get; set; }
+        public DbSet<Award> Award { get; set; }
+        public DbSet<AwardEmployees> AwardEmployees { get; set; }
+        public DbSet<Children> Children { get; set; }
+        public DbSet<Cultural> Cultural { get; set; }
+        public DbSet<CulturalChildrens> CulturalChildrens { get; set; }
+        public DbSet<CulturalEmployees> CulturalEmployees { get; set; }
+        public DbSet<CulturalFamily> CulturalFamily { get; set; }
+        public DbSet<CulturalGrandChildrens> CulturalGrandChildrens { get; set; }
+        public DbSet<Education> Education { get; set; }
+        public DbSet<Employee> Employee { get; set; }
+        public DbSet<Event> Event { get; set; }
+        public DbSet<EventChildrens> EventChildrens { get; set; }
+        public DbSet<EventEmployees> EventEmployees { get; set; }
+        public DbSet<EventFamily> EventFamily { get; set; }
+        public DbSet<EventGrandChildrens> EventGrandChildrens { get; set; }
+        public DbSet<Family> Family { get; set; }
+        public DbSet<FluorographyEmployees> FluorographyEmployees { get; set; }
+        public DbSet<GiftChildrens> GiftChildrens { get; set; }
+        public DbSet<GiftEmployees> GiftEmployees { get; set; }
+        public DbSet<GiftGrandChildrens> GiftGrandChildrens { get; set; }
+        public DbSet<GrandChildren> GrandChildren { get; set; }
+        public DbSet<Hobby> Hobby { get; set; }
+        public DbSet<HobbyChildrens> HobbyChildrens { get; set; }
+        public DbSet<HobbyEmployees> HobbyEmployees { get; set; }
+        public DbSet<HobbyGrandChildrens> HobbyGrandChildrens { get; set; }
+        public DbSet<MaterialAid> MaterialAid { get; set; }
+        public DbSet<MaterialAidEmployees> MaterialAidEmployees { get; set; }
+        public DbSet<Position> Position { get; set; }
+        public DbSet<PositionEmployees> PositionEmployees { get; set; }
+        public DbSet<PrivateHouseEmployees> PrivateHouseEmployees { get; set; }
+        public DbSet<PrivilegeEmployees> PrivilegeEmployees { get; set; }
+        public DbSet<Privileges> Privileges { get; set; }
+        public DbSet<PublicHouseEmployees> PublicHouseEmployees { get; set; }
+        public DbSet<Scientific> Scientific { get; set; }
+        public DbSet<SocialActivity> SocialActivity { get; set; }
+        public DbSet<SocialActivityEmployees> SocialActivityEmployees { get; set; }
+        public DbSet<Subdivisions> Subdivisions { get; set; }
 
         //------------------------------------------------
 
