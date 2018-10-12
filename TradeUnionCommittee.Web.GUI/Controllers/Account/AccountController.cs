@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.DTO;
+using TradeUnionCommittee.BLL.Enums;
 using TradeUnionCommittee.BLL.Interfaces.Account;
 using TradeUnionCommittee.Web.GUI.AdditionalSettings.DropDownLists;
 using TradeUnionCommittee.Web.GUI.AdditionalSettings.Oops;
@@ -40,7 +41,7 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Account
         {
             if (ModelState.IsValid)
             {
-                var result = await _accountService.Login(model.Email, model.Password);
+                var result = await _accountService.Login(model.Email, model.Password, AuthorizationType.Cookie);
                 if (result.IsValid)
                 {
                     if (!string.IsNullOrEmpty(model.ReturnUrl) && Url.IsLocalUrl(model.ReturnUrl))

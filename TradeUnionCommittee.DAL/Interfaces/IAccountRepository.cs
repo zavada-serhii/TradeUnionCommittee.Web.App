@@ -2,12 +2,13 @@
 using System.Threading.Tasks;
 using TradeUnionCommittee.Common.ActualResults;
 using TradeUnionCommittee.DAL.Entities;
+using TradeUnionCommittee.DAL.Enums;
 
 namespace TradeUnionCommittee.DAL.Interfaces
 {
     public interface IAccountRepository
     {
-        Task<ActualResult> Login(string email, string password);
+        Task<ActualResult> Login(string email, string password, AuthorizationType type);
         Task<ActualResult> LogOff();
         Task<ActualResult<IEnumerable<User>>> GetAllUsersAsync();
         Task<ActualResult<User>> GetUserAsync(string id);

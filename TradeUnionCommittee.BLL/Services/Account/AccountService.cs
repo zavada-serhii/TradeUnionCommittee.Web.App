@@ -6,6 +6,7 @@ using TradeUnionCommittee.BLL.Utilities;
 using TradeUnionCommittee.Common.ActualResults;
 using TradeUnionCommittee.Common.Enums;
 using TradeUnionCommittee.DAL.Entities;
+using TradeUnionCommittee.DAL.Enums;
 using TradeUnionCommittee.DAL.Interfaces;
 
 namespace TradeUnionCommittee.BLL.Services.Account
@@ -21,9 +22,9 @@ namespace TradeUnionCommittee.BLL.Services.Account
             _mapperService = mapperService;
         }
 
-        public async Task<ActualResult> Login(string email, string password)
+        public async Task<ActualResult> Login(string email, string password, Enums.AuthorizationType type)
         {
-            var result = await _database.AccountRepository.Login(email, password);
+            var result = await _database.AccountRepository.Login(email, password, (AuthorizationType)type);
             return result.IsValid ? new ActualResult() : new ActualResult<string>(Errors.InvalidLoginOrPassword);
         }
 

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using TradeUnionCommittee.Common.ActualResults;
 using TradeUnionCommittee.Common.Enums;
 using TradeUnionCommittee.DAL.Entities;
+using TradeUnionCommittee.DAL.Enums;
 using TradeUnionCommittee.DAL.Interfaces;
 
 namespace TradeUnionCommittee.DAL.Repositories.Account
@@ -25,12 +26,22 @@ namespace TradeUnionCommittee.DAL.Repositories.Account
 
         //-----------------------------------------------------------------------------------
 
-        public async Task<ActualResult> Login(string email, string password)
+        public async Task<ActualResult> Login(string email, string password, AuthorizationType type)
         {
             try
             {
-                var result = await _signInManager.PasswordSignInAsync(email, password, false, false);
-                return result.Succeeded ? new ActualResult() : new ActualResult(Errors.InvalidLoginOrPassword);
+                switch (type)
+                {
+                    case AuthorizationType.Cookie:
+                        var resultCookie = await _signInManager.PasswordSignInAsync(email, password, false, false);
+                        return resultCookie.Succeeded ? new ActualResult() : new ActualResult(Errors.InvalidLoginOrPassword);
+                    case AuthorizationType.Token:
+                        var user = await _userManager.FindByNameAsync(email);
+                        var resultToken = await _userManager.CheckPasswordAsync(user, password);
+                        return resultToken ? new ActualResult() : new ActualResult(Errors.InvalidLoginOrPassword);
+                    default:
+                        throw new ArgumentOutOfRangeException(nameof(type), type, null);
+                }
             }
             catch (Exception e)
             {
