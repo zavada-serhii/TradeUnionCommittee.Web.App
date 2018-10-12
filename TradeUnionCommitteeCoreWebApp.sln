@@ -11,11 +11,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TradeUnionCommittee.BLL", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TradeUnionCommittee.Web.GUI", "TradeUnionCommittee.Web.GUI\TradeUnionCommittee.Web.GUI.csproj", "{058DC0B6-F6E0-4103-B5AF-F28FB63F98D4}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TradeUnionCommittee.Api", "TradeUnionCommittee.Api\TradeUnionCommittee.Api.csproj", "{6B40D6B3-78A9-4EE8-B6FD-88DA97DE5905}"
+EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TradeUnionCommittee.Service", "TradeUnionCommittee.Service\TradeUnionCommittee.Service.csproj", "{D4EB1575-1CC0-42C9-9292-CA137203EF98}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TradeUnionCommittee.UnitTests", "TradeUnionCommittee.UnitTests\TradeUnionCommittee.UnitTests.csproj", "{D0F824FD-78DB-4D79-AE3A-A45C69F73072}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TradeUnionCommittee.Api", "TradeUnionCommittee.Api\TradeUnionCommittee.Api.csproj", "{B9F7D366-F259-4854-887B-69611F273DE1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TradeUnionCommittee.UnitTests", "TradeUnionCommittee.UnitTests\TradeUnionCommittee.UnitTests.csproj", "{D0F824FD-78DB-4D79-AE3A-A45C69F73072}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +39,10 @@ Global
 		{058DC0B6-F6E0-4103-B5AF-F28FB63F98D4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{058DC0B6-F6E0-4103-B5AF-F28FB63F98D4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{058DC0B6-F6E0-4103-B5AF-F28FB63F98D4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6B40D6B3-78A9-4EE8-B6FD-88DA97DE5905}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6B40D6B3-78A9-4EE8-B6FD-88DA97DE5905}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6B40D6B3-78A9-4EE8-B6FD-88DA97DE5905}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6B40D6B3-78A9-4EE8-B6FD-88DA97DE5905}.Release|Any CPU.Build.0 = Release|Any CPU
 		{D4EB1575-1CC0-42C9-9292-CA137203EF98}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{D4EB1575-1CC0-42C9-9292-CA137203EF98}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D4EB1575-1CC0-42C9-9292-CA137203EF98}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -47,10 +51,6 @@ Global
 		{D0F824FD-78DB-4D79-AE3A-A45C69F73072}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D0F824FD-78DB-4D79-AE3A-A45C69F73072}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D0F824FD-78DB-4D79-AE3A-A45C69F73072}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B9F7D366-F259-4854-887B-69611F273DE1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B9F7D366-F259-4854-887B-69611F273DE1}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B9F7D366-F259-4854-887B-69611F273DE1}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B9F7D366-F259-4854-887B-69611F273DE1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
