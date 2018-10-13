@@ -4,8 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.DTO;
 using TradeUnionCommittee.BLL.Interfaces.Employee;
-using TradeUnionCommittee.Web.GUI.AdditionalSettings.DropDownLists;
-using TradeUnionCommittee.Web.GUI.AdditionalSettings.Oops;
+using TradeUnionCommittee.Web.GUI.Configuration.DropDownLists;
+using TradeUnionCommittee.Web.GUI.Controllers.Oops;
 using TradeUnionCommittee.Web.GUI.Models;
 
 namespace TradeUnionCommittee.Web.GUI.Controllers.Employee

@@ -1,10 +1,11 @@
 ﻿using AutoMapper;
 using TradeUnionCommittee.BLL.DTO;
+using TradeUnionCommittee.BLL.Enums;
 using TradeUnionCommittee.Web.GUI.Models;
 
-namespace TradeUnionCommittee.Web.GUI.AdditionalSettings
+namespace TradeUnionCommittee.Web.GUI.Configuration
 {
-    public class AutoMapperProvider
+    public class AutoMapperConfiguration
     {
         /// <summary>
         ///     Configures the automatic mapper.
@@ -23,7 +24,7 @@ namespace TradeUnionCommittee.Web.GUI.AdditionalSettings
 
                 map.CreateMap<CreateEmployeeViewModel, CreateEmployeeDTO>()
                 .ForMember(d => d.HashIdSubdivision, opt => opt.MapFrom(c => c.HashIdSubordinateSubdivision ?? c.HashIdMainSubdivision))
-                .ForMember(d => d.CityPhone, opt => opt.MapFrom(c => c.CityPhoneAdditional ?? c.CityPhone));
+                .ForMember(d => d.TypeAccommodation, opt => opt.MapFrom(x => ConverterAccommodation(x.TypeAccommodation)));
 
                 map.CreateMap<DirectoryDTO, PositionViewModel>().ReverseMap();
                 map.CreateMap<DirectoryDTO, SocialActivityViewModel>().ReverseMap();
@@ -55,6 +56,27 @@ namespace TradeUnionCommittee.Web.GUI.AdditionalSettings
                 map.CreateMap<GeneralInfoEmployeeDTO, UpdateEmployeeViewModel>().ReverseMap();
 
             }).CreateMapper();
+        }
+
+        private static AccommodationType ConverterAccommodation(string accommodationType)
+        {
+            switch (accommodationType)
+            {
+                case "privateHouse":
+                    return AccommodationType.PrivateHouse;
+
+                case "fromUniversity":
+                    return AccommodationType.FromUniversity;
+
+                case "dormitory":
+                    return AccommodationType.Dormitory;
+
+                case "departmental":
+                    return AccommodationType.Departmental;
+
+                default:
+                    return 0;
+            }
         }
     }
 }

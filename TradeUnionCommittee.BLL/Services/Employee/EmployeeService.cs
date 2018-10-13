@@ -1,8 +1,9 @@
 ﻿using AutoMapper;
-using System;
 using System.Linq;
 using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.DTO;
+using TradeUnionCommittee.BLL.Enums;
+using TradeUnionCommittee.BLL.Extensions;
 using TradeUnionCommittee.BLL.Interfaces.Employee;
 using TradeUnionCommittee.BLL.Utilities;
 using TradeUnionCommittee.Common.ActualResults;
@@ -49,7 +50,7 @@ namespace TradeUnionCommittee.BLL.Services.Employee
                 return new ActualResult(Errors.InvalidId);
             }
 
-            if (dto.TypeAccommodation == "dormitory")
+            if (dto.TypeAccommodation == AccommodationType.Dormitory)
             {
                 var checkDormitory = await _hashIdUtilities.CheckDecryptWithId(dto.HashIdDormitory, Enums.Services.Dormitory);
                 if (checkDormitory != null)
@@ -62,7 +63,7 @@ namespace TradeUnionCommittee.BLL.Services.Employee
                 }
             }
 
-            if (dto.TypeAccommodation == "departmental")
+            if (dto.TypeAccommodation == AccommodationType.Departmental)
             {
                 var checkDepartmental = await _hashIdUtilities.CheckDecryptWithId(dto.HashIdDepartmental, Enums.Services.Departmental);
                 if (checkDepartmental != null)
@@ -125,12 +126,12 @@ namespace TradeUnionCommittee.BLL.Services.Employee
                 await _database.EducationRepository.Create(_mapperService.Mapper.Map<Education>(dto));
                 await _database.PositionEmployeesRepository.Create(_mapperService.Mapper.Map<PositionEmployees>(dto));
 
-                if (dto.TypeAccommodation == "privateHouse" || dto.TypeAccommodation == "fromUniversity")
+                if (dto.TypeAccommodation == AccommodationType.PrivateHouse || dto.TypeAccommodation == AccommodationType.FromUniversity)
                 {
                     await _database.PrivateHouseEmployeesRepository.Create(_mapperService.Mapper.Map<PrivateHouseEmployees>(dto));
                 }
 
-                if (dto.TypeAccommodation == "dormitory" || dto.TypeAccommodation == "departmental")
+                if (dto.TypeAccommodation == AccommodationType.Dormitory || dto.TypeAccommodation == AccommodationType.Departmental)
                 {
                     await _database.PublicHouseEmployeesRepository.Create(_mapperService.Mapper.Map<PublicHouseEmployees>(dto));
                 }
@@ -166,7 +167,7 @@ namespace TradeUnionCommittee.BLL.Services.Employee
         {
             var mapper = new MapperConfiguration(cfg => cfg.CreateMap<DAL.Entities.Employee, GeneralInfoEmployeeDTO>()
                 .ForMember("IdEmployee", opt => opt.MapFrom(c => c.Id))
-                .ForMember("CountYear", opt => opt.MapFrom(c => CalculateAge(c.BirthDate)))
+                .ForMember("CountYear", opt => opt.MapFrom(c => c.BirthDate.CalculateAge()))
                 .ForMember("Sex", opt => opt.MapFrom(c => ConvertToUkraine(c.Sex)))
             ).CreateMapper();
             var employee = mapper.Map<ActualResult<DAL.Entities.Employee>, ActualResult<GeneralInfoEmployeeDTO>>(await _database.EmployeeRepository.Get(id));
@@ -197,16 +198,6 @@ namespace TradeUnionCommittee.BLL.Services.Employee
                 default:
                     return sex;
             }
-        }
-
-        private int CalculateAge(DateTime birthDate)
-        {
-            var yearsPassed = DateTime.Now.Year - birthDate.Year;
-            if (DateTime.Now.Month < birthDate.Month || (DateTime.Now.Month == birthDate.Month && DateTime.Now.Day < birthDate.Day))
-            {
-                yearsPassed--;
-            }
-            return yearsPassed;
         }
 
         //------------------------------------------------------------------------------------------------------------------------------------------

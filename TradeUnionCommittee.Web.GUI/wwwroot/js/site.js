@@ -48,12 +48,9 @@ $('#editable-select-ScientifickTitle').editableSelect();
 $(function ()
 {
     $("#mobile-phone").mask("+38(099)999-99-99");
-    $("#home-phone").mask("999-99-9");
-    $("#home-phone1").mask("999-99-99");
     $("#Mechnikov-code").mask("9-999999-999999");
     $("#ident-code").mask("9999999999");
     $("#year").mask("9999");
-    $("#year-education").mask("9999");
 });
 
 //------------------------------------------------------------------------------------------------------------------------------------------
@@ -73,9 +70,6 @@ $(document).ready(function ()
 
         document.getElementById("employeeBirthDate").checked = true;
         document.getElementById("employeeHobby").checked = true;
-
-        //document.getElementById("home-phone").value = "";
-        document.getElementById("home-phone1").value = "";
     }
 });
 
@@ -90,7 +84,7 @@ function getSubordinateSubdivision(subordinateSubdivision)
     document.getElementById("subordinateSubdivision").innerHTML = " ";
     if (subordinateSubdivision !== null)
     {
-        $("#subordinateSubdivision").append("<option value value = null >Виберіть кафедру</option>");
+        $("#subordinateSubdivision").append("<option value value = null >Оберіть кафедру</option>");
         $.each(subordinateSubdivision, function ()
         {
             $("#subordinateSubdivision").append("<option value=" + this.hashId + ">" + this.name + "</option>");
@@ -101,32 +95,6 @@ function getSubordinateSubdivision(subordinateSubdivision)
         $("#subordinateSubdivision").append("<option value value = null >Кафедри відсутні</option>");
     }
 }
-
-//------------------------------------------------------------------------------------------------------------------------------------------
-
-$('input[name=CityPhone]').change(function ()
-{
-    if ($(this).val())
-    {
-        document.getElementById('home-phone1').readOnly = true;
-    }
-    else
-    {
-        document.getElementById('home-phone1').readOnly = false;
-    }
-});
-
-$('input[name=CityPhoneAdditional]').change(function ()
-{
-    if ($(this).val())
-    {
-        document.getElementById('home-phone').readOnly = true;
-    }
-    else
-    {
-        document.getElementById('home-phone').readOnly = false;
-    }
-});
 
 //------------------------------------------------------------------------------------------------------------------------------------------
 

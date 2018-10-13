@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
 using TradeUnionCommittee.BLL.DTO;
+using TradeUnionCommittee.BLL.Enums;
+using TradeUnionCommittee.BLL.Extensions;
 using TradeUnionCommittee.DAL.Entities;
 
 namespace TradeUnionCommittee.BLL.Utilities
@@ -124,7 +126,8 @@ namespace TradeUnionCommittee.BLL.Utilities
 
                     // -- Mapping for create employee
 
-                    map.CreateMap<Employee, CreateEmployeeDTO>().ReverseMap();
+                    map.CreateMap<Employee, CreateEmployeeDTO>().ReverseMap()
+                    .ForMember(d => d.CityPhone, c => c.MapFrom(x => x.CityPhone.AddMaskForCityPhone()));
 
                     map.CreateMap<Education, CreateEmployeeDTO>()
                         .ReverseMap()
@@ -141,17 +144,17 @@ namespace TradeUnionCommittee.BLL.Utilities
                     map.CreateMap<PrivateHouseEmployees, CreateEmployeeDTO>()
                         .ReverseMap()
                         .ForMember(x => x.IdEmployee, c => c.MapFrom(x => x.IdEmployee))
-                        .ForMember(x => x.City, c => c.MapFrom(x => x.TypeAccommodation == "privateHouse" ? x.CityPrivateHouse : x.CityHouseUniversity))
-                        .ForMember(x => x.Street, c => c.MapFrom(x => x.TypeAccommodation == "privateHouse" ? x.StreetPrivateHouse : x.StreetHouseUniversity))
-                        .ForMember(x => x.NumberHouse, c => c.MapFrom(x => x.TypeAccommodation == "privateHouse" ? x.NumberHousePrivateHouse : x.NumberHouseUniversity))
-                        .ForMember(x => x.NumberApartment, c => c.MapFrom(x => x.TypeAccommodation == "privateHouse" ? x.NumberApartmentPrivateHouse : x.NumberApartmentHouseUniversity))
-                        .ForMember(x => x.DateReceiving, c => c.MapFrom(x => x.TypeAccommodation == "fromUniversity" ? x.DateReceivingHouseFromUniversity : null));
+                        .ForMember(x => x.City, c => c.MapFrom(x => x.TypeAccommodation == AccommodationType.PrivateHouse ? x.CityPrivateHouse : x.CityHouseUniversity))
+                        .ForMember(x => x.Street, c => c.MapFrom(x => x.TypeAccommodation == AccommodationType.PrivateHouse ? x.StreetPrivateHouse : x.StreetHouseUniversity))
+                        .ForMember(x => x.NumberHouse, c => c.MapFrom(x => x.TypeAccommodation == AccommodationType.PrivateHouse ? x.NumberHousePrivateHouse : x.NumberHouseUniversity))
+                        .ForMember(x => x.NumberApartment, c => c.MapFrom(x => x.TypeAccommodation == AccommodationType.PrivateHouse ? x.NumberApartmentPrivateHouse : x.NumberApartmentHouseUniversity))
+                        .ForMember(x => x.DateReceiving, c => c.MapFrom(x => x.TypeAccommodation == AccommodationType.FromUniversity ? x.DateReceivingHouseFromUniversity : null));
 
                     map.CreateMap<PublicHouseEmployees, CreateEmployeeDTO>()
                         .ReverseMap()
                         .ForMember(x => x.IdEmployee, c => c.MapFrom(x => x.IdEmployee))
-                        .ForMember(x => x.IdAddressPublicHouse, c => c.MapFrom(x => x.TypeAccommodation == "dormitory" ? x.IdDormitory : x.IdDepartmental))
-                        .ForMember(x => x.NumberRoom, c => c.MapFrom(x => x.TypeAccommodation == "dormitory" ? x.NumberRoomDormitory : x.NumberRoomDepartmental));
+                        .ForMember(x => x.IdAddressPublicHouse, c => c.MapFrom(x => x.TypeAccommodation == AccommodationType.Dormitory ? x.IdDormitory : x.IdDepartmental))
+                        .ForMember(x => x.NumberRoom, c => c.MapFrom(x => x.TypeAccommodation == AccommodationType.Dormitory ? x.NumberRoomDormitory : x.NumberRoomDepartmental));
 
                     map.CreateMap<Scientific, CreateEmployeeDTO>()
                         .ReverseMap()

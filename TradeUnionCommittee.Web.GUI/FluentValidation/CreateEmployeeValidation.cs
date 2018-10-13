@@ -19,6 +19,8 @@ namespace TradeUnionCommittee.Web.GUI.FluentValidation
             RuleFor(x => x.StartYearWork).NotNull().WithMessage("Рік початку роботи в ОНУ не може бути порожнім");
             RuleFor(x => x.StartYearWork).NotNull().InclusiveBetween(1900, 2200).WithMessage("Неприпустимий Рік початку роботи в ОНУ");
             RuleFor(x => x.StartDateTradeUnion).NotNull().WithMessage("Дата вступу в ППО не може бути порожнім");
+            RuleFor(x => x.CityPhone).MinimumLength(6).WithMessage("Довжина номеру повинна бути від 6 символів");
+            RuleFor(x => x.CityPhone).MaximumLength(7).WithMessage("Довжина номеру максимум 7 символів");
 
             //------------------------------------------------------------------------------------------------------------------------------------------
 

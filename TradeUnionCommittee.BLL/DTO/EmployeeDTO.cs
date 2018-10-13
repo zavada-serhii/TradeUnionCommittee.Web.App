@@ -1,4 +1,5 @@
 ﻿using System;
+using TradeUnionCommittee.BLL.Enums;
 
 namespace TradeUnionCommittee.BLL.DTO
 {
@@ -61,7 +62,7 @@ namespace TradeUnionCommittee.BLL.DTO
 
         //------------------------------------------------------------------------------------------------------------------------------------------
 
-        public string TypeAccommodation { get; set; }
+        public AccommodationType TypeAccommodation { get; set; }
 
         public string CityPrivateHouse { get; set; }
         public string StreetPrivateHouse { get; set; }

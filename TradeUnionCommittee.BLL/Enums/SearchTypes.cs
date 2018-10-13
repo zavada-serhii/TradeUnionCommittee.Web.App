@@ -4,7 +4,8 @@
     {
         Dormitory = 0,
         Departmental = 1,
-        FromUniversity = 2
+        FromUniversity = 2,
+        PrivateHouse = 3
     }
 
     public enum CoverageType

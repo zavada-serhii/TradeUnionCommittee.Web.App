@@ -10,9 +10,9 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using TradeUnionCommittee.BLL.Extensions;
 using TradeUnionCommittee.BLL.Utilities;
-using TradeUnionCommittee.Web.GUI.AdditionalSettings;
-using TradeUnionCommittee.Web.GUI.AdditionalSettings.DropDownLists;
-using TradeUnionCommittee.Web.GUI.AdditionalSettings.Oops;
+using TradeUnionCommittee.Web.GUI.Configuration;
+using TradeUnionCommittee.Web.GUI.Configuration.DropDownLists;
+using TradeUnionCommittee.Web.GUI.Controllers.Oops;
 using TradeUnionCommittee.Web.GUI.FluentValidation;
 using TradeUnionCommittee.Web.GUI.Models;
 
@@ -87,9 +87,9 @@ namespace TradeUnionCommittee.Web.GUI
 
         private void DependencyInjectionSystem(IServiceCollection services)
         {
-            services.AddScoped<IOops, Oops>();
+            services.AddScoped<IOops, OopsController>();
             services.AddScoped<IDropDownList, DropDownList>();
-            services.AddSingleton(cm => AutoMapperProvider.ConfigureAutoMapper());
+            services.AddSingleton(cm => AutoMapperConfiguration.ConfigureAutoMapper());
         }
 
         private void DependencyInjectionFluentValidation(IServiceCollection services)

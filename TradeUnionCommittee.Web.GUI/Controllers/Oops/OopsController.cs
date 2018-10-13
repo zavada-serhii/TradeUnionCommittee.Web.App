@@ -1,9 +1,14 @@
 ﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 
-namespace TradeUnionCommittee.Web.GUI.AdditionalSettings.Oops
+namespace TradeUnionCommittee.Web.GUI.Controllers.Oops
 {
-    public class Oops : Controller, IOops
+    public interface IOops
+    {
+        IActionResult OutPutError(string backController, string backAction, IEnumerable<string> errors);
+    }
+
+    public class OopsController : Controller, IOops
     {
         public IActionResult OutPutError(string backController, string backAction, IEnumerable<string> errors)
         {

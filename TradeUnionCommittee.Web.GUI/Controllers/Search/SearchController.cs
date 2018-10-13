@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.Enums;
 using TradeUnionCommittee.BLL.Interfaces.Search;
-using TradeUnionCommittee.Web.GUI.AdditionalSettings.DropDownLists;
+using TradeUnionCommittee.Web.GUI.Configuration.DropDownLists;
 
 namespace TradeUnionCommittee.Web.GUI.Controllers.Search
 {
@@ -82,7 +82,7 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Search
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> SearchAccommodation([Bind("typeAccommodation,idDormitory,idDepartmental")] string typeAccommodation, string idDormitory, string idDepartmental)
         {
-            var result = await _searchService.SearchAccommodation((AccommodationType)TemporaryConverterAccommodation(typeAccommodation), idDormitory, idDepartmental);
+            var result = await _searchService.SearchAccommodation(TemporaryConverterAccommodation(typeAccommodation), idDormitory, idDepartmental);
             return View("ResultSearch", result.Result);
         }
 
@@ -205,18 +205,18 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Search
             };
         }
 
-        public int TemporaryConverterAccommodation(string value)
+        private AccommodationType TemporaryConverterAccommodation(string value)
         {
             switch (value)
             {
                 case "dormitory":
-                    return 0;
+                    return AccommodationType.Dormitory;
                 case "departmental":
-                    return 1;
+                    return AccommodationType.Departmental;
                 case "from-university":
-                    return 2;
+                    return AccommodationType.FromUniversity;
                 default:
-                    return -1;
+                    return 0;
             }
         }
 

@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using TradeUnionCommittee.BLL.DTO;
 
-namespace TradeUnionCommittee.Web.GUI.AdditionalSettings.DropDownLists
+namespace TradeUnionCommittee.Web.GUI.Configuration.DropDownLists
 {
     public interface IDropDownList
     {
