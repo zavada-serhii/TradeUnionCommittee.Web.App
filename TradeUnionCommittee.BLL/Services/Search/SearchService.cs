@@ -55,8 +55,8 @@ namespace TradeUnionCommittee.BLL.Services.Search
                 var searchByGenderAndSubdivision = await _database
                     .EmployeeRepository
                     .GetWithInclude(x => x.Sex == gender &&
-                                    x.PositionEmployees.IdSubdivisionNavigation.Id == idSubdivision ||
-                                    x.PositionEmployees.IdSubdivisionNavigation.IdSubordinate == idSubdivision, 
+                                    (x.PositionEmployees.IdSubdivisionNavigation.Id == idSubdivision ||
+                                    x.PositionEmployees.IdSubdivisionNavigation.IdSubordinate == idSubdivision), 
                                     p => p.PositionEmployees.IdSubdivisionNavigation.InverseIdSubordinateNavigation);
 
                 return new ActualResult<IEnumerable<ResultSearchDTO>> { Result = ResultFormation(searchByGenderAndSubdivision.Result) };
@@ -82,8 +82,8 @@ namespace TradeUnionCommittee.BLL.Services.Search
                 var searchByGenderAndSubdivision = await _database
                     .EmployeeRepository
                     .GetWithInclude(x => x.PositionEmployees.IdPosition == idPosition &&
-                                         x.PositionEmployees.IdSubdivisionNavigation.Id == idSubdivision ||
-                                         x.PositionEmployees.IdSubdivisionNavigation.IdSubordinate == idSubdivision,
+                                         (x.PositionEmployees.IdSubdivisionNavigation.Id == idSubdivision ||
+                                         x.PositionEmployees.IdSubdivisionNavigation.IdSubordinate == idSubdivision),
                                     p => p.PositionEmployees.IdSubdivisionNavigation.InverseIdSubordinateNavigation);
 
                 return new ActualResult<IEnumerable<ResultSearchDTO>> { Result = ResultFormation(searchByGenderAndSubdivision.Result) };
@@ -110,8 +110,8 @@ namespace TradeUnionCommittee.BLL.Services.Search
                 var searchByGenderAndSubdivision = await _database
                     .EmployeeRepository
                     .GetWithInclude(x => x.PrivilegeEmployees.IdPrivileges == idPrivilege &&
-                                         x.PositionEmployees.IdSubdivisionNavigation.Id == idSubdivision ||
-                                         x.PositionEmployees.IdSubdivisionNavigation.IdSubordinate == idSubdivision,
+                                         (x.PositionEmployees.IdSubdivisionNavigation.Id == idSubdivision ||
+                                         x.PositionEmployees.IdSubdivisionNavigation.IdSubordinate == idSubdivision),
                                     p => p.PositionEmployees.IdSubdivisionNavigation.InverseIdSubordinateNavigation,
                                     p => p.PrivilegeEmployees);
 
