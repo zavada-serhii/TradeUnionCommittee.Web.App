@@ -11,6 +11,7 @@ namespace TradeUnionCommittee.BLL.Utilities
         public int MinHashLenght { get; set; }
         public string Alphabet { get; set; }
         public string Seps { get; set; }
+        public bool UseGuidFormat { get; set; }
     }
 
     public interface IHashIdUtilities
@@ -26,13 +27,24 @@ namespace TradeUnionCommittee.BLL.Utilities
         private readonly int _minHashLenght;
         private readonly string _alphabet;
         private readonly string _seps;
+        private readonly bool _useGuidFormat;
 
         public HashIdUtilities(HashIdUtilitiesSetting setting)
         {
+            if (setting.UseGuidFormat)
+            {
+                _minHashLenght = 32;
+                _alphabet = setting.Alphabet.Replace("-", string.Empty).ToLower();
+            }
+            else
+            {
+                _minHashLenght = setting.MinHashLenght;
+                _alphabet = setting.Alphabet;
+            }
+
             _salt = setting.Salt;
-            _minHashLenght = setting.MinHashLenght;
-            _alphabet = setting.Alphabet;
             _seps = setting.Seps;
+            _useGuidFormat = setting.UseGuidFormat;
         }
 
         private Hashids ObjectHashids(Enums.Services service)
@@ -42,7 +54,7 @@ namespace TradeUnionCommittee.BLL.Utilities
 
         public string EncryptLong(long plainLong, Enums.Services service)
         {
-            return ObjectHashids(service).EncodeLong(plainLong);
+            return _useGuidFormat ? GuidFormat(ObjectHashids(service).EncodeLong(plainLong), true) : ObjectHashids(service).EncodeLong(plainLong);
         }
 
         public long DecryptLong(string cipherText, Enums.Services service)
@@ -51,8 +63,7 @@ namespace TradeUnionCommittee.BLL.Utilities
             {
                 return 0;
             }
-            var decod = ObjectHashids(service).DecodeLong(cipherText);
-            return decod[0];
+            return ObjectHashids(service).DecodeLong(_useGuidFormat ? GuidFormat(cipherText, false) : cipherText)[0];
         }
 
         public async Task<ActualResult<long>> CheckDecryptWithId(string hashId, Enums.Services service)
@@ -71,6 +82,11 @@ namespace TradeUnionCommittee.BLL.Utilities
             if (result == 0) return false;
             id = result;
             return true;
+        }
+
+        private string GuidFormat(string hash, bool addOrRemoveMinus)
+        {
+            return addOrRemoveMinus ? hash.Insert(8, "-").Insert(13, "-").Insert(18, "-").Insert(23, "-") : hash.Replace("-", string.Empty);
         }
 
         private string AdditionalSalt(Enums.Services service)
