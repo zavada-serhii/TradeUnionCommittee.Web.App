@@ -1,12 +1,11 @@
 ﻿using System.Linq;
-using iTextSharp.text;
-using iTextSharp.text.pdf;
+using TradeUnionCommittee.BLL.PDF.Models;
 
 namespace TradeUnionCommittee.BLL.PDF.ReportTemplates
 {
-    internal class AwardTemplate : BaseTemplate
+    internal class AwardTemplate : BaseTemplate, IReportTemplate
     {
-        public override void CreateTemplateReport(ReportModel model)
+        public void CreateTemplateReport(ReportModel model)
         {
             var fullName = model.AwardEmployees.First().IdEmployeeNavigation;
 
@@ -17,7 +16,7 @@ namespace TradeUnionCommittee.BLL.PDF.ReportTemplates
 
             //---------------------------------------------------------------
 
-            doc.Add(new Paragraph("Звіт по матеріальним заохоченням члена профспілки", FontBold) { Alignment = Element.ALIGN_CENTER });
+            AddNameReport(doc, "Звіт по матеріальним заохоченням члена профспілки");
             AddFullNameEmployee(doc, $"{fullName.FirstName} {fullName.SecondName} {fullName.Patronymic}");
             AddPeriod(doc, model.StartDate, model.EndDate);
             AddEmptyParagraph(doc, 3);
@@ -25,63 +24,22 @@ namespace TradeUnionCommittee.BLL.PDF.ReportTemplates
 
             //---------------------------------------------------------------
 
-            table.AddCell(new PdfPCell(new Phrase("Джерело", FontBold))
-            {
-                PaddingTop = 5,
-                HorizontalAlignment = Element.ALIGN_CENTER,
-                Colspan = 2
-            });
-
-            table.AddCell(new PdfPCell(new Phrase("Розмір", FontBold))
-            {
-                PaddingTop = 5,
-                HorizontalAlignment = Element.ALIGN_CENTER,
-                Colspan = 2
-            });
-
-            table.AddCell(new PdfPCell(new Phrase("Дата отримання", FontBold))
-            {
-                PaddingTop = 5,
-                HorizontalAlignment = Element.ALIGN_CENTER,
-                Colspan = 2
-            });
-
-            //---------------------------------------------------------------
+            AddCell(table, FontBold, 2, "Джерело");
+            AddCell(table, FontBold, 2, "Розмір");
+            AddCell(table, FontBold, 2, "Дата отримання");
 
             foreach (var award in model.AwardEmployees)
             {
-                table.AddCell(new PdfPCell(new Phrase($"{award.IdAwardNavigation.Name}", Font))
-                {
-                    PaddingTop = 5,
-                    HorizontalAlignment = Element.ALIGN_CENTER,
-                    Colspan = 2
-                });
-
-                table.AddCell(new PdfPCell(new Phrase($"{award.Amount} {Сurrency}", Font))
-                {
-                    PaddingTop = 5,
-                    HorizontalAlignment = Element.ALIGN_CENTER,
-                    Colspan = 2
-                });
-
-                table.AddCell(new PdfPCell(new Phrase($"{award.DateIssue:dd/MM/yyyy}", Font))
-                {
-                    PaddingTop = 5,
-                    HorizontalAlignment = Element.ALIGN_CENTER,
-                    Colspan = 2
-                });
+                AddCell(table, Font, 2, $"{award.IdAwardNavigation.Name}");
+                AddCell(table, Font, 2, $"{award.Amount} {Сurrency}");
+                AddCell(table, Font, 2, $"{award.DateIssue:dd/MM/yyyy}");
             }
-
-            //---------------------------------------------------------------
 
             doc.Add(table);
 
             //---------------------------------------------------------------
             
             AddSumFrom(doc, model.AwardEmployees.GroupBy(l => l.IdAwardNavigation.Name).Select(cl => new { cl.First().IdAwardNavigation.Name, Sum = cl.Sum(c => c.Amount) }).ToList());
-
-            //---------------------------------------------------------------
-
             AddGeneralSum(doc, model.AwardEmployees.Sum(x => x.Amount));
             AddSignature(doc);
 

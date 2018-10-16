@@ -1,17 +1,13 @@
-﻿using System;
+﻿using iTextSharp.text;
+using iTextSharp.text.pdf;
+using System;
 using System.Collections.Generic;
 using System.IO;
-using iTextSharp.text;
-using iTextSharp.text.pdf;
 
 namespace TradeUnionCommittee.BLL.PDF
 {
     internal abstract class BaseTemplate
     {
-        public abstract void CreateTemplateReport(ReportModel model);
-
-        //------------------------------------------------------------------------------------------------------------------------------------------
-
         protected readonly BaseFont BaseFont;
         protected readonly Font Font;
         protected readonly Font FontBold;
@@ -42,9 +38,16 @@ namespace TradeUnionCommittee.BLL.PDF
 
         //------------------------------------------------------------------------------------------------------------------------------------------
 
+        protected void AddNameReport(Document document, string value)
+        {
+            document.Add(new Paragraph(value, FontBold) { Alignment = Element.ALIGN_CENTER });
+        }
+
+        //------------------------------------------------------------------------------------------------------------------------------------------
+
         protected void AddFullNameEmployee(Document document, string fullNameEmployee)
         {
-            document.Add(new Paragraph($"{fullNameEmployee}", FontBold) { Alignment = Element.ALIGN_CENTER });
+            document.Add(new Paragraph(fullNameEmployee, FontBold) { Alignment = Element.ALIGN_CENTER });
         }
 
         //------------------------------------------------------------------------------------------------------------------------------------------
@@ -65,7 +68,19 @@ namespace TradeUnionCommittee.BLL.PDF
         }
 
         //------------------------------------------------------------------------------------------------------------------------------------------
-        
+
+        protected void AddCell(PdfPTable table, Font font, int colspan,  string value)
+        {
+            table.AddCell(new PdfPCell(new Phrase(value, font))
+            {
+                PaddingTop = 5,
+                HorizontalAlignment = Element.ALIGN_CENTER,
+                Colspan = colspan
+            });
+        }
+
+        //------------------------------------------------------------------------------------------------------------------------------------------
+
         protected void AddSumFrom<T>(Document document, IEnumerable<T> list)
         {
             foreach (var item in list)
@@ -80,11 +95,21 @@ namespace TradeUnionCommittee.BLL.PDF
             return (T)obj;
         }
 
-        //------------------------------------------------------------------------------------------------------------------------------------------
-
         protected void AddGeneralSum(Document document, decimal sum)
         {
-            document.Add(new Paragraph($"Загальна сумма - {sum} грн", Font) { Alignment = Element.ALIGN_RIGHT });
+            document.Add(new Paragraph($"Загальна сумма - {sum} {Сurrency}", Font) { Alignment = Element.ALIGN_RIGHT });
+        }
+
+        protected void AddSubsidiesSum(Document document, decimal sum, bool sumOrSubsidies = false)
+        {
+            document.Add(sumOrSubsidies
+                ? new Paragraph($"Сумма - {sum} {Сurrency}", Font) {Alignment = Element.ALIGN_RIGHT}
+                : new Paragraph($"Сумма дотацій - {sum} {Сurrency}", Font) {Alignment = Element.ALIGN_RIGHT});
+        }
+
+        protected void AddDiscountSum(Document document, decimal sum)
+        {
+            document.Add(new Paragraph($"Сумма знижок - {sum} {Сurrency}", Font) { Alignment = Element.ALIGN_RIGHT });
         }
 
         //------------------------------------------------------------------------------------------------------------------------------------------

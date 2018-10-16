@@ -1,8 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.DTO;
+using TradeUnionCommittee.BLL.Enums;
 using TradeUnionCommittee.BLL.Interfaces.Directory;
+using TradeUnionCommittee.BLL.Interfaces.Search;
 using TradeUnionCommittee.BLL.Utilities;
 using TradeUnionCommittee.Common.ActualResults;
 using TradeUnionCommittee.Common.Enums;
@@ -16,12 +19,14 @@ namespace TradeUnionCommittee.BLL.Services.Directory
         private readonly IUnitOfWork _database;
         private readonly IAutoMapperUtilities _mapperService;
         private readonly IHashIdUtilities _hashIdUtilities;
+        private readonly IReportService _reportService;
 
-        public PositionService(IUnitOfWork database, IAutoMapperUtilities mapperService, IHashIdUtilities hashIdUtilities)
+        public PositionService(IUnitOfWork database, IAutoMapperUtilities mapperService, IHashIdUtilities hashIdUtilities, IReportService reportService)
         {
             _database = database;
             _mapperService = mapperService;
             _hashIdUtilities = hashIdUtilities;
+            _reportService = reportService;
         }
 
         public async Task<ActualResult<IEnumerable<DirectoryDTO>>> GetAllAsync() =>
@@ -29,6 +34,22 @@ namespace TradeUnionCommittee.BLL.Services.Directory
 
         public async Task<ActualResult<DirectoryDTO>> GetAsync(string hashId)
         {
+            ReportDTO dto = new ReportDTO
+            {
+                HashId = 1,
+                PathToSave = @"E:\",
+                StartDate = DateTime.Now.Date.AddYears(-15),
+                EndDate = DateTime.Now.Date.AddYears(5)
+            };
+
+            await _reportService.CreateReport(dto, ReportType.MaterialAid);
+            await _reportService.CreateReport(dto, ReportType.Award);
+            await _reportService.CreateReport(dto, ReportType.Travel);
+            await _reportService.CreateReport(dto, ReportType.Wellness);
+            await _reportService.CreateReport(dto, ReportType.Tour);
+            await _reportService.CreateReport(dto, ReportType.Cultural);
+            await _reportService.CreateReport(dto, ReportType.Gift);
+
             var check = await _hashIdUtilities.CheckDecryptWithId(hashId, Enums.Services.Position);
             return check.IsValid 
                 ? _mapperService.Mapper.Map<ActualResult<DirectoryDTO>>(await _database.PositionRepository.Get(check.Result)) 
