@@ -6,6 +6,7 @@ using TradeUnionCommittee.BLL.DTO;
 using TradeUnionCommittee.BLL.Enums;
 using TradeUnionCommittee.BLL.Interfaces.Directory;
 using TradeUnionCommittee.BLL.Interfaces.Search;
+using TradeUnionCommittee.BLL.Services.Search;
 using TradeUnionCommittee.BLL.Utilities;
 using TradeUnionCommittee.Common.ActualResults;
 using TradeUnionCommittee.Common.Enums;
@@ -42,13 +43,19 @@ namespace TradeUnionCommittee.BLL.Services.Directory
                 EndDate = DateTime.Now.Date.AddYears(5)
             };
 
-            await _reportService.CreateReport(dto, ReportType.MaterialAid);
-            await _reportService.CreateReport(dto, ReportType.Award);
-            await _reportService.CreateReport(dto, ReportType.Travel);
-            await _reportService.CreateReport(dto, ReportType.Wellness);
-            await _reportService.CreateReport(dto, ReportType.Tour);
-            await _reportService.CreateReport(dto, ReportType.Cultural);
-            await _reportService.CreateReport(dto, ReportType.Gift);
+            //await _reportService.CreateReport(dto, ReportType.MaterialAid);
+            //await _reportService.CreateReport(dto, ReportType.Award);
+            //await _reportService.CreateReport(dto, ReportType.Travel);
+            //await _reportService.CreateReport(dto, ReportType.Wellness);
+            //await _reportService.CreateReport(dto, ReportType.Tour);
+            //await _reportService.CreateReport(dto, ReportType.Cultural);
+            //await _reportService.CreateReport(dto, ReportType.Gift);
+
+
+            ITestReportService testReportService = new TestReportService(_database);
+            await testReportService.CreateReport(dto, ReportType.MaterialAid);
+
+
 
             var check = await _hashIdUtilities.CheckDecryptWithId(hashId, Enums.Services.Position);
             return check.IsValid 
