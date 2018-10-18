@@ -12,19 +12,19 @@ using TradeUnionCommittee.DAL.Interfaces;
 
 namespace TradeUnionCommittee.BLL.Services.Search
 {
-    public interface ITestReportService
+    public interface IPdfService
     {
         Task CreateReport(ReportDTO dto, ReportType type);
         void Dispose();
     }
 
-    public class TestReportService : ITestReportService
+    public class PdfService : IPdfService
     {
         private readonly IUnitOfWork _database;
         private ReportDTO _reportDto;
         private ReportType _reportType;
 
-        public TestReportService(IUnitOfWork database)
+        public PdfService(IUnitOfWork database)
         {
             _database = database;
         }
@@ -33,11 +33,10 @@ namespace TradeUnionCommittee.BLL.Services.Search
         {
             _reportDto = dto;
             _reportType = type;
-
-            new GeneratePdf().Generate(await FillModel());
+            new PdfGenerator().Generate(await FillModelReport(), PdfType.Report);
         }
 
-        private async Task<TestReportModel> FillModel()
+        private async Task<TestReportModel> FillModelReport()
         {
             var model = new TestReportModel
             {
@@ -53,9 +52,7 @@ namespace TradeUnionCommittee.BLL.Services.Search
                 case ReportType.All:
                     model.MaterialAidEmployees = await GetMaterialAid();
                     model.AwardEmployees = await GetAward();
-                    model.EventEmployees = await GetEvent(TypeEvent.Travel);
-                    model.EventEmployees = await GetEvent(TypeEvent.Wellness);
-                    model.EventEmployees = await GetEvent(TypeEvent.Tour);
+                    model.EventEmployees = await AddAllEvent();
                     model.CulturalEmployees = await GetCultural();
                     model.GiftEmployees = await GetGift();
                     break;
@@ -149,6 +146,15 @@ namespace TradeUnionCommittee.BLL.Services.Search
                 .GetWithInclude(x => x.DateGift.Between(_reportDto.StartDate, _reportDto.EndDate) && x.IdEmployee == _reportDto.HashId);
 
             return result.Result.OrderBy(x => x.DateGift);
+        }
+
+        private async Task<IEnumerable<EventEmployees>> AddAllEvent()
+        {
+            var eventEmployees = new List<EventEmployees>();
+            eventEmployees.AddRange(await GetEvent(TypeEvent.Travel));
+            eventEmployees.AddRange(await GetEvent(TypeEvent.Wellness));
+            eventEmployees.AddRange(await GetEvent(TypeEvent.Tour));
+            return eventEmployees;
         }
 
         public void Dispose()

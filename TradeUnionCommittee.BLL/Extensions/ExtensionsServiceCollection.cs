@@ -46,6 +46,8 @@ namespace TradeUnionCommittee.BLL.Extensions
             services.AddScoped<IDepartmentalService, DepartmentalService>();
 
             services.AddScoped<ISearchService, SearchService>();
+            services.AddScoped<IPdfService, PdfService>();
+
             services.AddScoped<IReportService, ReportService>();
 
             //---------------------------------------------------------------------------------------------

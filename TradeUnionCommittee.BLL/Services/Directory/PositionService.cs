@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.DTO;
 using TradeUnionCommittee.BLL.Enums;
 using TradeUnionCommittee.BLL.Interfaces.Directory;
-using TradeUnionCommittee.BLL.Interfaces.Search;
 using TradeUnionCommittee.BLL.Services.Search;
 using TradeUnionCommittee.BLL.Utilities;
 using TradeUnionCommittee.Common.ActualResults;
@@ -20,14 +20,15 @@ namespace TradeUnionCommittee.BLL.Services.Directory
         private readonly IUnitOfWork _database;
         private readonly IAutoMapperUtilities _mapperService;
         private readonly IHashIdUtilities _hashIdUtilities;
-        private readonly IReportService _reportService;
+        private readonly IPdfService _pdfService;
+        
 
-        public PositionService(IUnitOfWork database, IAutoMapperUtilities mapperService, IHashIdUtilities hashIdUtilities, IReportService reportService)
+        public PositionService(IUnitOfWork database, IAutoMapperUtilities mapperService, IHashIdUtilities hashIdUtilities, IPdfService pdfService)
         {
             _database = database;
             _mapperService = mapperService;
             _hashIdUtilities = hashIdUtilities;
-            _reportService = reportService;
+            _pdfService = pdfService;
         }
 
         public async Task<ActualResult<IEnumerable<DirectoryDTO>>> GetAllAsync() =>
@@ -38,24 +39,15 @@ namespace TradeUnionCommittee.BLL.Services.Directory
             ReportDTO dto = new ReportDTO
             {
                 HashId = 1,
-                PathToSave = @"E:\",
+                PathToSave = @"E:\Temp\",
                 StartDate = DateTime.Now.Date.AddYears(-15),
                 EndDate = DateTime.Now.Date.AddYears(5)
             };
 
-            //await _reportService.CreateReport(dto, ReportType.MaterialAid);
-            //await _reportService.CreateReport(dto, ReportType.Award);
-            //await _reportService.CreateReport(dto, ReportType.Travel);
-            //await _reportService.CreateReport(dto, ReportType.Wellness);
-            //await _reportService.CreateReport(dto, ReportType.Tour);
-            //await _reportService.CreateReport(dto, ReportType.Cultural);
-            //await _reportService.CreateReport(dto, ReportType.Gift);
-
-
-            ITestReportService testReportService = new TestReportService(_database);
-            await testReportService.CreateReport(dto, ReportType.MaterialAid);
-
-
+            for (var i = 0; i < 8; i++)
+            {
+                await _pdfService.CreateReport(dto, (ReportType)i);
+            }
 
             var check = await _hashIdUtilities.CheckDecryptWithId(hashId, Enums.Services.Position);
             return check.IsValid 
@@ -109,6 +101,7 @@ namespace TradeUnionCommittee.BLL.Services.Directory
         public void Dispose()
         {
             _database.Dispose();
+            _pdfService.Dispose();
         }
     }
 }
