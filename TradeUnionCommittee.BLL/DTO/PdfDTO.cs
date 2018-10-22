@@ -2,9 +2,10 @@
 
 namespace TradeUnionCommittee.BLL.DTO
 {
-    public class ReportDTO
+    public class PdfDTO
     {
-        public long HashId { get; set; }
+        public long HashUserId { get; set; }
+        public long HashEventId { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
         public string PathToSave { get; set; }

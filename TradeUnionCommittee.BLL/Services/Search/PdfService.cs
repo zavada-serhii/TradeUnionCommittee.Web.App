@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using TradeUnionCommittee.BLL.DTO;
 using TradeUnionCommittee.BLL.Enums;
 using TradeUnionCommittee.BLL.Extensions;
 using TradeUnionCommittee.BLL.TestPDF;
+using TradeUnionCommittee.BLL.TestPDF.DTO;
 using TradeUnionCommittee.BLL.TestPDF.Models;
 using TradeUnionCommittee.DAL.Entities;
 using TradeUnionCommittee.DAL.Interfaces;
@@ -14,47 +14,60 @@ namespace TradeUnionCommittee.BLL.Services.Search
 {
     public interface IPdfService
     {
-        Task CreateReport(ReportDTO dto, ReportType type);
+        Task CreateReport(ReportPdfDTO dto);
+        Task CreateSearch(SearchPdfDTO dto);
         void Dispose();
     }
 
     public class PdfService : IPdfService
     {
         private readonly IUnitOfWork _database;
-        private ReportDTO _reportDto;
-        private ReportType _reportType;
+        private ReportPdfDTO _reportPdfDto;
+        private SearchPdfDTO _searchPdfDto;
 
         public PdfService(IUnitOfWork database)
         {
             _database = database;
         }
 
-        public async Task CreateReport(ReportDTO dto, ReportType type)
+        public async Task CreateReport(ReportPdfDTO dto)
         {
-            _reportDto = dto;
-            _reportType = type;
-            new PdfGenerator().Generate(await FillModelReport(), PdfType.Report);
+            _reportPdfDto = dto;
+            new PdfGenerator().GenerateReport(await FillModelReport());
         }
 
-        private async Task<TestReportModel> FillModelReport()
+        public async Task CreateSearch(SearchPdfDTO dto)
         {
-            var model = new TestReportModel
+            _searchPdfDto = dto;
+            new PdfGenerator().GenerateSearch(await FillModelSearch());
+            //Travel
+            //Wellness
+            //Tour
+            //Cultural
+            //Gift - by name event 
+        }
+
+
+
+        private async Task<ReportModel> FillModelReport()
+        {
+            var model = new ReportModel
             {
-                Type = _reportType,
-                PathToSave = _reportDto.PathToSave,
+                Type = _reportPdfDto.Type,
+                PathToSave = _reportPdfDto.PathToSave,
                 FullNameEmployee = await GetFullNameEmployee(),
-                StartDate = _reportDto.StartDate,
-                EndDate = _reportDto.EndDate
+                StartDate = _reportPdfDto.StartDate,
+                EndDate = _reportPdfDto.EndDate
             };
 
-            switch (_reportType)
+            switch (_reportPdfDto.Type)
             {
                 case ReportType.All:
                     model.MaterialAidEmployees = await GetMaterialAid();
                     model.AwardEmployees = await GetAward();
                     model.EventEmployees = await AddAllEvent();
-                    model.CulturalEmployees = await GetCultural();
-                    model.GiftEmployees = await GetGift();
+                    model.CulturalEmployees = await GetCultural(PdfType.Report);
+                    model.GiftEmployees = await GetGift(PdfType.Report);
                     break;
                 case ReportType.MaterialAid:
                     model.MaterialAidEmployees = await GetMaterialAid();
@@ -63,19 +76,53 @@ namespace TradeUnionCommittee.BLL.Services.Search
                     model.AwardEmployees = await GetAward();
                     break;
                 case ReportType.Travel:
-                    model.EventEmployees = await GetEvent(TypeEvent.Travel);
+                    model.EventEmployees = await GetEvent(TypeEvent.Travel, PdfType.Report);
                     break;
                 case ReportType.Wellness:
-                    model.EventEmployees = await GetEvent(TypeEvent.Wellness);
+                    model.EventEmployees = await GetEvent(TypeEvent.Wellness, PdfType.Report);
                     break;
                 case ReportType.Tour:
-                    model.EventEmployees = await GetEvent(TypeEvent.Tour);
+                    model.EventEmployees = await GetEvent(TypeEvent.Tour, PdfType.Report);
                     break;
                 case ReportType.Cultural:
-                    model.CulturalEmployees = await GetCultural();
+                    model.CulturalEmployees = await GetCultural(PdfType.Report);
                     break;
                 case ReportType.Gift:
-                    model.GiftEmployees = await GetGift();
+                    model.GiftEmployees = await GetGift(PdfType.Report);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+
+            return model;
+        }
+
+        private async Task<SearchModel> FillModelSearch()
+        {
+            var model = new SearchModel
+            {
+                Type = _searchPdfDto.Type,
+                PathToSave = _searchPdfDto.PathToSave,
+                StartDate = _searchPdfDto.StartDate,
+                EndDate = _searchPdfDto.EndDate
+            };
+
+            switch (_searchPdfDto.Type)
+            {
+                case SearchType.Travel:
+                    model.EventEmployees = await GetEvent(TypeEvent.Travel, PdfType.Search);
+                    break;
+                case SearchType.Wellness:
+                    model.EventEmployees = await GetEvent(TypeEvent.Wellness, PdfType.Search);
+                    break;
+                case SearchType.Tour:
+                    model.EventEmployees = await GetEvent(TypeEvent.Tour, PdfType.Search);
+                    break;
+                case SearchType.Cultural:
+                    model.CulturalEmployees = await GetCultural(PdfType.Search);
+                    break;
+                case SearchType.Gift:
+                    model.GiftEmployees = await GetGift(PdfType.Search);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -88,7 +135,7 @@ namespace TradeUnionCommittee.BLL.Services.Search
 
         private async Task<string> GetFullNameEmployee()
         {
-            var employee = await _database.EmployeeRepository.Get(_reportDto.HashId);
+            var employee = await _database.EmployeeRepository.Get(_reportPdfDto.HashUserId);
             var result = employee.Result;
             return $"{result.FirstName} {result.SecondName} {result.Patronymic}";
         }
@@ -97,8 +144,8 @@ namespace TradeUnionCommittee.BLL.Services.Search
         {
             var result = await _database
                 .MaterialAidEmployeesRepository
-                .GetWithInclude(x => x.DateIssue.Between(_reportDto.StartDate, _reportDto.EndDate) &&
-                                     x.IdEmployee == _reportDto.HashId,
+                .GetWithInclude(x => x.DateIssue.Between(_reportPdfDto.StartDate, _reportPdfDto.EndDate) &&
+                                     x.IdEmployee == _reportPdfDto.HashUserId,
                                 p => p.IdMaterialAidNavigation);
 
             return result.Result.OrderBy(x => x.DateIssue);
@@ -108,53 +155,97 @@ namespace TradeUnionCommittee.BLL.Services.Search
         {
             var result = await _database
                 .AwardEmployeesRepository
-                .GetWithInclude(x => x.DateIssue.Between(_reportDto.StartDate, _reportDto.EndDate) &&
-                                     x.IdEmployee == _reportDto.HashId,
+                .GetWithInclude(x => x.DateIssue.Between(_reportPdfDto.StartDate, _reportPdfDto.EndDate) &&
+                                     x.IdEmployee == _reportPdfDto.HashUserId,
                                 p => p.IdAwardNavigation);
 
             return result.Result.OrderBy(x => x.DateIssue);
         }
 
-        private async Task<IEnumerable<CulturalEmployees>> GetCultural()
+        private async Task<IEnumerable<CulturalEmployees>> GetCultural(PdfType type)
         {
-            var result = await _database
-                .CulturalEmployeesRepository
-                .GetWithInclude(x => x.DateVisit.Between(_reportDto.StartDate, _reportDto.EndDate) &&
-                                     x.IdEmployee == _reportDto.HashId,
-                                p => p.IdCulturalNavigation);
+            switch (type)
+            {
+                case PdfType.Report:
+                    var resultReport = await _database
+                        .CulturalEmployeesRepository
+                        .GetWithInclude(x => x.DateVisit.Between(_reportPdfDto.StartDate, _reportPdfDto.EndDate) &&
+                                             x.IdEmployee == _reportPdfDto.HashUserId,
+                                        p => p.IdCulturalNavigation);
 
-            return result.Result.OrderBy(x => x.DateVisit);
+                    return resultReport.Result.OrderBy(x => x.DateVisit);
+                case PdfType.Search:
+                    var resultSearch = await _database
+                        .CulturalEmployeesRepository
+                        .GetWithInclude(x => x.DateVisit.Between(_searchPdfDto.StartDate, _searchPdfDto.EndDate) &&
+                                             x.IdCultural == _searchPdfDto.HashEventId,
+                                        p => p.IdCulturalNavigation);
+
+                    return resultSearch.Result.OrderBy(x => x.DateVisit);
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(type), type, null);
+            }
         }
 
-        private async Task<IEnumerable<EventEmployees>> GetEvent(TypeEvent typeEvent)
+        private async Task<IEnumerable<EventEmployees>> GetEvent(TypeEvent typeEvent, PdfType type)
         {
-            var result = await _database
-                .EventEmployeesRepository
-                .GetWithInclude(x => x.StartDate.Between(_reportDto.StartDate, _reportDto.EndDate) &&
-                                     x.EndDate.Between(_reportDto.StartDate, _reportDto.EndDate) &&
-                                     x.IdEventNavigation.Type == typeEvent &&
-                                     x.IdEmployee == _reportDto.HashId,
-                                p => p.IdEventNavigation);
+            switch (type)
+            {
+                case PdfType.Report:
+                    var resultReport = await _database
+                        .EventEmployeesRepository
+                        .GetWithInclude(x => x.StartDate.Between(_reportPdfDto.StartDate, _reportPdfDto.EndDate) &&
+                                             x.EndDate.Between(_reportPdfDto.StartDate, _reportPdfDto.EndDate) &&
+                                             x.IdEventNavigation.Type == typeEvent &&
+                                             x.IdEmployee == _reportPdfDto.HashUserId,
+                                        p => p.IdEventNavigation);
 
-            return result.Result.OrderBy(x => x.StartDate);
+                    return resultReport.Result.OrderBy(x => x.StartDate);
+                case PdfType.Search:
+
+                    var resultSearch = await _database
+                        .EventEmployeesRepository
+                        .GetWithInclude(x => x.StartDate.Between(_searchPdfDto.StartDate, _searchPdfDto.EndDate) &&
+                                             x.EndDate.Between(_searchPdfDto.StartDate, _searchPdfDto.EndDate) &&
+                                             x.IdEventNavigation.Type == typeEvent &&
+                                             x.IdEvent == _searchPdfDto.HashEventId,
+                                        p => p.IdEventNavigation);
+
+                    return resultSearch.Result.OrderBy(x => x.StartDate);
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(type), type, null);
+            }
         }
 
-        private async Task<IEnumerable<GiftEmployees>> GetGift()
+        private async Task<IEnumerable<GiftEmployees>> GetGift(PdfType type)
         {
-            var result = await _database
-                .GiftEmployeesRepository
-                .GetWithInclude(x => x.DateGift.Between(_reportDto.StartDate, _reportDto.EndDate) && x.IdEmployee == _reportDto.HashId);
+            switch (type)
+            {
+                case PdfType.Report:
+                    var resultReport = await _database
+                        .GiftEmployeesRepository
+                        .GetWithInclude(x => x.DateGift.Between(_reportPdfDto.StartDate, _reportPdfDto.EndDate) && x.IdEmployee == _reportPdfDto.HashUserId);
 
-            return result.Result.OrderBy(x => x.DateGift);
+                    return resultReport.Result.OrderBy(x => x.DateGift);
+                case PdfType.Search:
+                    var resultSearch = await _database
+                        .GiftEmployeesRepository
+                        .GetWithInclude(x => x.DateGift.Between(_searchPdfDto.StartDate, _searchPdfDto.EndDate) && 
+                                             x.NameEvent == Convert.ToString(_searchPdfDto.HashEventId));
+
+                    return resultSearch.Result.OrderBy(x => x.DateGift);
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(type), type, null);
+            }
         }
 
         private async Task<IEnumerable<EventEmployees>> AddAllEvent()
         {
-            var eventEmployees = new List<EventEmployees>();
-            eventEmployees.AddRange(await GetEvent(TypeEvent.Travel));
-            eventEmployees.AddRange(await GetEvent(TypeEvent.Wellness));
-            eventEmployees.AddRange(await GetEvent(TypeEvent.Tour));
-            return eventEmployees;
+            var result = new List<EventEmployees>();
+            result.AddRange(await GetEvent(TypeEvent.Travel, PdfType.Report));
+            result.AddRange(await GetEvent(TypeEvent.Wellness, PdfType.Report));
+            result.AddRange(await GetEvent(TypeEvent.Tour, PdfType.Report));
+            return result;
         }
 
         public void Dispose()

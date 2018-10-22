@@ -1,8 +1,7 @@
-﻿using System;
-using iTextSharp.text;
+﻿using iTextSharp.text;
 using iTextSharp.text.pdf;
+using System;
 using System.IO;
-using TradeUnionCommittee.BLL.Enums;
 using TradeUnionCommittee.BLL.PDF;
 using TradeUnionCommittee.BLL.TestPDF.Models;
 
@@ -12,8 +11,9 @@ namespace TradeUnionCommittee.BLL.TestPDF
     {
         private readonly Font _font;
         private readonly Font _fontBold;
-        private string _currency = "грн";
+        private const string Currency = "грн";
         private PdfWriter _writer;
+        private Document _document;
 
         public PdfGenerator()
         {
@@ -24,24 +24,29 @@ namespace TradeUnionCommittee.BLL.TestPDF
 
         //----------------------------------------------------------------------------------------------
 
-        public void Generate(TestReportModel model, PdfType type)
+        public void GenerateReport(ReportModel model)
         {
-            var document = new Document();
-            _writer = PdfWriter.GetInstance(document, new FileStream($@"{model.PathToSave}{model.FullNameEmployee}.{model.Type}.{Guid.NewGuid()}.pdf", FileMode.Create));
-            document.Open();
+            _document = new Document();
+            _writer = PdfWriter.GetInstance(_document, new FileStream($@"{model.PathToSave}{model.FullNameEmployee}.{model.Type}.{Guid.NewGuid()}.pdf", FileMode.Create));
+            _document.Open();
 
-            switch (type)
-            {
-                case PdfType.Report:
-                    new ReportGenerator(_font, _fontBold, _currency).Generate(model, document);
-                    break;
-                case PdfType.Search:
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(type), type, null);
-            }
-            
-            document.Close();
+            new ReportGenerator(_font, _fontBold, Currency).Generate(model, _document);
+
+            _document.Close();
+            _writer.Close();
+        }
+
+        //----------------------------------------------------------------------------------------------
+
+        public void GenerateSearch(SearchModel model)
+        {
+            _document = new Document();
+            _writer = PdfWriter.GetInstance(_document, new FileStream($@"{model.PathToSave}{model.Type}.{Guid.NewGuid()}.pdf", FileMode.Create));
+            _document.Open();
+
+            // SearchGenerator
+
+            _document.Close();
             _writer.Close();
         }
     }

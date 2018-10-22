@@ -22,7 +22,7 @@ namespace TradeUnionCommittee.BLL.Services.Search
             _database = database;
         }
 
-        public async Task CreateReport(ReportDTO dto, ReportType type)
+        public async Task CreateReport(PdfDTO dto, ReportType type)
         {
             switch (type)
             {
@@ -54,12 +54,12 @@ namespace TradeUnionCommittee.BLL.Services.Search
             }   
         }
 
-        private async Task CreateMaterialAidReport(ReportDTO dto)
+        private async Task CreateMaterialAidReport(PdfDTO dto)
         {
             var result = await _database
                          .MaterialAidEmployeesRepository
                          .GetWithInclude(x => x.DateIssue.Between(dto.StartDate, dto.EndDate) && 
-                                              x.IdEmployeeNavigation.Id == dto.HashId,
+                                              x.IdEmployeeNavigation.Id == dto.HashUserId,
                                          p => p.IdEmployeeNavigation,
                                          p => p.IdMaterialAidNavigation);
 
@@ -73,12 +73,12 @@ namespace TradeUnionCommittee.BLL.Services.Search
             });
         }
 
-        private async Task CreateAwardReport(ReportDTO dto)
+        private async Task CreateAwardReport(PdfDTO dto)
         {
             var result = await _database
                         .AwardEmployeesRepository
                         .GetWithInclude(x => x.DateIssue.Between(dto.StartDate, dto.EndDate) &&
-                                             x.IdEmployeeNavigation.Id == dto.HashId,
+                                             x.IdEmployeeNavigation.Id == dto.HashUserId,
                                         p => p.IdEmployeeNavigation,
                                         p => p.IdAwardNavigation);
 
@@ -92,12 +92,12 @@ namespace TradeUnionCommittee.BLL.Services.Search
             });
         }
 
-        private async Task CreateCulturalReport(ReportDTO dto)
+        private async Task CreateCulturalReport(PdfDTO dto)
         {
             var result = await _database
                 .CulturalEmployeesRepository
                 .GetWithInclude(x => x.DateVisit.Between(dto.StartDate,dto.EndDate) &&
-                                     x.IdEmployeeNavigation.Id == dto.HashId,
+                                     x.IdEmployeeNavigation.Id == dto.HashUserId,
                                 p => p.IdEmployeeNavigation,
                                 p => p.IdCulturalNavigation);
 
@@ -111,14 +111,14 @@ namespace TradeUnionCommittee.BLL.Services.Search
             });
         }
 
-        private async Task CreateEventReport(ReportDTO dto, TypeEvent typeEvent)
+        private async Task CreateEventReport(PdfDTO dto, TypeEvent typeEvent)
         {
             var result = await _database
                 .EventEmployeesRepository
                 .GetWithInclude(x => (x.StartDate.Between(dto.StartDate, dto.EndDate) &&
                                      x.EndDate.Between(dto.StartDate, dto.EndDate)) &&
                                      x.IdEventNavigation.Type == typeEvent &&
-                                     x.IdEmployeeNavigation.Id == dto.HashId,
+                                     x.IdEmployeeNavigation.Id == dto.HashUserId,
                                 p => p.IdEmployeeNavigation,
                                 p => p.IdEventNavigation);
 
@@ -132,12 +132,12 @@ namespace TradeUnionCommittee.BLL.Services.Search
             });
         }
 
-        private async Task CreateGiftReport(ReportDTO dto)
+        private async Task CreateGiftReport(PdfDTO dto)
         {
             var result = await _database
                 .GiftEmployeesRepository
                 .GetWithInclude(x => x.DateGift.Between(dto.StartDate, dto.EndDate) &&
-                                     x.IdEmployeeNavigation.Id == dto.HashId,
+                                     x.IdEmployeeNavigation.Id == dto.HashUserId,
                                 p => p.IdEmployeeNavigation);
 
             IReportTemplate template = new GiftTemplate();

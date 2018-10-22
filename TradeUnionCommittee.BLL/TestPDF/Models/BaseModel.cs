@@ -2,7 +2,7 @@
 
 namespace TradeUnionCommittee.BLL.TestPDF.Models
 {
-    public class TestBaseModel
+    public class BaseModel
     {
         public string PathToSave { get; set; }
         public DateTime StartDate { get; set; }

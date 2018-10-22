@@ -30,7 +30,7 @@ namespace TradeUnionCommittee.BLL.TestPDF
         }
 
 
-        public void Generate(TestReportModel model, Document document)
+        public void Generate(ReportModel model, Document document)
         {
             AddNameReport(model, document);
             document.Add(new Paragraph(model.FullNameEmployee, _fontBold) { Alignment = Element.ALIGN_CENTER });
@@ -48,7 +48,7 @@ namespace TradeUnionCommittee.BLL.TestPDF
             document.Add(new Paragraph($"Головний бухгалтер ППО ОНУ імені І.І.Мечникова {new string('_', 10)}  {new string('_', 18)}", _font) { Alignment = Element.ALIGN_RIGHT });
         }
 
-        private void AddNameReport(TestReportModel model, IElementListener doc)
+        private void AddNameReport(ReportModel model, IElementListener doc)
         {
             switch (model.Type)
             {
@@ -81,7 +81,7 @@ namespace TradeUnionCommittee.BLL.TestPDF
             }
         }
 
-        private void AddPeriod(TestReportModel model, IElementListener doc)
+        private void AddPeriod(ReportModel model, IElementListener doc)
         {
             doc.Add(new Paragraph($"за період з {model.StartDate:dd/MM/yyyy}р по {model.EndDate:dd/MM/yyyy}р", _fontBold) { Alignment = Element.ALIGN_CENTER });
             if (model.Type == ReportType.All)
@@ -90,7 +90,7 @@ namespace TradeUnionCommittee.BLL.TestPDF
             }
         }
 
-        private void AddBodyReport(TestReportModel model, Document doc)
+        private void AddBodyReport(ReportModel model, Document doc)
         {
             switch (model.Type)
             {
@@ -123,7 +123,7 @@ namespace TradeUnionCommittee.BLL.TestPDF
             }
         }
 
-        private void FullReport(TestReportModel model, Document doc)
+        private void FullReport(DataModel model, Document doc)
         {
             if (model.MaterialAidEmployees.Any())
             {

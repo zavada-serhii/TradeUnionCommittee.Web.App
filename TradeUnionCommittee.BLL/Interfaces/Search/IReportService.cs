@@ -6,7 +6,7 @@ namespace TradeUnionCommittee.BLL.Interfaces.Search
 {
     public interface IReportService
     {
-        Task CreateReport(ReportDTO dto, ReportType type);
+        Task CreateReport(PdfDTO dto, ReportType type);
         void Dispose();
     }
 }
