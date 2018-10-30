@@ -6,7 +6,7 @@ using TradeUnionCommittee.DAL.Entities;
 
 namespace TradeUnionCommittee.BLL.PDF.ReportTemplates
 {
-    internal class MaterialAidTemplate : BaseSettings, IBaseReportTemplate<MaterialAidEmployees>
+    internal class MaterialAidTemplate : BaseSettings
     {
         public decimal CreateBody(Document doc, IEnumerable<MaterialAidEmployees> model)
         {

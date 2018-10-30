@@ -7,7 +7,7 @@ using TradeUnionCommittee.DAL.Entities;
 
 namespace TradeUnionCommittee.BLL.PDF.ReportTemplates
 {
-    internal class EventTemplate : BaseSettings, IBaseReportTemplate<EventEmployees>
+    internal class EventTemplate : BaseSettings
     {
         public decimal CreateBody(Document doc, IEnumerable<EventEmployees> model)
         {

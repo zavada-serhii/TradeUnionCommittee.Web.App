@@ -6,7 +6,7 @@ using TradeUnionCommittee.DAL.Entities;
 
 namespace TradeUnionCommittee.BLL.PDF.ReportTemplates
 {
-    internal class GiftTemplate : BaseSettings, IBaseReportTemplate<GiftEmployees>
+    internal class GiftTemplate : BaseSettings
     {
         public decimal CreateBody(Document doc, IEnumerable<GiftEmployees> model)
         {
