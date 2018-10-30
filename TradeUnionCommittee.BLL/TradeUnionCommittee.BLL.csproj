@@ -17,4 +17,10 @@
     <ProjectReference Include="..\TradeUnionCommittee.DAL\TradeUnionCommittee.DAL.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="PDF\Fonts\TimesNewRoman.ttf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

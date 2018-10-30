@@ -15,7 +15,7 @@ namespace TradeUnionCommittee.BLL.PDF
 
         protected BaseSettings()
         {
-            var baseFont = BaseFont.CreateFont($@"{_basePathToFont}\Fonts\TimesNewRoman.ttf", BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
+            var baseFont = BaseFont.CreateFont($@"{_basePathToFont}\PDF\Fonts\TimesNewRoman.ttf", BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
             Font = new Font(baseFont, 14, Font.NORMAL);
             FontBold = new Font(baseFont, 12, Font.BOLD);
         }
