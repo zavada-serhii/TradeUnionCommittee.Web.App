@@ -1,6 +1,8 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using iTextSharp.text;
+using iTextSharp.text.pdf;
 using TradeUnionCommittee.BLL.Enums;
 using TradeUnionCommittee.BLL.PDF.Models;
 using TradeUnionCommittee.BLL.PDF.ReportTemplates;
@@ -18,8 +20,14 @@ namespace TradeUnionCommittee.BLL.PDF
         private decimal _tourEventEmployeesGeneralSum;
         private decimal _giftEmployeesGeneralSum;
 
-        public void Generate(ReportModel model, Document document)
+        public void Generate(ReportModel model)
         {
+            var document = new Document();
+            var writer = PdfWriter.GetInstance(document, new FileStream($@"{model.PathToSave}{model.FullNameEmployee}.{model.Type}.{Guid.NewGuid()}.pdf", FileMode.Create));
+            document.Open();
+
+            //----------------------------------------------------------------------------------------------
+
             AddNameReport(model, document);
             document.Add(new Paragraph(model.FullNameEmployee, FontBold) { Alignment = Element.ALIGN_CENTER });
             AddPeriod(model, document);
@@ -34,6 +42,11 @@ namespace TradeUnionCommittee.BLL.PDF
             AddAllGeneralSum(model.Type, document);
 
             document.Add(new Paragraph($"Головний бухгалтер ППО ОНУ імені І.І.Мечникова {new string('_', 10)}  {new string('_', 18)}", Font) { Alignment = Element.ALIGN_RIGHT });
+
+            //----------------------------------------------------------------------------------------------
+
+            document.Close();
+            writer.Close();
         }
 
         private void AddNameReport(ReportModel model, IElementListener doc)

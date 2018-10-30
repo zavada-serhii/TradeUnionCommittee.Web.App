@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using iTextSharp.text;
-using iTextSharp.text.pdf;
 using TradeUnionCommittee.BLL.Enums;
 using TradeUnionCommittee.BLL.Extensions;
 using TradeUnionCommittee.BLL.Interfaces.PDF;
@@ -31,17 +28,8 @@ namespace TradeUnionCommittee.BLL.Services.PDF
         public async Task CreateReport(ReportPdfDTO dto)
         {
             _reportPdfDto = dto;
-
             var model = await FillModelReport();
-
-            var document = new Document();
-            var writer = PdfWriter.GetInstance(document, new FileStream($@"{model.PathToSave}{model.FullNameEmployee}.{model.Type}.{Guid.NewGuid()}.pdf", FileMode.Create));
-            document.Open();
-
-            new ReportGenerator().Generate(model, document);
-
-            document.Close();
-            writer.Close();
+            new ReportGenerator().Generate(model);
         }
 
         //------------------------------------------------------------------------------------------
