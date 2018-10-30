@@ -1,40 +1,32 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
-using TradeUnionCommittee.BLL.PDF.Models;
+using iTextSharp.text;
+using iTextSharp.text.pdf;
 using TradeUnionCommittee.DAL.Entities;
 
 namespace TradeUnionCommittee.BLL.PDF.ReportTemplates
 {
-    internal class EventTemplate : BaseTemplate, IReportTemplate
+    internal class EventTemplate : BaseSettings, IBaseReportTemplate<EventEmployees>
     {
-        public void CreateTemplateReport(ReportModel model)
+        public decimal CreateBody(Document doc, IEnumerable<EventEmployees> model)
         {
-
-            var fullName = model.EventEmployees.First().IdEmployeeNavigation;
-            var eventName = GetEventName(model.EventEmployees.First().IdEventNavigation.Type);
+            var table = new PdfPTable(5);
 
             //---------------------------------------------------------------
 
-            var doc = CreateDocument(model.PathToSave);
-            var table = AddPdfPTable(5);
-
-            //---------------------------------------------------------------
-            
-            AddNameReport(doc, $"Звіт по {eventName} члена профспілки");
-            AddFullNameEmployee(doc, $"{fullName.FirstName} {fullName.SecondName} {fullName.Patronymic}");
-            AddPeriod(doc, model.StartDate, model.EndDate);
             AddEmptyParagraph(doc, 3);
             table.WidthPercentage = 100;
 
             //---------------------------------------------------------------
 
-            AddCell(table, FontBold, 1, $"Назва {GetEventName(eventName)}");
+            AddCell(table, FontBold, 1, $"Назва {GetEventName(model.First().IdEventNavigation.Type)}");
             AddCell(table, FontBold, 1, "Розмір дотації");
             AddCell(table, FontBold, 1, "Розмір знижки");
             AddCell(table, FontBold, 1, "Дата початку");
             AddCell(table, FontBold, 1, "Дата закінчення");
 
-            foreach (var ev in model.EventEmployees)
+            foreach (var ev in model)
             {
                 AddCell(table, Font, 1, $"{ev.IdEventNavigation.Name}");
                 AddCell(table, Font, 1, $"{ev.Amount} {Сurrency}");
@@ -47,17 +39,16 @@ namespace TradeUnionCommittee.BLL.PDF.ReportTemplates
 
             //---------------------------------------------------------------
 
-            var sumAmount = model.EventEmployees.Sum(x => x.Amount);
-            var sumDiscount = model.EventEmployees.Sum(x => x.Discount);
 
-            AddSubsidiesSum(doc, sumAmount);
-            AddDiscountSum(doc, sumDiscount);
-            AddGeneralSum(doc, sumAmount + sumDiscount);
-            AddSignature(doc);
+            var sumAmount = model.Sum(x => x.Amount);
+            var sumDiscount = model.Sum(x => x.Discount);
+            var generalSum = sumAmount + sumDiscount;
 
-            //---------------------------------------------------------------
+            doc.Add(new Paragraph($"Сумма дотацій - {sumAmount} {Сurrency}", Font) { Alignment = Element.ALIGN_RIGHT });
+            doc.Add(new Paragraph($"Сумма знижок - {sumDiscount} {Сurrency}", Font) { Alignment = Element.ALIGN_RIGHT });
+            doc.Add(new Paragraph($"Загальна сумма - {generalSum} {Сurrency}", Font) { Alignment = Element.ALIGN_RIGHT });
 
-            SaveFile(doc);
+            return generalSum;
         }
 
         private string GetEventName(TypeEvent @event)
@@ -65,25 +56,10 @@ namespace TradeUnionCommittee.BLL.PDF.ReportTemplates
             switch (@event)
             {
                 case TypeEvent.Travel:
-                    return "поїздкам";
-                case TypeEvent.Wellness:
-                    return "оздоровленням";
-                case TypeEvent.Tour:
-                    return "путівкам";
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(@event), @event, null);
-            }
-        }
-
-        private string GetEventName(string @event)
-        {
-            switch (@event)
-            {
-                case "поїздкам":
                     return "Поїздки";
-                case "оздоровленням":
+                case TypeEvent.Wellness:
                     return "Оздоровлення";
-                case "путівкам":
+                case TypeEvent.Tour:
                     return "Путівки";
                 default:
                     throw new ArgumentOutOfRangeException(nameof(@event), @event, null);

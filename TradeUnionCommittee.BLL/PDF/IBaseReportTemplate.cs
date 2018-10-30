@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using iTextSharp.text;
 
-namespace TradeUnionCommittee.BLL.TestPDF
+namespace TradeUnionCommittee.BLL.PDF
 {
     public interface IBaseReportTemplate<in T> where T : class, new()
     {

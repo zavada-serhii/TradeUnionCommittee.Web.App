@@ -1,24 +1,19 @@
-﻿using System.Linq;
-using TradeUnionCommittee.BLL.PDF.Models;
+﻿using System.Collections.Generic;
+using System.Linq;
+using iTextSharp.text;
+using iTextSharp.text.pdf;
+using TradeUnionCommittee.DAL.Entities;
 
 namespace TradeUnionCommittee.BLL.PDF.ReportTemplates
 {
-    internal class GiftTemplate : BaseTemplate, IReportTemplate
+    internal class GiftTemplate : BaseSettings, IBaseReportTemplate<GiftEmployees>
     {
-        public void CreateTemplateReport(ReportModel model)
+        public decimal CreateBody(Document doc, IEnumerable<GiftEmployees> model)
         {
-            var fullName = model.GiftEmployees.First().IdEmployeeNavigation;
+            var table = new PdfPTable(5);
 
             //---------------------------------------------------------------
 
-            var doc = CreateDocument(model.PathToSave);
-            var table = AddPdfPTable(5);
-
-            //---------------------------------------------------------------
-            
-            AddNameReport(doc, "Звіт по подарункам члена профспілки");
-            AddFullNameEmployee(doc, $"{fullName.FirstName} {fullName.SecondName} {fullName.Patronymic}");
-            AddPeriod(doc, model.StartDate, model.EndDate);
             AddEmptyParagraph(doc, 3);
             table.WidthPercentage = 100;
 
@@ -30,7 +25,7 @@ namespace TradeUnionCommittee.BLL.PDF.ReportTemplates
             AddCell(table, FontBold, 1, "Розмір знижки");
             AddCell(table, FontBold, 1, "Дата отримання");
 
-            foreach (var gift in model.GiftEmployees)
+            foreach (var gift in model)
             {
                 AddCell(table, Font, 1, $"{gift.NameEvent}");
                 AddCell(table, Font, 1, $"{gift.NameGift}");
@@ -43,17 +38,15 @@ namespace TradeUnionCommittee.BLL.PDF.ReportTemplates
 
             //---------------------------------------------------------------
 
-            var sumAmount = model.GiftEmployees.Sum(x => x.Price);
-            var sumDiscount = model.GiftEmployees.Sum(x => x.Discount);
+            var sumAmount = model.Sum(x => x.Price);
+            var sumDiscount = model.Sum(x => x.Discount);
+            var generalSum = sumAmount + sumDiscount;
 
-            AddSubsidiesSum(doc, sumAmount, true);
-            AddDiscountSum(doc, sumDiscount);
-            AddGeneralSum(doc, sumAmount + sumDiscount);
-            AddSignature(doc);
+            doc.Add(new Paragraph($"Сумма - {sumAmount} {Сurrency}", Font) { Alignment = Element.ALIGN_RIGHT });
+            doc.Add(new Paragraph($"Сумма знижок - {sumDiscount} {Сurrency}", Font) { Alignment = Element.ALIGN_RIGHT });
+            doc.Add(new Paragraph($"Загальна сумма - {generalSum} {Сurrency}", Font) { Alignment = Element.ALIGN_RIGHT });
 
-            //---------------------------------------------------------------
-
-            SaveFile(doc);
+            return generalSum;
         }
     }
 }

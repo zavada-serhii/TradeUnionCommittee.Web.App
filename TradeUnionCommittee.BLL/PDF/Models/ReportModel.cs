@@ -1,14 +1,10 @@
-﻿using System.Collections.Generic;
-using TradeUnionCommittee.DAL.Entities;
+﻿using TradeUnionCommittee.BLL.Enums;
 
 namespace TradeUnionCommittee.BLL.PDF.Models
 {
-    public class ReportModel : BaseModel
+    public class ReportModel : DataModel
     {
-        public IEnumerable<MaterialAidEmployees> MaterialAidEmployees { get; set; }
-        public IEnumerable<AwardEmployees> AwardEmployees { get; set; }
-        public IEnumerable<CulturalEmployees> CulturalEmployees { get; set; }
-        public IEnumerable<EventEmployees> EventEmployees { get; set; }
-        public IEnumerable<GiftEmployees> GiftEmployees { get; set; }
+        public ReportType Type { get; set; }
+        public string FullNameEmployee { get; set; }
     }
 }

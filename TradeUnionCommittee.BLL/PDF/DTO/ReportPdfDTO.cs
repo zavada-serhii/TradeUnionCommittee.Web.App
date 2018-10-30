@@ -1,6 +1,6 @@
 ﻿using TradeUnionCommittee.BLL.Enums;
 
-namespace TradeUnionCommittee.BLL.TestPDF.DTO
+namespace TradeUnionCommittee.BLL.PDF.DTO
 {
     public class ReportPdfDTO : BasePdfDTO
     {

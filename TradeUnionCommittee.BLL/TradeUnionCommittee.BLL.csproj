@@ -17,8 +17,4 @@
     <ProjectReference Include="..\TradeUnionCommittee.DAL\TradeUnionCommittee.DAL.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="PDF\Fonts\" />
-  </ItemGroup>
-
 </Project>

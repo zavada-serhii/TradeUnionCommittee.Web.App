@@ -1,24 +1,19 @@
-﻿using System.Linq;
-using TradeUnionCommittee.BLL.PDF.Models;
+﻿using System.Collections.Generic;
+using System.Linq;
+using iTextSharp.text;
+using iTextSharp.text.pdf;
+using TradeUnionCommittee.DAL.Entities;
 
 namespace TradeUnionCommittee.BLL.PDF.ReportTemplates
 {
-    internal class CulturalTemplate : BaseTemplate, IReportTemplate
+    internal class CulturalTemplate : BaseSettings, IBaseReportTemplate<CulturalEmployees>
     {
-        public void CreateTemplateReport(ReportModel model)
+        public decimal CreateBody(Document doc, IEnumerable<CulturalEmployees> model)
         {
-            var fullName = model.CulturalEmployees.First().IdEmployeeNavigation;
+            var table = new PdfPTable(4);
 
             //---------------------------------------------------------------
 
-            var doc = CreateDocument(model.PathToSave);
-            var table = AddPdfPTable(4);
-
-            //---------------------------------------------------------------
-
-            AddNameReport(doc, "Звіт по культурно-просвітницьким закладам члена профспілки");
-            AddFullNameEmployee(doc, $"{fullName.FirstName} {fullName.SecondName} {fullName.Patronymic}");
-            AddPeriod(doc, model.StartDate, model.EndDate);
             AddEmptyParagraph(doc, 3);
             table.WidthPercentage = 100;
 
@@ -29,7 +24,7 @@ namespace TradeUnionCommittee.BLL.PDF.ReportTemplates
             AddCell(table, FontBold, 1, "Розмір знижки");
             AddCell(table, FontBold, 1, "Дата візиту");
 
-            foreach (var cultural in model.CulturalEmployees)
+            foreach (var cultural in model)
             {
                 AddCell(table, Font, 1, $"{cultural.IdCulturalNavigation.Name}");
                 AddCell(table, Font, 1, $"{cultural.Amount} {Сurrency}");
@@ -41,17 +36,15 @@ namespace TradeUnionCommittee.BLL.PDF.ReportTemplates
 
             //---------------------------------------------------------------
 
-            var sumAmount = model.CulturalEmployees.Sum(x => x.Amount);
-            var sumDiscount = model.CulturalEmployees.Sum(x => x.Discount);
+            var sumAmount = model.Sum(x => x.Amount);
+            var sumDiscount = model.Sum(x => x.Discount);
+            var generalSum = sumAmount + sumDiscount;
 
-            AddSubsidiesSum(doc, sumAmount);
-            AddDiscountSum(doc, sumDiscount);
-            AddGeneralSum(doc, sumAmount + sumDiscount);
-            AddSignature(doc);
+            doc.Add(new Paragraph($"Сумма дотацій - {sumAmount} {Сurrency}", Font) { Alignment = Element.ALIGN_RIGHT });
+            doc.Add(new Paragraph($"Сумма знижок - {sumDiscount} {Сurrency}", Font) { Alignment = Element.ALIGN_RIGHT });
+            doc.Add(new Paragraph($"Загальна сумма - {generalSum} {Сurrency}", Font) { Alignment = Element.ALIGN_RIGHT });
 
-            //---------------------------------------------------------------
-
-            SaveFile(doc);
+            return generalSum;
         }
     }
 }

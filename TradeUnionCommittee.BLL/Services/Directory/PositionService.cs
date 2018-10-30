@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.DTO;
 using TradeUnionCommittee.BLL.Enums;
 using TradeUnionCommittee.BLL.Interfaces.Directory;
-using TradeUnionCommittee.BLL.Services.Search;
-using TradeUnionCommittee.BLL.TestPDF.DTO;
+using TradeUnionCommittee.BLL.Interfaces.PDF;
+using TradeUnionCommittee.BLL.PDF.DTO;
 using TradeUnionCommittee.BLL.Utilities;
 using TradeUnionCommittee.Common.ActualResults;
 using TradeUnionCommittee.Common.Enums;
@@ -37,12 +36,10 @@ namespace TradeUnionCommittee.BLL.Services.Directory
 
         public async Task<ActualResult<DirectoryDTO>> GetAsync(string hashId)
         {
-            //C:\Users\zavad\Desktop\Pdf\Report\
-            //E:\Temp\
             var reportPdfDto = new ReportPdfDTO
             {
                 HashUserId = 1,
-                PathToSave = @"C:\Users\zavad\Desktop\Pdf\Report\",
+                PathToSave = @"E:\PDF\Report\",
                 StartDate = DateTime.Now.Date.AddYears(-15),
                 EndDate = DateTime.Now.Date.AddYears(5)
             };
@@ -52,26 +49,6 @@ namespace TradeUnionCommittee.BLL.Services.Directory
                 reportPdfDto.Type = (ReportType)i;
                 await _pdfService.CreateReport(reportPdfDto);
             }
-
-            //---------------------------------------------------------------------------------
-
-            //C:\Users\zavad\Desktop\Pdf\Search\
-            //E:\Temp\
-            //var searchPdfDto = new SearchPdfDTO
-            //{
-            //    HashEventId = 1,
-            //    PathToSave = @"C:\Users\zavad\Desktop\Pdf\Search\",
-            //    StartDate = DateTime.Now.Date.AddYears(-15),
-            //    EndDate = DateTime.Now.Date.AddYears(5)
-            //};
-
-            //for (var i = 0; i < 5; i++)
-            //{
-            //    searchPdfDto.Type = (SearchType)i;
-            //    await _pdfService.CreateSearch(searchPdfDto);
-            //}
-
-            //---------------------------------------------------------------------------------
 
             var check = await _hashIdUtilities.CheckDecryptWithId(hashId, Enums.Services.Position);
             return check.IsValid 

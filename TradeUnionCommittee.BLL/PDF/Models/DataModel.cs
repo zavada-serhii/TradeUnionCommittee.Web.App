@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using TradeUnionCommittee.DAL.Entities;
 
-namespace TradeUnionCommittee.BLL.TestPDF.Models
+namespace TradeUnionCommittee.BLL.PDF.Models
 {
     public class DataModel : BaseModel
     {
