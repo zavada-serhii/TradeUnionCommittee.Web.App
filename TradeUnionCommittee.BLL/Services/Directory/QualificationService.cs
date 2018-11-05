@@ -61,14 +61,8 @@ namespace TradeUnionCommittee.BLL.Services.Directory
 
         public async Task<ActualResult> UpdateQualificationEmployeeAsync(QualificationDTO dto)
         {
-            var checkDecrypt = await _hashIdUtilities.CheckDecryptWithId(dto.HashId, Enums.Services.Qualification);
-            if (checkDecrypt.IsValid)
-            {
-                dto.Id = checkDecrypt.Result;
-                await _database.ScientificRepository.Update(_mapper.Mapper.Map<Scientific>(dto));
-                return _mapper.Mapper.Map<ActualResult>(await _database.SaveAsync());
-            }
-            return new ActualResult(checkDecrypt.ErrorsList);
+            await _database.ScientificRepository.Update(_mapper.Mapper.Map<Scientific>(dto));
+            return _mapper.Mapper.Map<ActualResult>(await _database.SaveAsync());
         }
 
         public async Task<ActualResult> DeleteQualificationEmployeeAsync(string hashId)

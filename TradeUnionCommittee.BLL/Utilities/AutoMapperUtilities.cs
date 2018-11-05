@@ -118,9 +118,18 @@ namespace TradeUnionCommittee.BLL.Utilities
                         .ForMember(d => d.Type, c => c.UseValue(TypeHouse.Departmental));
 
                     map.CreateMap<Scientific, QualificationDTO>()
+                        .ForMember(d => d.HashId, c => c.MapFrom(x => _hashIdUtilities.EncryptLong(x.Id, Enums.Services.Qualification)))
+                        .ForMember(d => d.HashEmployeeId, c => c.MapFrom(x => _hashIdUtilities.EncryptLong(x.IdEmployee, Enums.Services.Employee)))
                         .ReverseMap()
-                        .ForMember(d => d.Id, c => c.MapFrom(x => x.Id));
+                        .ForMember(d => d.Id, c => c.MapFrom(x => _hashIdUtilities.DecryptLong(x.HashId, Enums.Services.Qualification)))
+                        .ForMember(d => d.IdEmployee, c => c.MapFrom(x => _hashIdUtilities.DecryptLong(x.HashEmployeeId, Enums.Services.Employee)));
 
+                    map.CreateMap<Education, EducationDTO>()
+                        .ForMember(d => d.HashId, c => c.MapFrom(x => _hashIdUtilities.EncryptLong(x.Id, Enums.Services.Education)))
+                        .ForMember(d => d.HashIdEmployee, c => c.MapFrom(x => _hashIdUtilities.EncryptLong(x.IdEmployee, Enums.Services.Employee)))
+                        .ReverseMap()
+                        .ForMember(d => d.Id, c => c.MapFrom(x => _hashIdUtilities.DecryptLong(x.HashId,Enums.Services.Education)))
+                        .ForMember(d => d.IdEmployee, c => c.MapFrom(x => _hashIdUtilities.DecryptLong(x.HashIdEmployee, Enums.Services.Employee)));
 
                     //------------------------------------------------------------------------------
 
@@ -179,8 +188,7 @@ namespace TradeUnionCommittee.BLL.Utilities
                     //------------------------------------------------------------------------------
 
                     map.CreateMap<Employee, GeneralInfoEmployeeDTO>()
-                        .ForMember(d => d.HashIdEmployee, c => c.MapFrom(x => _hashIdUtilities.EncryptLong(x.Id, Enums.Services.Employee)))
-                        .ForMember(x => x.HashIdEmployee, opt => opt.MapFrom(c => c.Id))
+                        .ForMember(x => x.HashIdEmployee, opt => opt.MapFrom(c => _hashIdUtilities.EncryptLong(c.Id, Enums.Services.Employee)))
                         .ForMember(x => x.CountYear, opt => opt.MapFrom(c => c.BirthDate.CalculateAge()))
                         .ForMember(x => x.Sex, opt => opt.MapFrom(c => ConvertToUkraineGender(c.Sex)))
                         .ForMember(x => x.HashIdEducation, opt => opt.MapFrom(c => _hashIdUtilities.EncryptLong(c.Education.Id, Enums.Services.Education)))
@@ -192,8 +200,6 @@ namespace TradeUnionCommittee.BLL.Utilities
                         .ForMember(x => x.ScientifickTitle, opt => opt.MapFrom(c => c.Scientific == null ? null : c.Scientific.ScientificTitle));
 
                     //------------------------------------------------------------------------------
-
-                    map.CreateMap<Education, EducationDTO>().ReverseMap();
 
                 }).CreateMapper();
             }

@@ -76,7 +76,7 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Employee
                 if (vm.HashId == null) return NotFound();
                 var result = await _qualificationService.UpdateQualificationEmployeeAsync(_mapper.Map<QualificationDTO>(vm));
                 return result.IsValid
-                    ? RedirectToAction("Index", "Employee", new { id = vm.HashId })
+                    ? RedirectToAction("Index", "Employee", new { id = vm.HashEmployeeId })
                     : _oops.OutPutError("Employee", "Index", result.ErrorsList);
             }
             return View(vm);
@@ -98,12 +98,12 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Employee
         [HttpPost, ActionName("Delete")]
         [Authorize(Roles = "Admin")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(string id)
+        public async Task<IActionResult> DeleteConfirmed(string hashId, string hashEmployeeId)
         {
-            if (id == null) return NotFound();
-            var result = await _qualificationService.DeleteQualificationEmployeeAsync(id);
+            if (hashId == null || hashEmployeeId == null) return NotFound();
+            var result = await _qualificationService.DeleteQualificationEmployeeAsync(hashId);
             return result.IsValid
-                ? RedirectToAction("Index", "Employee", new { id })
+                ? RedirectToAction("Index", "Employee", new { id = hashEmployeeId })
                 : _oops.OutPutError("MainInfoEmployee", "Index", result.ErrorsList);
         }
 

@@ -15,8 +15,10 @@
             <form asp-action="Update">
                 <div class="row">
 
-                    <input type="hidden" asp-for="IdEducation" />
+                    <input type="hidden" asp-for="HashId" />
                     <input type="hidden" asp-for="HashIdEmployee" />
+                    <input type="hidden" asp-for="RowVersion" />
+
 
                     <div class="form-group col-lg-4 col-xl-3">
                         <label asp-for="LevelEducation" class="control-label required">Рiвень освiти</label><br>

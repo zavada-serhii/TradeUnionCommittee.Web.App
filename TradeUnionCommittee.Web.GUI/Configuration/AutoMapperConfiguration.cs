@@ -46,13 +46,8 @@ namespace TradeUnionCommittee.Web.GUI.Configuration
                 map.CreateMap<SubdivisionDTO, CreateSubordinateSubdivisionViewModel>().ReverseMap();
                 map.CreateMap<SubdivisionDTO, RestructuringViewModel>().ReverseMap();
 
-                map.CreateMap<EducationDTO, EducationViewModel>()
-                .ForMember(d => d.IdEducation, c => c.MapFrom(x => x.Id))
-                .ReverseMap()
-                .ForMember(d => d.Id, c => c.MapFrom(x => x.IdEducation));
-
+                map.CreateMap<EducationDTO, EducationViewModel>().ReverseMap();
                 map.CreateMap<QualificationDTO, QualificationViewModel>().ReverseMap();
-
                 map.CreateMap<GeneralInfoEmployeeDTO, UpdateEmployeeViewModel>().ReverseMap();
 
             }).CreateMapper();
