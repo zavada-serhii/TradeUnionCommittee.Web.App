@@ -16,7 +16,7 @@
                 <div class="row">
 
                     <input type="hidden" asp-for="IdEducation" />
-                    <input type="hidden" asp-for="IdEmployee" />
+                    <input type="hidden" asp-for="HashIdEmployee" />
 
                     <div class="form-group col-lg-4 col-xl-3">
                         <label asp-for="LevelEducation" class="control-label required">Рiвень освiти</label><br>
@@ -41,7 +41,7 @@
                 <div class="row justify-content-between">
                     <div class="form-group col-lg-3">
                         <div>
-                            <a asp-action="Index" asp-controller="Employee" asp-route-id="@Model.IdEmployee">Повернутися</a>
+                            <a asp-action="Index" asp-controller="Employee" asp-route-id="@Model.HashIdEmployee">Повернутися</a>
                         </div>
                     </div>
 

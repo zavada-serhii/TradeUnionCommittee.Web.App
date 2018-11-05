@@ -5,7 +5,7 @@ namespace TradeUnionCommittee.BLL.DTO
 {
     public class GeneralInfoEmployeeDTO
     {
-        public long IdEmployee { get; set; }
+        public string HashIdEmployee { get; set; }
         public string FirstName { get; set; }
         public string SecondName { get; set; }
         public string Patronymic { get; set; }
@@ -25,9 +25,11 @@ namespace TradeUnionCommittee.BLL.DTO
         public DateTime StartDateTradeUnion { get; set; }
         public DateTime? EndDateTradeUnion { get; set; }
 
+        public string HashIdQualification { get; set; }
         public string ScientifickDegree { get; set; }
         public string ScientifickTitle { get; set; }
 
+        public string HashIdEducation { get; set; }
         public string LevelEducation { get; set; }
         public string NameInstitution { get; set; }
         public int? YearReceiving { get; set; }

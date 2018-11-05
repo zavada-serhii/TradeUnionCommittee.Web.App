@@ -81,7 +81,7 @@ namespace TradeUnionCommittee.Web.GUI.Models
 
     public class UpdateEmployeeViewModel
     {
-        public long? IdEmployee { get; set; }
+        public string HashIdEmployee { get; set; }
         public string FirstName { get; set; }
         public string SecondName { get; set; }
         public string Patronymic { get; set; }

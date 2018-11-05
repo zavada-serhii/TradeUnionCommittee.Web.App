@@ -1,9 +1,7 @@
-﻿using AutoMapper;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.DTO;
 using TradeUnionCommittee.BLL.Enums;
-using TradeUnionCommittee.BLL.Extensions;
 using TradeUnionCommittee.BLL.Interfaces.Employee;
 using TradeUnionCommittee.BLL.Utilities;
 using TradeUnionCommittee.Common.ActualResults;
@@ -163,41 +161,21 @@ namespace TradeUnionCommittee.BLL.Services.Employee
 
         //------------------------------------------------------------------------------------------------------------------------------------------
 
-        public async Task<ActualResult<GeneralInfoEmployeeDTO>> GetMainInfoEmployeeAsync(long id)
+        public async Task<ActualResult<GeneralInfoEmployeeDTO>> GetMainInfoEmployeeAsync(string hashId)
         {
-            var mapper = new MapperConfiguration(cfg => cfg.CreateMap<DAL.Entities.Employee, GeneralInfoEmployeeDTO>()
-                .ForMember("IdEmployee", opt => opt.MapFrom(c => c.Id))
-                .ForMember("CountYear", opt => opt.MapFrom(c => c.BirthDate.CalculateAge()))
-                .ForMember("Sex", opt => opt.MapFrom(c => ConvertToUkraine(c.Sex)))
-            ).CreateMapper();
-            var employee = mapper.Map<ActualResult<DAL.Entities.Employee>, ActualResult<GeneralInfoEmployeeDTO>>(await _database.EmployeeRepository.Get(id));
+            var checkDecrypt = await _hashIdUtilities.CheckDecryptWithId(hashId, Enums.Services.Employee);
 
-            var education = await _database.EducationRepository.Get(id);
-            var scientifick = await _database.ScientificRepository.Get(id);
-
-            employee.Result.LevelEducation = education.Result.LevelEducation;
-            employee.Result.NameInstitution = education.Result.NameInstitution;
-            employee.Result.YearReceiving = education.Result.YearReceiving;
-
-            if (scientifick.Result != null)
+            if (checkDecrypt.IsValid)
             {
-                employee.Result.ScientifickDegree = scientifick.Result.ScientificDegree;
-                employee.Result.ScientifickTitle = scientifick.Result.ScientificTitle;
+                var resultSearchByHashId = await _database
+                    .EmployeeRepository
+                    .GetWithInclude(x => x.Id == checkDecrypt.Result,
+                                    p => p.Education,
+                                    p => p.Scientific);
+                var employee = new ActualResult<DAL.Entities.Employee> { Result = resultSearchByHashId.Result.FirstOrDefault() };
+                return _mapperService.Mapper.Map<ActualResult<DAL.Entities.Employee>, ActualResult<GeneralInfoEmployeeDTO>>(employee);
             }
-            return employee;
-        }
-
-        private string ConvertToUkraine(string sex)
-        {
-            switch (sex)
-            {
-                case "Male":
-                    return new string("Чоловіча");
-                case "Female":
-                    return new string("Жіноча");
-                default:
-                    return sex;
-            }
+            return new ActualResult<GeneralInfoEmployeeDTO>(checkDecrypt.ErrorsList);
         }
 
         //------------------------------------------------------------------------------------------------------------------------------------------

@@ -178,6 +178,21 @@ namespace TradeUnionCommittee.BLL.Utilities
 
                     //------------------------------------------------------------------------------
 
+                    map.CreateMap<Employee, GeneralInfoEmployeeDTO>()
+                        .ForMember(d => d.HashIdEmployee, c => c.MapFrom(x => _hashIdUtilities.EncryptLong(x.Id, Enums.Services.Employee)))
+                        .ForMember(x => x.HashIdEmployee, opt => opt.MapFrom(c => c.Id))
+                        .ForMember(x => x.CountYear, opt => opt.MapFrom(c => c.BirthDate.CalculateAge()))
+                        .ForMember(x => x.Sex, opt => opt.MapFrom(c => ConvertToUkraineGender(c.Sex)))
+                        .ForMember(x => x.HashIdEducation, opt => opt.MapFrom(c => _hashIdUtilities.EncryptLong(c.Education.Id, Enums.Services.Education)))
+                        .ForMember(x => x.LevelEducation, opt => opt.MapFrom(c => c.Education.LevelEducation))
+                        .ForMember(x => x.NameInstitution, opt => opt.MapFrom(c => c.Education.NameInstitution))
+                        .ForMember(x => x.YearReceiving, opt => opt.MapFrom(c => c.Education.YearReceiving))
+                        .ForMember(x => x.HashIdQualification, opt => opt.MapFrom(c => c.Scientific == null ? null : _hashIdUtilities.EncryptLong(c.Scientific.Id, Enums.Services.Qualification)))
+                        .ForMember(x => x.ScientifickDegree, opt => opt.MapFrom(c => c.Scientific == null ? null : c.Scientific.ScientificDegree))
+                        .ForMember(x => x.ScientifickTitle, opt => opt.MapFrom(c => c.Scientific == null ? null : c.Scientific.ScientificTitle));
+
+                    //------------------------------------------------------------------------------
+
                     map.CreateMap<Education, EducationDTO>().ReverseMap();
 
                 }).CreateMapper();
@@ -196,6 +211,19 @@ namespace TradeUnionCommittee.BLL.Utilities
                     return "Заступник";
                 default:
                     return string.Empty;
+            }
+        }
+
+        private string ConvertToUkraineGender(string sex)
+        {
+            switch (sex)
+            {
+                case "Male":
+                    return new string("Чоловіча");
+                case "Female":
+                    return new string("Жіноча");
+                default:
+                    return sex;
             }
         }
     }

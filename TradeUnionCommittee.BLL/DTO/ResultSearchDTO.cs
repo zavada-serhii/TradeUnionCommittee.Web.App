@@ -4,7 +4,7 @@ namespace TradeUnionCommittee.BLL.DTO
 {
     public class ResultSearchDTO
     {
-        public long IdUser { get; set; }
+        public string HashIdUser { get; set; }
         public string FullName { get; set; }
         public string SurnameAndInitials { get; set; }
         public DateTime BirthDate { get; set; }

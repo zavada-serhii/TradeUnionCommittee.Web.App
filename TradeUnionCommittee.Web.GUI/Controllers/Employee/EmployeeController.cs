@@ -29,7 +29,7 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Employee
 
         [HttpGet]
         [Authorize(Roles = "Admin,Accountant,Deputy")]
-        public async Task<IActionResult> Index(long id)
+        public async Task<IActionResult> Index(string id)
         {
             var result = await _employeeService.GetMainInfoEmployeeAsync(id);
             return View(result.Result);
@@ -86,10 +86,10 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Employee
 
         [HttpGet]
         [Authorize(Roles = "Admin,Accountant,Deputy")]
-        public async Task<IActionResult> Update(long? id)
+        public async Task<IActionResult> Update(string id)
         {
             if (id == null) return NotFound();
-            var result = await _employeeService.GetMainInfoEmployeeAsync(id.Value);
+            var result = await _employeeService.GetMainInfoEmployeeAsync(id);
             return result.IsValid
                 ? View(_mapper.Map<UpdateEmployeeViewModel>(result.Result))
                 : _oops.OutPutError("Employee", "Index", result.ErrorsList);
@@ -102,7 +102,7 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Employee
         {
             if (ModelState.IsValid)
             {
-                if (vm.IdEmployee == null) return NotFound();
+                if (vm.HashIdEmployee == null) return NotFound();
                 var result = await _employeeService.UpdateMainInfoEmployeeAsync(_mapper.Map<GeneralInfoEmployeeDTO>(vm));
                 return result.IsValid
                     ? RedirectToAction("Index")
