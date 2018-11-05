@@ -1,5 +1,4 @@
-﻿using System;
-using AutoMapper;
+﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
@@ -30,10 +29,10 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Employee
 
         [HttpGet]
         [Authorize(Roles = "Admin,Accountant,Deputy")]
-        public async Task<IActionResult> Create(long id)
+        public async Task<IActionResult> Create(string id)
         {
             await FillingDropDownListsQualification();
-            return View(new QualificationViewModel { IdEmployee = id });
+            return View(new QualificationViewModel { HashEmployeeId = id });
         }
 
         [HttpPost]
@@ -45,7 +44,7 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Employee
             {
                 var result = await _qualificationService.CreateQualificationEmployeeAsync(_mapper.Map<QualificationDTO>(vm));
                 return result.IsValid
-                    ? RedirectToAction("Index", "Employee", new { id = vm.IdEmployee })
+                    ? RedirectToAction("Index", "Employee", new { id = vm.HashEmployeeId })
                     : _oops.OutPutError("Employee", "Index", result.ErrorsList);
             }
             return View(vm);
@@ -55,10 +54,10 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Employee
 
         [HttpGet]
         [Authorize(Roles = "Admin,Accountant,Deputy")]
-        public async Task<IActionResult> Update(long? id)
+        public async Task<IActionResult> Update(string id)
         {
             if (id == null) return NotFound();
-            var result = await _qualificationService.GetQualificationEmployeeAsync(id.Value);
+            var result = await _qualificationService.GetQualificationEmployeeAsync(id);
             if (result.IsValid)
             {
                 await FillingDropDownListsQualification();
@@ -74,10 +73,10 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Employee
         {
             if (ModelState.IsValid)
             {
-                if (vm.IdEmployee == null) return NotFound();
+                if (vm.HashId == null) return NotFound();
                 var result = await _qualificationService.UpdateQualificationEmployeeAsync(_mapper.Map<QualificationDTO>(vm));
                 return result.IsValid
-                    ? RedirectToAction("Index", "Employee", new { id = vm.IdEmployee })
+                    ? RedirectToAction("Index", "Employee", new { id = vm.HashEmployeeId })
                     : _oops.OutPutError("Employee", "Index", result.ErrorsList);
             }
             return View(vm);
@@ -87,10 +86,10 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Employee
 
         [HttpGet]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Delete(long? id)
+        public async Task<IActionResult> Delete(string id)
         {
             if (id == null) return NotFound();
-            var result = await _qualificationService.GetQualificationEmployeeAsync(id.Value);
+            var result = await _qualificationService.GetQualificationEmployeeAsync(id);
             return result.IsValid
                 ? View(result.Result)
                 : _oops.OutPutError("MainInfoEmployee", "Index", result.ErrorsList);
@@ -99,12 +98,12 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Employee
         [HttpPost, ActionName("Delete")]
         [Authorize(Roles = "Admin")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(long? id)
+        public async Task<IActionResult> DeleteConfirmed(string hashId, string hashEmployeeId)
         {
-            if (id == null) return NotFound();
-            var result = await _qualificationService.DeleteQualificationEmployeeAsync(id.Value);
+            if (hashId == null || hashEmployeeId == null) return NotFound();
+            var result = await _qualificationService.DeleteQualificationEmployeeAsync(hashId);
             return result.IsValid
-                ? RedirectToAction("Index", "Employee", new { id })
+                ? RedirectToAction("Index", "Employee", new { id = hashEmployeeId })
                 : _oops.OutPutError("MainInfoEmployee", "Index", result.ErrorsList);
         }
 

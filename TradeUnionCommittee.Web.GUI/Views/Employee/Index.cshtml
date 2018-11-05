@@ -239,11 +239,11 @@
 
 <div class="row justify-content-end">
     <div class="col-md-6 text-right">
-        <a asp-action="Update" asp-route-id="@Model.IdEmployee" class="btn btn-success"><i class="fas fa-edit"></i>Редагувати (No Logic)</a>
+        <a asp-action="Update" asp-route-id="@Model.HashIdEmployee" class="btn btn-success"><i class="fas fa-edit"></i>Редагувати (No Logic)</a>
 
         @if (User.IsInRole("Admin"))
         {
-            <a asp-action="Delete" asp-route-id="@Model.IdEmployee" class="btn btn-danger"><i class="fas fa-trash-alt"></i>Видалити (No Logic)</a>
+            <a asp-action="Delete" asp-route-id="@Model.HashIdEmployee" class="btn btn-danger"><i class="fas fa-trash-alt"></i>Видалити (No Logic)</a>
         }
 
     </div>
@@ -275,7 +275,7 @@
 
 <div class="row justify-content-end">
     <div class="col-md-6 text-right">
-        <a asp-action="Update" asp-controller="Education" asp-route-id="@Model.IdEmployee" class="btn btn-success"><i class="fas fa-edit"></i>Редагувати освіту</a>
+        <a asp-action="Update" asp-controller="Education" asp-route-id="@Model.HashIdEducation" class="btn btn-success"><i class="fas fa-edit"></i>Редагувати освіту</a>
     </div>
 </div>
 
@@ -309,11 +309,11 @@
 
     <div class="row justify-content-end">
         <div class="col-md-6 text-right">
-            <a asp-action="Update" asp-controller="Qualification" asp-route-id="@Model.IdEmployee" class="btn btn-success"><i class="fas fa-edit"></i>Редагувати кваліфікацію</a>
+            <a asp-action="Update" asp-controller="Qualification" asp-route-id="@Model.HashIdQualification" class="btn btn-success"><i class="fas fa-edit"></i>Редагувати кваліфікацію</a>
 
             @if (User.IsInRole("Admin"))
             {
-                <a asp-action="Delete" asp-controller="Qualification" asp-route-id="@Model.IdEmployee" class="btn btn-danger"><i class="fas fa-trash-alt"></i>Видалити кваліфікацію</a>
+                <a asp-action="Delete" asp-controller="Qualification" asp-route-id="@Model.HashIdQualification" class="btn btn-danger"><i class="fas fa-trash-alt"></i>Видалити кваліфікацію</a>
             }
 
         </div>
@@ -329,7 +329,7 @@ else
 
     <div class="row justify-content-end">
         <div class="col-md-6 text-right">
-            <a asp-action="Create" asp-controller="Qualification" asp-route-id="@Model.IdEmployee" class="btn btn-success"><i class="fas fa-edit"></i>Додати кваліфікацію</a>
+            <a asp-action="Create" asp-controller="Qualification" asp-route-id="@Model.HashIdEmployee" class="btn btn-success"><i class="fas fa-edit"></i>Додати кваліфікацію</a>
         </div>
     </div>
 }

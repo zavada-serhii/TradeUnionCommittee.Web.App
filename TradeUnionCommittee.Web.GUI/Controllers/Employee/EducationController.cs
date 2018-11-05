@@ -29,10 +29,10 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Employee
 
         [HttpGet]
         [Authorize(Roles = "Admin,Accountant,Deputy")]
-        public async Task<IActionResult> Update(long? id)
+        public async Task<IActionResult> Update(string id)
         {
             if (id == null) return NotFound();
-            var result = await _educationService.GetEducationEmployeeAsync(id.Value);
+            var result = await _educationService.GetEducationEmployeeAsync(id);
             if (result.IsValid)
             {
                 await FillingDropDownListsEducation();
@@ -48,10 +48,10 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Employee
         {
             if (ModelState.IsValid)
             {
-                if (vm.IdEmployee == null) return NotFound();
+                if (vm.HashIdEmployee == null) return NotFound();
                 var result = await _educationService.UpdateEducationEmployeeAsync(_mapper.Map<EducationDTO>(vm));
                 return result.IsValid
-                    ? RedirectToAction("Index", "Employee", new { id = vm.IdEmployee })
+                    ? RedirectToAction("Index", "Employee", new { id = vm.HashIdEmployee })
                     : _oops.OutPutError("Employee", "Index", result.ErrorsList);
             }
             return View(vm);

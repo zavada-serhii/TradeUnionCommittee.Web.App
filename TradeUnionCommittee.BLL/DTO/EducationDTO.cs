@@ -2,10 +2,11 @@
 {
     public class EducationDTO
     {
-        public long Id { get; set; }
-        public long IdEmployee { get; set; }
+        public string HashId { get; set; }
+        public string HashIdEmployee { get; set; }
         public string LevelEducation { get; set; }
         public string NameInstitution { get; set; }
         public int? YearReceiving { get; set; }
+        public uint RowVersion { get; set; }
     }
 }

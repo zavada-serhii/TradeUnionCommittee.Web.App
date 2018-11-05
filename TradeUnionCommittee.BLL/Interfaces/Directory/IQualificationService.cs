@@ -9,10 +9,10 @@ namespace TradeUnionCommittee.BLL.Interfaces.Directory
     {
         Task<ActualResult<IEnumerable<string>>> GetAllScientificDegreeAsync();
         Task<ActualResult<IEnumerable<string>>> GetAllScientificTitleAsync();
-        Task<ActualResult<QualificationDTO>> GetQualificationEmployeeAsync(long idEmployee);
+        Task<ActualResult<QualificationDTO>> GetQualificationEmployeeAsync(string hashId);
         Task<ActualResult> UpdateQualificationEmployeeAsync(QualificationDTO dto);
         Task<ActualResult> CreateQualificationEmployeeAsync(QualificationDTO dto);
-        Task<ActualResult> DeleteQualificationEmployeeAsync(long idEmployee);
+        Task<ActualResult> DeleteQualificationEmployeeAsync(string hashId);
         void Dispose();
     }
 }

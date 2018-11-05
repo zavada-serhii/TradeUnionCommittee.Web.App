@@ -13,7 +13,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TradeUnionCommittee.Web.GUI
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TradeUnionCommittee.UnitTests", "TradeUnionCommittee.UnitTests\TradeUnionCommittee.UnitTests.csproj", "{D0F824FD-78DB-4D79-AE3A-A45C69F73072}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TradeUnionCommittee.Web.Api", "TradeUnionCommittee.Web.Api\TradeUnionCommittee.Web.Api.csproj", "{84139A2A-6FA3-4364-B869-6018A0047916}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TradeUnionCommittee.Web.Api", "TradeUnionCommittee.Web.Api\TradeUnionCommittee.Web.Api.csproj", "{84139A2A-6FA3-4364-B869-6018A0047916}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

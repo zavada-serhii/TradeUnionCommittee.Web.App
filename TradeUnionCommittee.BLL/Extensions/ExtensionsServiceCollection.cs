@@ -2,10 +2,12 @@
 using TradeUnionCommittee.BLL.Interfaces.Account;
 using TradeUnionCommittee.BLL.Interfaces.Directory;
 using TradeUnionCommittee.BLL.Interfaces.Employee;
+using TradeUnionCommittee.BLL.Interfaces.PDF;
 using TradeUnionCommittee.BLL.Interfaces.Search;
 using TradeUnionCommittee.BLL.Services.Account;
 using TradeUnionCommittee.BLL.Services.Directory;
 using TradeUnionCommittee.BLL.Services.Employee;
+using TradeUnionCommittee.BLL.Services.PDF;
 using TradeUnionCommittee.BLL.Services.Search;
 using TradeUnionCommittee.BLL.Utilities;
 using TradeUnionCommittee.DAL.Extensions;
@@ -46,6 +48,7 @@ namespace TradeUnionCommittee.BLL.Extensions
             services.AddScoped<IDepartmentalService, DepartmentalService>();
 
             services.AddScoped<ISearchService, SearchService>();
+            services.AddScoped<IPdfService, PdfService>();
 
             //---------------------------------------------------------------------------------------------
 

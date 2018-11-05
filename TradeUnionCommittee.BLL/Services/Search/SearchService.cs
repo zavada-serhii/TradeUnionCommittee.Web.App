@@ -321,7 +321,7 @@ namespace TradeUnionCommittee.BLL.Services.Search
 
                 result.Add(new ResultSearchDTO
                 {
-                    IdUser = employee.Id,
+                    HashIdUser = _hashIdUtilities.EncryptLong(employee.Id, Enums.Services.Employee),
                     FullName = $"{employee.FirstName} {employee.SecondName} {employee.Patronymic}",
                     SurnameAndInitials = $"{employee.FirstName} {employee.SecondName[0]}. {patronymic}",
                     BirthDate = employee.BirthDate,

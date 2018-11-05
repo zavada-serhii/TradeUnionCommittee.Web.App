@@ -15,11 +15,13 @@ namespace TradeUnionCommittee.BLL.Services.Directory
     {
         private readonly IUnitOfWork _database;
         private readonly IAutoMapperUtilities _mapper;
+        private readonly IHashIdUtilities _hashIdUtilities;
 
-        public QualificationService(IUnitOfWork database, IAutoMapperUtilities mapper)
+        public QualificationService(IUnitOfWork database, IAutoMapperUtilities mapper, IHashIdUtilities hashIdUtilities)
         {
             _database = database;
             _mapper = mapper;
+            _hashIdUtilities = hashIdUtilities;
         }
 
         public async Task<ActualResult<IEnumerable<string>>> GetAllScientificDegreeAsync()
@@ -36,14 +38,19 @@ namespace TradeUnionCommittee.BLL.Services.Directory
 
         //------------------------------------------------------------------------------------------------------------------------------------------
    
-        public async Task<ActualResult<QualificationDTO>> GetQualificationEmployeeAsync(long idEmployee)
+        public async Task<ActualResult<QualificationDTO>> GetQualificationEmployeeAsync(string hashId)
         {
-            var scientific = await _database.ScientificRepository.Get(idEmployee);
-            if (scientific.Result != null)
+            var checkDecrypt = await _hashIdUtilities.CheckDecryptWithId(hashId, Enums.Services.Qualification);
+            if (checkDecrypt.IsValid)
             {
-                return _mapper.Mapper.Map<ActualResult<QualificationDTO>>(scientific);
+                var scientific = await _database.ScientificRepository.Get(checkDecrypt.Result);
+                if (scientific.Result != null)
+                {
+                    return _mapper.Mapper.Map<ActualResult<QualificationDTO>>(scientific);
+                }
+                return new ActualResult<QualificationDTO>(Errors.TupleDeleted);
             }
-            return new ActualResult<QualificationDTO>(Errors.TupleDeleted);
+            return new ActualResult<QualificationDTO>(checkDecrypt.ErrorsList);
         }
 
         public async Task<ActualResult> CreateQualificationEmployeeAsync(QualificationDTO dto)
@@ -54,17 +61,19 @@ namespace TradeUnionCommittee.BLL.Services.Directory
 
         public async Task<ActualResult> UpdateQualificationEmployeeAsync(QualificationDTO dto)
         {
-            var idScientific = await _database.ScientificRepository.Get(dto.IdEmployee);
-            dto.Id = idScientific.Result.Id;
             await _database.ScientificRepository.Update(_mapper.Mapper.Map<Scientific>(dto));
             return _mapper.Mapper.Map<ActualResult>(await _database.SaveAsync());
         }
 
-        public async Task<ActualResult> DeleteQualificationEmployeeAsync(long idEmployee)
+        public async Task<ActualResult> DeleteQualificationEmployeeAsync(string hashId)
         {
-            var idScientific = await _database.ScientificRepository.Get(idEmployee);
-            await _database.ScientificRepository.Delete(idScientific.Result.Id);
-            return _mapper.Mapper.Map<ActualResult>(await _database.SaveAsync());
+            var checkDecrypt = await _hashIdUtilities.CheckDecryptWithId(hashId, Enums.Services.Qualification);
+            if (checkDecrypt.IsValid)
+            {
+                await _database.ScientificRepository.Delete(checkDecrypt.Result);
+                return _mapper.Mapper.Map<ActualResult>(await _database.SaveAsync());
+            }
+            return new ActualResult<QualificationDTO>(checkDecrypt.ErrorsList);
         }
 
         public void Dispose()

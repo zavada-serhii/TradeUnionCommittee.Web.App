@@ -13,5 +13,10 @@ namespace TradeUnionCommittee.BLL.Extensions
             }
             return yearsPassed;
         }
+
+        public static bool Between(this DateTime input, DateTime startDate, DateTime endDate)
+        {
+            return input >= startDate && input <= endDate;
+        }
     }
 }
