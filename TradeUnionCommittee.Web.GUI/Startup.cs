@@ -5,9 +5,11 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.IO.Compression;
 using TradeUnionCommittee.BLL.Extensions;
 using TradeUnionCommittee.BLL.Utilities;
 using TradeUnionCommittee.Web.GUI.Configuration;
@@ -50,9 +52,20 @@ namespace TradeUnionCommittee.Web.GUI
 
             services
                 .AddTradeUnionCommitteeServiceModule(Configuration.GetConnectionString("DefaultConnection"), Configuration.GetSection("HashIdUtilitiesSettings").Get<HashIdUtilitiesSetting>())
+                .AddResponseCompression()
                 .AddMvc()
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
                 .AddFluentValidation();
+
+            services.Configure<GzipCompressionProviderOptions>(options =>
+            {
+                options.Level = CompressionLevel.Optimal;
+            });
+
+            services.AddResponseCompression(options =>
+            {
+                options.EnableForHttps = true;
+            });
 
             DependencyInjectionSystem(services);
             DependencyInjectionFluentValidation(services);
@@ -72,6 +85,7 @@ namespace TradeUnionCommittee.Web.GUI
                 app.UseHsts();
             }
 
+            app.UseResponseCompression();
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseAuthentication(); 
