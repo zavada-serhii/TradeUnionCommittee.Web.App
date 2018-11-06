@@ -29,10 +29,8 @@ namespace TradeUnionCommittee.BLL.Services.Directory
 
         public async Task<ActualResult<DirectoryDTO>> GetAsync(string hashId)
         {
-            var check = await _hashIdUtilities.CheckDecryptWithId(hashId, Enums.Services.Hobby);
-            return check.IsValid
-                ? _mapperService.Mapper.Map<ActualResult<DirectoryDTO>>(await _database.HobbyRepository.Get(check.Result))
-                : new ActualResult<DirectoryDTO>(check.ErrorsList);
+            var id = _hashIdUtilities.DecryptLong(hashId, Enums.Services.Hobby);
+            return _mapperService.Mapper.Map<ActualResult<DirectoryDTO>>(await _database.HobbyRepository.Get(id));
         }
 
         public async Task<ActualResult> CreateAsync(DirectoryDTO dto)
@@ -47,28 +45,18 @@ namespace TradeUnionCommittee.BLL.Services.Directory
 
         public async Task<ActualResult> UpdateAsync(DirectoryDTO dto)
         {
-            var check = await _hashIdUtilities.CheckDecryptWithId(dto.HashId, Enums.Services.Hobby);
-            if (check.IsValid)
+            if (!await CheckNameAsync(dto.Name))
             {
-                if (!await CheckNameAsync(dto.Name))
-                {
-                    await _database.HobbyRepository.Update(_mapperService.Mapper.Map<Hobby>(dto));
-                    return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
-                }
-                return new ActualResult(Errors.DuplicateData);
+                await _database.HobbyRepository.Update(_mapperService.Mapper.Map<Hobby>(dto));
+                return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
             }
-            return new ActualResult(check.ErrorsList);
+            return new ActualResult(Errors.DuplicateData);
         }
 
         public async Task<ActualResult> DeleteAsync(string hashId)
         {
-            var check = await _hashIdUtilities.CheckDecryptWithId(hashId, Enums.Services.Hobby);
-            if (check.IsValid)
-            {
-                await _database.HobbyRepository.Delete(check.Result);
-                return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
-            }
-            return new ActualResult(check.ErrorsList);
+            await _database.HobbyRepository.Delete(_hashIdUtilities.DecryptLong(hashId, Enums.Services.Hobby));
+            return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
         }
 
         public async Task<bool> CheckNameAsync(string name)

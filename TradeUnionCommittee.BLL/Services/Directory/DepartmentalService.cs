@@ -35,10 +35,8 @@ namespace TradeUnionCommittee.BLL.Services.Directory
 
         public async Task<ActualResult<DepartmentalDTO>> GetAsync(string hashId)
         {
-            var check = await _hashIdUtilities.CheckDecryptWithId(hashId, Enums.Services.Departmental);
-            return check.IsValid
-                ? _mapperService.Mapper.Map<ActualResult<DepartmentalDTO>>(await _database.AddressPublicHouseRepository.Get(check.Result))
-                : new ActualResult<DepartmentalDTO>(check.ErrorsList);
+            var id = _hashIdUtilities.DecryptLong(hashId, Enums.Services.Departmental);
+            return _mapperService.Mapper.Map<ActualResult<DepartmentalDTO>>(await _database.AddressPublicHouseRepository.Get(id));
         }
 
         public async Task<ActualResult> CreateAsync(DepartmentalDTO dto)
@@ -49,24 +47,14 @@ namespace TradeUnionCommittee.BLL.Services.Directory
 
         public async Task<ActualResult> UpdateAsync(DepartmentalDTO dto)
         {
-            var check = await _hashIdUtilities.CheckDecryptWithId(dto.HashId, Enums.Services.Departmental);
-            if (check.IsValid)
-            {
-                await _database.AddressPublicHouseRepository.Update(_mapperService.Mapper.Map<AddressPublicHouse>(dto));
-                return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
-            }
-            return new ActualResult(check.ErrorsList);
+            await _database.AddressPublicHouseRepository.Update(_mapperService.Mapper.Map<AddressPublicHouse>(dto));
+            return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
         }
 
         public async Task<ActualResult> DeleteAsync(string hashId)
         {
-            var check = await _hashIdUtilities.CheckDecryptWithId(hashId, Enums.Services.Departmental);
-            if (check.IsValid)
-            {
-                await _database.AddressPublicHouseRepository.Delete(check.Result);
-                return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
-            }
-            return new ActualResult(check.ErrorsList);
+            await _database.AddressPublicHouseRepository.Delete(_hashIdUtilities.DecryptLong(hashId, Enums.Services.Departmental));
+            return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
         }
 
         public void Dispose()

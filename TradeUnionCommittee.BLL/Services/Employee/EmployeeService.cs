@@ -5,7 +5,6 @@ using TradeUnionCommittee.BLL.Enums;
 using TradeUnionCommittee.BLL.Interfaces.Employee;
 using TradeUnionCommittee.BLL.Utilities;
 using TradeUnionCommittee.Common.ActualResults;
-using TradeUnionCommittee.Common.Enums;
 using TradeUnionCommittee.DAL.Entities;
 using TradeUnionCommittee.DAL.Interfaces;
 
@@ -24,95 +23,8 @@ namespace TradeUnionCommittee.BLL.Services.Employee
             _hashIdUtilities = hashIdUtilities;
         }
 
-        #region CheckHashIdInDto
-
-        private async Task<ActualResult> CheckHashIdInDto(CreateEmployeeDTO dto)
-        {
-            var checkPosition = await _hashIdUtilities.CheckDecryptWithId(dto.HashIdPosition, Enums.Services.Position);
-            if (checkPosition != null)
-            {
-                dto.IdPosition = checkPosition.Result;
-            }
-            else
-            {
-                return new ActualResult(Errors.InvalidId);
-            }
-
-            var checkSubdivision = await _hashIdUtilities.CheckDecryptWithId(dto.HashIdSubdivision, Enums.Services.Subdivision);
-            if (checkSubdivision != null)
-            {
-                dto.IdSubdivision = checkSubdivision.Result;
-            }
-            else
-            {
-                return new ActualResult(Errors.InvalidId);
-            }
-
-            if (dto.TypeAccommodation == AccommodationType.Dormitory)
-            {
-                var checkDormitory = await _hashIdUtilities.CheckDecryptWithId(dto.HashIdDormitory, Enums.Services.Dormitory);
-                if (checkDormitory != null)
-                {
-                    dto.IdDormitory = checkDormitory.Result;
-                }
-                else
-                {
-                    return new ActualResult(Errors.InvalidId);
-                }
-            }
-
-            if (dto.TypeAccommodation == AccommodationType.Departmental)
-            {
-                var checkDepartmental = await _hashIdUtilities.CheckDecryptWithId(dto.HashIdDepartmental, Enums.Services.Departmental);
-                if (checkDepartmental != null)
-                {
-                    dto.IdDepartmental = checkDepartmental.Result;
-                }
-                else
-                {
-                    return new ActualResult(Errors.InvalidId);
-                }
-            }
-
-            if (dto.SocialActivity)
-            {
-                var checkSocialActivity = await _hashIdUtilities.CheckDecryptWithId(dto.HashIdSocialActivity, Enums.Services.SocialActivity);
-                if (checkSocialActivity != null)
-                {
-                    dto.IdSocialActivity = checkSocialActivity.Result;
-                }
-                else
-                {
-                    return new ActualResult(Errors.InvalidId);
-                }
-            }
-
-            if (dto.Privileges)
-            {
-                var checkPrivileges = await _hashIdUtilities.CheckDecryptWithId(dto.HashIdPrivileges, Enums.Services.Privileges);
-                if (checkPrivileges != null)
-                {
-                    dto.IdPrivileges = checkPrivileges.Result;
-                }
-                else
-                {
-                    return new ActualResult(Errors.InvalidId);
-                }
-            }
-
-            return new ActualResult();
-        }
-
-        #endregion
-
         public async Task<ActualResult> AddEmployeeAsync(CreateEmployeeDTO dto)
         {
-            var checkHashIdInDto = await CheckHashIdInDto(dto);
-            if (!checkHashIdInDto.IsValid)
-            {
-                return new ActualResult(checkHashIdInDto.ErrorsList);
-            }
-
             var employee = _mapperService.Mapper.Map<DAL.Entities.Employee>(dto);
             await _database.EmployeeRepository.Create(employee);
             var createEmployee = await _database.SaveAsync();
@@ -163,19 +75,13 @@ namespace TradeUnionCommittee.BLL.Services.Employee
 
         public async Task<ActualResult<GeneralInfoEmployeeDTO>> GetMainInfoEmployeeAsync(string hashId)
         {
-            var checkDecrypt = await _hashIdUtilities.CheckDecryptWithId(hashId, Enums.Services.Employee);
-
-            if (checkDecrypt.IsValid)
-            {
-                var resultSearchByHashId = await _database
-                    .EmployeeRepository
-                    .GetWithInclude(x => x.Id == checkDecrypt.Result,
-                                    p => p.Education,
-                                    p => p.Scientific);
-                var employee = new ActualResult<DAL.Entities.Employee> { Result = resultSearchByHashId.Result.FirstOrDefault() };
-                return _mapperService.Mapper.Map<ActualResult<DAL.Entities.Employee>, ActualResult<GeneralInfoEmployeeDTO>>(employee);
-            }
-            return new ActualResult<GeneralInfoEmployeeDTO>(checkDecrypt.ErrorsList);
+            var resultSearchByHashId = await _database
+                .EmployeeRepository
+                .GetWithInclude(x => x.Id == _hashIdUtilities.DecryptLong(hashId, Enums.Services.Employee),
+                                p => p.Education,
+                                p => p.Scientific);
+            var employee = new ActualResult<DAL.Entities.Employee> { Result = resultSearchByHashId.Result.FirstOrDefault() };
+            return _mapperService.Mapper.Map<ActualResult<DAL.Entities.Employee>, ActualResult<GeneralInfoEmployeeDTO>>(employee);
         }
 
         //------------------------------------------------------------------------------------------------------------------------------------------
@@ -192,12 +98,7 @@ namespace TradeUnionCommittee.BLL.Services.Employee
 
         public async Task<ActualResult> DeleteAsync(string hashId)
         {
-            var check = await _hashIdUtilities.CheckDecryptWithId(hashId, Enums.Services.Employee);
-            if (check.IsValid)
-            {
-                return _mapperService.Mapper.Map<ActualResult>(await DeleteAsync(check.Result));
-            }
-            return new ActualResult(check.ErrorsList);
+            return _mapperService.Mapper.Map<ActualResult>(await DeleteAsync(_hashIdUtilities.DecryptLong(hashId, Enums.Services.Employee)));
         }
 
         private async Task<ActualResult> DeleteAsync(long id)

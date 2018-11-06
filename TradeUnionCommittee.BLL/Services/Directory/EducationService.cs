@@ -45,17 +45,12 @@ namespace TradeUnionCommittee.BLL.Services.Directory
 
         public async Task<ActualResult<EducationDTO>> GetEducationEmployeeAsync(string hashId)
         {
-            var checkDecrypt = await _hashIdUtilities.CheckDecryptWithId(hashId, Enums.Services.Education);
-            if (checkDecrypt.IsValid)
+            var education = await _database.EducationRepository.Get(_hashIdUtilities.DecryptLong(hashId, Enums.Services.Education));
+            if (education.Result != null)
             {
-                var education = await _database.EducationRepository.Get(checkDecrypt.Result);
-                if (education.Result != null)
-                {
-                    return _mapperService.Mapper.Map<ActualResult<EducationDTO>>(education);
-                }
-                return new ActualResult<EducationDTO>(Errors.TupleDeleted);
+                return _mapperService.Mapper.Map<ActualResult<EducationDTO>>(education);
             }
-            return new ActualResult<EducationDTO>(checkDecrypt.ErrorsList);
+            return new ActualResult<EducationDTO>(Errors.TupleDeleted);
         }
 
         public async Task<ActualResult> UpdateEducationEmployeeAsync(EducationDTO dto)

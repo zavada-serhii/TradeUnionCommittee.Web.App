@@ -1,8 +1,5 @@
 ﻿using HashidsNet;
-using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.Exceptions;
-using TradeUnionCommittee.Common.ActualResults;
-using TradeUnionCommittee.Common.Enums;
 
 namespace TradeUnionCommittee.BLL.Utilities
 {
@@ -19,7 +16,6 @@ namespace TradeUnionCommittee.BLL.Utilities
     {
         long DecryptLong(string cipherText, Enums.Services service);
         string EncryptLong(long plainLong, Enums.Services service);
-        Task<ActualResult<long>> CheckDecryptWithId(string hashId, Enums.Services service);
     }
 
     internal sealed class HashIdUtilities : IHashIdUtilities
@@ -71,24 +67,6 @@ namespace TradeUnionCommittee.BLL.Utilities
                 return result[0];
             }
             throw new DecryptHashIdException($"{service}");
-        }
-
-        public async Task<ActualResult<long>> CheckDecryptWithId(string hashId, Enums.Services service)
-        {
-            return await Task.Run(() => CheckDecrypt(hashId, service, out long id) ? new ActualResult<long> { Result = id } : new ActualResult<long>(Errors.InvalidId));
-        }
-
-        private bool CheckDecrypt(string cipherText, Enums.Services service, out long id)
-        {
-            id = 0;
-            if (string.IsNullOrEmpty(cipherText) || string.IsNullOrWhiteSpace(cipherText))
-            {
-                return false;
-            }
-            var result = DecryptLong(cipherText, service);
-            if (result == 0) return false;
-            id = result;
-            return true;
         }
 
         private string GuidFormat(string hash, bool addOrRemoveMinus)

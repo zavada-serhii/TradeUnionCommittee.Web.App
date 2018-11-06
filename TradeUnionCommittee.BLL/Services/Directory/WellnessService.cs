@@ -29,10 +29,8 @@ namespace TradeUnionCommittee.BLL.Services.Directory
 
         public async Task<ActualResult<WellnessDTO>> GetAsync(string hashId)
         {
-            var check = await _hashIdUtilities.CheckDecryptWithId(hashId, Enums.Services.Wellness);
-            return check.IsValid
-                ? _mapperService.Mapper.Map<ActualResult<WellnessDTO>>(await _database.EventRepository.Get(check.Result))
-                : new ActualResult<WellnessDTO>(check.ErrorsList);
+            var id = _hashIdUtilities.DecryptLong(hashId, Enums.Services.Wellness);
+            return _mapperService.Mapper.Map<ActualResult<WellnessDTO>>(await _database.EventRepository.Get(id));
         }
 
         public async Task<ActualResult> CreateAsync(WellnessDTO dto)
@@ -47,28 +45,18 @@ namespace TradeUnionCommittee.BLL.Services.Directory
 
         public async Task<ActualResult> UpdateAsync(WellnessDTO dto)
         {
-            var check = await _hashIdUtilities.CheckDecryptWithId(dto.HashId, Enums.Services.Wellness);
-            if (check.IsValid)
+            if (!await CheckNameAsync(dto.Name))
             {
-                if (!await CheckNameAsync(dto.Name))
-                {
-                    await _database.EventRepository.Update(_mapperService.Mapper.Map<Event>(dto));
-                    return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
-                }
-                return new ActualResult(Errors.DuplicateData);
+                await _database.EventRepository.Update(_mapperService.Mapper.Map<Event>(dto));
+                return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
             }
-            return new ActualResult(check.ErrorsList);
+            return new ActualResult(Errors.DuplicateData);
         }
 
         public async Task<ActualResult> DeleteAsync(string hashId)
         {
-            var check = await _hashIdUtilities.CheckDecryptWithId(hashId, Enums.Services.Wellness);
-            if (check.IsValid)
-            {
-                await _database.EventRepository.Delete(check.Result);
-                return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
-            }
-            return new ActualResult(check.ErrorsList);
+            await _database.EventRepository.Delete(_hashIdUtilities.DecryptLong(hashId, Enums.Services.Wellness));
+            return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
         }
 
         public async Task<bool> CheckNameAsync(string name)

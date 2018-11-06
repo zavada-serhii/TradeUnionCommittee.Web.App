@@ -29,10 +29,8 @@ namespace TradeUnionCommittee.BLL.Services.Directory
 
         public async Task<ActualResult<DirectoryDTO>> GetAsync(string hashId)
         {
-            var check = await _hashIdUtilities.CheckDecryptWithId(hashId, Enums.Services.Privileges);
-            return check.IsValid
-                ? _mapperService.Mapper.Map<ActualResult<DirectoryDTO>>(await _database.PrivilegesRepository.Get(check.Result))
-                : new ActualResult<DirectoryDTO>(check.ErrorsList);
+            var id = _hashIdUtilities.DecryptLong(hashId, Enums.Services.Privileges);
+            return _mapperService.Mapper.Map<ActualResult<DirectoryDTO>>(await _database.PrivilegesRepository.Get(id));
         }
 
         public async Task<ActualResult> CreateAsync(DirectoryDTO dto)
@@ -47,28 +45,18 @@ namespace TradeUnionCommittee.BLL.Services.Directory
 
         public async Task<ActualResult> UpdateAsync(DirectoryDTO dto)
         {
-            var check = await _hashIdUtilities.CheckDecryptWithId(dto.HashId, Enums.Services.Privileges);
-            if (check.IsValid)
+            if (!await CheckNameAsync(dto.Name))
             {
-                if (!await CheckNameAsync(dto.Name))
-                {
-                    await _database.PrivilegesRepository.Update(_mapperService.Mapper.Map<Privileges>(dto));
-                    return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
-                }
-                return new ActualResult(Errors.DuplicateData);
+                await _database.PrivilegesRepository.Update(_mapperService.Mapper.Map<Privileges>(dto));
+                return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
             }
-            return new ActualResult(check.ErrorsList);
+            return new ActualResult(Errors.DuplicateData);
         }
 
         public async Task<ActualResult> DeleteAsync(string hashId)
         {
-            var check = await _hashIdUtilities.CheckDecryptWithId(hashId, Enums.Services.Privileges);
-            if (check.IsValid)
-            {
-                await _database.PrivilegesRepository.Delete(check.Result);
-                return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
-            }
-            return new ActualResult(check.ErrorsList);
+            await _database.PrivilegesRepository.Delete(_hashIdUtilities.DecryptLong(hashId, Enums.Services.Privileges));
+            return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
         }
 
         public async Task<bool> CheckNameAsync(string name)

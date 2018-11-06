@@ -40,17 +40,12 @@ namespace TradeUnionCommittee.BLL.Services.Directory
    
         public async Task<ActualResult<QualificationDTO>> GetQualificationEmployeeAsync(string hashId)
         {
-            var checkDecrypt = await _hashIdUtilities.CheckDecryptWithId(hashId, Enums.Services.Qualification);
-            if (checkDecrypt.IsValid)
+            var scientific = await _database.ScientificRepository.Get(_hashIdUtilities.DecryptLong(hashId, Enums.Services.Qualification));
+            if (scientific.Result != null)
             {
-                var scientific = await _database.ScientificRepository.Get(checkDecrypt.Result);
-                if (scientific.Result != null)
-                {
-                    return _mapper.Mapper.Map<ActualResult<QualificationDTO>>(scientific);
-                }
-                return new ActualResult<QualificationDTO>(Errors.TupleDeleted);
+                return _mapper.Mapper.Map<ActualResult<QualificationDTO>>(scientific);
             }
-            return new ActualResult<QualificationDTO>(checkDecrypt.ErrorsList);
+            return new ActualResult<QualificationDTO>(Errors.TupleDeleted);
         }
 
         public async Task<ActualResult> CreateQualificationEmployeeAsync(QualificationDTO dto)
@@ -67,13 +62,8 @@ namespace TradeUnionCommittee.BLL.Services.Directory
 
         public async Task<ActualResult> DeleteQualificationEmployeeAsync(string hashId)
         {
-            var checkDecrypt = await _hashIdUtilities.CheckDecryptWithId(hashId, Enums.Services.Qualification);
-            if (checkDecrypt.IsValid)
-            {
-                await _database.ScientificRepository.Delete(checkDecrypt.Result);
-                return _mapper.Mapper.Map<ActualResult>(await _database.SaveAsync());
-            }
-            return new ActualResult<QualificationDTO>(checkDecrypt.ErrorsList);
+            await _database.ScientificRepository.Delete(_hashIdUtilities.DecryptLong(hashId, Enums.Services.Qualification));
+            return _mapper.Mapper.Map<ActualResult>(await _database.SaveAsync());
         }
 
         public void Dispose()

@@ -29,10 +29,8 @@ namespace TradeUnionCommittee.BLL.Services.Directory
 
         public async Task<ActualResult<DirectoryDTO>> GetAsync(string hashId)
         {
-            var check = await _hashIdUtilities.CheckDecryptWithId(hashId, Enums.Services.MaterialAid);
-            return check.IsValid
-                ? _mapperService.Mapper.Map<ActualResult<DirectoryDTO>>(await _database.MaterialAidRepository.Get(check.Result))
-                : new ActualResult<DirectoryDTO>(check.ErrorsList);
+            var id = _hashIdUtilities.DecryptLong(hashId, Enums.Services.MaterialAid);
+            return _mapperService.Mapper.Map<ActualResult<DirectoryDTO>>(await _database.MaterialAidRepository.Get(id));
         }
 
         public async Task<ActualResult> CreateAsync(DirectoryDTO dto)
@@ -47,28 +45,18 @@ namespace TradeUnionCommittee.BLL.Services.Directory
 
         public async Task<ActualResult> UpdateAsync(DirectoryDTO dto)
         {
-            var check = await _hashIdUtilities.CheckDecryptWithId(dto.HashId, Enums.Services.MaterialAid);
-            if (check.IsValid)
+            if (!await CheckNameAsync(dto.Name))
             {
-                if (!await CheckNameAsync(dto.Name))
-                {
-                    await _database.MaterialAidRepository.Update(_mapperService.Mapper.Map<MaterialAid>(dto));
-                    return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
-                }
-                return new ActualResult(Errors.DuplicateData);
+                await _database.MaterialAidRepository.Update(_mapperService.Mapper.Map<MaterialAid>(dto));
+                return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
             }
-            return new ActualResult(check.ErrorsList);
+            return new ActualResult(Errors.DuplicateData);
         }
 
         public async Task<ActualResult> DeleteAsync(string hashId)
         {
-            var check = await _hashIdUtilities.CheckDecryptWithId(hashId, Enums.Services.MaterialAid);
-            if (check.IsValid)
-            {
-                await _database.MaterialAidRepository.Delete(check.Result);
-                return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
-            }
-            return new ActualResult(check.ErrorsList);
+            await _database.MaterialAidRepository.Delete(_hashIdUtilities.DecryptLong(hashId, Enums.Services.MaterialAid));
+            return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
         }
 
         public async Task<bool> CheckNameAsync(string name)

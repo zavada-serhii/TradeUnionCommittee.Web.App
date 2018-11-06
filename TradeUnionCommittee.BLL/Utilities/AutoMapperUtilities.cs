@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System;
+using AutoMapper;
 using TradeUnionCommittee.BLL.DTO;
 using TradeUnionCommittee.BLL.Enums;
 using TradeUnionCommittee.BLL.Extensions;
@@ -145,8 +146,8 @@ namespace TradeUnionCommittee.BLL.Utilities
                     map.CreateMap<PositionEmployees, CreateEmployeeDTO>()
                         .ReverseMap()
                         .ForMember(d => d.IdEmployee, c => c.MapFrom(x => x.IdEmployee))
-                        .ForMember(d => d.IdSubdivision, c => c.MapFrom(x => x.IdSubdivision))
-                        .ForMember(d => d.IdPosition, c => c.MapFrom(x => x.IdPosition))
+                        .ForMember(d => d.IdSubdivision, c => c.MapFrom(x => _hashIdUtilities.DecryptLong(x.HashIdSubdivision, Enums.Services.Subdivision)))
+                        .ForMember(d => d.IdPosition, c => c.MapFrom(x => _hashIdUtilities.DecryptLong(x.HashIdPosition, Enums.Services.Position)))
                         .ForMember(d => d.StartDate, c=> c.MapFrom(x => x.StartDatePosition))
                         .ForMember(d => d.CheckPosition, c => c.UseValue(true));
 
@@ -162,7 +163,7 @@ namespace TradeUnionCommittee.BLL.Utilities
                     map.CreateMap<PublicHouseEmployees, CreateEmployeeDTO>()
                         .ReverseMap()
                         .ForMember(x => x.IdEmployee, c => c.MapFrom(x => x.IdEmployee))
-                        .ForMember(x => x.IdAddressPublicHouse, c => c.MapFrom(x => x.TypeAccommodation == AccommodationType.Dormitory ? x.IdDormitory : x.IdDepartmental))
+                        .ForMember(x => x.IdAddressPublicHouse, c => c.MapFrom(x => DecryptIdAddressPublicHouse(x.TypeAccommodation, x.HashIdDormitory, x.HashIdDepartmental)))
                         .ForMember(x => x.NumberRoom, c => c.MapFrom(x => x.TypeAccommodation == AccommodationType.Dormitory ? x.NumberRoomDormitory : x.NumberRoomDepartmental));
 
                     map.CreateMap<Scientific, CreateEmployeeDTO>()
@@ -174,14 +175,14 @@ namespace TradeUnionCommittee.BLL.Utilities
                     map.CreateMap<SocialActivityEmployees, CreateEmployeeDTO>()
                         .ReverseMap()
                         .ForMember(x => x.IdEmployee, c => c.MapFrom(x => x.IdEmployee))
-                        .ForMember(x => x.IdSocialActivity, c => c.MapFrom(x => x.IdSocialActivity))
+                        .ForMember(x => x.IdSocialActivity, c => c.MapFrom(x => _hashIdUtilities.DecryptLong(x.HashIdSocialActivity, Enums.Services.SocialActivity)))
                         .ForMember(x => x.Note, c => c.MapFrom(x => x.NoteSocialActivity))
                         .ForMember(d => d.CheckSocialActivity, c => c.UseValue(true));
 
                     map.CreateMap<PrivilegeEmployees, CreateEmployeeDTO>()
                         .ReverseMap()
                         .ForMember(x => x.IdEmployee, c => c.MapFrom(x => x.IdEmployee))
-                        .ForMember(x => x.IdPrivileges, c => c.MapFrom(x => x.IdPrivileges))
+                        .ForMember(x => x.IdPrivileges, c => c.MapFrom(x => _hashIdUtilities.DecryptLong(x.HashIdPrivileges, Enums.Services.Privileges)))
                         .ForMember(x => x.Note, c => c.MapFrom(x => x.NotePrivileges))
                         .ForMember(d => d.CheckPrivileges, c => c.UseValue(true));
 
@@ -230,6 +231,19 @@ namespace TradeUnionCommittee.BLL.Utilities
                     return new string("Жіноча");
                 default:
                     return sex;
+            }
+        }
+
+        private long DecryptIdAddressPublicHouse(AccommodationType type, string hashIdDormitory, string hashIdDepartmental)
+        {
+            switch (type)
+            {
+                case AccommodationType.Dormitory:
+                    return _hashIdUtilities.DecryptLong(hashIdDormitory, Enums.Services.Dormitory);
+                case AccommodationType.Departmental:
+                    return _hashIdUtilities.DecryptLong(hashIdDepartmental, Enums.Services.Departmental);
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(type), type, null);
             }
         }
     }
