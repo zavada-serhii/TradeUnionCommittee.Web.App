@@ -57,10 +57,8 @@ namespace TradeUnionCommittee.BLL.DTO
         public int? YearReceiving { get; set; }
 
         public string HashIdPosition { get; set; }
-        internal long IdPosition { get; set; }
         public DateTime StartDatePosition { get; set; }
         public string HashIdSubdivision { get; set; }
-        internal long IdSubdivision { get; set; }
 
         //------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -78,11 +76,9 @@ namespace TradeUnionCommittee.BLL.DTO
         public DateTime? DateReceivingHouseFromUniversity { get; set; }
 
         public string HashIdDormitory { get; set; }
-        internal long IdDormitory { get; set; }
         public string NumberRoomDormitory { get; set; }
 
         public string HashIdDepartmental { get; set; }
-        internal long IdDepartmental { get; set; }
         public string NumberRoomDepartmental { get; set; }
 
         //------------------------------------------------------------------------------------------------------------------------------------------
@@ -93,12 +89,10 @@ namespace TradeUnionCommittee.BLL.DTO
 
         public bool SocialActivity { get; set; }
         public string HashIdSocialActivity { get; set; }
-        internal long IdSocialActivity { get; set; }
         public string NoteSocialActivity { get; set; }
 
         public bool Privileges { get; set; }
         public string HashIdPrivileges { get; set; }
-        internal long IdPrivileges { get; set; }
         public string NotePrivileges { get; set; }
     }
 }
