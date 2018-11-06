@@ -1,5 +1,6 @@
-﻿using System.Threading.Tasks;
-using HashidsNet;
+﻿using HashidsNet;
+using System.Threading.Tasks;
+using TradeUnionCommittee.BLL.Exceptions;
 using TradeUnionCommittee.Common.ActualResults;
 using TradeUnionCommittee.Common.Enums;
 
@@ -63,7 +64,13 @@ namespace TradeUnionCommittee.BLL.Utilities
             {
                 return 0;
             }
-            return ObjectHashids(service).DecodeLong(_useGuidFormat ? GuidFormat(cipherText, false) : cipherText)[0];
+            var result = ObjectHashids(service).DecodeLong(_useGuidFormat ? GuidFormat(cipherText, false) : cipherText);
+
+            if (result.Length == 1)
+            {
+                return result[0];
+            }
+            throw new DecryptHashIdException($"{service}");
         }
 
         public async Task<ActualResult<long>> CheckDecryptWithId(string hashId, Enums.Services service)
