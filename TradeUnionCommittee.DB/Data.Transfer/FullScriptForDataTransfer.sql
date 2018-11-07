@@ -36,20 +36,24 @@ INSERT INTO public."AddressPublicHouse"("Id", "City", "Street", "NumberHouse", "
 INSERT INTO public."Employee"("Id", "FirstName", "SecondName", "Patronymic", "Sex", "BirthDate", 
 								"IdentificationСode", "MechnikovCard", "MobilePhone", "CityPhone", 
 								"BasicProfession", "StartYearWork", "EndYearWork", "StartDateTradeUnion", 
-								"EndDateTradeUnion", "Note", "DateAdded")
-SELECT 	id,(FullName).FirstName,(FullName).SecondName,(FullName).Patronymic,
+								"EndDateTradeUnion", 
+								"LevelEducation", "NameInstitution", "YearReceiving",
+								"ScientificDegree", "ScientificTitle",
+								"Note", "DateAdded")
+SELECT 	e.id,(FullName).FirstName,(FullName).SecondName,(FullName).Patronymic,
 		CASE WHEN sex = 'Чоловіча' THEN 'Male' ELSE 'Female' END AS Sex,
 		dateofbirth,identificationcode,mechnikovcard,mobilephonenumber,
 		cityphonenumber,basicprofession,startdateofworkinonu, 
 		enddateofworkinonu, dateofjoiningthetradeunion, 
-		dateofnotjoiningthetradeunion, note, dateadded
-FROM maindb.employeesuniversity;
-
-INSERT INTO public."Education" ("Id", "IdEmployee", "LevelEducation", "NameInstitution", "YearReceiving") 
-SELECT id, idemployees, (education).leveleducation, (education).nameinstitution, CAST((education).datereceiving AS INT) FROM maindb.listeducation;
-
-INSERT INTO public."Scientific" ("Id", "IdEmployee", "ScientificDegree", "ScientificTitle") 
-SELECT id, idemployees, (scientific).scientificdegree,(scientific).scientifictitle FROM maindb.listscientific;
+		dateofnotjoiningthetradeunion, 
+		(education).leveleducation, (education).nameinstitution, CAST((education).datereceiving AS INT),
+		(scientific).scientificdegree,(scientific).scientifictitle,
+		note, dateadded
+FROM maindb.employeesuniversity AS e
+INNER JOIN maindb.listeducation AS le
+ON e.id = le.idemployees
+LEFT JOIN maindb.listscientific as ls
+ON e.id = ls.idemployees;
 
 INSERT INTO public."Children" ("Id", "IdEmployee", "FirstName", "SecondName", "Patronymic", "BirthDate") 
 SELECT id, idemployees,(FullName).FirstName,(FullName).SecondName,(FullName).Patronymic, dateofbirth FROM maindb.listchildren;
@@ -225,8 +229,6 @@ SELECT setval('"Privileges_Id_seq"', (SELECT last_value FROM maindb.privileges_i
 SELECT setval('"SocialActivity_Id_seq"', (SELECT last_value FROM maindb.socialactivity_id_seq), TRUE);
 SELECT setval('"AddressPublicHouse_Id_seq"', (SELECT last_value FROM maindb.addresspublichouse_id_seq), TRUE);
 SELECT setval('"Employee_Id_seq"', (SELECT last_value FROM maindb.employeesuniversity_id_seq), TRUE);
-SELECT setval('"Education_Id_seq"', (SELECT last_value FROM maindb.listeducation_id_seq), TRUE);
-SELECT setval('"Scientific_Id_seq"', (SELECT last_value FROM maindb.listscientific_id_seq), TRUE);
 SELECT setval('"Children_Id_seq"', (SELECT last_value FROM maindb.listchildren_id_seq), TRUE);
 SELECT setval('"GrandChildren_Id_seq"', (SELECT last_value FROM maindb.listgrandchildren_id_seq), TRUE);
 SELECT setval('"Family_Id_seq"', (SELECT last_value FROM maindb.listspouse_id_seq), TRUE);

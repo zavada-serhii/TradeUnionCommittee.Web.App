@@ -429,6 +429,18 @@ namespace TradeUnionCommittee.DAL.EF
                     .HasColumnType("character varying");
 
                 entity.Property(e => e.StartDateTradeUnion).HasColumnType("date");
+
+                entity.Property(e => e.LevelEducation)
+                    .IsRequired()
+                    .HasColumnType("character varying");
+
+                entity.Property(e => e.NameInstitution)
+                    .IsRequired()
+                    .HasColumnType("character varying");
+
+                entity.Property(e => e.ScientificDegree).HasColumnType("character varying");
+
+                entity.Property(e => e.ScientificTitle).HasColumnType("character varying");
             });
 
             modelBuilder.Entity<Event>(entity =>
