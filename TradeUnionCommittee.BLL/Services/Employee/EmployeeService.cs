@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.DTO;
 using TradeUnionCommittee.BLL.Enums;
@@ -34,7 +33,7 @@ namespace TradeUnionCommittee.BLL.Services.Employee
             {
                 dto.IdEmployee = employee.Id;
 
-                //await _database.EducationRepository.Create(_mapperService.Mapper.Map<Education>(dto));
+               
                 await _database.PositionEmployeesRepository.Create(_mapperService.Mapper.Map<PositionEmployees>(dto));
 
                 if (dto.TypeAccommodation == AccommodationType.PrivateHouse || dto.TypeAccommodation == AccommodationType.FromUniversity)
@@ -45,11 +44,6 @@ namespace TradeUnionCommittee.BLL.Services.Employee
                 if (dto.TypeAccommodation == AccommodationType.Dormitory || dto.TypeAccommodation == AccommodationType.Departmental)
                 {
                     await _database.PublicHouseEmployeesRepository.Create(_mapperService.Mapper.Map<PublicHouseEmployees>(dto));
-                }
-
-                if (dto.Scientifick)
-                {
-                    //await _database.ScientificRepository.Create(_mapperService.Mapper.Map<Scientific>(dto));
                 }
 
                 if (dto.SocialActivity)

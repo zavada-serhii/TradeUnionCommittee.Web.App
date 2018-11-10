@@ -30,6 +30,18 @@ namespace TradeUnionCommittee.Web.GUI.FluentValidation
 
             //------------------------------------------------------------------------------------------------------------------------------------------
 
+            RuleFor(x => x.ScientificDegree)
+                .NotNull()
+                .When(x => !string.IsNullOrEmpty(x.ScientificTitle) && !string.IsNullOrWhiteSpace(x.ScientificTitle))
+                .WithMessage("Учений ступiнь не може бути порожнім");
+
+            RuleFor(x => x.ScientificTitle)
+                .NotNull()
+                .When(x => !string.IsNullOrEmpty(x.ScientificDegree) && !string.IsNullOrWhiteSpace(x.ScientificDegree))
+                .WithMessage("Наукове звання не може бути порожнім");
+
+            //------------------------------------------------------------------------------------------------------------------------------------------
+
             RuleFor(x => x.HashIdPosition).NotNull().WithMessage("Посада не може бути порожнім");
             RuleFor(x => x.HashIdMainSubdivision).NotNull().WithMessage("Структурний пiдроздiл не може бути порожнім");
 
@@ -51,12 +63,7 @@ namespace TradeUnionCommittee.Web.GUI.FluentValidation
             RuleFor(x => x.NumberRoomDepartmental).NotNull().When(x => x.TypeAccommodation == "departmental").WithMessage("Номер кiмнати не може бути порожнім");
 
             //------------------------------------------------------------------------------------------------------------------------------------------
-
-            RuleFor(x => x.ScientifickDegree).NotNull().When(x => x.Scientifick).WithMessage("Учений ступiнь не може бути порожнім");
-            RuleFor(x => x.ScientifickTitle).NotNull().When(x => x.Scientifick).WithMessage("Наукове звання не може бути порожнім");
-
-            //------------------------------------------------------------------------------------------------------------------------------------------
-
+            
             RuleFor(x => x.HashIdSocialActivity).NotNull().When(x => x.SocialActivity).WithMessage("Назва посади не може бути порожнім");
 
             //------------------------------------------------------------------------------------------------------------------------------------------
