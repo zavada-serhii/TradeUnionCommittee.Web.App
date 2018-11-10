@@ -41,8 +41,6 @@ namespace TradeUnionCommittee.DAL.Repositories
         //------------------------------------------------------------------------------------------------------------------------------------------
 
         private EmployeeRepository _employeeRepository;
-        private EducationRepository _educationRepository;
-        private ScientificRepository _scientificRepository;
         private ChildrenRepository _childrenRepository;
         private GrandChildrenRepository _grandChildrenRepository;
         private FamilyRepository _familyRepository;
@@ -99,8 +97,6 @@ namespace TradeUnionCommittee.DAL.Repositories
         //------------------------------------------------------------------------------------------------------------------------------------------
 
         public IRepository<Employee> EmployeeRepository => _employeeRepository ?? (_employeeRepository = new EmployeeRepository(_context));
-        public IRepository<Education> EducationRepository => _educationRepository ?? (_educationRepository = new EducationRepository(_context));
-        public IRepository<Scientific> ScientificRepository => _scientificRepository ?? (_scientificRepository = new ScientificRepository(_context));
         public IRepository<Children> ChildrenRepository => _childrenRepository ?? (_childrenRepository = new ChildrenRepository(_context));
         public IRepository<GrandChildren> GrandChildrenRepository => _grandChildrenRepository ?? (_grandChildrenRepository = new GrandChildrenRepository(_context));
         public IRepository<Family> FamilyRepository => _familyRepository ?? (_familyRepository = new FamilyRepository(_context));
