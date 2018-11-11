@@ -167,7 +167,13 @@ namespace TradeUnionCommittee.BLL.Utilities
                     map.CreateMap<Employee, GeneralInfoEmployeeDTO>()
                         .ForMember(x => x.HashIdEmployee, opt => opt.MapFrom(c => _hashIdUtilities.EncryptLong(c.Id, Enums.Services.Employee)))
                         .ForMember(x => x.CountYear, opt => opt.MapFrom(c => c.BirthDate.CalculateAge()))
-                        .ForMember(x => x.Sex, opt => opt.MapFrom(c => ConvertToUkraineGender(c.Sex)));
+                        .ForMember(x => x.Sex, opt => opt.MapFrom(c => ConvertToUkraineGender(c.Sex)))
+                        .ReverseMap()
+                        .ForMember(d => d.Id, c => c.MapFrom(x => _hashIdUtilities.DecryptLong(x.HashIdEmployee, Enums.Services.Employee)))
+                        .ForMember(d => d.CityPhone, c => c.MapFrom(x => x.CityPhone.AddMaskForCityPhone()))
+                        .ForMember(d => d.DateAdded, c => c.UseValue(DateTime.Now))
+                        .ForMember(d => d.EndYearWork, c => c.MapFrom(x => x.EndYearWork == 0 ? null : x.EndYearWork))
+                        .ForMember(d => d.EndDateTradeUnion, c => c.MapFrom(x => x.EndDateTradeUnion == null || x.EndDateTradeUnion == DateTime.MinValue ? null : x.EndYearWork));
 
                     //------------------------------------------------------------------------------
 

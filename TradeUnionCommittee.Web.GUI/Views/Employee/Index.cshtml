@@ -189,7 +189,7 @@
             <p class="h4">@Model.StartYearWork</p>
         </div>
 
-        @if (Model.EndYearWork != 0)
+        @if (Model.EndYearWork != null)
         {
             <div class="form-group col-lg-6 col-xl-4">
                 <label>Рiк завершення роботи в ОНУ</label>
@@ -293,7 +293,7 @@
     
 <div class="row justify-content-end">
     <div class="col-md-6 text-right">
-        <a asp-action="Update" asp-route-id="@Model.HashIdEmployee" class="btn btn-success"><i class="fas fa-edit"></i>Редагувати (No Logic)</a>
+        <a asp-action="Update" asp-route-id="@Model.HashIdEmployee" class="btn btn-success"><i class="fas fa-edit"></i>Редагувати</a>
 
         @if (User.IsInRole("Admin"))
         {

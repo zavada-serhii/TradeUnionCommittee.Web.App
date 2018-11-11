@@ -20,7 +20,7 @@ namespace TradeUnionCommittee.BLL.DTO
 
         public string BasicProfession { get; set; }
         public int StartYearWork { get; set; }
-        public int EndYearWork { get; set; }
+        public int? EndYearWork { get; set; }
 
         public DateTime StartDateTradeUnion { get; set; }
         public DateTime? EndDateTradeUnion { get; set; }
@@ -31,6 +31,8 @@ namespace TradeUnionCommittee.BLL.DTO
         public string LevelEducation { get; set; }
         public string NameInstitution { get; set; }
         public int? YearReceiving { get; set; }
+
+        public uint RowVersion { get; set; }
     }
 
     public class CreateEmployeeDTO

@@ -95,9 +95,18 @@ namespace TradeUnionCommittee.Web.GUI.Models
 
         public string BasicProfession { get; set; }
         public int StartYearWork { get; set; }
-        public int EndYearWork { get; set; }
+        public int? EndYearWork { get; set; }
 
         public DateTime StartDateTradeUnion { get; set; }
         public DateTime? EndDateTradeUnion { get; set; }
+
+        public string ScientificDegree { get; set; }
+        public string ScientificTitle { get; set; }
+
+        public string LevelEducation { get; set; }
+        public string NameInstitution { get; set; }
+        public int? YearReceiving { get; set; }
+
+        public uint RowVersion { get; set; }
     }
 }

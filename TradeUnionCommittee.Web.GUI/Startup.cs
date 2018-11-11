@@ -111,6 +111,7 @@ namespace TradeUnionCommittee.Web.GUI
         private void DependencyInjectionFluentValidation(IServiceCollection services)
         {
             services.AddScoped<IValidator<CreateEmployeeViewModel>, CreateEmployeeValidation>();
+            services.AddScoped<IValidator<UpdateEmployeeViewModel>, UpdateEmployeeValidation>();
         }
     }
 }

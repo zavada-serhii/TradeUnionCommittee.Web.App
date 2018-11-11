@@ -81,10 +81,8 @@ namespace TradeUnionCommittee.BLL.Services.Employee
 
         public async Task<ActualResult> UpdateMainInfoEmployeeAsync(GeneralInfoEmployeeDTO dto)
         {
-            return await Task.Run(() =>
-            {
-                return new ActualResult();
-            });
+            await _database.EmployeeRepository.Update(_mapperService.Mapper.Map<DAL.Entities.Employee>(dto));
+            return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
         }
 
         //------------------------------------------------------------------------------------------------------------------------------------------

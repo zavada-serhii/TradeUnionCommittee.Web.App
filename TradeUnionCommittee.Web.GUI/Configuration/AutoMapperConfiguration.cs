@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System;
+using AutoMapper;
 using TradeUnionCommittee.BLL.DTO;
 using TradeUnionCommittee.BLL.Enums;
 using TradeUnionCommittee.Web.GUI.Models;
@@ -46,7 +47,10 @@ namespace TradeUnionCommittee.Web.GUI.Configuration
                 map.CreateMap<SubdivisionDTO, CreateSubordinateSubdivisionViewModel>().ReverseMap();
                 map.CreateMap<SubdivisionDTO, RestructuringViewModel>().ReverseMap();
 
-                map.CreateMap<GeneralInfoEmployeeDTO, UpdateEmployeeViewModel>().ReverseMap();
+                map.CreateMap<GeneralInfoEmployeeDTO, UpdateEmployeeViewModel>()
+                .ForMember(d => d.CityPhone, opt => opt.MapFrom(c => c.CityPhone.Replace("-", string.Empty)))
+                .ReverseMap();
+                
 
             }).CreateMapper();
         }
