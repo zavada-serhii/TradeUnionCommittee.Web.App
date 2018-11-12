@@ -40,17 +40,20 @@ namespace TradeUnionCommittee.DAL.Entities
         public int? EndYearWork { get; set; }
         public DateTime StartDateTradeUnion { get; set; }
         public DateTime? EndDateTradeUnion { get; set; }
+        public string LevelEducation { get; set; }
+        public string NameInstitution { get; set; }
+        public int? YearReceiving { get; set; }
+        public string ScientificDegree { get; set; }
+        public string ScientificTitle { get; set; }
         public string Note { get; set; }
         public DateTime DateAdded { get; set; }
         [Timestamp]
         [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         [Column("xmin", TypeName = "xid")]
         public uint RowVersion { get; set; }
-
-        public Education Education { get; set; }
+        
         public PositionEmployees PositionEmployees { get; set; }
         public PrivilegeEmployees PrivilegeEmployees { get; set; }
-        public Scientific Scientific { get; set; }
         public SocialActivityEmployees SocialActivityEmployees { get; set; }
         public ICollection<ActivityEmployees> ActivityEmployees { get; set; }
         public ICollection<ApartmentAccountingEmployees> ApartmentAccountingEmployees { get; set; }

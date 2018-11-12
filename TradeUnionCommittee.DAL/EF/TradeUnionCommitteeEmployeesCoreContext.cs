@@ -31,7 +31,6 @@ namespace TradeUnionCommittee.DAL.EF
         public DbSet<CulturalEmployees> CulturalEmployees { get; set; }
         public DbSet<CulturalFamily> CulturalFamily { get; set; }
         public DbSet<CulturalGrandChildrens> CulturalGrandChildrens { get; set; }
-        public DbSet<Education> Education { get; set; }
         public DbSet<Employee> Employee { get; set; }
         public DbSet<Event> Event { get; set; }
         public DbSet<EventChildrens> EventChildrens { get; set; }
@@ -56,7 +55,6 @@ namespace TradeUnionCommittee.DAL.EF
         public DbSet<PrivilegeEmployees> PrivilegeEmployees { get; set; }
         public DbSet<Privileges> Privileges { get; set; }
         public DbSet<PublicHouseEmployees> PublicHouseEmployees { get; set; }
-        public DbSet<Scientific> Scientific { get; set; }
         public DbSet<SocialActivity> SocialActivity { get; set; }
         public DbSet<SocialActivityEmployees> SocialActivityEmployees { get; set; }
         public DbSet<Subdivisions> Subdivisions { get; set; }
@@ -364,26 +362,6 @@ namespace TradeUnionCommittee.DAL.EF
                     .HasConstraintName("CulturalGrandChildrens_IdGrandChildren_fkey");
             });
 
-            modelBuilder.Entity<Education>(entity =>
-            {
-                entity.HasIndex(e => e.IdEmployee)
-                    .HasName("Education_IdEmployee_key")
-                    .IsUnique();
-
-                entity.Property(e => e.LevelEducation)
-                    .IsRequired()
-                    .HasColumnType("character varying");
-
-                entity.Property(e => e.NameInstitution)
-                    .IsRequired()
-                    .HasColumnType("character varying");
-
-                entity.HasOne(d => d.IdEmployeeNavigation)
-                    .WithOne(p => p.Education)
-                    .HasForeignKey<Education>(d => d.IdEmployee)
-                    .HasConstraintName("Education_IdEmployee_fkey");
-            });
-
             modelBuilder.Entity<Employee>(entity =>
             {
                 entity.HasIndex(e => e.IdentificationСode)
@@ -429,6 +407,18 @@ namespace TradeUnionCommittee.DAL.EF
                     .HasColumnType("character varying");
 
                 entity.Property(e => e.StartDateTradeUnion).HasColumnType("date");
+
+                entity.Property(e => e.LevelEducation)
+                    .IsRequired()
+                    .HasColumnType("character varying");
+
+                entity.Property(e => e.NameInstitution)
+                    .IsRequired()
+                    .HasColumnType("character varying");
+
+                entity.Property(e => e.ScientificDegree).HasColumnType("character varying");
+
+                entity.Property(e => e.ScientificTitle).HasColumnType("character varying");
             });
 
             modelBuilder.Entity<Event>(entity =>
@@ -886,26 +876,6 @@ namespace TradeUnionCommittee.DAL.EF
                     .WithMany(p => p.PublicHouseEmployees)
                     .HasForeignKey(d => d.IdEmployee)
                     .HasConstraintName("PublicHouseEmployees_IdEmployee_fkey");
-            });
-
-            modelBuilder.Entity<Scientific>(entity =>
-            {
-                entity.HasIndex(e => e.IdEmployee)
-                    .HasName("Scientific_IdEmployee_key")
-                    .IsUnique();
-
-                entity.Property(e => e.ScientificDegree)
-                    .IsRequired()
-                    .HasColumnType("character varying");
-
-                entity.Property(e => e.ScientificTitle)
-                    .IsRequired()
-                    .HasColumnType("character varying");
-
-                entity.HasOne(d => d.IdEmployeeNavigation)
-                    .WithOne(p => p.Scientific)
-                    .HasForeignKey<Scientific>(d => d.IdEmployee)
-                    .HasConstraintName("Scientific_IdEmployee_fkey");
             });
 
             modelBuilder.Entity<SocialActivity>(entity =>

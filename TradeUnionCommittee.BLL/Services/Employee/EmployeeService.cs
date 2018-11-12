@@ -33,7 +33,6 @@ namespace TradeUnionCommittee.BLL.Services.Employee
             {
                 dto.IdEmployee = employee.Id;
 
-                await _database.EducationRepository.Create(_mapperService.Mapper.Map<Education>(dto));
                 await _database.PositionEmployeesRepository.Create(_mapperService.Mapper.Map<PositionEmployees>(dto));
 
                 if (dto.TypeAccommodation == AccommodationType.PrivateHouse || dto.TypeAccommodation == AccommodationType.FromUniversity)
@@ -44,11 +43,6 @@ namespace TradeUnionCommittee.BLL.Services.Employee
                 if (dto.TypeAccommodation == AccommodationType.Dormitory || dto.TypeAccommodation == AccommodationType.Departmental)
                 {
                     await _database.PublicHouseEmployeesRepository.Create(_mapperService.Mapper.Map<PublicHouseEmployees>(dto));
-                }
-
-                if (dto.Scientifick)
-                {
-                    await _database.ScientificRepository.Create(_mapperService.Mapper.Map<Scientific>(dto));
                 }
 
                 if (dto.SocialActivity)
@@ -77,9 +71,7 @@ namespace TradeUnionCommittee.BLL.Services.Employee
         {
             var resultSearchByHashId = await _database
                 .EmployeeRepository
-                .GetWithInclude(x => x.Id == _hashIdUtilities.DecryptLong(hashId, Enums.Services.Employee),
-                                p => p.Education,
-                                p => p.Scientific);
+                .Find(x => x.Id == _hashIdUtilities.DecryptLong(hashId, Enums.Services.Employee));
             var employee = new ActualResult<DAL.Entities.Employee> { Result = resultSearchByHashId.Result.FirstOrDefault() };
             return _mapperService.Mapper.Map<ActualResult<DAL.Entities.Employee>, ActualResult<GeneralInfoEmployeeDTO>>(employee);
         }
@@ -88,10 +80,8 @@ namespace TradeUnionCommittee.BLL.Services.Employee
 
         public async Task<ActualResult> UpdateMainInfoEmployeeAsync(GeneralInfoEmployeeDTO dto)
         {
-            return await Task.Run(() =>
-            {
-                return new ActualResult();
-            });
+            await _database.EmployeeRepository.Update(_mapperService.Mapper.Map<DAL.Entities.Employee>(dto));
+            return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
         }
 
         //------------------------------------------------------------------------------------------------------------------------------------------

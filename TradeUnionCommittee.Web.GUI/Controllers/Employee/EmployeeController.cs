@@ -90,6 +90,8 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Employee
         {
             if (id == null) return NotFound();
             var result = await _employeeService.GetMainInfoEmployeeAsync(id);
+            await FillingStudyDropDownLists();
+            await FillingScientificDropDownLists();
             return result.IsValid
                 ? View(_mapper.Map<UpdateEmployeeViewModel>(result.Result))
                 : _oops.OutPutError("Employee", "Index", result.ErrorsList);
@@ -105,9 +107,12 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Employee
                 if (vm.HashIdEmployee == null) return NotFound();
                 var result = await _employeeService.UpdateMainInfoEmployeeAsync(_mapper.Map<GeneralInfoEmployeeDTO>(vm));
                 return result.IsValid
-                    ? RedirectToAction("Index")
+                    ? RedirectToAction("Index", "Employee", new { id = vm.HashIdEmployee })
                     : _oops.OutPutError("Employee", "Index", result.ErrorsList);
             }
+            await FillingStudyDropDownLists();
+            await FillingScientificDropDownLists();
+            vm.Sex = ConvertToUkraineGender(vm.Sex);
             return View(vm);
         }
 
@@ -115,33 +120,64 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Employee
 
         [HttpGet]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Delete(long? id)
+        public async Task<IActionResult> Delete(string id)
         {
-            return await Task.Run(() => View("Delete"));
+            if (id == null) return NotFound();
+            var result = await _employeeService.GetMainInfoEmployeeAsync(id);
+            return result.IsValid
+                ? View(result.Result)
+                : _oops.OutPutError("Employee", "Index", result.ErrorsList);
         }
 
         [HttpPost, ActionName("Delete")]
         [Authorize(Roles = "Admin")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(long? id)
+        public async Task<IActionResult> DeleteConfirmed(string id)
         {
-            return await Task.Run(() => View("Delete"));
+            if (id == null) return NotFound();
+            var result = await _employeeService.DeleteAsync(id);
+            return result.IsValid
+                ? RedirectToAction("Directory", "Home")
+                : _oops.OutPutError("Home", "Directory", result.ErrorsList);
         }
 
         //------------------------------------------------------------------------------------------------------------------------------------------
 
         private async Task FillingDropDownLists()
         {
-            ViewBag.LevelEducation = await _dropDownList.GetLevelEducation();
-            ViewBag.Study = await _dropDownList.GetStudy();
+            await FillingStudyDropDownLists();
             ViewBag.MainSubdivision = await _dropDownList.GetMainSubdivision();
             ViewBag.Position = await _dropDownList.GetPosition();
             ViewBag.Dormitory = await _dropDownList.GetDormitory();
             ViewBag.Departmental = await _dropDownList.GetDepartmental();
-            ViewBag.AcademicDegree = await _dropDownList.GetAcademicDegree();
-            ViewBag.ScientificTitle = await _dropDownList.GetScientificTitle();
+            await FillingScientificDropDownLists();
             ViewBag.SocialActivity = await _dropDownList.GetSocialActivity();
             ViewBag.Privilegies = await _dropDownList.GetPrivilegies();
+        }
+
+        private async Task FillingStudyDropDownLists()
+        {
+            ViewBag.LevelEducation = await _dropDownList.GetLevelEducation();
+            ViewBag.Study = await _dropDownList.GetStudy();
+        }
+
+        private async Task FillingScientificDropDownLists()
+        {
+            ViewBag.AcademicDegree = await _dropDownList.GetAcademicDegree();
+            ViewBag.ScientificTitle = await _dropDownList.GetScientificTitle();
+        }
+
+        private string ConvertToUkraineGender(string sex)
+        {
+            switch (sex)
+            {
+                case "Male":
+                    return new string("Чоловіча");
+                case "Female":
+                    return new string("Жіноча");
+                default:
+                    return sex;
+            }
         }
 
         protected override void Dispose(bool disposing)

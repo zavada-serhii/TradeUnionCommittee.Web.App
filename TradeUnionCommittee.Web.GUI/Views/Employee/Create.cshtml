@@ -130,6 +130,27 @@
         </div>
     </div>
 </fieldset>
+   
+<hr />
+    
+<fieldset class="form-group">
+    <legend class="control-legend">Кваліфікація</legend>
+    <div class="row">
+
+        <div class="form-group col-lg-4 col-xl-3">
+            <label asp-for="ScientificDegree" class="control-label">Учений ступiнь</label>
+            <select asp-for="ScientificDegree" id="editable-select-ScientifickDegree" asp-items="@ViewBag.AcademicDegree" class="custom-select"></select>
+            <span asp-validation-for="ScientificDegree" class="text-danger"></span>
+        </div>
+
+        <div class="form-group col-lg-4 col-xl-3">
+            <label asp-for="ScientificTitle" class="control-label">Наукове звання</label>
+            <select asp-for="ScientificTitle" id="editable-select-ScientifickTitle" asp-items="@ViewBag.ScientificTitle" class="custom-select" style="width: 100%"></select>
+            <span asp-validation-for="ScientificTitle" class="text-danger"></span>
+        </div>
+
+    </div>
+</fieldset>
 
 <hr />
 
@@ -299,12 +320,6 @@
     <legend>Додаткова інформація</legend>
 
     <label class="custom-control custom-checkbox">
-        <input asp-for="Scientifick" type="checkbox" id="Scientifick" class="custom-control-input dinamic">
-        <span class="custom-control-indicator"></span>
-        <span class="custom-control-description">Кваліфікація</span>
-    </label>
-
-    <label class="custom-control custom-checkbox">
         <input asp-for="SocialActivity" type="checkbox" id="SocialActivity" class="custom-control-input dinamic">
         <span class="custom-control-indicator"></span>
         <span class="custom-control-description">Громадська посада</span>
@@ -319,28 +334,6 @@
 </fieldset>
 
 <hr>
-
-<fieldset class="form-group award Scientifick invisible">
-    <legend>Кваліфікація</legend>
-    <div class="row">
-
-        <div class="form-group col-lg-4 col-xl-3">
-            <label asp-for="ScientifickDegree" class="control-label required">Учений ступiнь</label>
-            <select asp-for="ScientifickDegree" id="editable-select-ScientifickDegree" asp-items="@ViewBag.AcademicDegree" class="custom-select"></select>
-            <span asp-validation-for="ScientifickDegree" class="text-danger"></span>
-        </div>
-
-        <div class="form-group col-lg-4 col-xl-3">
-            <label asp-for="ScientifickTitle" class="control-label required">Наукове звання</label>
-            <select asp-for="ScientifickTitle" id="editable-select-ScientifickTitle" asp-items="@ViewBag.ScientificTitle" class="custom-select" style="width: 100%"></select>
-            <span asp-validation-for="ScientifickTitle" class="text-danger"></span>
-        </div>
-
-    </div>
-    <hr>
-</fieldset>
-
-
 
 <fieldset class="form-group award SocialActivity invisible">
     <legend>Громадська посада</legend>

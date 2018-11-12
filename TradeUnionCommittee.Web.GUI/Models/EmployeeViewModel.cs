@@ -31,6 +31,9 @@ namespace TradeUnionCommittee.Web.GUI.Models
         public string NameInstitution { get; set; }
         public int? YearReceiving { get; set; }
 
+        public string ScientificDegree { get; set; }
+        public string ScientificTitle { get; set; }
+
         public string HashIdPosition { get; set; }
         public DateTime? StartDatePosition { get; set; }
         public string HashIdMainSubdivision { get; set; }
@@ -65,11 +68,7 @@ namespace TradeUnionCommittee.Web.GUI.Models
         public string NumberRoomDepartmental { get; set; }
 
         //------------------------------------------------------------------------------------------------------------------------------------------
-
-        public bool Scientifick { get; set; }
-        public string ScientifickDegree { get; set; }
-        public string ScientifickTitle { get; set; }
-
+        
         public bool SocialActivity { get; set; }
         public string HashIdSocialActivity { get; set; }
         public string NoteSocialActivity { get; set; }
@@ -96,9 +95,18 @@ namespace TradeUnionCommittee.Web.GUI.Models
 
         public string BasicProfession { get; set; }
         public int StartYearWork { get; set; }
-        public int EndYearWork { get; set; }
+        public int? EndYearWork { get; set; }
 
         public DateTime StartDateTradeUnion { get; set; }
         public DateTime? EndDateTradeUnion { get; set; }
+
+        public string ScientificDegree { get; set; }
+        public string ScientificTitle { get; set; }
+
+        public string LevelEducation { get; set; }
+        public string NameInstitution { get; set; }
+        public int? YearReceiving { get; set; }
+
+        public uint RowVersion { get; set; }
     }
 }

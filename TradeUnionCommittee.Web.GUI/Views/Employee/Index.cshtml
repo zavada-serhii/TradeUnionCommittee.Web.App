@@ -189,7 +189,7 @@
             <p class="h4">@Model.StartYearWork</p>
         </div>
 
-        @if (Model.EndYearWork != 0)
+        @if (Model.EndYearWork != null)
         {
             <div class="form-group col-lg-6 col-xl-4">
                 <label>Рiк завершення роботи в ОНУ</label>
@@ -237,20 +237,6 @@
     
 <hr>
 
-<div class="row justify-content-end">
-    <div class="col-md-6 text-right">
-        <a asp-action="Update" asp-route-id="@Model.HashIdEmployee" class="btn btn-success"><i class="fas fa-edit"></i>Редагувати (No Logic)</a>
-
-        @if (User.IsInRole("Admin"))
-        {
-            <a asp-action="Delete" asp-route-id="@Model.HashIdEmployee" class="btn btn-danger"><i class="fas fa-trash-alt"></i>Видалити (No Logic)</a>
-        }
-
-    </div>
-</div>
-
-<hr>
-
 <fieldset class="form-group">
     <legend>Освіта</legend>
     <div class="row">
@@ -272,15 +258,10 @@
         }
     </div>
 </fieldset>
-
-<div class="row justify-content-end">
-    <div class="col-md-6 text-right">
-        <a asp-action="Update" asp-controller="Education" asp-route-id="@Model.HashIdEducation" class="btn btn-success"><i class="fas fa-edit"></i>Редагувати освіту</a>
-    </div>
-</div>
+    
 
 
-@if (Model.ScientifickTitle != null || Model.ScientifickDegree != null)
+@if (Model.ScientificTitle != null || Model.ScientificDegree != null)
 {
     <hr>
 
@@ -288,51 +269,40 @@
         <legend>Кваліфікація</legend>
         <div class="row">
 
-            @if (Model.ScientifickDegree != null)
+            @if (Model.ScientificDegree != null)
             {
                 <div class="form-group col-lg-6 col-xl-4">
                     <label>Учений ступінь</label>
-                    <p class="h4">@Model.ScientifickDegree</p>
+                    <p class="h4">@Model.ScientificDegree</p>
                 </div>
             }
 
-            @if (Model.ScientifickTitle != null)
+            @if (Model.ScientificTitle != null)
             {
                 <div class="form-group col-lg-6 col-xl-4">
                     <label>Наукове звання</label>
-                    <p class="h4">@Model.ScientifickTitle</p>
+                    <p class="h4">@Model.ScientificTitle</p>
                 </div>
             }
                     
         </div>
     </fieldset>
-
-    <div class="row justify-content-end">
-        <div class="col-md-6 text-right">
-            <a asp-action="Update" asp-controller="Qualification" asp-route-id="@Model.HashIdQualification" class="btn btn-success"><i class="fas fa-edit"></i>Редагувати кваліфікацію</a>
-
-            @if (User.IsInRole("Admin"))
-            {
-                <a asp-action="Delete" asp-controller="Qualification" asp-route-id="@Model.HashIdQualification" class="btn btn-danger"><i class="fas fa-trash-alt"></i>Видалити кваліфікацію</a>
-            }
-
-        </div>
-    </div>
 }
-else
-{
-    <hr>
+ 
+<hr>
+    
+<div class="row justify-content-end">
+    <div class="col-md-6 text-right">
+        <a asp-action="Update" asp-route-id="@Model.HashIdEmployee" class="btn btn-success"><i class="fas fa-edit"></i>Редагувати</a>
 
-    <fieldset class="form-group">
-        <legend>Кваліфікація</legend>
-    </fieldset>
+        @if (User.IsInRole("Admin"))
+        {
+            <a asp-action="Delete" asp-route-id="@Model.HashIdEmployee" class="btn btn-danger"><i class="fas fa-trash-alt"></i>Видалити</a>
+        }
 
-    <div class="row justify-content-end">
-        <div class="col-md-6 text-right">
-            <a asp-action="Create" asp-controller="Qualification" asp-route-id="@Model.HashIdEmployee" class="btn btn-success"><i class="fas fa-edit"></i>Додати кваліфікацію</a>
-        </div>
     </div>
-}
+</div>
+
 </div>
 </div>
 		

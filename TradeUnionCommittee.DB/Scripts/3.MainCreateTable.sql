@@ -14,35 +14,15 @@ CREATE TABLE "Employee"(
         "EndYearWork" 		INT             NULL            CHECK("EndYearWork" >= "StartYearWork"),
         "StartDateTradeUnion" 	DATE 		NOT NULL 	CHECK(CAST(EXTRACT(YEAR FROM  "StartDateTradeUnion") AS INT) >= "StartYearWork"),
         "EndDateTradeUnion" 	DATE            NULL            CHECK("EndDateTradeUnion" > "StartDateTradeUnion"),
+        "LevelEducation" 	VARCHAR		NOT NULL,
+	"NameInstitution" 	VARCHAR		NOT NULL,
+	"YearReceiving" 	INT             NULL,
+        "ScientificDegree"	VARCHAR		NULL,
+	"ScientificTitle" 	VARCHAR		NULL,
         "Note" 			TEXT            NULL,
         "DateAdded" 		DATE 		NOT NULL        DEFAULT CURRENT_DATE
 );
 ALTER TABLE "Employee"
-OWNER TO postgres;
-
------------------------------------------------------------------------------------------------------------------------------------------------
-
-CREATE TABLE "Education"(
-	"Id" 			BIGSERIAL 	NOT NULL 	PRIMARY KEY,
-	"IdEmployee" 		BIGINT 		NOT NULL	REFERENCES "Employee"("Id") ON UPDATE CASCADE ON DELETE CASCADE,
-	"LevelEducation" 	VARCHAR		NOT NULL,
-	"NameInstitution" 	VARCHAR		NOT NULL,
-	"YearReceiving" 	INT             NULL,
-	UNIQUE("IdEmployee")
-);
-ALTER TABLE "Education"
-OWNER TO postgres;
-
------------------------------------------------------------------------------------------------------------------------------------------------
-
-CREATE TABLE "Scientific"(
-	"Id"			BIGSERIAL	NOT NULL	PRIMARY KEY,
-	"IdEmployee"		BIGINT 		NOT NULL 	REFERENCES "Employee"("Id") ON UPDATE CASCADE ON DELETE CASCADE,
-	"ScientificDegree"	VARCHAR		NOT NULL,
-	"ScientificTitle" 	VARCHAR		NOT NULL,
-	UNIQUE("IdEmployee")
-);
-ALTER TABLE "Scientific"
 OWNER TO postgres;
 
 -----------------------------------------------------------------------------------------------------------------------------------------------

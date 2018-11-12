@@ -8,8 +8,6 @@ namespace TradeUnionCommittee.DAL.Interfaces
     public interface IUnitOfWork : IDisposable
     {
         IRepository<Employee> EmployeeRepository { get; }
-        IRepository<Education> EducationRepository { get; }
-        IRepository<Scientific> ScientificRepository { get; }
         IRepository<Children> ChildrenRepository { get; }
         IRepository<GrandChildren> GrandChildrenRepository { get; }
         IRepository<Family> FamilyRepository { get; }
