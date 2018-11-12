@@ -33,7 +33,6 @@ namespace TradeUnionCommittee.BLL.Services.Employee
             {
                 dto.IdEmployee = employee.Id;
 
-               
                 await _database.PositionEmployeesRepository.Create(_mapperService.Mapper.Map<PositionEmployees>(dto));
 
                 if (dto.TypeAccommodation == AccommodationType.PrivateHouse || dto.TypeAccommodation == AccommodationType.FromUniversity)
