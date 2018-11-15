@@ -40,6 +40,8 @@ namespace TradeUnionCommittee.BLL.Utilities
                         .ForMember(d => d.Name, c => c.MapFrom(x => ConvertToUkrainianLang(x.Name)))
                         .ReverseMap();
 
+                    map.CreateMap<Journal, JournalDTO>().ReverseMap();
+
                     // -- Mapping for directory
 
                     map.CreateMap<Position, DirectoryDTO>()
