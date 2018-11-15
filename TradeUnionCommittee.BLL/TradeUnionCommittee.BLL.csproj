@@ -9,7 +9,7 @@
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="7.0.1" />
     <PackageReference Include="Hashids.net" Version="1.2.2" />
-    <PackageReference Include="iTextSharp.LGPLv2.Core" Version="1.4.4" />
+    <PackageReference Include="iTextSharp.LGPLv2.Core" Version="1.4.5" />
   </ItemGroup>
 
   <ItemGroup>
