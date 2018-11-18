@@ -13,6 +13,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TradeUnionCommittee.UnitTes
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TradeUnionCommittee.Web.Api", "TradeUnionCommittee.Web.Api\TradeUnionCommittee.Web.Api.csproj", "{84139A2A-6FA3-4364-B869-6018A0047916}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TradeUnionCommittee.Mvc.Web.GUI", "TradeUnionCommittee.Mvc.Web.GUI\TradeUnionCommittee.Mvc.Web.GUI.csproj", "{38EF35E9-230A-4430-896D-19FA4BCB69DF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{84139A2A-6FA3-4364-B869-6018A0047916}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{84139A2A-6FA3-4364-B869-6018A0047916}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{84139A2A-6FA3-4364-B869-6018A0047916}.Release|Any CPU.Build.0 = Release|Any CPU
+		{38EF35E9-230A-4430-896D-19FA4BCB69DF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{38EF35E9-230A-4430-896D-19FA4BCB69DF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{38EF35E9-230A-4430-896D-19FA4BCB69DF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{38EF35E9-230A-4430-896D-19FA4BCB69DF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

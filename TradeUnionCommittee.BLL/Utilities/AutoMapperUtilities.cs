@@ -78,19 +78,19 @@ namespace TradeUnionCommittee.BLL.Utilities
                         .ForMember(d => d.HashId, c => c.MapFrom(x => _hashIdUtilities.EncryptLong(x.Id, Enums.Services.Travel)))
                         .ReverseMap()
                         .ForMember(d => d.Id, c => c.MapFrom(x => _hashIdUtilities.DecryptLong(x.HashId, Enums.Services.Travel)))
-                        .ForMember(d => d.Type, c => c.UseValue(TypeEvent.Travel));
+                        .ForMember(d => d.Type, c => c.MapFrom(x => TypeEvent.Travel));
 
                     map.CreateMap<Event, WellnessDTO>()
                         .ForMember(d => d.HashId, c => c.MapFrom(x => _hashIdUtilities.EncryptLong(x.Id, Enums.Services.Wellness)))
                         .ReverseMap()
                         .ForMember(d => d.Id, c => c.MapFrom(x => _hashIdUtilities.DecryptLong(x.HashId, Enums.Services.Wellness)))
-                        .ForMember(d => d.Type, c => c.UseValue(TypeEvent.Wellness));
+                        .ForMember(d => d.Type, c => c.MapFrom(x => TypeEvent.Wellness));
 
                     map.CreateMap<Event, TourDTO>()
                         .ForMember(d => d.HashId, c => c.MapFrom(x => _hashIdUtilities.EncryptLong(x.Id, Enums.Services.Tour)))
                         .ReverseMap()
                         .ForMember(d => d.Id, c => c.MapFrom(x => _hashIdUtilities.DecryptLong(x.HashId, Enums.Services.Tour)))
-                        .ForMember(d => d.Type, c => c.UseValue(TypeEvent.Tour));
+                        .ForMember(d => d.Type, c => c.MapFrom(x => TypeEvent.Tour));
 
                     map.CreateMap<Activities, DirectoryDTO>()
                         .ForMember(d => d.HashId, c => c.MapFrom(x => _hashIdUtilities.EncryptLong(x.Id, Enums.Services.Activities)))
@@ -112,13 +112,13 @@ namespace TradeUnionCommittee.BLL.Utilities
                         .ForMember(d => d.HashId, c => c.MapFrom(x => _hashIdUtilities.EncryptLong(x.Id, Enums.Services.Dormitory)))
                         .ReverseMap()
                         .ForMember(d => d.Id, c => c.MapFrom(x => _hashIdUtilities.DecryptLong(x.HashId, Enums.Services.Dormitory)))
-                        .ForMember(d => d.Type, c => c.UseValue(TypeHouse.Dormitory));
+                        .ForMember(d => d.Type, c => c.MapFrom(x => TypeHouse.Dormitory));
 
                     map.CreateMap<AddressPublicHouse, DepartmentalDTO>()
                         .ForMember(d => d.HashId, c => c.MapFrom(x => _hashIdUtilities.EncryptLong(x.Id, Enums.Services.Departmental)))
                         .ReverseMap()
                         .ForMember(d => d.Id, c => c.MapFrom(x => _hashIdUtilities.DecryptLong(x.HashId, Enums.Services.Departmental)))
-                        .ForMember(d => d.Type, c => c.UseValue(TypeHouse.Departmental));
+                        .ForMember(d => d.Type, c => c.MapFrom(x => TypeHouse.Departmental));
 
                     //------------------------------------------------------------------------------
 
@@ -133,7 +133,7 @@ namespace TradeUnionCommittee.BLL.Utilities
                         .ForMember(d => d.IdSubdivision, c => c.MapFrom(x => _hashIdUtilities.DecryptLong(x.HashIdSubdivision, Enums.Services.Subdivision)))
                         .ForMember(d => d.IdPosition, c => c.MapFrom(x => _hashIdUtilities.DecryptLong(x.HashIdPosition, Enums.Services.Position)))
                         .ForMember(d => d.StartDate, c=> c.MapFrom(x => x.StartDatePosition))
-                        .ForMember(d => d.CheckPosition, c => c.UseValue(true));
+                        .ForMember(d => d.CheckPosition, c => c.MapFrom(x => true));
 
                     map.CreateMap<PrivateHouseEmployees, CreateEmployeeDTO>()
                         .ReverseMap()
@@ -155,14 +155,14 @@ namespace TradeUnionCommittee.BLL.Utilities
                         .ForMember(x => x.IdEmployee, c => c.MapFrom(x => x.IdEmployee))
                         .ForMember(x => x.IdSocialActivity, c => c.MapFrom(x => _hashIdUtilities.DecryptLong(x.HashIdSocialActivity, Enums.Services.SocialActivity)))
                         .ForMember(x => x.Note, c => c.MapFrom(x => x.NoteSocialActivity))
-                        .ForMember(d => d.CheckSocialActivity, c => c.UseValue(true));
+                        .ForMember(d => d.CheckSocialActivity, c => c.MapFrom(x => true));
 
                     map.CreateMap<PrivilegeEmployees, CreateEmployeeDTO>()
                         .ReverseMap()
                         .ForMember(x => x.IdEmployee, c => c.MapFrom(x => x.IdEmployee))
                         .ForMember(x => x.IdPrivileges, c => c.MapFrom(x => _hashIdUtilities.DecryptLong(x.HashIdPrivileges, Enums.Services.Privileges)))
                         .ForMember(x => x.Note, c => c.MapFrom(x => x.NotePrivileges))
-                        .ForMember(d => d.CheckPrivileges, c => c.UseValue(true));
+                        .ForMember(d => d.CheckPrivileges, c => c.MapFrom(x => true));
 
                     //------------------------------------------------------------------------------
 
@@ -173,7 +173,7 @@ namespace TradeUnionCommittee.BLL.Utilities
                         .ReverseMap()
                         .ForMember(d => d.Id, c => c.MapFrom(x => _hashIdUtilities.DecryptLong(x.HashIdEmployee, Enums.Services.Employee)))
                         .ForMember(d => d.CityPhone, c => c.MapFrom(x => x.CityPhone.AddMaskForCityPhone()))
-                        .ForMember(d => d.DateAdded, c => c.UseValue(DateTime.Now))
+                        .ForMember(d => d.DateAdded, c => c.MapFrom(x => DateTime.Now))
                         .ForMember(d => d.EndYearWork, c => c.MapFrom(x => x.EndYearWork == 0 ? null : x.EndYearWork))
                         .ForMember(d => d.EndDateTradeUnion, c => c.MapFrom(x => x.EndDateTradeUnion == null || x.EndDateTradeUnion == DateTime.MinValue ? null : x.EndYearWork));
 

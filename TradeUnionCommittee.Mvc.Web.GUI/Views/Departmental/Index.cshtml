@@ -1,0 +1,68 @@
+﻿@model IEnumerable<TradeUnionCommittee.BLL.DTO.DepartmentalDTO>
+@{
+    ViewData["Title"] = "Відомчі";
+    Layout = "_Layout";
+}
+
+<section class="add-user container-fluid">
+    <div class="row justify-content-center">
+        <div class="col-md-12 add-user_block">
+            <div class="row">
+                <a asp-controller="Home" asp-action="Directory" class="back-link">Повернутися</a>
+                <hr />
+                <div class="form-group">
+                    <a asp-action="Create" class="btn btn-success">Додати відомче</a>
+                </div>
+            </div>
+            <div class="row main-block">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>
+                            Місто
+                        </th>
+                        <th>
+                            Вулиця
+                        </th>
+                        <th>
+                            Номер дому
+                        </th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @item.City
+                            </td>
+                            <td>
+                                @item.Street
+                            </td>
+                            <td>
+                                @item.NumberHouse
+                            </td>
+
+                            <td class="text-right">
+                                <div class="btn-group">
+                                    <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown"></button>
+                                    <div class="dropdown-menu">
+                                        <a class="dropdown-item" asp-action="Update" asp-route-id="@item.HashId">Редагувати</a>
+
+                                        @if (User.IsInRole("Admin"))
+                                        {
+                                            <a class="dropdown-item" asp-action="Delete" asp-route-id="@item.HashId">Видалити</a>
+                                        }
+                                    </div>
+                                </div>
+                            </td>
+
+                        </tr>
+                    }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
