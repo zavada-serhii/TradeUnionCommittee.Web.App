@@ -44,6 +44,11 @@ namespace TradeUnionCommittee.BLL.Services.Account
             return _mapperService.Mapper.Map<ActualResult<AccountDTO>>( await _database.AccountRepository.GetUserAsync(hashId));
         }
 
+        public async Task<ActualResult<string>> GetRoleByEmailAsync(string email)
+        {
+            return _mapperService.Mapper.Map<ActualResult<string>>(await _database.AccountRepository.GetRoleByEmailAsync(email));
+        }
+
         public async Task<ActualResult> CreateUserAsync(AccountDTO dto)
         {
             if (!await CheckEmailAsync(dto.Email))
