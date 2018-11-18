@@ -29,8 +29,4 @@
     <ProjectReference Include="..\TradeUnionCommittee.ViewModels\TradeUnionCommittee.ViewModels.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Models\" />
-  </ItemGroup>
-
 </Project>
