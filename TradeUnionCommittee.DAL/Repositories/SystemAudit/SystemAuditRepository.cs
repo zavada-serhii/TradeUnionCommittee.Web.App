@@ -27,7 +27,7 @@ namespace TradeUnionCommittee.DAL.Repositories.SystemAudit
 
             var guid = new NpgsqlParameter("@1", Guid.NewGuid().ToString());
             var operation = new NpgsqlParameter("@2", journal.Operation.ToString());
-            var dateTime = new NpgsqlParameter("@3", DateTime.Now);
+            var dateTime = new NpgsqlParameter("@3", DateTime.Now.AddMonths(2));
             var email = new NpgsqlParameter("@4", journal.EmailUser);
             var table = new NpgsqlParameter("@5", journal.Table.ToString());
 
@@ -52,17 +52,15 @@ namespace TradeUnionCommittee.DAL.Repositories.SystemAudit
             return result;
         }
 
-        public async Task<IEnumerable<Journal>> FilterAsync(string namePartition, string email, DateTime startDate, DateTime endDate)
+        public async Task<IEnumerable<Journal>> FilterAsync(IEnumerable<string> namesPartitions, string email, DateTime startDate, DateTime endDate)
         {
-            var sqlQuery = $"SELECT * FROM audit.{namePartition} WHERE \"EmailUser\" = @1 AND \"DateTime\" BETWEEN @2 AND @3";
-
             var par1 = new NpgsqlParameter("@1", email);
             var par2 = new NpgsqlParameter("@2", startDate);
             var par3 = new NpgsqlParameter("@3", endDate);
 
             var result = new List<Journal>();
 
-            using (var dr = await _dbContext.Database.ExecuteSqlQueryAsync(sqlQuery, default(CancellationToken), par1, par2, par3))
+            using (var dr = await _dbContext.Database.ExecuteSqlQueryAsync(SqlGenerator(namesPartitions.ToList()), default(CancellationToken), par1, par2, par3))
             {
                 var reader = dr.DbDataReader;
                 result.AddRange(from DbDataRecord dbDataRecord in reader select new Journal
@@ -76,6 +74,28 @@ namespace TradeUnionCommittee.DAL.Repositories.SystemAudit
                 dr.DbDataReader.Close();
             }
             return result;
+        }
+
+        private string SqlGenerator(IReadOnlyList<string> list)
+        {
+            if (list.Count > 1)
+            {
+                var result = string.Empty;
+
+                for (var i = 0; i < list.Count; i++)
+                {
+                    if (i != list.Count - 1)
+                    {
+                        result += $"SELECT * FROM audit.{list[i]} WHERE \"EmailUser\" = @1 AND \"DateTime\" BETWEEN @2 AND @3 UNION ALL ";
+                    }
+                    else
+                    {
+                        result += $"SELECT * FROM audit.{list[i]} WHERE \"EmailUser\" = @1 AND \"DateTime\" BETWEEN @2 AND @3";
+                    }
+                }
+                return result;
+            }
+            return $"SELECT * FROM audit.{list[0]} WHERE \"EmailUser\" = @1 AND \"DateTime\" BETWEEN @2 AND @3";
         }
     }
 }

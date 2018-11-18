@@ -9,6 +9,6 @@ namespace TradeUnionCommittee.DAL.Interfaces
     {
         Task AuditAsync(Journal journal);
         Task<IEnumerable<string>> GetExistingPartitionInDbAsync();
-        Task<IEnumerable<Journal>> FilterAsync(string namePartition, string email, DateTime startDate, DateTime endDate);
+        Task<IEnumerable<Journal>> FilterAsync(IEnumerable<string> namesPartitions, string email, DateTime startDate, DateTime endDate);
     }
 }

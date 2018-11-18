@@ -32,7 +32,7 @@ namespace TradeUnionCommittee.BLL.Services.SystemAudit
         {
             foreach (var table in tables)
             {
-                await _database.SystemAuditRepository.AuditAsync(new Journal { EmailUser = email, Operation = (Operations)operation, Table = (Tables)table });
+                await AuditAsync(email, operation, table);
             }
         }
 
@@ -44,13 +44,8 @@ namespace TradeUnionCommittee.BLL.Services.SystemAudit
 
             if (resultPartition.Any())
             {
-                var result = new List<JournalDTO>();
-                foreach (var partition in resultPartition)
-                {
-                    var list = await _database.SystemAuditRepository.FilterAsync(partition, email, startDate, endDate);
-                    result.AddRange(_mapperService.Mapper.Map<IEnumerable<JournalDTO>>(list));
-                }
-                return new ActualResult<IEnumerable<JournalDTO>> {Result = result};
+                var result = await _database.SystemAuditRepository.FilterAsync(resultPartition.ToList(), email, startDate, endDate);
+                return new ActualResult<IEnumerable<JournalDTO>> { Result = _mapperService.Mapper.Map<IEnumerable<JournalDTO>>(result) };
             }
             return new ActualResult<IEnumerable<JournalDTO>>();
         }
