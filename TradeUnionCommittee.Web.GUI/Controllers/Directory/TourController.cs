@@ -3,7 +3,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.DTO;
+using TradeUnionCommittee.BLL.Enums;
 using TradeUnionCommittee.BLL.Interfaces.Directory;
+using TradeUnionCommittee.BLL.Interfaces.SystemAudit;
 using TradeUnionCommittee.Web.GUI.Controllers.Oops;
 using TradeUnionCommittee.Web.GUI.Models;
 
@@ -14,12 +16,14 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Directory
         private readonly ITourService _services;
         private readonly IOops _oops;
         private readonly IMapper _mapper;
+        private readonly ISystemAuditService _systemAuditService;
 
-        public TourController(ITourService services, IOops oops, IMapper mapper)
+        public TourController(ITourService services, IOops oops, IMapper mapper, ISystemAuditService systemAuditService)
         {
             _services = services;
             _oops = oops;
             _mapper = mapper;
+            _systemAuditService = systemAuditService;
         }
 
         //------------------------------------------------------------------------------------------------------------------------------------------
@@ -49,9 +53,12 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Directory
             if (ModelState.IsValid)
             {
                 var result = await _services.CreateAsync(_mapper.Map<TourDTO>(vm));
-                return result.IsValid
-                    ? RedirectToAction("Index")
-                    : _oops.OutPutError("Tour", "Index", result.ErrorsList);
+                if (result.IsValid)
+                {
+                    await _systemAuditService.AuditAsync(User.Identity.Name, Operations.Insert, Tables.Event);
+                    return RedirectToAction("Index");
+                }
+                return _oops.OutPutError("Tour", "Index", result.ErrorsList);
             }
             return View(vm);
         }
@@ -64,9 +71,7 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Directory
         {
             if (id == null) return NotFound();
             var result = await _services.GetAsync(id);
-            return result.IsValid
-                ? View(_mapper.Map<TourViewModel>(result.Result))
-                : _oops.OutPutError("Tour", "Index", result.ErrorsList);
+            return result.IsValid ? View(_mapper.Map<TourViewModel>(result.Result)) : _oops.OutPutError("Tour", "Index", result.ErrorsList);
         }
 
         [HttpPost, ActionName("Update")]
@@ -78,9 +83,12 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Directory
             {
                 if (vm.HashId == null) return NotFound();
                 var result = await _services.UpdateAsync(_mapper.Map<TourDTO>(vm));
-                return result.IsValid
-                    ? RedirectToAction("Index")
-                    : _oops.OutPutError("Tour", "Index", result.ErrorsList);
+                if (result.IsValid)
+                {
+                    await _systemAuditService.AuditAsync(User.Identity.Name, Operations.Update, Tables.Event);
+                    return RedirectToAction("Index");
+                }
+                return _oops.OutPutError("Tour", "Index", result.ErrorsList);
             }
             return View(vm);
         }
@@ -93,9 +101,7 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Directory
         {
             if (id == null) return NotFound();
             var result = await _services.GetAsync(id);
-            return result.IsValid
-                ? View(result.Result)
-                : _oops.OutPutError("Tour", "Index", result.ErrorsList);
+            return result.IsValid ? View(result.Result) : _oops.OutPutError("Tour", "Index", result.ErrorsList);
         }
 
         [HttpPost, ActionName("Delete")]
@@ -105,9 +111,12 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Directory
         {
             if (id == null) return NotFound();
             var result = await _services.DeleteAsync(id);
-            return result.IsValid
-                ? RedirectToAction("Index")
-                : _oops.OutPutError("Tour", "Index", result.ErrorsList);
+            if (result.IsValid)
+            {
+                await _systemAuditService.AuditAsync(User.Identity.Name, Operations.Delete, Tables.Event);
+                return RedirectToAction("Index");
+            }
+            return _oops.OutPutError("Tour", "Index", result.ErrorsList);
         }
 
         //------------------------------------------------------------------------------------------------------------------------------------------

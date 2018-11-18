@@ -33,7 +33,6 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Directory
         public async Task<IActionResult> Index()
         {
             var result = await _services.GetAllAsync();
-            await _systemAuditService.AuditAsync(User.Identity.Name, Operations.Select, Tables.Position);
             return View(result.Result);
         }
 
@@ -72,12 +71,7 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Directory
         {
             if (id == null) return NotFound();
             var result = await _services.GetAsync(id);
-            if (result.IsValid)
-            {
-                await _systemAuditService.AuditAsync(User.Identity.Name, Operations.Select, Tables.Position);
-                return View(_mapper.Map<PositionViewModel>(result.Result));
-            }
-            return _oops.OutPutError("Position", "Index", result.ErrorsList);
+            return result.IsValid ? View(_mapper.Map<PositionViewModel>(result.Result)) : _oops.OutPutError("Position", "Index", result.ErrorsList);
         }
 
         [HttpPost, ActionName("Update")]
@@ -107,12 +101,7 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Directory
         {
             if (id == null) return NotFound();
             var result = await _services.GetAsync(id);
-            if (result.IsValid)
-            {
-                await _systemAuditService.AuditAsync(User.Identity.Name, Operations.Select, Tables.Position);
-                return View(result.Result);
-            }
-            return _oops.OutPutError("Position", "Index", result.ErrorsList);
+            return result.IsValid ? View(result.Result) : _oops.OutPutError("Position", "Index", result.ErrorsList);
         }
 
         [HttpPost, ActionName("Delete")]
@@ -136,7 +125,6 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Directory
         [Authorize(Roles = "Admin,Accountant,Deputy")]
         public async Task<IActionResult> CheckName(string name)
         {
-            await _systemAuditService.AuditAsync(User.Identity.Name, Operations.Select, Tables.Position);
             return Json(!await _services.CheckNameAsync(name));
         }
 

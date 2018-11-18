@@ -28,6 +28,14 @@ namespace TradeUnionCommittee.BLL.Services.SystemAudit
             await _database.SystemAuditRepository.AuditAsync(new Journal {EmailUser = email, Operation = (Operations)operation, Table = (Tables)table });
         }
 
+        public async Task AuditAsync(string email, Enums.Operations operation, Enums.Tables[] tables)
+        {
+            foreach (var table in tables)
+            {
+                await _database.SystemAuditRepository.AuditAsync(new Journal { EmailUser = email, Operation = (Operations)operation, Table = (Tables)table });
+            }
+        }
+
         public async Task<ActualResult<IEnumerable<JournalDTO>>> FilterAsync(string email, DateTime startDate, DateTime endDate)
         {
             var existingPartitionInDb = await _database.SystemAuditRepository.GetExistingPartitionInDbAsync();
