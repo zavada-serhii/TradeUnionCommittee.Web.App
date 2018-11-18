@@ -116,6 +116,26 @@ namespace TradeUnionCommittee.DAL.Repositories.Account
 
         //-----------------------------------------------------------------------------------
 
+        public async Task<ActualResult<string>> GetRoleByEmailAsync(string email)
+        {
+            try
+            {
+                var user = await _userManager.FindByEmailAsync(email);
+                if (user != null)
+                {
+                    var userRole = await _userManager.GetRolesAsync(user);
+                    return new ActualResult<string> { Result = userRole.FirstOrDefault() };
+                }
+                return new ActualResult<string>(Errors.TupleDeleted);
+            }
+            catch (Exception e)
+            {
+                return new ActualResult<string>(e.Message);
+            }
+        }
+
+        //-----------------------------------------------------------------------------------
+
         public async Task<ActualResult<User>> GetUserWithRoleAsync(string id)
         {
             try

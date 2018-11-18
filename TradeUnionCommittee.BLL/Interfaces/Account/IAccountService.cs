@@ -11,6 +11,7 @@ namespace TradeUnionCommittee.BLL.Interfaces.Account
         Task<ActualResult> LogOff();
         Task<ActualResult<IEnumerable<AccountDTO>>> GetAllUsersAsync();
         Task<ActualResult<AccountDTO>> GetUserAsync(string hashId);
+        Task<ActualResult<string>> GetRoleByEmailAsync(string email);
         Task<ActualResult> CreateUserAsync(AccountDTO dto);
         Task<ActualResult> UpdateUserEmailAsync(AccountDTO dto);
         Task<ActualResult> UpdateUserPasswordAsync(AccountDTO dto);
