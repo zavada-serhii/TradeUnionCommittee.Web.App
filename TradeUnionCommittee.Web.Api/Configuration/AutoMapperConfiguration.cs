@@ -23,8 +23,10 @@ namespace TradeUnionCommittee.Web.Api.Configuration
                 map.CreateMap<AccountDTO, UpdatePasswordAccountViewModel>().ReverseMap();
 
                 map.CreateMap<CreateEmployeeViewModel, CreateEmployeeDTO>()
-                    .ForMember(d => d.HashIdSubdivision, opt => opt.MapFrom(c => c.HashIdSubordinateSubdivision ?? c.HashIdMainSubdivision))
-                    .ForMember(d => d.TypeAccommodation, opt => opt.MapFrom(x => ConverterAccommodation(x.TypeAccommodation)));
+                    .ForMember(d => d.HashIdSubdivision,
+                        opt => opt.MapFrom(c => c.HashIdSubordinateSubdivision ?? c.HashIdMainSubdivision))
+                    .ForMember(d => d.TypeAccommodation,
+                        opt => opt.MapFrom(x => ConverterAccommodation(x.TypeAccommodation)));
 
                 map.CreateMap<DirectoryDTO, PositionViewModel>().ReverseMap();
                 map.CreateMap<DirectoryDTO, SocialActivityViewModel>().ReverseMap();
@@ -75,3 +77,4 @@ namespace TradeUnionCommittee.Web.Api.Configuration
             }
         }
     }
+}
