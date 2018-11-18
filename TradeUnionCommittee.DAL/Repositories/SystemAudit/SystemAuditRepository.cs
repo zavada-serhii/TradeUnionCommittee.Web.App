@@ -39,7 +39,7 @@ namespace TradeUnionCommittee.DAL.Repositories.SystemAudit
 
         public async Task<IEnumerable<string>> GetExistingPartitionInDbAsync()
         {
-            const string sqlQuery = "SELECT * FROM pg_tables WHERE schemaname = \'audit\' AND tablename != \'Journal\';";
+            const string sqlQuery = "SELECT tablename FROM pg_tables WHERE schemaname = \'audit\' AND tablename != \'Journal\';";
 
             var result = new List<string>();
 
@@ -54,7 +54,7 @@ namespace TradeUnionCommittee.DAL.Repositories.SystemAudit
 
         public async Task<IEnumerable<Journal>> FilterAsync(string namePartition, string email, DateTime startDate, DateTime endDate)
         {
-            var sqlQuery = $"SELECT \"Guid\", \"Operation\", \"DateTime\", \"EmailUser\", \"Table\" FROM audit.{namePartition} WHERE \"EmailUser\" = @1 AND \"DateTime\" BETWEEN @2 AND @3";
+            var sqlQuery = $"SELECT * FROM audit.{namePartition} WHERE \"EmailUser\" = @1 AND \"DateTime\" BETWEEN @2 AND @3";
 
             var par1 = new NpgsqlParameter("@1", email);
             var par2 = new NpgsqlParameter("@2", startDate);
