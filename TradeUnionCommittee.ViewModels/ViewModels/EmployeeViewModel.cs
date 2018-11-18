@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 
-namespace TradeUnionCommittee.Mvc.Web.GUI.Models
+namespace TradeUnionCommittee.ViewModels.ViewModels
 {
     public class CreateEmployeeViewModel
     {

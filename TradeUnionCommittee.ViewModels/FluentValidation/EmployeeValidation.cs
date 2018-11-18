@@ -1,8 +1,8 @@
 ﻿using System;
 using FluentValidation;
-using TradeUnionCommittee.Mvc.Web.GUI.Models;
+using TradeUnionCommittee.ViewModels.ViewModels;
 
-namespace TradeUnionCommittee.Mvc.Web.GUI.FluentValidation
+namespace TradeUnionCommittee.ViewModels.FluentValidation
 {
     public class CreateEmployeeValidation : AbstractValidator<CreateEmployeeViewModel>
     {
