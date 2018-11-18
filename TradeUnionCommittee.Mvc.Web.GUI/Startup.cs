@@ -1,8 +1,4 @@
-﻿using System;
-using System.IO.Compression;
-using FluentValidation;
-using FluentValidation.AspNetCore;
-using Microsoft.AspNetCore.Authentication.Cookies;
+﻿using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -10,13 +6,14 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using System;
+using System.IO.Compression;
 using TradeUnionCommittee.BLL.Extensions;
 using TradeUnionCommittee.BLL.Utilities;
 using TradeUnionCommittee.Mvc.Web.GUI.Configuration;
 using TradeUnionCommittee.Mvc.Web.GUI.Configuration.DropDownLists;
 using TradeUnionCommittee.Mvc.Web.GUI.Controllers.Oops;
-using TradeUnionCommittee.Mvc.Web.GUI.FluentValidation;
-using TradeUnionCommittee.Mvc.Web.GUI.Models;
+using TradeUnionCommittee.ViewModels.Extensions;
 
 namespace TradeUnionCommittee.Mvc.Web.GUI
 {
@@ -29,12 +26,10 @@ namespace TradeUnionCommittee.Mvc.Web.GUI
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.Configure<CookiePolicyOptions>(options =>
             {
-                // This lambda determines whether user consent for non-essential cookies is needed for a given request.
                 options.CheckConsentNeeded = context => true;
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
@@ -52,10 +47,11 @@ namespace TradeUnionCommittee.Mvc.Web.GUI
 
             services
                 .AddTradeUnionCommitteeServiceModule(Configuration.GetConnectionString("DefaultConnection"), Configuration.GetSection("HashIdUtilitiesSettings").Get<HashIdUtilitiesSetting>())
+                .AddTradeUnionCommitteeViewModelsModule()
                 .AddResponseCompression()
                 .AddMvc()
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
-                .AddFluentValidation();
+                .AddTradeUnionCommitteeValidationModule();
 
             services.Configure<GzipCompressionProviderOptions>(options =>
             {
@@ -68,7 +64,6 @@ namespace TradeUnionCommittee.Mvc.Web.GUI
             });
 
             DependencyInjectionSystem(services);
-            DependencyInjectionFluentValidation(services);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -106,12 +101,6 @@ namespace TradeUnionCommittee.Mvc.Web.GUI
             services.AddScoped<IOops, OopsController>();
             services.AddScoped<IDropDownList, DropDownList>();
             services.AddSingleton(cm => AutoMapperConfiguration.ConfigureAutoMapper());
-        }
-
-        private void DependencyInjectionFluentValidation(IServiceCollection services)
-        {
-            services.AddScoped<IValidator<CreateEmployeeViewModel>, CreateEmployeeValidation>();
-            services.AddScoped<IValidator<UpdateEmployeeViewModel>, UpdateEmployeeValidation>();
         }
     }
 }

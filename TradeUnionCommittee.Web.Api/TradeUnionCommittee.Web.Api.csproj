@@ -15,4 +15,10 @@
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.1.2" PrivateAssets="All" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\TradeUnionCommittee.BLL\TradeUnionCommittee.BLL.csproj" />
+    <ProjectReference Include="..\TradeUnionCommittee.Common\TradeUnionCommittee.Common.csproj" />
+    <ProjectReference Include="..\TradeUnionCommittee.ViewModels\TradeUnionCommittee.ViewModels.csproj" />
+  </ItemGroup>
+
 </Project>
