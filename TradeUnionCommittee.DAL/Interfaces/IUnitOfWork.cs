@@ -60,6 +60,7 @@ namespace TradeUnionCommittee.DAL.Interfaces
         
         IAccountRepository AccountRepository { get; }
         ISearchRepository SearchRepository { get; }
+        ISystemAuditRepository SystemAuditRepository { get; }
 
         //------------------------------------------------------------------------------------------------------------------------------------------
 

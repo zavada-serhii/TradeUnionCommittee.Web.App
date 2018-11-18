@@ -14,6 +14,8 @@ namespace TradeUnionCommittee.DAL.EF
         {
             NpgsqlConnection.GlobalTypeMapper.MapEnum<TypeEvent>("TypeEvent", new NpgsqlNullNameTranslator());
             NpgsqlConnection.GlobalTypeMapper.MapEnum<TypeHouse>("TypeHouse", new NpgsqlNullNameTranslator());
+            NpgsqlConnection.GlobalTypeMapper.MapEnum<Operations>("Operations", new NpgsqlNullNameTranslator());
+            NpgsqlConnection.GlobalTypeMapper.MapEnum<Tables>("Tables", new NpgsqlNullNameTranslator());
         }
 
         public DbSet<Activities> Activities { get; set; }

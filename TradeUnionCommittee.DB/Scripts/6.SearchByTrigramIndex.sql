@@ -1,4 +1,6 @@
 
+CREATE EXTENSION "pg_trgm" SCHEMA public VERSION "1.3";
+
 ---------------------------------------------------------------------------------------------------------------------
 
 CREATE FUNCTION public."TrigramFullName"(p public."Employee")

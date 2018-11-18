@@ -4,7 +4,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.DTO;
+using TradeUnionCommittee.BLL.Enums;
 using TradeUnionCommittee.BLL.Interfaces.Directory;
+using TradeUnionCommittee.BLL.Interfaces.SystemAudit;
 using TradeUnionCommittee.Web.GUI.Configuration.DropDownLists;
 using TradeUnionCommittee.Web.GUI.Controllers.Oops;
 using TradeUnionCommittee.Web.GUI.Models;
@@ -17,13 +19,15 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Directory
         private readonly IDropDownList _dropDownList;
         private readonly IOops _oops;
         private readonly IMapper _mapper;
+        private readonly ISystemAuditService _systemAuditService;
 
-        public SubdivisionController(ISubdivisionsService services, IDropDownList dropDownList, IOops oops, IMapper mapper)
+        public SubdivisionController(ISubdivisionsService services, IDropDownList dropDownList, IOops oops, IMapper mapper, ISystemAuditService systemAuditService)
         {
             _services = services;
             _dropDownList = dropDownList;
             _oops = oops;
             _mapper = mapper;
+            _systemAuditService = systemAuditService;
         }
 
         //------------------------------------------------------------------------------------------------------------------------------------------
@@ -52,9 +56,13 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Directory
             if (ModelState.IsValid)
             {
                 var result = await _services.CreateMainSubdivisionAsync(_mapper.Map<SubdivisionDTO>(vm));
-                return result.IsValid
-                    ? RedirectToAction("Index")
-                    : _oops.OutPutError("Subdivision", "Index", result.ErrorsList);
+
+                if (result.IsValid)
+                {
+                    await _systemAuditService.AuditAsync(User.Identity.Name, Operations.Insert, Tables.Subdivisions);
+                    return RedirectToAction("Index");
+                }
+                return _oops.OutPutError("Subdivision", "Index", result.ErrorsList);
             }
             return View(vm);
         }
@@ -67,9 +75,7 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Directory
         {
             if (id == null) return NotFound();
             var result = await _services.GetAsync(id);
-            return result.IsValid
-                ? View(_mapper.Map<UpdateNameSubdivisionViewModel>(result.Result))
-                : _oops.OutPutError("Subdivision", "Index", result.ErrorsList);
+            return result.IsValid ? View(_mapper.Map<UpdateNameSubdivisionViewModel>(result.Result)) : _oops.OutPutError("Subdivision", "Index", result.ErrorsList);
         }
 
         [HttpPost, ActionName("UpdateName")]
@@ -81,9 +87,13 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Directory
             {
                 if (vm.HashId == null) return NotFound();
                 var result = await _services.UpdateNameSubdivisionAsync(_mapper.Map<SubdivisionDTO>(vm));
-                return result.IsValid
-                    ? RedirectToAction("Index")
-                    : _oops.OutPutError("Subdivision", "Index", result.ErrorsList);
+
+                if (result.IsValid)
+                {
+                    await _systemAuditService.AuditAsync(User.Identity.Name, Operations.Update, Tables.Subdivisions);
+                    return RedirectToAction("Index");
+                }
+                return _oops.OutPutError("Subdivision", "Index", result.ErrorsList);
             }
             return View(vm);
         }
@@ -96,9 +106,7 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Directory
         {
             if (id == null) return NotFound();
             var result = await _services.GetAsync(id);
-            return result.IsValid
-                ? View(_mapper.Map<UpdateAbbreviationSubdivisionViewModel>(result.Result))
-                : _oops.OutPutError("Subdivision", "Index", result.ErrorsList);
+            return result.IsValid ? View(_mapper.Map<UpdateAbbreviationSubdivisionViewModel>(result.Result)) : _oops.OutPutError("Subdivision", "Index", result.ErrorsList);
         }
 
         [HttpPost, ActionName("UpdateAbbreviation")]
@@ -110,9 +118,12 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Directory
             {
                 if (vm.HashId == null) return NotFound();
                 var result = await _services.UpdateAbbreviationSubdivisionAsync(_mapper.Map<SubdivisionDTO>(vm));
-                return result.IsValid
-                    ? RedirectToAction("Index")
-                    : _oops.OutPutError("Subdivision", "Index", result.ErrorsList);
+                if (result.IsValid)
+                {
+                    await _systemAuditService.AuditAsync(User.Identity.Name, Operations.Update, Tables.Subdivisions);
+                    return RedirectToAction("Index");
+                }
+                return _oops.OutPutError("Subdivision", "Index", result.ErrorsList);
             }
             return View(vm);
         }
@@ -125,9 +136,7 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Directory
         {
             if (id == null) return NotFound();
             var result = await _services.GetAsync(id);
-            return result.IsValid
-                ? View(_mapper.Map<DeleteSubdivisionViewModel>(result.Result))
-                : _oops.OutPutError("Subdivision", "Index", result.ErrorsList);
+            return result.IsValid ? View(_mapper.Map<DeleteSubdivisionViewModel>(result.Result)) : _oops.OutPutError("Subdivision", "Index", result.ErrorsList);
         }
 
         [HttpPost, ActionName("Delete")]
@@ -137,9 +146,13 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Directory
         {
             if (id == null) return NotFound();
             var result = await _services.DeleteAsync(id);
-            return result.IsValid
-                ? RedirectToAction("Index")
-                : _oops.OutPutError("Subdivision", "Index", result.ErrorsList);
+
+            if (result.IsValid)
+            {
+                await _systemAuditService.AuditAsync(User.Identity.Name, Operations.Delete, Tables.Subdivisions);
+                return RedirectToAction("Index");
+            }
+            return _oops.OutPutError("Subdivision", "Index", result.ErrorsList);
         }
 
         //------------------------------------------------------------------------------------------------------------------------------------------
@@ -153,9 +166,7 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Directory
             var nameMainSubdivision = await _services.GetAsync(id);
             ViewData["IdMainSubdivision"] = id;
             ViewData["NameMainSubdivision"] = nameMainSubdivision.Result.Name;
-            return result.IsValid
-                ? View(result.Result) 
-                : _oops.OutPutError("Subdivision", "Index", result.ErrorsList);
+            return result.IsValid ? View(result.Result) : _oops.OutPutError("Subdivision", "Index", result.ErrorsList);
         }
 
         //------------------------------------------------------------------------------------------------------------------------------------------
@@ -175,9 +186,13 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Directory
             if (ModelState.IsValid)
             {
                 var result = await _services.CreateSubordinateSubdivisionAsync(_mapper.Map<SubdivisionDTO>(vm));
-                return result.IsValid
-                    ? RedirectToAction("Details", new { id = vm.HashIdSubordinate })
-                    : _oops.OutPutError("Subdivision", "Index", result.ErrorsList);
+
+                if (result.IsValid)
+                {
+                    await _systemAuditService.AuditAsync(User.Identity.Name, Operations.Insert, Tables.Subdivisions);
+                    return RedirectToAction("Details", new {id = vm.HashIdSubordinate});
+                }
+                return _oops.OutPutError("Subdivision", "Index", result.ErrorsList);
             }
             return View(vm);
         }
@@ -203,9 +218,12 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Directory
             if (ModelState.IsValid)
             {
                 var result = await _services.RestructuringUnits(_mapper.Map<SubdivisionDTO>(vm));
-                return result.IsValid
-                    ? RedirectToAction("Index")
-                    : _oops.OutPutError("Subdivision", "Index", result.ErrorsList);
+                if(result.IsValid)
+                {
+                    await _systemAuditService.AuditAsync(User.Identity.Name, Operations.Update, Tables.Subdivisions);
+                    return RedirectToAction("Index");
+                }
+                return _oops.OutPutError("Subdivision", "Index", result.ErrorsList);
             }
             return View(vm);
         }

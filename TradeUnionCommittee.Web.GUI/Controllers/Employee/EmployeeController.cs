@@ -3,7 +3,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.DTO;
+using TradeUnionCommittee.BLL.Enums;
 using TradeUnionCommittee.BLL.Interfaces.Employee;
+using TradeUnionCommittee.BLL.Interfaces.SystemAudit;
 using TradeUnionCommittee.Web.GUI.Configuration.DropDownLists;
 using TradeUnionCommittee.Web.GUI.Controllers.Oops;
 using TradeUnionCommittee.Web.GUI.Models;
@@ -16,13 +18,15 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Employee
         private readonly IDropDownList _dropDownList;
         private readonly IOops _oops;
         private readonly IMapper _mapper;
+        private readonly ISystemAuditService _systemAuditService;
 
-        public EmployeeController(IEmployeeService employeeService, IDropDownList dropDownList, IOops oops, IMapper mapper)
+        public EmployeeController(IEmployeeService employeeService, IDropDownList dropDownList, IOops oops, IMapper mapper, ISystemAuditService systemAuditService)
         {
             _employeeService = employeeService;
             _dropDownList = dropDownList;
             _oops = oops;
             _mapper = mapper;
+            _systemAuditService = systemAuditService;
         }
 
         //------------------------------------------------------------------------------------------------------------------------------------------
@@ -52,10 +56,34 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Employee
         {
             if (ModelState.IsValid)
             {
-                var result = await _employeeService.AddEmployeeAsync(_mapper.Map<CreateEmployeeDTO>(vm));
-                return result.IsValid
-                    ? RedirectToAction("Create")
-                    : _oops.OutPutError("Employee", "Create", result.ErrorsList);
+                var model = _mapper.Map<CreateEmployeeDTO>(vm);
+                var result = await _employeeService.AddEmployeeAsync(model);
+                if (result.IsValid)
+                {
+                    await _systemAuditService.AuditAsync(User.Identity.Name, Operations.Insert, new[] { Tables.Employee, Tables.PositionEmployees });
+
+                    if (model.TypeAccommodation == AccommodationType.Dormitory || model.TypeAccommodation == AccommodationType.Departmental)
+                    {
+                        await _systemAuditService.AuditAsync(User.Identity.Name, Operations.Insert, Tables.PublicHouseEmployees);
+                    }
+                    else
+                    {
+                        await _systemAuditService.AuditAsync(User.Identity.Name, Operations.Insert, Tables.PrivateHouseEmployees);
+                    }
+
+                    if (model.SocialActivity)
+                    {
+                        await _systemAuditService.AuditAsync(User.Identity.Name, Operations.Insert, Tables.SocialActivityEmployees);
+                    }
+
+                    if (model.Privileges)
+                    {
+                        await _systemAuditService.AuditAsync(User.Identity.Name, Operations.Insert, Tables.PrivilegeEmployees);
+                    }
+
+                    return RedirectToAction("Create");
+                }
+                return _oops.OutPutError("Employee", "Create", result.ErrorsList);
             }
             await FillingDropDownLists();
             return View("Create", vm);
@@ -92,9 +120,7 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Employee
             var result = await _employeeService.GetMainInfoEmployeeAsync(id);
             await FillingStudyDropDownLists();
             await FillingScientificDropDownLists();
-            return result.IsValid
-                ? View(_mapper.Map<UpdateEmployeeViewModel>(result.Result))
-                : _oops.OutPutError("Employee", "Index", result.ErrorsList);
+            return result.IsValid ? View(_mapper.Map<UpdateEmployeeViewModel>(result.Result)) : _oops.OutPutError("Employee", "Index", result.ErrorsList);
         }
 
         [HttpPost, ActionName("Update")]
@@ -106,9 +132,12 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Employee
             {
                 if (vm.HashIdEmployee == null) return NotFound();
                 var result = await _employeeService.UpdateMainInfoEmployeeAsync(_mapper.Map<GeneralInfoEmployeeDTO>(vm));
-                return result.IsValid
-                    ? RedirectToAction("Index", "Employee", new { id = vm.HashIdEmployee })
-                    : _oops.OutPutError("Employee", "Index", result.ErrorsList);
+                if (result.IsValid)
+                {
+                    await _systemAuditService.AuditAsync(User.Identity.Name, Operations.Update, Tables.Employee);
+                    return RedirectToAction("Index", "Employee", new {id = vm.HashIdEmployee});
+                }
+                return _oops.OutPutError("Employee", "Index", result.ErrorsList);
             }
             await FillingStudyDropDownLists();
             await FillingScientificDropDownLists();
@@ -124,9 +153,7 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Employee
         {
             if (id == null) return NotFound();
             var result = await _employeeService.GetMainInfoEmployeeAsync(id);
-            return result.IsValid
-                ? View(result.Result)
-                : _oops.OutPutError("Employee", "Index", result.ErrorsList);
+            return result.IsValid ? View(result.Result) : _oops.OutPutError("Employee", "Index", result.ErrorsList);
         }
 
         [HttpPost, ActionName("Delete")]
@@ -136,9 +163,12 @@ namespace TradeUnionCommittee.Web.GUI.Controllers.Employee
         {
             if (id == null) return NotFound();
             var result = await _employeeService.DeleteAsync(id);
-            return result.IsValid
-                ? RedirectToAction("Directory", "Home")
-                : _oops.OutPutError("Home", "Directory", result.ErrorsList);
+            if (result.IsValid)
+            {
+                await _systemAuditService.AuditAsync(User.Identity.Name, Operations.Delete, Tables.Employee);
+                return RedirectToAction("Directory", "Home");
+            }
+            return _oops.OutPutError("Home", "Index", result.ErrorsList);
         }
 
         //------------------------------------------------------------------------------------------------------------------------------------------
