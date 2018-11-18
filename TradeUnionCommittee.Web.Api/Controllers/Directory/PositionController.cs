@@ -1,7 +1,7 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
-using AutoMapper;
 using TradeUnionCommittee.BLL.DTO;
 using TradeUnionCommittee.BLL.Enums;
 using TradeUnionCommittee.BLL.Interfaces.Directory;
@@ -26,13 +26,15 @@ namespace TradeUnionCommittee.Web.Api.Controllers.Directory
         }
 
         [HttpGet]
+        [Route("GetAll")]
         [Authorize(Roles = "Admin,Accountant,Deputy", AuthenticationSchemes = "Bearer")]
         public async Task<IActionResult> GetAll()
         {
             return Ok(await _services.GetAllAsync());
         }
 
-        [HttpGet("{id}", Name = "Get")]
+        [HttpGet]
+        [Route("Get/{id}")]
         [Authorize(Roles = "Admin,Accountant,Deputy", AuthenticationSchemes = "Bearer")]
         public async Task<IActionResult> Get(string id)
         {
@@ -44,6 +46,7 @@ namespace TradeUnionCommittee.Web.Api.Controllers.Directory
         }
 
         [HttpPost]
+        [Route("Create")]
         [Authorize(Roles = "Admin,Accountant,Deputy", AuthenticationSchemes = "Bearer")]
         public async Task<IActionResult> Create([FromBody] PositionViewModel vm)
         {
@@ -62,6 +65,7 @@ namespace TradeUnionCommittee.Web.Api.Controllers.Directory
         }
 
         [HttpPost]
+        [Route("Update")]
         [Authorize(Roles = "Admin,Accountant,Deputy", AuthenticationSchemes = "Bearer")]
         public async Task<IActionResult> Update([FromBody] PositionViewModel vm)
         {
@@ -79,7 +83,8 @@ namespace TradeUnionCommittee.Web.Api.Controllers.Directory
             return BadRequest(ModelState);
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete]
+        [Route("Delete/{id}")]
         [Authorize(Roles = "Admin", AuthenticationSchemes = "Bearer")]
         public async Task<IActionResult> Delete(string id)
         {
