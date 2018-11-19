@@ -38,30 +38,28 @@ namespace TradeUnionCommittee.Web.Api.Controllers.Directory
         [Authorize(Roles = "Admin,Accountant,Deputy", AuthenticationSchemes = "Bearer")]
         public async Task<IActionResult> Get(string id)
         {
-            if (id != null)
+            if (id == null) return NotFound();
+            var result = await _services.GetAsync(id);
+            if (result.IsValid)
             {
-                return Ok(await _services.GetAsync(id));
+                return Ok(result.Result);
             }
-            return NotFound();
+            return BadRequest(result);
         }
 
         [HttpPost]
         [Route("Create")]
         [Authorize(Roles = "Admin,Accountant,Deputy", AuthenticationSchemes = "Bearer")]
-        public async Task<IActionResult> Create([FromBody] PositionViewModel vm)
+        public async Task<IActionResult> Create([FromBody] string name)
         {
-            if (ModelState.IsValid)
+            if (string.IsNullOrEmpty(name) || string.IsNullOrWhiteSpace(name)) return BadRequest();
+            var result = await _services.CreateAsync(new DirectoryDTO {Name = name});
+            if (result.IsValid)
             {
-                var result = await _services.CreateAsync(_mapper.Map<DirectoryDTO>(vm));
-               
-                if (result.IsValid)
-                {
-                    await _systemAuditService.AuditAsync(User.Identity.Name, Operations.Insert, Tables.Position);
-                    return Ok();
-                }
-                return BadRequest(result);
+                await _systemAuditService.AuditAsync(User.Identity.Name, Operations.Insert, Tables.Position);
+                return Ok();
             }
-            return BadRequest(ModelState.ValidationState);
+            return BadRequest(result);
         }
 
         [HttpPost]
@@ -80,7 +78,7 @@ namespace TradeUnionCommittee.Web.Api.Controllers.Directory
                 }
                 return BadRequest(result);
             }
-            return BadRequest(ModelState);
+            return BadRequest();
         }
 
         [HttpDelete]
@@ -93,7 +91,7 @@ namespace TradeUnionCommittee.Web.Api.Controllers.Directory
             if (result.IsValid)
             {
                 await _systemAuditService.AuditAsync(User.Identity.Name, Operations.Delete, Tables.Position);
-                return Ok();
+                return NoContent();
             }
             return BadRequest(result);
         }
