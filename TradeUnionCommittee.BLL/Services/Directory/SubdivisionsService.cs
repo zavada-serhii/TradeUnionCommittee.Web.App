@@ -62,7 +62,7 @@ namespace TradeUnionCommittee.BLL.Services.Directory
 
         public async Task<ActualResult> UpdateNameSubdivisionAsync(SubdivisionDTO dto)
         {
-            var id = _hashIdUtilities.DecryptLong(dto.HashId, Enums.Services.Subdivision);
+            var id = _hashIdUtilities.DecryptLong(dto.HashIdMain, Enums.Services.Subdivision);
             if (!await CheckNameAsync(dto.Name))
             {
                 var subdivision = await _database.SubdivisionsRepository.Find(x => x.Id == id);
@@ -80,7 +80,7 @@ namespace TradeUnionCommittee.BLL.Services.Directory
 
         public async Task<ActualResult> UpdateAbbreviationSubdivisionAsync(SubdivisionDTO dto)
         {
-            var id = _hashIdUtilities.DecryptLong(dto.HashId, Enums.Services.Subdivision);
+            var id = _hashIdUtilities.DecryptLong(dto.HashIdMain, Enums.Services.Subdivision);
             if (!await CheckNameAsync(dto.Name))
             {
                 var subdivision = await _database.SubdivisionsRepository.Find(x => x.Id == id);
@@ -104,7 +104,7 @@ namespace TradeUnionCommittee.BLL.Services.Directory
 
         public async Task<ActualResult> RestructuringUnits(SubdivisionDTO dto)
         {
-            var idMainSubdivisions = _hashIdUtilities.DecryptLong(dto.HashId, Enums.Services.Subdivision);
+            var idMainSubdivisions = _hashIdUtilities.DecryptLong(dto.HashIdMain, Enums.Services.Subdivision);
             var idSubordinateSubdivisions = _hashIdUtilities.DecryptLong(dto.HashIdSubordinate, Enums.Services.Subdivision);
             var subdivision = await _database.SubdivisionsRepository.Find(x => x.Id == idSubordinateSubdivisions);
             var result = subdivision.Result.FirstOrDefault();

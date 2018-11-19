@@ -1,16 +1,25 @@
 ﻿namespace TradeUnionCommittee.BLL.DTO
 {
-    public class DirectoryDTO
+    public abstract class BaseDTO
     {
-        public string HashId { get; set; }
-        public string Name { get; set; }
-        public uint RowVersion { get; set; }
+        public virtual string Name { get; set; }
+        public virtual uint RowVersion { get; set; }
     }
 
-    public class SubdivisionDTO : DirectoryDTO
+    public class DirectoryDTO : BaseDTO
     {
+        public string HashId { get; set; }
+        public override string Name { get; set; }
+        public override uint RowVersion { get; set; }
+    }
+
+    public class SubdivisionDTO : BaseDTO
+    {
+        public string HashIdMain { get; set; }
         public string HashIdSubordinate { get; set; }
+        public override string Name { get; set; }
         public string Abbreviation { get; set; }
+        public override uint RowVersion { get; set; }
     }
 
     public class RolesDTO : DirectoryDTO

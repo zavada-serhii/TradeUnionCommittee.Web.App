@@ -50,22 +50,25 @@ namespace TradeUnionCommittee.Web.Api.Controllers.Directory
         [HttpPost]
         [Route("Create")]
         [Authorize(Roles = "Admin,Accountant,Deputy", AuthenticationSchemes = "Bearer")]
-        public async Task<IActionResult> Create([FromBody] string name)
+        public async Task<IActionResult> Create([FromBody] CreatePositionViewModel vm)
         {
-            if (string.IsNullOrEmpty(name) || string.IsNullOrWhiteSpace(name)) return BadRequest();
-            var result = await _services.CreateAsync(new DirectoryDTO {Name = name});
-            if (result.IsValid)
+            if (ModelState.IsValid)
             {
-                await _systemAuditService.AuditAsync(User.Identity.Name, Operations.Insert, Tables.Position);
-                return Ok();
+                var result = await _services.CreateAsync(_mapper.Map<DirectoryDTO>(vm));
+                if (result.IsValid)
+                {
+                    await _systemAuditService.AuditAsync(User.Identity.Name, Operations.Insert, Tables.Position);
+                    return Ok();
+                }
+                return BadRequest(result);
             }
-            return BadRequest(result);
+            return BadRequest();
         }
 
         [HttpPost]
         [Route("Update")]
         [Authorize(Roles = "Admin,Accountant,Deputy", AuthenticationSchemes = "Bearer")]
-        public async Task<IActionResult> Update([FromBody] PositionViewModel vm)
+        public async Task<IActionResult> Update([FromBody] UpdatePositionViewModel vm)
         {
             if (ModelState.IsValid)
             {

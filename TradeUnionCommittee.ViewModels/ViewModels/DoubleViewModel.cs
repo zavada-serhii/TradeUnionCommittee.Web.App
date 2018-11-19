@@ -5,131 +5,191 @@ namespace TradeUnionCommittee.ViewModels.ViewModels
 {
     public abstract class BaseDirectoryViewModel
     {
-        public virtual string HashId { get; set; }
-
+        [Required(ErrorMessage = "Назва не може бути порожньою!")]
         public virtual string Name { get; set; }
+    }
 
+    public abstract class DirectoryViewModel : BaseDirectoryViewModel
+    {
+        [Required]
+        public virtual string HashId { get; set; }
+        [Required]
         public virtual uint RowVersion { get; set; }
     }
 
-    public class PositionViewModel : BaseDirectoryViewModel
-    {
-        public override string HashId { get; set; }
+    //------------------------------------------------------------------------------------------------------------------------------------------
 
-        [Required(ErrorMessage = "Назва не може бути порожньою!")]
+    public class CreatePositionViewModel : BaseDirectoryViewModel
+    {
         [Remote("CheckName", "Position", ErrorMessage = "Ця назва вже використовується!")]
         public override string Name { get; set; }
+    }
 
+    public class UpdatePositionViewModel : DirectoryViewModel
+    {
+        public override string HashId { get; set; }
+        [Remote("CheckName", "Position", ErrorMessage = "Ця назва вже використовується!")]
+        public override string Name { get; set; }
         public override uint RowVersion { get; set; }
     }
 
-    public class SocialActivityViewModel : BaseDirectoryViewModel
-    {
-        public override string HashId { get; set; }
+    //------------------------------------------------------------------------------------------------------------------------------------------
 
-        [Required(ErrorMessage = "Назва не може бути порожньою!")]
+    public class CreateSocialActivityViewModel : BaseDirectoryViewModel
+    {
         [Remote("CheckName", "SocialActivity", ErrorMessage = "Ця назва вже використовується!")]
         public override string Name { get; set; }
+    }
 
+    public class UpdateSocialActivityViewModel : DirectoryViewModel
+    {
+        public override string HashId { get; set; }
+        [Remote("CheckName", "SocialActivity", ErrorMessage = "Ця назва вже використовується!")]
+        public override string Name { get; set; }
         public override uint RowVersion { get; set; }
     }
 
-    public class PrivilegesViewModel : BaseDirectoryViewModel
-    {
-        public override string HashId { get; set; }
+    //------------------------------------------------------------------------------------------------------------------------------------------
 
-        [Required(ErrorMessage = "Назва не може бути порожньою!")]
+    public class CreatePrivilegesViewModel : BaseDirectoryViewModel
+    {
         [Remote("CheckName", "Privileges", ErrorMessage = "Ця назва вже використовується!")]
         public override string Name { get; set; }
+    }
 
+    public class UpdatePrivilegesViewModel : DirectoryViewModel
+    {
+        public override string HashId { get; set; }
+        [Remote("CheckName", "Privileges", ErrorMessage = "Ця назва вже використовується!")]
+        public override string Name { get; set; }
         public override uint RowVersion { get; set; }
     }
 
-    public class AwardViewModel : BaseDirectoryViewModel
-    {
-        public override string HashId { get; set; }
+    //------------------------------------------------------------------------------------------------------------------------------------------
 
-        [Required(ErrorMessage = "Назва не може бути порожньою!")]
+    public class CreateAwardViewModel : BaseDirectoryViewModel
+    {
         [Remote("CheckName", "Award", ErrorMessage = "Ця назва вже використовується!")]
         public override string Name { get; set; }
+    }
 
+    public class UpdateAwardViewModel : DirectoryViewModel
+    {
+        public override string HashId { get; set; }
+        [Remote("CheckName", "Award", ErrorMessage = "Ця назва вже використовується!")]
+        public override string Name { get; set; }
         public override uint RowVersion { get; set; }
     }
 
-    public class MaterialAidViewModel : BaseDirectoryViewModel
-    {
-        public override string HashId { get; set; }
+    //------------------------------------------------------------------------------------------------------------------------------------------
 
-        [Required(ErrorMessage = "Назва не може бути порожньою!")]
+    public class CreateMaterialAidViewModel : BaseDirectoryViewModel
+    {
         [Remote("CheckName", "MaterialAid", ErrorMessage = "Ця назва вже використовується!")]
         public override string Name { get; set; }
+    }
 
+    public class UpdateMaterialAidViewModel : DirectoryViewModel
+    {
+        public override string HashId { get; set; }
+        [Remote("CheckName", "MaterialAid", ErrorMessage = "Ця назва вже використовується!")]
+        public override string Name { get; set; }
         public override uint RowVersion { get; set; }
     }
 
-    public class HobbyViewModel : BaseDirectoryViewModel
-    {
-        public override string HashId { get; set; }
+    //------------------------------------------------------------------------------------------------------------------------------------------
 
-        [Required(ErrorMessage = "Назва не може бути порожньою!")]
+    public class CreateHobbyViewModel : BaseDirectoryViewModel
+    {
         [Remote("CheckName", "Hobby", ErrorMessage = "Ця назва вже використовується!")]
         public override string Name { get; set; }
+    }
 
+    public class UpdateHobbyViewModel : DirectoryViewModel
+    {
+        public override string HashId { get; set; }
+        [Remote("CheckName", "Hobby", ErrorMessage = "Ця назва вже використовується!")]
+        public override string Name { get; set; }
         public override uint RowVersion { get; set; }
     }
 
-    public class TravelViewModel : BaseDirectoryViewModel
-    {
-        public override string HashId { get; set; }
+    //------------------------------------------------------------------------------------------------------------------------------------------
 
-        [Required(ErrorMessage = "Назва не може бути порожньою!")]
+    public class CreateTravelViewModel : BaseDirectoryViewModel
+    {
         [Remote("CheckName", "Travel", ErrorMessage = "Ця назва вже використовується!")]
         public override string Name { get; set; }
+    }
 
+    public class UpdateTravelViewModel : DirectoryViewModel
+    {
+        public override string HashId { get; set; }
+        [Remote("CheckName", "Travel", ErrorMessage = "Ця назва вже використовується!")]
+        public override string Name { get; set; }
         public override uint RowVersion { get; set; }
     }
 
-    public class WellnessViewModel : BaseDirectoryViewModel
-    {
-        public override string HashId { get; set; }
+    //------------------------------------------------------------------------------------------------------------------------------------------
 
-        [Required(ErrorMessage = "Назва не може бути порожньою!")]
+    public class CreateWellnessViewModel : BaseDirectoryViewModel
+    {
         [Remote("CheckName", "Wellness", ErrorMessage = "Ця назва вже використовується!")]
         public override string Name { get; set; }
+    }
 
+    public class UpdateWellnessViewModel : DirectoryViewModel
+    {
+        public override string HashId { get; set; }
+        [Remote("CheckName", "Wellness", ErrorMessage = "Ця назва вже використовується!")]
+        public override string Name { get; set; }
         public override uint RowVersion { get; set; }
     }
 
-    public class TourViewModel : BaseDirectoryViewModel
-    {
-        public override string HashId { get; set; }
+    //------------------------------------------------------------------------------------------------------------------------------------------
 
-        [Required(ErrorMessage = "Назва не може бути порожньою!")]
+    public class CreateTourViewModel : BaseDirectoryViewModel
+    {
         [Remote("CheckName", "Tour", ErrorMessage = "Ця назва вже використовується!")]
         public override string Name { get; set; }
+    }
 
+    public class UpdateTourViewModel : DirectoryViewModel
+    {
+        public override string HashId { get; set; }
+        [Remote("CheckName", "Tour", ErrorMessage = "Ця назва вже використовується!")]
+        public override string Name { get; set; }
         public override uint RowVersion { get; set; }
     }
 
-    public class ActivitiesViewModel : BaseDirectoryViewModel
-    {
-        public override string HashId { get; set; }
+    //------------------------------------------------------------------------------------------------------------------------------------------
 
-        [Required(ErrorMessage = "Назва не може бути порожньою!")]
+    public class CreateActivitiesViewModel : BaseDirectoryViewModel
+    {
         [Remote("CheckName", "Activities", ErrorMessage = "Ця назва вже використовується!")]
         public override string Name { get; set; }
+    }
 
+    public class UpdateActivitiesViewModel : DirectoryViewModel
+    {
+        public override string HashId { get; set; }
+        [Remote("CheckName", "Activities", ErrorMessage = "Ця назва вже використовується!")]
+        public override string Name { get; set; }
         public override uint RowVersion { get; set; }
     }
 
-    public class CulturalViewModel : BaseDirectoryViewModel
-    {
-        public override string HashId { get; set; }
+    //------------------------------------------------------------------------------------------------------------------------------------------
 
-        [Required(ErrorMessage = "Назва не може бути порожньою!")]
+    public class CreateCulturalViewModel : BaseDirectoryViewModel
+    {
         [Remote("CheckName", "Cultural", ErrorMessage = "Ця назва вже використовується!")]
         public override string Name { get; set; }
+    }
 
+    public class UpdateCulturalViewModel : DirectoryViewModel
+    {
+        public override string HashId { get; set; }
+        [Remote("CheckName", "Cultural", ErrorMessage = "Ця назва вже використовується!")]
+        public override string Name { get; set; }
         public override uint RowVersion { get; set; }
     }
 }

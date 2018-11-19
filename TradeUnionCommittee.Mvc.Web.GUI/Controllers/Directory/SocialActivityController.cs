@@ -48,7 +48,7 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Directory
         [HttpPost]
         [Authorize(Roles = "Admin,Accountant,Deputy")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(SocialActivityViewModel vm)
+        public async Task<IActionResult> Create(CreateSocialActivityViewModel vm)
         {
             if (ModelState.IsValid)
             {
@@ -71,13 +71,13 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Directory
         {
             if (id == null) return NotFound();
             var result = await _services.GetAsync(id);
-            return result.IsValid ? View(_mapper.Map<SocialActivityViewModel>(result.Result)) : _oops.OutPutError("SocialActivity", "Index", result.ErrorsList);
+            return result.IsValid ? View(_mapper.Map<UpdateSocialActivityViewModel>(result.Result)) : _oops.OutPutError("SocialActivity", "Index", result.ErrorsList);
         }
 
         [HttpPost, ActionName("Update")]
         [Authorize(Roles = "Admin,Accountant,Deputy")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> UpdateConfirmed(SocialActivityViewModel vm)
+        public async Task<IActionResult> UpdateConfirmed(UpdateSocialActivityViewModel vm)
         {
             if (ModelState.IsValid)
             {

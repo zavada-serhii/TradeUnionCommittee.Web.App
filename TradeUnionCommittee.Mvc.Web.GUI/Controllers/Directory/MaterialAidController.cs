@@ -48,7 +48,7 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Directory
         [HttpPost]
         [Authorize(Roles = "Admin,Accountant")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(MaterialAidViewModel vm)
+        public async Task<IActionResult> Create(CreateMaterialAidViewModel vm)
         {
             if (ModelState.IsValid)
             {
@@ -71,13 +71,13 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Directory
         {
             if (id == null) return NotFound();
             var result = await _services.GetAsync(id);
-            return result.IsValid ? View(_mapper.Map<MaterialAidViewModel>(result.Result)) : _oops.OutPutError("MaterialAid", "Index", result.ErrorsList);
+            return result.IsValid ? View(_mapper.Map<UpdateMaterialAidViewModel>(result.Result)) : _oops.OutPutError("MaterialAid", "Index", result.ErrorsList);
         }
 
         [HttpPost, ActionName("Update")]
         [Authorize(Roles = "Admin,Accountant")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> UpdateConfirmed(MaterialAidViewModel vm)
+        public async Task<IActionResult> UpdateConfirmed(UpdateMaterialAidViewModel vm)
         {
             if (ModelState.IsValid)
             {

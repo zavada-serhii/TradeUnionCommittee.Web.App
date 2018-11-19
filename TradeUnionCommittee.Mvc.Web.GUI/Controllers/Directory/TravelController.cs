@@ -48,7 +48,7 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Directory
         [HttpPost]
         [Authorize(Roles = "Admin,Accountant,Deputy")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(TravelViewModel vm)
+        public async Task<IActionResult> Create(CreateTravelViewModel vm)
         {
             if (ModelState.IsValid)
             {
@@ -71,13 +71,13 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Directory
         {
             if (id == null) return NotFound();
             var result = await _services.GetAsync(id);
-            return result.IsValid ? View(_mapper.Map<TravelViewModel>(result.Result)) : _oops.OutPutError("Travel", "Index", result.ErrorsList);
+            return result.IsValid ? View(_mapper.Map<UpdateTravelViewModel>(result.Result)) : _oops.OutPutError("Travel", "Index", result.ErrorsList);
         }
 
         [HttpPost, ActionName("Update")]
         [Authorize(Roles = "Admin,Accountant,Deputy")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> UpdateConfirmed(TravelViewModel vm)
+        public async Task<IActionResult> UpdateConfirmed(UpdateTravelViewModel vm)
         {
             if (ModelState.IsValid)
             {
