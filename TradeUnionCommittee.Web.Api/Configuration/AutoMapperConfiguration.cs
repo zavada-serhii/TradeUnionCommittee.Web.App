@@ -13,6 +13,8 @@ namespace TradeUnionCommittee.Web.Api.Configuration
         /// <returns>IMapper.</returns>
         public static IMapper ConfigureAutoMapper()
         {
+            string nullVarible = null;
+
             return new MapperConfiguration(map =>
             {
                 //-- Controller Mapper ---------------------------------------------------------------------------------------------------------
@@ -43,7 +45,6 @@ namespace TradeUnionCommittee.Web.Api.Configuration
                 map.CreateMap<CreateTourViewModel, TourDTO>();
                 map.CreateMap<CreateActivitiesViewModel, DirectoryDTO>();
                 map.CreateMap<CreateCulturalViewModel, DirectoryDTO>();
-
                 map.CreateMap<DirectoryDTO, UpdatePositionViewModel>().ReverseMap();
                 map.CreateMap<DirectoryDTO, UpdateSocialActivityViewModel>().ReverseMap();
                 map.CreateMap<DirectoryDTO, UpdatePrivilegesViewModel>().ReverseMap();
@@ -56,19 +57,18 @@ namespace TradeUnionCommittee.Web.Api.Configuration
                 map.CreateMap<DirectoryDTO, UpdateActivitiesViewModel>().ReverseMap();
                 map.CreateMap<DirectoryDTO, UpdateCulturalViewModel>().ReverseMap();
 
-
                 map.CreateMap<CreateDepartmentalViewModel, DepartmentalDTO>();
                 map.CreateMap<CreateDormitoryViewModel, DormitoryDTO>();
-
                 map.CreateMap<DepartmentalDTO, UpdateDepartmentalViewModel>().ReverseMap();
                 map.CreateMap<DormitoryDTO, UpdateDormitoryViewModel>().ReverseMap();
 
-
-                map.CreateMap<SubdivisionDTO, CreateMainSubdivisionViewModel>().ReverseMap();
+                map.CreateMap<CreateMainSubdivisionViewModel, SubdivisionDTO>();
+                map.CreateMap<CreateSubordinateSubdivisionViewModel, SubdivisionDTO>()
+                    .ForMember(d => d.HashIdMain, opt => opt.MapFrom(x => nullVarible))
+                    .ForMember(d => d.HashIdSubordinate, opt => opt.MapFrom(x => x.HashIdMain));
+                map.CreateMap<RestructuringViewModel, SubdivisionDTO>();
                 map.CreateMap<SubdivisionDTO, UpdateNameSubdivisionViewModel>().ReverseMap();
                 map.CreateMap<SubdivisionDTO, UpdateAbbreviationSubdivisionViewModel>().ReverseMap();
-                map.CreateMap<SubdivisionDTO, CreateSubordinateSubdivisionViewModel>().ReverseMap();
-                map.CreateMap<SubdivisionDTO, RestructuringViewModel>().ReverseMap();
 
                 // -- End Mapping for Directory 
 
