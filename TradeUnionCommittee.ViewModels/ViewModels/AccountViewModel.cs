@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace TradeUnionCommittee.ViewModels.ViewModels
 {
-    public class LoginViewModel
+    public class BaseLoginViewModel
     {
         [Required(ErrorMessage = "Email не може бути порожнім")]
         [EmailAddress(ErrorMessage = "Некоректний Email")]
@@ -12,7 +12,10 @@ namespace TradeUnionCommittee.ViewModels.ViewModels
         [DataType(DataType.Password)]
         [Required(ErrorMessage = "Пароль не може бути порожнім")]
         public string Password { get; set; }
+    }
 
+    public class LoginViewModel : BaseLoginViewModel
+    {
         public string ReturnUrl { get; set; }
     }
 

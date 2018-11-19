@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using Swashbuckle.AspNetCore.Swagger;
 using TradeUnionCommittee.BLL.Extensions;
 using TradeUnionCommittee.BLL.Utilities;
 using TradeUnionCommittee.ViewModels.Extensions;
@@ -50,6 +51,8 @@ namespace TradeUnionCommittee.Web.Api
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
                 .AddTradeUnionCommitteeValidationModule();
 
+            services.AddSwaggerGen(c => { c.SwaggerDoc("v1", new Info {Title = "Trade Union Committee API", Description = "Swagger Trade Union Committee API" }); });
+
             DependencyInjectionSystem(services);
         }
 
@@ -71,6 +74,8 @@ namespace TradeUnionCommittee.Web.Api
 
             app.UseAuthentication();
             app.UseMvc();
+            app.UseSwagger();
+            app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/v1/swagger.json", "Trade Union Committee API"); });
         }
 
         private void DependencyInjectionSystem(IServiceCollection services)

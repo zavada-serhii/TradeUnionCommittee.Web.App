@@ -9,6 +9,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.Enums;
 using TradeUnionCommittee.BLL.Interfaces.Account;
+using TradeUnionCommittee.ViewModels.ViewModels;
 
 namespace TradeUnionCommittee.Web.Api.Controllers.Account
 {
@@ -23,13 +24,11 @@ namespace TradeUnionCommittee.Web.Api.Controllers.Account
             _accountService = accountService;
         }
 
-        [HttpPost("token")]
-        public async Task Token()
+        [HttpPost]
+        [Route("Token")]
+        public async Task Token(BaseLoginViewModel viewModel)
         {
-            var username = Request.Form["username"];
-            var password = Request.Form["password"];
-
-            var identity = await GetIdentity(username, password);
+            var identity = await GetIdentity(viewModel.Email, viewModel.Password);
             if (identity == null)
             {
                 Response.StatusCode = 400;
