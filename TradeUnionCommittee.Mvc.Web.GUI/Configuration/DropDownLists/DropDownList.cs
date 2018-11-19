@@ -87,7 +87,7 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Configuration.DropDownLists
         public async Task<SelectList> GetMainSubdivision()
         {
             var subdivision = await _subdivisionsService.GetAllAsync();
-            return subdivision.IsValid ? new SelectList(subdivision.Result, "HashId", "Name") : null;
+            return subdivision.IsValid ? new SelectList(subdivision.Result, "HashIdMain", "Name") : null;
         }
 
         public async Task<List<SubdivisionDTO>> GetSubordinateSubdivisions(string hashId)

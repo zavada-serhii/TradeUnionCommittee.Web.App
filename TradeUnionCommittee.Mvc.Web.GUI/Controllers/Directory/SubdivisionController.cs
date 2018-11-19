@@ -85,7 +85,7 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Directory
         {
             if (ModelState.IsValid)
             {
-                if (vm.HashId == null) return NotFound();
+                if (vm.HashIdMain == null) return NotFound();
                 var result = await _services.UpdateNameSubdivisionAsync(_mapper.Map<SubdivisionDTO>(vm));
 
                 if (result.IsValid)
@@ -116,7 +116,7 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Directory
         {
             if (ModelState.IsValid)
             {
-                if (vm.HashId == null) return NotFound();
+                if (vm.HashIdMain == null) return NotFound();
                 var result = await _services.UpdateAbbreviationSubdivisionAsync(_mapper.Map<SubdivisionDTO>(vm));
                 if (result.IsValid)
                 {
@@ -136,7 +136,7 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Directory
         {
             if (id == null) return NotFound();
             var result = await _services.GetAsync(id);
-            return result.IsValid ? View(_mapper.Map<DeleteSubdivisionViewModel>(result.Result)) : _oops.OutPutError("Subdivision", "Index", result.ErrorsList);
+            return result.IsValid ? View(result.Result) : _oops.OutPutError("Subdivision", "Index", result.ErrorsList);
         }
 
         [HttpPost, ActionName("Delete")]
@@ -175,7 +175,7 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Directory
         [Authorize(Roles = "Admin,Accountant,Deputy")]
         public IActionResult CreateSubordinate(string id)
         {
-            return View(new CreateSubordinateSubdivisionViewModel { HashIdSubordinate = id });
+            return View(new CreateSubordinateSubdivisionViewModel { HashIdMain = id });
         }
 
         [HttpPost, ActionName("CreateSubordinate")]
@@ -190,7 +190,7 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Directory
                 if (result.IsValid)
                 {
                     await _systemAuditService.AuditAsync(User.Identity.Name, Operations.Insert, Tables.Subdivisions);
-                    return RedirectToAction("Details", new {id = vm.HashIdSubordinate});
+                    return RedirectToAction("Details", new {id = vm.HashIdMain});
                 }
                 return _oops.OutPutError("Subdivision", "Index", result.ErrorsList);
             }
@@ -206,7 +206,7 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Directory
             if (id == null) return NotFound();
             var subordinateSubdivision = await _services.GetSubordinateSubdivisions(id);
             ViewBag.MainSubdivision = await _dropDownList.GetMainSubdivision();
-            ViewBag.SubordinateSubdivision = new SelectList(subordinateSubdivision.Result, "HashId", "Name");
+            ViewBag.SubordinateSubdivision = new SelectList(subordinateSubdivision.Result, "HashIdMain", "Name");
             return View();
         }
 

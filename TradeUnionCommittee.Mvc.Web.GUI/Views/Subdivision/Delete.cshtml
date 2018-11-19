@@ -1,4 +1,4 @@
-﻿@model TradeUnionCommittee.ViewModels.ViewModels.DeleteSubdivisionViewModel
+﻿@model TradeUnionCommittee.BLL.DTO.SubdivisionDTO
 @{
     ViewData["Title"] = "Delete";
 }
@@ -15,7 +15,7 @@
             </div>
             <hr>
             <form asp-action="Delete">
-                <input type="hidden" asp-for="HashId" />
+                <input type="hidden" asp-for="HashIdMain" />
 
                 <dl class="row">
                     <dt class="col-md-3">

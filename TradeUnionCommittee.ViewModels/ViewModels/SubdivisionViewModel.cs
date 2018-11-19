@@ -16,7 +16,7 @@ namespace TradeUnionCommittee.ViewModels.ViewModels
     public class CreateSubordinateSubdivisionViewModel
     {
         [Required]
-        public string HashIdSubordinate { get; set; }
+        public string HashIdMain { get; set; }
         [Required(ErrorMessage = "Назва не може бути порожньою!")]
         [Remote("CheckName", "Subdivision", ErrorMessage = "Ця назва вже використовується!")]
         public string Name { get; set; }
@@ -28,7 +28,7 @@ namespace TradeUnionCommittee.ViewModels.ViewModels
     public class UpdateNameSubdivisionViewModel 
     {
         [Required]
-        public string HashId { get; set; }
+        public string HashIdMain { get; set; }
         [Required(ErrorMessage = "Назва не може бути порожньою!")]
         [Remote("CheckName", "Subdivision", ErrorMessage = "Ця назва вже використовується!")]
         public string Name { get; set; }
@@ -39,7 +39,7 @@ namespace TradeUnionCommittee.ViewModels.ViewModels
     public class UpdateAbbreviationSubdivisionViewModel
     {
         [Required]
-        public string HashId { get; set; }
+        public string HashIdMain { get; set; }
         [Required(ErrorMessage = "Aбревіатура не може бути порожньою!")]
         [Remote("CheckAbbreviation", "Subdivision", ErrorMessage = "Ця aбревіатура вже використовується!")]
         public string Abbreviation { get; set; }
@@ -47,20 +47,11 @@ namespace TradeUnionCommittee.ViewModels.ViewModels
         public uint RowVersion { get; set; }
     }
 
-    public class DeleteSubdivisionViewModel
-    {
-        public string HashId { get; set; }
-        public string Name { get; set; }
-        public string Abbreviation { get; set; }
-    }
-
     public class RestructuringViewModel
     {
         [Required]
-        public string HashId { get; set; }
+        public string HashIdMain { get; set; }
         [Required]
         public string HashIdSubordinate { get; set; }
-        [Required]
-        public uint RowVersion { get; set; }
     }
 }
