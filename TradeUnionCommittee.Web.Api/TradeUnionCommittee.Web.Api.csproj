@@ -23,7 +23,6 @@
   <ItemGroup>
     <ProjectReference Include="..\TradeUnionCommittee.BLL\TradeUnionCommittee.BLL.csproj" />
     <ProjectReference Include="..\TradeUnionCommittee.Common\TradeUnionCommittee.Common.csproj" />
-    <ProjectReference Include="..\TradeUnionCommittee.Mvc.Web.GUI\TradeUnionCommittee.Mvc.Web.GUI.csproj" />
     <ProjectReference Include="..\TradeUnionCommittee.ViewModels\TradeUnionCommittee.ViewModels.csproj" />
   </ItemGroup>
 
