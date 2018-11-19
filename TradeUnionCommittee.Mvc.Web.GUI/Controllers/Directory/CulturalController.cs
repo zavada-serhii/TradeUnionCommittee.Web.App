@@ -48,7 +48,7 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Directory
         [HttpPost]
         [Authorize(Roles = "Admin,Accountant,Deputy")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(CulturalViewModel vm)
+        public async Task<IActionResult> Create(CreateCulturalViewModel vm)
         {
             if (ModelState.IsValid)
             {
@@ -71,13 +71,13 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Directory
         {
             if (id == null) return NotFound();
             var result = await _services.GetAsync(id);
-            return result.IsValid ? View(_mapper.Map<CulturalViewModel>(result.Result)) : _oops.OutPutError("Cultural", "Index", result.ErrorsList);
+            return result.IsValid ? View(_mapper.Map<UpdateCulturalViewModel>(result.Result)) : _oops.OutPutError("Cultural", "Index", result.ErrorsList);
         }
 
         [HttpPost, ActionName("Update")]
         [Authorize(Roles = "Admin,Accountant,Deputy")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> UpdateConfirmed(CulturalViewModel vm)
+        public async Task<IActionResult> UpdateConfirmed(UpdateCulturalViewModel vm)
         {
             if (ModelState.IsValid)
             {

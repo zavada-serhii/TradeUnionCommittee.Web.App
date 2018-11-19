@@ -26,19 +26,43 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Configuration
                 .ForMember(d => d.HashIdSubdivision, opt => opt.MapFrom(c => c.HashIdSubordinateSubdivision ?? c.HashIdMainSubdivision))
                 .ForMember(d => d.TypeAccommodation, opt => opt.MapFrom(x => ConverterAccommodation(x.TypeAccommodation)));
 
-                map.CreateMap<DirectoryDTO, PositionViewModel>().ReverseMap();
-                map.CreateMap<DirectoryDTO, SocialActivityViewModel>().ReverseMap();
-                map.CreateMap<DirectoryDTO, PrivilegesViewModel>().ReverseMap();
-                map.CreateMap<DirectoryDTO, AwardViewModel>().ReverseMap();
-                map.CreateMap<DirectoryDTO, MaterialAidViewModel>().ReverseMap();
-                map.CreateMap<DirectoryDTO, HobbyViewModel>().ReverseMap();
-                map.CreateMap<TravelDTO, TravelViewModel>().ReverseMap();
-                map.CreateMap<WellnessDTO, WellnessViewModel>().ReverseMap();
-                map.CreateMap<TourDTO, TourViewModel>().ReverseMap();
-                map.CreateMap<DirectoryDTO, ActivitiesViewModel>().ReverseMap();
-                map.CreateMap<DirectoryDTO, CulturalViewModel>().ReverseMap();
-                map.CreateMap<DepartmentalDTO, DepartmentalViewModel>().ReverseMap();
-                map.CreateMap<DormitoryDTO, DormitoryViewModel>().ReverseMap();
+                map.CreateMap<GeneralInfoEmployeeDTO, UpdateEmployeeViewModel>()
+                    .ForMember(d => d.CityPhone, opt => opt.MapFrom(c => c.CityPhone.Replace("-", string.Empty)))
+                    .ReverseMap();
+
+                // -- Start Mapping for Directory 
+
+                map.CreateMap<CreatePositionViewModel, DirectoryDTO>();
+                map.CreateMap<CreateSocialActivityViewModel, DirectoryDTO>();
+                map.CreateMap<CreatePrivilegesViewModel, DirectoryDTO>();
+                map.CreateMap<CreateAwardViewModel, DirectoryDTO>();
+                map.CreateMap<CreateMaterialAidViewModel, DirectoryDTO>();
+                map.CreateMap<CreateHobbyViewModel, DirectoryDTO>();
+                map.CreateMap<CreateTravelViewModel, TravelDTO>();
+                map.CreateMap<CreateWellnessViewModel, WellnessDTO>();
+                map.CreateMap<CreateTourViewModel, TourDTO>();
+                map.CreateMap<CreateActivitiesViewModel, DirectoryDTO>();
+                map.CreateMap<CreateCulturalViewModel, DirectoryDTO>();
+
+                map.CreateMap<DirectoryDTO, UpdatePositionViewModel>().ReverseMap();
+                map.CreateMap<DirectoryDTO, UpdateSocialActivityViewModel>().ReverseMap();
+                map.CreateMap<DirectoryDTO, UpdatePrivilegesViewModel>().ReverseMap();
+                map.CreateMap<DirectoryDTO, UpdateAwardViewModel>().ReverseMap();
+                map.CreateMap<DirectoryDTO, UpdateMaterialAidViewModel>().ReverseMap();
+                map.CreateMap<DirectoryDTO, UpdateHobbyViewModel>().ReverseMap();
+                map.CreateMap<TravelDTO, UpdateTravelViewModel>().ReverseMap();
+                map.CreateMap<WellnessDTO, UpdateWellnessViewModel>().ReverseMap();
+                map.CreateMap<TourDTO, UpdateTourViewModel>().ReverseMap();
+                map.CreateMap<DirectoryDTO, UpdateActivitiesViewModel>().ReverseMap();
+                map.CreateMap<DirectoryDTO, UpdateCulturalViewModel>().ReverseMap();
+
+
+                map.CreateMap<CreateDepartmentalViewModel, DepartmentalDTO>();
+                map.CreateMap<CreateDormitoryViewModel, DormitoryDTO>();
+
+                map.CreateMap<DepartmentalDTO, UpdateDepartmentalViewModel>().ReverseMap();
+                map.CreateMap<DormitoryDTO, UpdateDormitoryViewModel>().ReverseMap();
+
 
                 map.CreateMap<SubdivisionDTO, CreateMainSubdivisionViewModel>().ReverseMap();
                 map.CreateMap<SubdivisionDTO, UpdateNameSubdivisionViewModel>().ReverseMap();
@@ -46,10 +70,7 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Configuration
                 map.CreateMap<SubdivisionDTO, CreateSubordinateSubdivisionViewModel>().ReverseMap();
                 map.CreateMap<SubdivisionDTO, RestructuringViewModel>().ReverseMap();
 
-                map.CreateMap<GeneralInfoEmployeeDTO, UpdateEmployeeViewModel>()
-                .ForMember(d => d.CityPhone, opt => opt.MapFrom(c => c.CityPhone.Replace("-", string.Empty)))
-                .ReverseMap();
-                
+                // -- End Mapping for Directory 
 
             }).CreateMapper();
         }

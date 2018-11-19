@@ -65,7 +65,7 @@ namespace TradeUnionCommittee.Web.Api.Controllers.Directory
         [HttpPost]
         [Route("Update")]
         [Authorize(Roles = "Admin,Accountant,Deputy", AuthenticationSchemes = "Bearer")]
-        public async Task<IActionResult> Update([FromBody] PositionViewModel vm)
+        public async Task<IActionResult> Update([FromBody] UpdatePositionViewModel vm)
         {
             if (ModelState.IsValid)
             {

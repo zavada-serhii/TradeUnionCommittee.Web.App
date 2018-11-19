@@ -48,7 +48,7 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Directory
         [HttpPost]
         [Authorize(Roles = "Admin,Accountant")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(AwardViewModel vm)
+        public async Task<IActionResult> Create(CreateAwardViewModel vm)
         {
             if (ModelState.IsValid)
             {
@@ -71,13 +71,13 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Directory
         {
             if (id == null) return NotFound();
             var result = await _services.GetAsync(id);
-            return result.IsValid ? View(_mapper.Map<AwardViewModel>(result.Result)) : _oops.OutPutError("Award", "Index", result.ErrorsList);
+            return result.IsValid ? View(_mapper.Map<UpdateAwardViewModel>(result.Result)) : _oops.OutPutError("Award", "Index", result.ErrorsList);
         }
 
         [HttpPost, ActionName("Update")]
         [Authorize(Roles = "Admin,Accountant")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> UpdateConfirmed(AwardViewModel vm)
+        public async Task<IActionResult> UpdateConfirmed(UpdateAwardViewModel vm)
         {
             if (ModelState.IsValid)
             {
