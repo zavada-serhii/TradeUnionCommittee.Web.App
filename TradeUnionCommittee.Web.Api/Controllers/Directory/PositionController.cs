@@ -98,7 +98,8 @@ namespace TradeUnionCommittee.Web.Api.Controllers.Directory
             return BadRequest(result);
         }
 
-        [AcceptVerbs("Get", "Post")]
+        [HttpGet]
+        [Route("CheckName/{name}")]
         [Authorize(Roles = "Admin,Accountant,Deputy", AuthenticationSchemes = "Bearer")]
         public async Task<IActionResult> CheckName(string name)
         {
