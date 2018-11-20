@@ -2,10 +2,14 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Swashbuckle.AspNetCore.Swagger;
+using Swashbuckle.AspNetCore.SwaggerGen;
+using System.Collections.Generic;
+using System.Linq;
 using TradeUnionCommittee.BLL.Extensions;
 using TradeUnionCommittee.BLL.Utilities;
 using TradeUnionCommittee.ViewModels.Extensions;
@@ -51,7 +55,12 @@ namespace TradeUnionCommittee.Web.Api
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
                 .AddTradeUnionCommitteeValidationModule();
 
-            services.AddSwaggerGen(c => { c.SwaggerDoc("v1", new Info {Title = "Trade Union Committee API", Description = "Swagger Trade Union Committee API" }); });
+            services.AddSwaggerGen(c => 
+            {
+                c.SwaggerDoc("v1.0", new Info {Title = "Trade Union Committee API", Description = "Swagger Trade Union Committee API" });
+                c.OperationFilter<AuthorizationHeaderParameterOperationFilter>();
+            });
+            
 
             DependencyInjectionSystem(services);
         }
@@ -75,12 +84,38 @@ namespace TradeUnionCommittee.Web.Api
             app.UseAuthentication();
             app.UseMvc();
             app.UseSwagger();
-            app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/v1/swagger.json", "Trade Union Committee API"); });
+            app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/v1.0/swagger.json", "Trade Union Committee API"); });
         }
 
         private void DependencyInjectionSystem(IServiceCollection services)
         {
             services.AddSingleton(cm => AutoMapperConfiguration.ConfigureAutoMapper());
+        }
+    }
+
+    public class AuthorizationHeaderParameterOperationFilter : IOperationFilter
+    {
+        public void Apply(Operation operation, OperationFilterContext context)
+        {
+            var filterPipeline = context.ApiDescription.ActionDescriptor.FilterDescriptors;
+            var isAuthorized = filterPipeline.Select(filterInfo => filterInfo.Filter).Any(filter => filter is AuthorizeFilter);
+            var allowAnonymous = filterPipeline.Select(filterInfo => filterInfo.Filter).Any(filter => filter is IAllowAnonymousFilter);
+
+            if (isAuthorized && !allowAnonymous)
+            {
+                if (operation.Parameters == null)
+                    operation.Parameters = new List<IParameter>();
+
+                operation.Parameters.Add(new NonBodyParameter
+                {
+                    Name = "Authorization",
+                    In = "header",
+                    Description = "Access token",
+                    Required = true,
+                    Type = "string",
+                    
+                });
+            }
         }
     }
 }
