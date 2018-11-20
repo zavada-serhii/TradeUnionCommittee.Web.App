@@ -9,7 +9,9 @@ using Microsoft.IdentityModel.Tokens;
 using Swashbuckle.AspNetCore.Swagger;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using System.Collections.Generic;
+using System.IO.Compression;
 using System.Linq;
+using Microsoft.AspNetCore.ResponseCompression;
 using TradeUnionCommittee.BLL.Extensions;
 using TradeUnionCommittee.BLL.Utilities;
 using TradeUnionCommittee.ViewModels.Extensions;
@@ -51,6 +53,7 @@ namespace TradeUnionCommittee.Web.Api
             services
                 .AddTradeUnionCommitteeServiceModule(Configuration.GetConnectionString("DefaultConnection"), Configuration.GetSection("HashIdUtilitiesSettings").Get<HashIdUtilitiesSetting>())
                 .AddTradeUnionCommitteeViewModelsModule()
+                .AddResponseCompression()
                 .AddMvc()
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
                 .AddTradeUnionCommitteeValidationModule();
@@ -60,7 +63,11 @@ namespace TradeUnionCommittee.Web.Api
                 c.SwaggerDoc("v1.0", new Info {Title = "Trade Union Committee API", Description = "Swagger Trade Union Committee API" });
                 c.OperationFilter<AuthorizationHeaderParameterOperationFilter>();
             });
-            
+
+            services.Configure<GzipCompressionProviderOptions>(options =>
+            {
+                options.Level = CompressionLevel.Optimal;
+            });
 
             DependencyInjectionSystem(services);
         }
@@ -80,6 +87,7 @@ namespace TradeUnionCommittee.Web.Api
             app.UseHttpsRedirection();
             app.UseDefaultFiles();
             app.UseStaticFiles();
+            app.UseResponseCompression();
 
             app.UseAuthentication();
             app.UseMvc();
