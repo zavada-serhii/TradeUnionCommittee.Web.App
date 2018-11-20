@@ -1,7 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
-using AutoMapper;
+﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.DTO;
 using TradeUnionCommittee.BLL.Enums;
@@ -13,13 +13,13 @@ namespace TradeUnionCommittee.Web.Api.Controllers.Directory
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class PositionController : ControllerBase
+    public class PrivilegesController : ControllerBase
     {
-        private readonly IPositionService _services;
+        private readonly IPrivilegesService _services;
         private readonly ISystemAuditService _systemAuditService;
         private readonly IMapper _mapper;
 
-        public PositionController(IPositionService services, ISystemAuditService systemAuditService, IMapper mapper)
+        public PrivilegesController(IPrivilegesService services, ISystemAuditService systemAuditService, IMapper mapper)
         {
             _services = services;
             _systemAuditService = systemAuditService;
@@ -28,7 +28,7 @@ namespace TradeUnionCommittee.Web.Api.Controllers.Directory
 
         [HttpGet]
         [Route("GetAll")]
-        [Authorize(Roles = "Admin,Accountant,Deputy", AuthenticationSchemes = "Bearer")]
+        [Authorize(Roles = "Admin,Accountant", AuthenticationSchemes = "Bearer")]
         public async Task<IActionResult> GetAll()
         {
             return Ok(await _services.GetAllAsync());
@@ -36,7 +36,7 @@ namespace TradeUnionCommittee.Web.Api.Controllers.Directory
 
         [HttpGet]
         [Route("Get/{id}")]
-        [Authorize(Roles = "Admin,Accountant,Deputy", AuthenticationSchemes = "Bearer")]
+        [Authorize(Roles = "Admin,Accountant", AuthenticationSchemes = "Bearer")]
         public async Task<IActionResult> Get([Required] string id)
         {
             var result = await _services.GetAsync(id);
@@ -49,15 +49,15 @@ namespace TradeUnionCommittee.Web.Api.Controllers.Directory
 
         [HttpPost]
         [Route("Create")]
-        [Authorize(Roles = "Admin,Accountant,Deputy", AuthenticationSchemes = "Bearer")]
-        public async Task<IActionResult> Create([FromBody] CreatePositionViewModel vm)
+        [Authorize(Roles = "Admin,Accountant", AuthenticationSchemes = "Bearer")]
+        public async Task<IActionResult> Create([FromBody] CreatePrivilegesViewModel vm)
         {
             if (ModelState.IsValid)
             {
                 var result = await _services.CreateAsync(_mapper.Map<DirectoryDTO>(vm));
                 if (result.IsValid)
                 {
-                    await _systemAuditService.AuditAsync(User.Identity.Name, Operations.Insert, Tables.Position);
+                    await _systemAuditService.AuditAsync(User.Identity.Name, Operations.Insert, Tables.Privileges);
                     return Ok(result);
                 }
                 return BadRequest(result);
@@ -67,15 +67,15 @@ namespace TradeUnionCommittee.Web.Api.Controllers.Directory
 
         [HttpPost]
         [Route("Update")]
-        [Authorize(Roles = "Admin,Accountant,Deputy", AuthenticationSchemes = "Bearer")]
-        public async Task<IActionResult> Update([FromBody] UpdatePositionViewModel vm)
+        [Authorize(Roles = "Admin,Accountant", AuthenticationSchemes = "Bearer")]
+        public async Task<IActionResult> Update([FromBody] UpdatePrivilegesViewModel vm)
         {
             if (ModelState.IsValid)
             {
                 var result = await _services.UpdateAsync(_mapper.Map<DirectoryDTO>(vm));
                 if (result.IsValid)
                 {
-                    await _systemAuditService.AuditAsync(User.Identity.Name, Operations.Update, Tables.Position);
+                    await _systemAuditService.AuditAsync(User.Identity.Name, Operations.Update, Tables.Privileges);
                     return Ok(result);
                 }
                 return BadRequest(result);
@@ -91,7 +91,7 @@ namespace TradeUnionCommittee.Web.Api.Controllers.Directory
             var result = await _services.DeleteAsync(id);
             if (result.IsValid)
             {
-                await _systemAuditService.AuditAsync(User.Identity.Name, Operations.Delete, Tables.Position);
+                await _systemAuditService.AuditAsync(User.Identity.Name, Operations.Delete, Tables.Privileges);
                 return Ok(result);
             }
             return BadRequest(result);
@@ -99,7 +99,7 @@ namespace TradeUnionCommittee.Web.Api.Controllers.Directory
 
         [HttpGet]
         [Route("CheckName/{name}")]
-        [Authorize(Roles = "Admin,Accountant,Deputy", AuthenticationSchemes = "Bearer")]
+        [Authorize(Roles = "Admin,Accountant", AuthenticationSchemes = "Bearer")]
         public async Task<IActionResult> CheckName(string name)
         {
             return Ok(!await _services.CheckNameAsync(name));
