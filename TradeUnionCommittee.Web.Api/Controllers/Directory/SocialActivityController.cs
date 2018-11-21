@@ -100,7 +100,7 @@ namespace TradeUnionCommittee.Web.Api.Controllers.Directory
         [HttpGet]
         [Route("CheckName/{name}")]
         [Authorize(Roles = "Admin,Accountant,Deputy", AuthenticationSchemes = "Bearer")]
-        public async Task<IActionResult> CheckName(string name)
+        public async Task<IActionResult> CheckName([Required] string name)
         {
             return Ok(!await _services.CheckNameAsync(name));
         }

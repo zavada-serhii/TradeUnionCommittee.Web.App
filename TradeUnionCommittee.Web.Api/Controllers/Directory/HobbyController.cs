@@ -13,13 +13,13 @@ namespace TradeUnionCommittee.Web.Api.Controllers.Directory
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class PrivilegesController : ControllerBase
+    public class HobbyController : ControllerBase
     {
-        private readonly IPrivilegesService _services;
+        private readonly IHobbyService _services;
         private readonly ISystemAuditService _systemAuditService;
         private readonly IMapper _mapper;
 
-        public PrivilegesController(IPrivilegesService services, ISystemAuditService systemAuditService, IMapper mapper)
+        public HobbyController(IHobbyService services, ISystemAuditService systemAuditService, IMapper mapper)
         {
             _services = services;
             _systemAuditService = systemAuditService;
@@ -28,7 +28,7 @@ namespace TradeUnionCommittee.Web.Api.Controllers.Directory
 
         [HttpGet]
         [Route("GetAll")]
-        [Authorize(Roles = "Admin,Accountant", AuthenticationSchemes = "Bearer")]
+        [Authorize(Roles = "Admin,Accountant,Deputy", AuthenticationSchemes = "Bearer")]
         public async Task<IActionResult> GetAll()
         {
             return Ok(await _services.GetAllAsync());
@@ -36,7 +36,7 @@ namespace TradeUnionCommittee.Web.Api.Controllers.Directory
 
         [HttpGet]
         [Route("Get/{id}")]
-        [Authorize(Roles = "Admin,Accountant", AuthenticationSchemes = "Bearer")]
+        [Authorize(Roles = "Admin,Accountant,Deputy", AuthenticationSchemes = "Bearer")]
         public async Task<IActionResult> Get([Required] string id)
         {
             var result = await _services.GetAsync(id);
@@ -49,15 +49,15 @@ namespace TradeUnionCommittee.Web.Api.Controllers.Directory
 
         [HttpPost]
         [Route("Create")]
-        [Authorize(Roles = "Admin,Accountant", AuthenticationSchemes = "Bearer")]
-        public async Task<IActionResult> Create([FromBody] CreatePrivilegesViewModel vm)
+        [Authorize(Roles = "Admin,Accountant,Deputy", AuthenticationSchemes = "Bearer")]
+        public async Task<IActionResult> Create([FromBody] CreateHobbyViewModel vm)
         {
             if (ModelState.IsValid)
             {
                 var result = await _services.CreateAsync(_mapper.Map<DirectoryDTO>(vm));
                 if (result.IsValid)
                 {
-                    await _systemAuditService.AuditAsync(User.Identity.Name, Operations.Insert, Tables.Privileges);
+                    await _systemAuditService.AuditAsync(User.Identity.Name, Operations.Insert, Tables.Hobby);
                     return Ok(result);
                 }
                 return BadRequest(result);
@@ -67,15 +67,15 @@ namespace TradeUnionCommittee.Web.Api.Controllers.Directory
 
         [HttpPost]
         [Route("Update")]
-        [Authorize(Roles = "Admin,Accountant", AuthenticationSchemes = "Bearer")]
-        public async Task<IActionResult> Update([FromBody] UpdatePrivilegesViewModel vm)
+        [Authorize(Roles = "Admin,Accountant,Deputy", AuthenticationSchemes = "Bearer")]
+        public async Task<IActionResult> Update([FromBody] UpdateHobbyViewModel vm)
         {
             if (ModelState.IsValid)
             {
                 var result = await _services.UpdateAsync(_mapper.Map<DirectoryDTO>(vm));
                 if (result.IsValid)
                 {
-                    await _systemAuditService.AuditAsync(User.Identity.Name, Operations.Update, Tables.Privileges);
+                    await _systemAuditService.AuditAsync(User.Identity.Name, Operations.Update, Tables.Hobby);
                     return Ok(result);
                 }
                 return BadRequest(result);
@@ -91,7 +91,7 @@ namespace TradeUnionCommittee.Web.Api.Controllers.Directory
             var result = await _services.DeleteAsync(id);
             if (result.IsValid)
             {
-                await _systemAuditService.AuditAsync(User.Identity.Name, Operations.Delete, Tables.Privileges);
+                await _systemAuditService.AuditAsync(User.Identity.Name, Operations.Delete, Tables.Hobby);
                 return Ok(result);
             }
             return BadRequest(result);
@@ -99,7 +99,7 @@ namespace TradeUnionCommittee.Web.Api.Controllers.Directory
 
         [HttpGet]
         [Route("CheckName/{name}")]
-        [Authorize(Roles = "Admin,Accountant", AuthenticationSchemes = "Bearer")]
+        [Authorize(Roles = "Admin,Accountant,Deputy", AuthenticationSchemes = "Bearer")]
         public async Task<IActionResult> CheckName([Required] string name)
         {
             return Ok(!await _services.CheckNameAsync(name));
