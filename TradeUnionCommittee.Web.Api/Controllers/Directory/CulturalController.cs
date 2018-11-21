@@ -13,13 +13,13 @@ namespace TradeUnionCommittee.Web.Api.Controllers.Directory
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class SocialActivityController : ControllerBase
+    public class CulturalController : ControllerBase
     {
-        private readonly ISocialActivityService _services;
+        private readonly ICulturalService _services;
         private readonly ISystemAuditService _systemAuditService;
         private readonly IMapper _mapper;
 
-        public SocialActivityController(ISocialActivityService services, ISystemAuditService systemAuditService, IMapper mapper)
+        public CulturalController(ICulturalService services, ISystemAuditService systemAuditService, IMapper mapper)
         {
             _services = services;
             _systemAuditService = systemAuditService;
@@ -50,14 +50,14 @@ namespace TradeUnionCommittee.Web.Api.Controllers.Directory
         [HttpPost]
         [Route("Create")]
         [Authorize(Roles = "Admin,Accountant,Deputy", AuthenticationSchemes = "Bearer")]
-        public async Task<IActionResult> Create([FromBody] CreateSocialActivityViewModel vm)
+        public async Task<IActionResult> Create([FromBody] CreateCulturalViewModel vm)
         {
             if (ModelState.IsValid)
             {
                 var result = await _services.CreateAsync(_mapper.Map<DirectoryDTO>(vm));
                 if (result.IsValid)
                 {
-                    await _systemAuditService.AuditAsync(User.Identity.Name, Operations.Insert, Tables.SocialActivity);
+                    await _systemAuditService.AuditAsync(User.Identity.Name, Operations.Insert, Tables.Cultural);
                     return Ok(result);
                 }
                 return BadRequest(result);
@@ -68,14 +68,14 @@ namespace TradeUnionCommittee.Web.Api.Controllers.Directory
         [HttpPut]
         [Route("Update")]
         [Authorize(Roles = "Admin,Accountant,Deputy", AuthenticationSchemes = "Bearer")]
-        public async Task<IActionResult> Update([FromBody] UpdateSocialActivityViewModel vm)
+        public async Task<IActionResult> Update([FromBody] UpdateCulturalViewModel vm)
         {
             if (ModelState.IsValid)
             {
                 var result = await _services.UpdateAsync(_mapper.Map<DirectoryDTO>(vm));
                 if (result.IsValid)
                 {
-                    await _systemAuditService.AuditAsync(User.Identity.Name, Operations.Update, Tables.SocialActivity);
+                    await _systemAuditService.AuditAsync(User.Identity.Name, Operations.Update, Tables.Cultural);
                     return Ok(result);
                 }
                 return BadRequest(result);
@@ -91,7 +91,7 @@ namespace TradeUnionCommittee.Web.Api.Controllers.Directory
             var result = await _services.DeleteAsync(id);
             if (result.IsValid)
             {
-                await _systemAuditService.AuditAsync(User.Identity.Name, Operations.Delete, Tables.SocialActivity);
+                await _systemAuditService.AuditAsync(User.Identity.Name, Operations.Delete, Tables.Cultural);
                 return Ok(result);
             }
             return BadRequest(result);

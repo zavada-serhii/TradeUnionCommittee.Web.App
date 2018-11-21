@@ -65,7 +65,7 @@ namespace TradeUnionCommittee.Web.Api.Controllers.Directory
             return BadRequest();
         }
 
-        [HttpPost]
+        [HttpPut]
         [Route("Update")]
         [Authorize(Roles = "Admin,Accountant", AuthenticationSchemes = "Bearer")]
         public async Task<IActionResult> Update([FromBody] UpdatePrivilegesViewModel vm)

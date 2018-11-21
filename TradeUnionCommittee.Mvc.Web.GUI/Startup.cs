@@ -45,8 +45,12 @@ namespace TradeUnionCommittee.Mvc.Web.GUI
                 options.SlidingExpiration = true;
             });
 
+            var connectionString = Convert.ToBoolean(Configuration.GetConnectionString("UseSSL"))
+                ? Configuration.GetConnectionString("DefaultConnectionSSL")
+                : Configuration.GetConnectionString("DefaultConnection");
+
             services
-                .AddTradeUnionCommitteeServiceModule(Configuration.GetConnectionString("DefaultConnection"), Configuration.GetSection("HashIdUtilitiesSettings").Get<HashIdUtilitiesSetting>())
+                .AddTradeUnionCommitteeServiceModule(connectionString, Configuration.GetSection("HashIdUtilitiesSettings").Get<HashIdUtilitiesSetting>())
                 .AddTradeUnionCommitteeViewModelsModule()
                 .AddResponseCompression()
                 .AddMvc()

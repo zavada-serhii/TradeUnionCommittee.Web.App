@@ -26,7 +26,7 @@ namespace TradeUnionCommittee.Web.Api.Controllers.Account
 
         [HttpPost]
         [Route("Token")]
-        public async Task Token(BaseLoginViewModel viewModel)
+        public async Task Token([FromBody] BaseLoginViewModel viewModel)
         {
             var identity = await GetIdentity(viewModel.Email, viewModel.Password);
             if (identity == null)

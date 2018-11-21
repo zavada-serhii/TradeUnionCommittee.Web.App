@@ -13,13 +13,13 @@ namespace TradeUnionCommittee.Web.Api.Controllers.Directory
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class SocialActivityController : ControllerBase
+    public class TourController : ControllerBase
     {
-        private readonly ISocialActivityService _services;
+        private readonly ITourService _services;
         private readonly ISystemAuditService _systemAuditService;
         private readonly IMapper _mapper;
 
-        public SocialActivityController(ISocialActivityService services, ISystemAuditService systemAuditService, IMapper mapper)
+        public TourController(ITourService services, ISystemAuditService systemAuditService, IMapper mapper)
         {
             _services = services;
             _systemAuditService = systemAuditService;
@@ -28,7 +28,7 @@ namespace TradeUnionCommittee.Web.Api.Controllers.Directory
 
         [HttpGet]
         [Route("GetAll")]
-        [Authorize(Roles = "Admin,Accountant,Deputy", AuthenticationSchemes = "Bearer")]
+        [Authorize(Roles = "Admin,Accountant", AuthenticationSchemes = "Bearer")]
         public async Task<IActionResult> GetAll()
         {
             return Ok(await _services.GetAllAsync());
@@ -36,7 +36,7 @@ namespace TradeUnionCommittee.Web.Api.Controllers.Directory
 
         [HttpGet]
         [Route("Get/{id}")]
-        [Authorize(Roles = "Admin,Accountant,Deputy", AuthenticationSchemes = "Bearer")]
+        [Authorize(Roles = "Admin,Accountant", AuthenticationSchemes = "Bearer")]
         public async Task<IActionResult> Get([Required] string id)
         {
             var result = await _services.GetAsync(id);
@@ -49,15 +49,15 @@ namespace TradeUnionCommittee.Web.Api.Controllers.Directory
 
         [HttpPost]
         [Route("Create")]
-        [Authorize(Roles = "Admin,Accountant,Deputy", AuthenticationSchemes = "Bearer")]
-        public async Task<IActionResult> Create([FromBody] CreateSocialActivityViewModel vm)
+        [Authorize(Roles = "Admin,Accountant", AuthenticationSchemes = "Bearer")]
+        public async Task<IActionResult> Create([FromBody] CreateTourViewModel vm)
         {
             if (ModelState.IsValid)
             {
-                var result = await _services.CreateAsync(_mapper.Map<DirectoryDTO>(vm));
+                var result = await _services.CreateAsync(_mapper.Map<TourDTO>(vm));
                 if (result.IsValid)
                 {
-                    await _systemAuditService.AuditAsync(User.Identity.Name, Operations.Insert, Tables.SocialActivity);
+                    await _systemAuditService.AuditAsync(User.Identity.Name, Operations.Insert, Tables.Event);
                     return Ok(result);
                 }
                 return BadRequest(result);
@@ -67,15 +67,15 @@ namespace TradeUnionCommittee.Web.Api.Controllers.Directory
 
         [HttpPut]
         [Route("Update")]
-        [Authorize(Roles = "Admin,Accountant,Deputy", AuthenticationSchemes = "Bearer")]
-        public async Task<IActionResult> Update([FromBody] UpdateSocialActivityViewModel vm)
+        [Authorize(Roles = "Admin,Accountant", AuthenticationSchemes = "Bearer")]
+        public async Task<IActionResult> Update([FromBody] UpdateTourViewModel vm)
         {
             if (ModelState.IsValid)
             {
-                var result = await _services.UpdateAsync(_mapper.Map<DirectoryDTO>(vm));
+                var result = await _services.UpdateAsync(_mapper.Map<TourDTO>(vm));
                 if (result.IsValid)
                 {
-                    await _systemAuditService.AuditAsync(User.Identity.Name, Operations.Update, Tables.SocialActivity);
+                    await _systemAuditService.AuditAsync(User.Identity.Name, Operations.Update, Tables.Event);
                     return Ok(result);
                 }
                 return BadRequest(result);
@@ -91,7 +91,7 @@ namespace TradeUnionCommittee.Web.Api.Controllers.Directory
             var result = await _services.DeleteAsync(id);
             if (result.IsValid)
             {
-                await _systemAuditService.AuditAsync(User.Identity.Name, Operations.Delete, Tables.SocialActivity);
+                await _systemAuditService.AuditAsync(User.Identity.Name, Operations.Delete, Tables.Event);
                 return Ok(result);
             }
             return BadRequest(result);
@@ -99,7 +99,7 @@ namespace TradeUnionCommittee.Web.Api.Controllers.Directory
 
         [HttpGet]
         [Route("CheckName/{name}")]
-        [Authorize(Roles = "Admin,Accountant,Deputy", AuthenticationSchemes = "Bearer")]
+        [Authorize(Roles = "Admin,Accountant", AuthenticationSchemes = "Bearer")]
         public async Task<IActionResult> CheckName([Required] string name)
         {
             return Ok(!await _services.CheckNameAsync(name));

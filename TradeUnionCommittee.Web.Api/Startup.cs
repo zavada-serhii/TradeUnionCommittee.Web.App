@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using System;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -12,6 +13,7 @@ using System.Collections.Generic;
 using System.IO.Compression;
 using System.Linq;
 using Microsoft.AspNetCore.ResponseCompression;
+using Swashbuckle.AspNetCore.SwaggerUI;
 using TradeUnionCommittee.BLL.Extensions;
 using TradeUnionCommittee.BLL.Utilities;
 using TradeUnionCommittee.ViewModels.Extensions;
@@ -50,8 +52,12 @@ namespace TradeUnionCommittee.Web.Api
                     };
                 });
 
+            var connectionString = Convert.ToBoolean(Configuration.GetConnectionString("UseSSL"))
+                ? Configuration.GetConnectionString("DefaultConnectionSSL")
+                : Configuration.GetConnectionString("DefaultConnection");
+
             services
-                .AddTradeUnionCommitteeServiceModule(Configuration.GetConnectionString("DefaultConnection"), Configuration.GetSection("HashIdUtilitiesSettings").Get<HashIdUtilitiesSetting>())
+                .AddTradeUnionCommitteeServiceModule(connectionString, Configuration.GetSection("HashIdUtilitiesSettings").Get<HashIdUtilitiesSetting>())
                 .AddTradeUnionCommitteeViewModelsModule()
                 .AddResponseCompression()
                 .AddMvc()
@@ -67,6 +73,11 @@ namespace TradeUnionCommittee.Web.Api
             services.Configure<GzipCompressionProviderOptions>(options =>
             {
                 options.Level = CompressionLevel.Optimal;
+            });
+
+            services.AddResponseCompression(options =>
+            {
+                options.EnableForHttps = true;
             });
 
             DependencyInjectionSystem(services);
@@ -92,7 +103,7 @@ namespace TradeUnionCommittee.Web.Api
             app.UseAuthentication();
             app.UseMvc();
             app.UseSwagger();
-            app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/v1.0/swagger.json", "Trade Union Committee API"); });
+            app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/v1.0/swagger.json", "Trade Union Committee API"); c.DocExpansion(DocExpansion.None); });
         }
 
         private void DependencyInjectionSystem(IServiceCollection services)

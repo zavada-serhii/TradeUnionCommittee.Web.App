@@ -15,7 +15,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TradeUnionCommittee.Mvc.Web
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TradeUnionCommittee.ViewModels", "TradeUnionCommittee.ViewModels\TradeUnionCommittee.ViewModels.csproj", "{05B718B5-5A6F-4967-9B59-3BEDFAC97AB9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TradeUnionCommittee.Web.Api", "TradeUnionCommittee.Web.Api\TradeUnionCommittee.Web.Api.csproj", "{8B34AC3B-35AD-4B79-B732-C589E494CDDB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TradeUnionCommittee.Web.Api", "TradeUnionCommittee.Web.Api\TradeUnionCommittee.Web.Api.csproj", "{8B34AC3B-35AD-4B79-B732-C589E494CDDB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
