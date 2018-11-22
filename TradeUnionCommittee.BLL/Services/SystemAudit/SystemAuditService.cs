@@ -40,11 +40,11 @@ namespace TradeUnionCommittee.BLL.Services.SystemAudit
         {
             var existingPartitionInDb = await _database.SystemAuditRepository.GetExistingPartitionInDbAsync();
             var sequenceDate = startDate.Date.GetListPartitionings(endDate.Date);
-            var resultPartition = sequenceDate.Intersect(existingPartitionInDb);
+            var resultPartition = sequenceDate.Intersect(existingPartitionInDb).ToList();
 
             if (resultPartition.Any())
             {
-                var result = await _database.SystemAuditRepository.FilterAsync(resultPartition.ToList(), email, startDate, endDate);
+                var result = await _database.SystemAuditRepository.FilterAsync(resultPartition, email, startDate, endDate);
                 return new ActualResult<IEnumerable<JournalDTO>> { Result = _mapperService.Mapper.Map<IEnumerable<JournalDTO>>(result) };
             }
             return new ActualResult<IEnumerable<JournalDTO>>();
