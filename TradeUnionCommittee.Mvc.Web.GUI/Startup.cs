@@ -105,6 +105,7 @@ namespace TradeUnionCommittee.Mvc.Web.GUI
             services.AddScoped<IOops, OopsController>();
             services.AddScoped<IDropDownList, DropDownList>();
             services.AddSingleton(cm => AutoMapperConfiguration.ConfigureAutoMapper());
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
         }
     }
 }

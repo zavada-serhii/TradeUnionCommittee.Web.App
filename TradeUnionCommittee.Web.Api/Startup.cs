@@ -12,6 +12,7 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 using System.Collections.Generic;
 using System.IO.Compression;
 using System.Linq;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.ResponseCompression;
 using Swashbuckle.AspNetCore.SwaggerUI;
 using TradeUnionCommittee.BLL.Extensions;
@@ -109,6 +110,7 @@ namespace TradeUnionCommittee.Web.Api
         private void DependencyInjectionSystem(IServiceCollection services)
         {
             services.AddSingleton(cm => AutoMapperConfiguration.ConfigureAutoMapper());
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
         }
     }
 
