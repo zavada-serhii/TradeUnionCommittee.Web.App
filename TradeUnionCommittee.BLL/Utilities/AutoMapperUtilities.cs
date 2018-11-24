@@ -103,16 +103,41 @@ namespace TradeUnionCommittee.BLL.Utilities
                         .ReverseMap()
                         .ForMember(d => d.Id, c => c.MapFrom(x => _hashIdUtilities.DecryptLong(x.HashId, Enums.Services.Cultural)));
 
+                    //----------------------------------------------
+
                     map.CreateMap<Subdivisions, SubdivisionDTO>()
-                        .ForMember(d => d.HashIdMain, c => c.MapFrom(x => _hashIdUtilities.EncryptLong(x.Id, Enums.Services.Subdivision)))
-                        .ReverseMap()
+                        .ForMember(d => d.HashIdMain, c => c.MapFrom(x => _hashIdUtilities.EncryptLong(x.Id,Enums.Services.Subdivision)))
+                        .ForMember(d => d.Name, c => c.MapFrom(x => x.Name))
+                        .ForMember(d => d.Abbreviation, c => c.MapFrom(x => x.Abbreviation))
+                        .ForMember(d => d.RowVersion, c => c.MapFrom(x => x.RowVersion));
+
+                    map.CreateMap<CreateSubdivisionDTO, Subdivisions>()
+                        .ForMember(d => d.Name, c => c.MapFrom(x => x.Name))
+                        .ForMember(d => d.Abbreviation, c => c.MapFrom(x => x.Abbreviation));
+
+                    map.CreateMap<CreateSubordinateSubdivisionDTO, Subdivisions>()
+                        .ForMember(d => d.Name, c => c.MapFrom(x => x.Name))
+                        .ForMember(d => d.Abbreviation, c => c.MapFrom(x => x.Abbreviation))
+                        .ForMember(d => d.IdSubordinate, c => c.MapFrom(x => _hashIdUtilities.DecryptLong(x.HashIdMain, Enums.Services.Subdivision)));
+
+                    map.CreateMap<UpdateSubdivisionNameDTO, Subdivisions>()
                         .ForMember(d => d.Id, c => c.MapFrom(x => _hashIdUtilities.DecryptLong(x.HashIdMain, Enums.Services.Subdivision)))
-                        .ForMember(d => d.IdSubordinate, c => c.MapFrom(x => _hashIdUtilities.DecryptLong(x.HashIdSubordinate, Enums.Services.Subdivision)));
+                        .ForMember(d => d.Name, c => c.MapFrom(x => x.Name))
+                        .ForMember(d => d.RowVersion, c => c.MapFrom(x => x.RowVersion))
+                        .ForMember(d => d.SubdivisionUpdate, c => c.MapFrom(x => Subdivision.UpdateName));
+
+                    map.CreateMap<UpdateSubdivisionAbbreviationDTO, Subdivisions>()
+                        .ForMember(d => d.Id, c => c.MapFrom(x => _hashIdUtilities.DecryptLong(x.HashIdMain, Enums.Services.Subdivision)))
+                        .ForMember(d => d.Abbreviation, c => c.MapFrom(x => x.Abbreviation))
+                        .ForMember(d => d.RowVersion, c => c.MapFrom(x => x.RowVersion))
+                        .ForMember(d => d.SubdivisionUpdate, c => c.MapFrom(x => Subdivision.UpdateAbbreviation));
 
                     map.CreateMap<RestructuringSubdivisionDTO, Subdivisions>()
                         .ForMember(d => d.Id, c => c.MapFrom(x => _hashIdUtilities.DecryptLong(x.HashIdSubordinate, Enums.Services.Subdivision)))
                         .ForMember(d => d.IdSubordinate, c => c.MapFrom(x => _hashIdUtilities.DecryptLong(x.HashIdMain, Enums.Services.Subdivision)))
-                        .ForMember(d => d.SubdivisionUpdate, c => c.MapFrom(x => SubdivisionUpdate.RestructuringUnits));
+                        .ForMember(d => d.SubdivisionUpdate, c => c.MapFrom(x => Subdivision.RestructuringUnits));
+
+                    //----------------------------------------------
 
                     map.CreateMap<AddressPublicHouse, DormitoryDTO>()
                         .ForMember(d => d.HashId, c => c.MapFrom(x => _hashIdUtilities.EncryptLong(x.Id, Enums.Services.Dormitory)))

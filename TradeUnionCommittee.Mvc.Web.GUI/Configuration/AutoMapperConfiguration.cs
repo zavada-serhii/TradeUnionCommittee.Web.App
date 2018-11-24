@@ -63,13 +63,10 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Configuration
                 map.CreateMap<DepartmentalDTO, UpdateDepartmentalViewModel>().ReverseMap();
                 map.CreateMap<DormitoryDTO, UpdateDormitoryViewModel>().ReverseMap();
 
-                map.CreateMap<CreateMainSubdivisionViewModel,SubdivisionDTO>();
-                map.CreateMap<CreateSubordinateSubdivisionViewModel, SubdivisionDTO>()
-                    .ForMember(d => d.HashIdMain, opt => opt.MapFrom(x => nullVarible))
-                    .ForMember(d => d.HashIdSubordinate, opt => opt.MapFrom(x => x.HashIdMain));
-                map.CreateMap<RestructuringViewModel, SubdivisionDTO>();
-                map.CreateMap<SubdivisionDTO, UpdateNameSubdivisionViewModel>().ReverseMap();
-                map.CreateMap<SubdivisionDTO, UpdateAbbreviationSubdivisionViewModel>().ReverseMap();
+                map.CreateMap<CreateMainSubdivisionViewModel, CreateSubdivisionDTO>();
+                map.CreateMap<CreateSubordinateSubdivisionViewModel, CreateSubordinateSubdivisionDTO>();
+                map.CreateMap<UpdateSubdivisionNameDTO, UpdateNameSubdivisionViewModel>().ReverseMap();
+                map.CreateMap<UpdateSubdivisionAbbreviationDTO, UpdateAbbreviationSubdivisionViewModel>().ReverseMap();
                 map.CreateMap<RestructuringViewModel, RestructuringSubdivisionDTO>()
                     .ForMember(d => d.HashIdSubordinate, opt => opt.MapFrom(x => GetHashId(x.HashIdSubordinate)))
                     .ForMember(d => d.RowVersion, opt => opt.MapFrom(x => GetRowVersion(x.HashIdSubordinate)));

@@ -1,9 +1,9 @@
 ﻿namespace TradeUnionCommittee.DAL.Enums
 {
-    public enum SubdivisionUpdate
+    public enum Subdivision
     {
-        Name,
-        Abbreviation,
+        UpdateName,
+        UpdateAbbreviation,
         RestructuringUnits
     }
 }

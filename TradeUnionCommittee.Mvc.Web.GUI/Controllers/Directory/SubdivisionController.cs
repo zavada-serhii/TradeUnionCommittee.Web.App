@@ -39,6 +39,21 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Directory
             var result = await _services.GetAllAsync();
             return View(result);
         }
+
+        //------------------------------------------------------------------------------------------------------------------------------------------
+
+        [HttpGet]
+        [Authorize(Roles = "Admin,Accountant,Deputy")]
+        public async Task<IActionResult> Details(string id)
+        {
+            if (id == null) return NotFound();
+            var result = await _services.GetSubordinateSubdivisions(id);
+            var nameMainSubdivision = await _services.GetAsync(id);
+            ViewData["IdMainSubdivision"] = id;
+            ViewData["NameMainSubdivision"] = nameMainSubdivision.Result.Name;
+            return result.IsValid ? View(result.Result) : _oops.OutPutError("Subdivision", "Index", result.ErrorsList);
+        }
+
         //------------------------------------------------------------------------------------------------------------------------------------------
 
         [HttpGet]
@@ -55,12 +70,40 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Directory
         {
             if (ModelState.IsValid)
             {
-                var result = await _services.CreateMainSubdivisionAsync(_mapper.Map<SubdivisionDTO>(vm));
+                var result = await _services.CreateMainSubdivisionAsync(_mapper.Map<CreateSubdivisionDTO>(vm));
 
                 if (result.IsValid)
                 {
                     await _systemAuditService.AuditAsync(User.Identity.Name, Operations.Insert, Tables.Subdivisions);
                     return RedirectToAction("Index");
+                }
+                return _oops.OutPutError("Subdivision", "Index", result.ErrorsList);
+            }
+            return View(vm);
+        }
+
+        //------------------------------------------------------------------------------------------------------------------------------------------
+
+        [HttpGet]
+        [Authorize(Roles = "Admin,Accountant,Deputy")]
+        public IActionResult CreateSubordinate(string id)
+        {
+            return View(new CreateSubordinateSubdivisionViewModel { HashIdMain = id });
+        }
+
+        [HttpPost, ActionName("CreateSubordinate")]
+        [Authorize(Roles = "Admin,Accountant,Deputy")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CreateSubordinateConfirmed(CreateSubordinateSubdivisionViewModel vm)
+        {
+            if (ModelState.IsValid)
+            {
+                var result = await _services.CreateSubordinateSubdivisionAsync(_mapper.Map<CreateSubordinateSubdivisionDTO>(vm));
+
+                if (result.IsValid)
+                {
+                    await _systemAuditService.AuditAsync(User.Identity.Name, Operations.Insert, Tables.Subdivisions);
+                    return RedirectToAction("Details", new { id = vm.HashIdMain });
                 }
                 return _oops.OutPutError("Subdivision", "Index", result.ErrorsList);
             }
@@ -86,7 +129,7 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Directory
             if (ModelState.IsValid)
             {
                 if (vm.HashIdMain == null) return NotFound();
-                var result = await _services.UpdateNameSubdivisionAsync(_mapper.Map<SubdivisionDTO>(vm));
+                var result = await _services.UpdateNameSubdivisionAsync(_mapper.Map<UpdateSubdivisionNameDTO>(vm));
 
                 if (result.IsValid)
                 {
@@ -117,7 +160,38 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Directory
             if (ModelState.IsValid)
             {
                 if (vm.HashIdMain == null) return NotFound();
-                var result = await _services.UpdateAbbreviationSubdivisionAsync(_mapper.Map<SubdivisionDTO>(vm));
+                var result = await _services.UpdateAbbreviationSubdivisionAsync(_mapper.Map<UpdateSubdivisionAbbreviationDTO>(vm));
+                if (result.IsValid)
+                {
+                    await _systemAuditService.AuditAsync(User.Identity.Name, Operations.Update, Tables.Subdivisions);
+                    return RedirectToAction("Index");
+                }
+                return _oops.OutPutError("Subdivision", "Index", result.ErrorsList);
+            }
+            return View(vm);
+        }
+
+        //------------------------------------------------------------------------------------------------------------------------------------------
+
+        [HttpGet]
+        [Authorize(Roles = "Admin,Accountant,Deputy")]
+        public async Task<IActionResult> Restructuring(string id)
+        {
+            if (id == null) return NotFound();
+            var subordinateSubdivision = await _services.GetSubordinateSubdivisionsForMvc(id);
+            ViewBag.MainSubdivision = await _dropDownList.GetMainSubdivision();
+            ViewBag.SubordinateSubdivision = new SelectList(subordinateSubdivision, "Key", "Value");
+            return View();
+        }
+
+        [HttpPost, ActionName("Restructuring")]
+        [Authorize(Roles = "Admin,Accountant,Deputy")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> RestructuringConfirmed(RestructuringViewModel vm)
+        {
+            if (ModelState.IsValid)
+            {
+                var result = await _services.RestructuringUnits(_mapper.Map<RestructuringSubdivisionDTO>(vm));
                 if (result.IsValid)
                 {
                     await _systemAuditService.AuditAsync(User.Identity.Name, Operations.Update, Tables.Subdivisions);
@@ -153,79 +227,6 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Directory
                 return RedirectToAction("Index");
             }
             return _oops.OutPutError("Subdivision", "Index", result.ErrorsList);
-        }
-
-        //------------------------------------------------------------------------------------------------------------------------------------------
-
-        [HttpGet]
-        [Authorize(Roles = "Admin,Accountant,Deputy")]
-        public async Task<IActionResult> Details(string id)
-        {
-            if (id == null) return NotFound();
-            var result = await _services.GetSubordinateSubdivisions(id);
-            var nameMainSubdivision = await _services.GetAsync(id);
-            ViewData["IdMainSubdivision"] = id;
-            ViewData["NameMainSubdivision"] = nameMainSubdivision.Result.Name;
-            return result.IsValid ? View(result.Result) : _oops.OutPutError("Subdivision", "Index", result.ErrorsList);
-        }
-
-        //------------------------------------------------------------------------------------------------------------------------------------------
-
-        [HttpGet]
-        [Authorize(Roles = "Admin,Accountant,Deputy")]
-        public IActionResult CreateSubordinate(string id)
-        {
-            return View(new CreateSubordinateSubdivisionViewModel { HashIdMain = id });
-        }
-
-        [HttpPost, ActionName("CreateSubordinate")]
-        [Authorize(Roles = "Admin,Accountant,Deputy")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CreateSubordinateConfirmed(CreateSubordinateSubdivisionViewModel vm)
-        {
-            if (ModelState.IsValid)
-            {
-                var result = await _services.CreateSubordinateSubdivisionAsync(_mapper.Map<SubdivisionDTO>(vm));
-
-                if (result.IsValid)
-                {
-                    await _systemAuditService.AuditAsync(User.Identity.Name, Operations.Insert, Tables.Subdivisions);
-                    return RedirectToAction("Details", new {id = vm.HashIdMain});
-                }
-                return _oops.OutPutError("Subdivision", "Index", result.ErrorsList);
-            }
-            return View(vm);
-        }
-
-        //------------------------------------------------------------------------------------------------------------------------------------------
-
-        [HttpGet]
-        [Authorize(Roles = "Admin,Accountant,Deputy")]
-        public async Task<IActionResult> Restructuring(string id)
-        {
-            if (id == null) return NotFound();
-            var subordinateSubdivision = await _services.GetSubordinateSubdivisionsForMvc(id);
-            ViewBag.MainSubdivision = await _dropDownList.GetMainSubdivision();
-            ViewBag.SubordinateSubdivision = new SelectList(subordinateSubdivision, "Key", "Value");
-            return View();
-        }
-
-        [HttpPost, ActionName("Restructuring")]
-        [Authorize(Roles = "Admin,Accountant,Deputy")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> RestructuringConfirmed(RestructuringViewModel vm)
-        {
-            if (ModelState.IsValid)
-            {
-                var result = await _services.RestructuringUnits(_mapper.Map<RestructuringSubdivisionDTO>(vm));
-                if(result.IsValid)
-                {
-                    await _systemAuditService.AuditAsync(User.Identity.Name, Operations.Update, Tables.Subdivisions);
-                    return RedirectToAction("Index");
-                }
-                return _oops.OutPutError("Subdivision", "Index", result.ErrorsList);
-            }
-            return View(vm);
         }
 
         //------------------------------------------------------------------------------------------------------------------------------------------

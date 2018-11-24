@@ -1,10 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.DTO;
 using TradeUnionCommittee.BLL.Enums;
 using TradeUnionCommittee.BLL.Interfaces.Directory;
@@ -76,7 +76,7 @@ namespace TradeUnionCommittee.Web.Api.Controllers.Directory
         {
             if (ModelState.IsValid)
             {
-                var result = await _services.CreateMainSubdivisionAsync(_mapper.Map<SubdivisionDTO>(vm));
+                var result = await _services.CreateMainSubdivisionAsync(_mapper.Map<CreateSubdivisionDTO>(vm));
                 if (result.IsValid)
                 {
                     await _systemAuditService.AuditAsync(User.Identity.Name, Operations.Insert, Tables.Subdivisions);
@@ -94,7 +94,7 @@ namespace TradeUnionCommittee.Web.Api.Controllers.Directory
         {
             if (ModelState.IsValid)
             {
-                var result = await _services.CreateSubordinateSubdivisionAsync(_mapper.Map<SubdivisionDTO>(vm));
+                var result = await _services.CreateSubordinateSubdivisionAsync(_mapper.Map<CreateSubordinateSubdivisionDTO>(vm));
                 if (result.IsValid)
                 {
                     await _systemAuditService.AuditAsync(User.Identity.Name, Operations.Insert, Tables.Subdivisions);
@@ -114,7 +114,7 @@ namespace TradeUnionCommittee.Web.Api.Controllers.Directory
         {
             if (ModelState.IsValid)
             {
-                var result = await _services.UpdateNameSubdivisionAsync(_mapper.Map<SubdivisionDTO>(vm));
+                var result = await _services.UpdateNameSubdivisionAsync(_mapper.Map<UpdateSubdivisionNameDTO>(vm));
                 if (result.IsValid)
                 {
                     await _systemAuditService.AuditAsync(User.Identity.Name, Operations.Update, Tables.Subdivisions);
@@ -132,7 +132,7 @@ namespace TradeUnionCommittee.Web.Api.Controllers.Directory
         {
             if (ModelState.IsValid)
             {
-                var result = await _services.UpdateAbbreviationSubdivisionAsync(_mapper.Map<SubdivisionDTO>(vm));
+                var result = await _services.UpdateAbbreviationSubdivisionAsync(_mapper.Map<UpdateSubdivisionAbbreviationDTO>(vm));
                 if (result.IsValid)
                 {
                     await _systemAuditService.AuditAsync(User.Identity.Name, Operations.Update, Tables.Subdivisions);

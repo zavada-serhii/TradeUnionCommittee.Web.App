@@ -7,7 +7,6 @@ using TradeUnionCommittee.BLL.Utilities;
 using TradeUnionCommittee.Common.ActualResults;
 using TradeUnionCommittee.Common.Enums;
 using TradeUnionCommittee.DAL.Entities;
-using TradeUnionCommittee.DAL.Enums;
 using TradeUnionCommittee.DAL.Interfaces;
 
 namespace TradeUnionCommittee.BLL.Services.Directory
@@ -48,7 +47,7 @@ namespace TradeUnionCommittee.BLL.Services.Directory
 
         //-------------------------------------------------------------------------------------------------------------------
 
-        public async Task<ActualResult> CreateMainSubdivisionAsync(SubdivisionDTO dto)
+        public async Task<ActualResult> CreateMainSubdivisionAsync(CreateSubdivisionDTO dto)
         {
             if (!await CheckNameAsync(dto.Name) && !await CheckAbbreviationAsync(dto.Abbreviation))
             {
@@ -58,7 +57,7 @@ namespace TradeUnionCommittee.BLL.Services.Directory
             return new ActualResult(Errors.DuplicateData);
         }
 
-        public async Task<ActualResult> CreateSubordinateSubdivisionAsync(SubdivisionDTO dto)
+        public async Task<ActualResult> CreateSubordinateSubdivisionAsync(CreateSubordinateSubdivisionDTO dto)
         {
             if (!await CheckNameAsync(dto.Name) && !await CheckAbbreviationAsync(dto.Abbreviation))
             {
@@ -70,25 +69,21 @@ namespace TradeUnionCommittee.BLL.Services.Directory
 
         //-------------------------------------------------------------------------------------------------------------------
 
-        public async Task<ActualResult> UpdateNameSubdivisionAsync(SubdivisionDTO dto)
+        public async Task<ActualResult> UpdateNameSubdivisionAsync(UpdateSubdivisionNameDTO dto)
         {
             if (!await CheckNameAsync(dto.Name))
             {
-                var model  = _mapperService.Mapper.Map<Subdivisions>(dto);
-                model.SubdivisionUpdate = SubdivisionUpdate.Name;
-                await _database.SubdivisionsRepository.Update(model);
+                await _database.SubdivisionsRepository.Update(_mapperService.Mapper.Map<Subdivisions>(dto));
                 return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
             }
             return new ActualResult(Errors.DuplicateData);
         }
 
-        public async Task<ActualResult> UpdateAbbreviationSubdivisionAsync(SubdivisionDTO dto)
+        public async Task<ActualResult> UpdateAbbreviationSubdivisionAsync(UpdateSubdivisionAbbreviationDTO dto)
         {
             if (!await CheckNameAsync(dto.Abbreviation))
             {
-                var model = _mapperService.Mapper.Map<Subdivisions>(dto);
-                model.SubdivisionUpdate = SubdivisionUpdate.Abbreviation;
-                await _database.SubdivisionsRepository.Update(model);
+                await _database.SubdivisionsRepository.Update(_mapperService.Mapper.Map<Subdivisions>(dto));
                 return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
             }
             return new ActualResult(Errors.DuplicateData);

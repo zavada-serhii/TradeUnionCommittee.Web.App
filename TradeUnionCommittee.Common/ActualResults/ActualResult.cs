@@ -12,7 +12,6 @@ namespace TradeUnionCommittee.Common.ActualResults
         public ActualResult()
         {
             IsValid = true;
-            ErrorsList = new List<string>();
         }
 
         public ActualResult(string error)

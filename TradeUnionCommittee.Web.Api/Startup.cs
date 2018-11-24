@@ -131,8 +131,7 @@ namespace TradeUnionCommittee.Web.Api
                     In = "header",
                     Description = "Access token",
                     Required = true,
-                    Type = "string",
-                    
+                    Type = "string"
                 });
             }
         }
