@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Threading.Tasks;
@@ -20,14 +21,16 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Directory
         private readonly IOops _oops;
         private readonly IMapper _mapper;
         private readonly ISystemAuditService _systemAuditService;
+        private readonly IHttpContextAccessor _accessor;
 
-        public SubdivisionController(ISubdivisionsService services, IDropDownList dropDownList, IOops oops, IMapper mapper, ISystemAuditService systemAuditService)
+        public SubdivisionController(ISubdivisionsService services, IDropDownList dropDownList, IOops oops, IMapper mapper, ISystemAuditService systemAuditService, IHttpContextAccessor accessor)
         {
             _services = services;
             _dropDownList = dropDownList;
             _oops = oops;
             _mapper = mapper;
             _systemAuditService = systemAuditService;
+            _accessor = accessor;
         }
 
         //------------------------------------------------------------------------------------------------------------------------------------------
@@ -74,7 +77,7 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Directory
 
                 if (result.IsValid)
                 {
-                    await _systemAuditService.AuditAsync(User.Identity.Name, Operations.Insert, Tables.Subdivisions);
+                    await _systemAuditService.AuditAsync(User.Identity.Name, _accessor.HttpContext.Connection.RemoteIpAddress.ToString(), Operations.Insert, Tables.Subdivisions);
                     return RedirectToAction("Index");
                 }
                 return _oops.OutPutError("Subdivision", "Index", result.ErrorsList);
@@ -102,7 +105,7 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Directory
 
                 if (result.IsValid)
                 {
-                    await _systemAuditService.AuditAsync(User.Identity.Name, Operations.Insert, Tables.Subdivisions);
+                    await _systemAuditService.AuditAsync(User.Identity.Name, _accessor.HttpContext.Connection.RemoteIpAddress.ToString(), Operations.Insert, Tables.Subdivisions);
                     return RedirectToAction("Details", new { id = vm.HashIdMain });
                 }
                 return _oops.OutPutError("Subdivision", "Index", result.ErrorsList);
@@ -133,7 +136,7 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Directory
 
                 if (result.IsValid)
                 {
-                    await _systemAuditService.AuditAsync(User.Identity.Name, Operations.Update, Tables.Subdivisions);
+                    await _systemAuditService.AuditAsync(User.Identity.Name, _accessor.HttpContext.Connection.RemoteIpAddress.ToString(), Operations.Update, Tables.Subdivisions);
                     return RedirectToAction("Index");
                 }
                 return _oops.OutPutError("Subdivision", "Index", result.ErrorsList);
@@ -163,7 +166,7 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Directory
                 var result = await _services.UpdateAbbreviationSubdivisionAsync(_mapper.Map<UpdateSubdivisionAbbreviationDTO>(vm));
                 if (result.IsValid)
                 {
-                    await _systemAuditService.AuditAsync(User.Identity.Name, Operations.Update, Tables.Subdivisions);
+                    await _systemAuditService.AuditAsync(User.Identity.Name, _accessor.HttpContext.Connection.RemoteIpAddress.ToString(), Operations.Update, Tables.Subdivisions);
                     return RedirectToAction("Index");
                 }
                 return _oops.OutPutError("Subdivision", "Index", result.ErrorsList);
@@ -194,7 +197,7 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Directory
                 var result = await _services.RestructuringUnits(_mapper.Map<RestructuringSubdivisionDTO>(vm));
                 if (result.IsValid)
                 {
-                    await _systemAuditService.AuditAsync(User.Identity.Name, Operations.Update, Tables.Subdivisions);
+                    await _systemAuditService.AuditAsync(User.Identity.Name, _accessor.HttpContext.Connection.RemoteIpAddress.ToString(), Operations.Update, Tables.Subdivisions);
                     return RedirectToAction("Index");
                 }
                 return _oops.OutPutError("Subdivision", "Index", result.ErrorsList);
@@ -223,7 +226,7 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Directory
 
             if (result.IsValid)
             {
-                await _systemAuditService.AuditAsync(User.Identity.Name, Operations.Delete, Tables.Subdivisions);
+                await _systemAuditService.AuditAsync(User.Identity.Name, _accessor.HttpContext.Connection.RemoteIpAddress.ToString(), Operations.Delete, Tables.Subdivisions);
                 return RedirectToAction("Index");
             }
             return _oops.OutPutError("Subdivision", "Index", result.ErrorsList);

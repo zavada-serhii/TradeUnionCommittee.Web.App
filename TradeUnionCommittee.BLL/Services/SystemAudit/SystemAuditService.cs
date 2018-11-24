@@ -23,29 +23,16 @@ namespace TradeUnionCommittee.BLL.Services.SystemAudit
             _mapperService = mapperService;
         }
 
-        public async Task AuditAsync(string email, Enums.Operations operation, Enums.Tables table)
+        public async Task AuditAsync(string email, string ipUser, Enums.Operations operation, Enums.Tables table)
         {
-            await _database.SystemAuditRepository.AuditAsync(new Journal {EmailUser = email, Operation = (Operations)operation, Table = (Tables)table });
+            await _database.SystemAuditRepository.AuditAsync(new Journal { EmailUser = email, IpUser = ipUser, Operation = (Operations)operation, Table = (Tables)table });
         }
 
-        public async Task AuditAsync(string email, Enums.Operations operation, Enums.Tables[] tables)
+        public async Task AuditAsync(string email, string ipUser, Enums.Operations operation, Enums.Tables[] tables)
         {
             foreach (var table in tables)
             {
-                await AuditAsync(email, operation, table);
-            }
-        }
-
-        public async Task AuditWithIpAsync(string email, string ipUser, Enums.Operations operation, Enums.Tables table)
-        {
-            await _database.SystemAuditRepository.AuditWithIpAsync(new Journal { EmailUser = email, IpUser = ipUser, Operation = (Operations)operation, Table = (Tables)table });
-        }
-
-        public async Task AuditWithIpAsync(string email, string ipUser, Enums.Operations operation, Enums.Tables[] tables)
-        {
-            foreach (var table in tables)
-            {
-                await AuditWithIpAsync(email, ipUser, operation, table);
+                await AuditAsync(email, ipUser, operation, table);
             }
         }
 

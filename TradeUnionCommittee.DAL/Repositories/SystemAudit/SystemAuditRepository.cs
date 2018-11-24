@@ -23,22 +23,6 @@ namespace TradeUnionCommittee.DAL.Repositories.SystemAudit
 
         public async Task AuditAsync(Journal journal)
         {
-            const string sqlQuery = "INSERT INTO audit.\"Journal\" (\"Guid\",\"Operation\",\"DateTime\",\"EmailUser\",\"Table\") VALUES (@1, CAST(@2 AS audit.\"Operations\"), @3, @4, CAST(@5 AS audit.\"Tables\"));";
-
-            var guid = new NpgsqlParameter("@1", Guid.NewGuid().ToString());
-            var operation = new NpgsqlParameter("@2", journal.Operation.ToString());
-            var dateTime = new NpgsqlParameter("@3", DateTime.Now.AddMonths(2));
-            var email = new NpgsqlParameter("@4", journal.EmailUser);
-            var table = new NpgsqlParameter("@5", journal.Table.ToString());
-
-            using (var dr = await _dbContext.Database.ExecuteSqlQueryAsync(sqlQuery, default(CancellationToken), guid, operation, dateTime, email, table))
-            {
-                dr.DbDataReader.Close();
-            }
-        }
-
-        public async Task AuditWithIpAsync(Journal journal)
-        {
             const string sqlQuery = "INSERT INTO audit.\"Journal\" (\"Guid\",\"Operation\",\"DateTime\",\"EmailUser\",\"Table\",\"IpUser\") VALUES (@1, CAST(@2 AS audit.\"Operations\"), @3, @4, CAST(@5 AS audit.\"Tables\"), CAST(@6 AS CIDR));";
 
             var guid = new NpgsqlParameter("@1", Guid.NewGuid().ToString());

@@ -1,8 +1,9 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
+using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.DTO;
 using TradeUnionCommittee.BLL.Enums;
 using TradeUnionCommittee.BLL.Interfaces.Directory;
@@ -18,12 +19,14 @@ namespace TradeUnionCommittee.Web.Api.Controllers.Directory
         private readonly ITravelService _services;
         private readonly ISystemAuditService _systemAuditService;
         private readonly IMapper _mapper;
+        private readonly IHttpContextAccessor _accessor;
 
-        public TravelController(ITravelService services, ISystemAuditService systemAuditService, IMapper mapper)
+        public TravelController(ITravelService services, ISystemAuditService systemAuditService, IMapper mapper, IHttpContextAccessor accessor)
         {
             _services = services;
             _systemAuditService = systemAuditService;
             _mapper = mapper;
+            _accessor = accessor;
         }
 
         [HttpGet]
@@ -57,7 +60,7 @@ namespace TradeUnionCommittee.Web.Api.Controllers.Directory
                 var result = await _services.CreateAsync(_mapper.Map<TravelDTO>(vm));
                 if (result.IsValid)
                 {
-                    await _systemAuditService.AuditAsync(User.Identity.Name, Operations.Insert, Tables.Event);
+                    await _systemAuditService.AuditAsync(User.Identity.Name, _accessor.HttpContext.Connection.RemoteIpAddress.ToString(), Operations.Insert, Tables.Event);
                     return Ok(result);
                 }
                 return BadRequest(result);
@@ -75,7 +78,7 @@ namespace TradeUnionCommittee.Web.Api.Controllers.Directory
                 var result = await _services.UpdateAsync(_mapper.Map<TravelDTO>(vm));
                 if (result.IsValid)
                 {
-                    await _systemAuditService.AuditAsync(User.Identity.Name, Operations.Update, Tables.Event);
+                    await _systemAuditService.AuditAsync(User.Identity.Name, _accessor.HttpContext.Connection.RemoteIpAddress.ToString(), Operations.Update, Tables.Event);
                     return Ok(result);
                 }
                 return BadRequest(result);
@@ -91,7 +94,7 @@ namespace TradeUnionCommittee.Web.Api.Controllers.Directory
             var result = await _services.DeleteAsync(id);
             if (result.IsValid)
             {
-                await _systemAuditService.AuditAsync(User.Identity.Name, Operations.Delete, Tables.Event);
+                await _systemAuditService.AuditAsync(User.Identity.Name, _accessor.HttpContext.Connection.RemoteIpAddress.ToString(), Operations.Delete, Tables.Event);
                 return Ok(result);
             }
             return BadRequest(result);

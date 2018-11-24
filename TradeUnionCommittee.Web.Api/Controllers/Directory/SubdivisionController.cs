@@ -21,7 +21,7 @@ namespace TradeUnionCommittee.Web.Api.Controllers.Directory
         private readonly ISubdivisionsService _services;
         private readonly IMapper _mapper;
         private readonly ISystemAuditService _systemAuditService;
-        private readonly IHttpContextAccessor _accessor; //var ip = _accessor.HttpContext.Connection.RemoteIpAddress.ToString();
+        private readonly IHttpContextAccessor _accessor;
 
         public SubdivisionController(ISubdivisionsService services, IMapper mapper, ISystemAuditService systemAuditService, IHttpContextAccessor accessor)
         {
@@ -79,7 +79,7 @@ namespace TradeUnionCommittee.Web.Api.Controllers.Directory
                 var result = await _services.CreateMainSubdivisionAsync(_mapper.Map<CreateSubdivisionDTO>(vm));
                 if (result.IsValid)
                 {
-                    await _systemAuditService.AuditAsync(User.Identity.Name, Operations.Insert, Tables.Subdivisions);
+                    await _systemAuditService.AuditAsync(User.Identity.Name, _accessor.HttpContext.Connection.RemoteIpAddress.ToString(), Operations.Insert, Tables.Subdivisions);
                     return Ok(result);
                 }
                 return BadRequest(result);
@@ -97,7 +97,7 @@ namespace TradeUnionCommittee.Web.Api.Controllers.Directory
                 var result = await _services.CreateSubordinateSubdivisionAsync(_mapper.Map<CreateSubordinateSubdivisionDTO>(vm));
                 if (result.IsValid)
                 {
-                    await _systemAuditService.AuditAsync(User.Identity.Name, Operations.Insert, Tables.Subdivisions);
+                    await _systemAuditService.AuditAsync(User.Identity.Name, _accessor.HttpContext.Connection.RemoteIpAddress.ToString(), Operations.Insert, Tables.Subdivisions);
                     return Ok(result);
                 }
                 return BadRequest(result);
@@ -117,7 +117,7 @@ namespace TradeUnionCommittee.Web.Api.Controllers.Directory
                 var result = await _services.UpdateNameSubdivisionAsync(_mapper.Map<UpdateSubdivisionNameDTO>(vm));
                 if (result.IsValid)
                 {
-                    await _systemAuditService.AuditAsync(User.Identity.Name, Operations.Update, Tables.Subdivisions);
+                    await _systemAuditService.AuditAsync(User.Identity.Name, _accessor.HttpContext.Connection.RemoteIpAddress.ToString(), Operations.Update, Tables.Subdivisions);
                     return Ok(result);
                 }
                 return BadRequest(result);
@@ -135,7 +135,7 @@ namespace TradeUnionCommittee.Web.Api.Controllers.Directory
                 var result = await _services.UpdateAbbreviationSubdivisionAsync(_mapper.Map<UpdateSubdivisionAbbreviationDTO>(vm));
                 if (result.IsValid)
                 {
-                    await _systemAuditService.AuditAsync(User.Identity.Name, Operations.Update, Tables.Subdivisions);
+                    await _systemAuditService.AuditAsync(User.Identity.Name, _accessor.HttpContext.Connection.RemoteIpAddress.ToString(), Operations.Update, Tables.Subdivisions);
                     return Ok(result);
                 }
                 return BadRequest(result);
@@ -153,7 +153,7 @@ namespace TradeUnionCommittee.Web.Api.Controllers.Directory
                 var result = await _services.RestructuringUnits(_mapper.Map<RestructuringSubdivisionDTO>(vm));
                 if (result.IsValid)
                 {
-                    await _systemAuditService.AuditAsync(User.Identity.Name, Operations.Update, Tables.Subdivisions);
+                    await _systemAuditService.AuditAsync(User.Identity.Name, _accessor.HttpContext.Connection.RemoteIpAddress.ToString(), Operations.Update, Tables.Subdivisions);
                     return Ok(result);
                 }
                 return BadRequest(result);
@@ -171,7 +171,7 @@ namespace TradeUnionCommittee.Web.Api.Controllers.Directory
             var result = await _services.DeleteAsync(id);
             if (result.IsValid)
             {
-                await _systemAuditService.AuditAsync(User.Identity.Name, Operations.Delete, Tables.Subdivisions);
+                await _systemAuditService.AuditAsync(User.Identity.Name, _accessor.HttpContext.Connection.RemoteIpAddress.ToString(), Operations.Delete, Tables.Subdivisions);
                 return Ok(result);
             }
             return BadRequest(result);
