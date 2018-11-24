@@ -69,6 +69,7 @@ namespace TradeUnionCommittee.Web.Api.Configuration
                 map.CreateMap<RestructuringViewModel, SubdivisionDTO>();
                 map.CreateMap<SubdivisionDTO, UpdateNameSubdivisionViewModel>().ReverseMap();
                 map.CreateMap<SubdivisionDTO, UpdateAbbreviationSubdivisionViewModel>().ReverseMap();
+                map.CreateMap<RestructuringViewModel, RestructuringSubdivisionDTO>().ForMember(d => d.RowVersion, opt => opt.MapFrom(x => x.RowVersionSubordinateSubdivision));
 
                 // -- End Mapping for Directory 
 

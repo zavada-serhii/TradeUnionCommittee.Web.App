@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System;
+using AutoMapper;
 using TradeUnionCommittee.BLL.DTO;
 using TradeUnionCommittee.BLL.Enums;
 using TradeUnionCommittee.ViewModels.ViewModels;
@@ -69,10 +70,24 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Configuration
                 map.CreateMap<RestructuringViewModel, SubdivisionDTO>();
                 map.CreateMap<SubdivisionDTO, UpdateNameSubdivisionViewModel>().ReverseMap();
                 map.CreateMap<SubdivisionDTO, UpdateAbbreviationSubdivisionViewModel>().ReverseMap();
+                map.CreateMap<RestructuringViewModel, RestructuringSubdivisionDTO>()
+                    .ForMember(d => d.HashIdSubordinate, opt => opt.MapFrom(x => GetHashId(x.HashIdSubordinate)))
+                    .ForMember(d => d.RowVersion, opt => opt.MapFrom(x => GetRowVersion(x.HashIdSubordinate)));
 
                 // -- End Mapping for Directory 
 
             }).CreateMapper();
+        }
+
+        private static string GetHashId(string hash)
+        {
+            return hash.Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries)[0];
+        }
+
+        private static uint GetRowVersion(string hash)
+        {
+            uint.TryParse(hash.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)[1], out uint result);
+            return result;
         }
 
         private static AccommodationType ConverterAccommodation(string accommodationType)

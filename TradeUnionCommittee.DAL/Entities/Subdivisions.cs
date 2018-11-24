@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using TradeUnionCommittee.DAL.Enums;
 
 namespace TradeUnionCommittee.DAL.Entities
 {
@@ -20,6 +21,8 @@ namespace TradeUnionCommittee.DAL.Entities
         [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         [Column("xmin", TypeName = "xid")]
         public uint RowVersion { get; set; }
+        [NotMapped]
+        public SubdivisionUpdate SubdivisionUpdate { get; set; }
 
         public Subdivisions IdSubordinateNavigation { get; set; }
         public ICollection<Subdivisions> InverseIdSubordinateNavigation { get; set; }

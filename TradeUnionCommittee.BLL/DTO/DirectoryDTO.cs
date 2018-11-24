@@ -13,18 +13,9 @@
         public override uint RowVersion { get; set; }
     }
 
-    public class SubdivisionDTO : BaseDTO
-    {
-        public string HashIdMain { get; set; }
-        public string HashIdSubordinate { get; set; }
-        public override string Name { get; set; }
-        public string Abbreviation { get; set; }
-        public override uint RowVersion { get; set; }
-    }
-
     public class RolesDTO : DirectoryDTO
     {
-
+        
     }
 
     public class TourDTO : DirectoryDTO

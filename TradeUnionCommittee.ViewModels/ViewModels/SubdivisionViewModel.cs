@@ -1,5 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
+using TradeUnionCommittee.ViewModels.Attributes;
 
 namespace TradeUnionCommittee.ViewModels.ViewModels
 {
@@ -47,11 +48,14 @@ namespace TradeUnionCommittee.ViewModels.ViewModels
         public uint RowVersion { get; set; }
     }
 
+    [RestructuringCompare]
     public class RestructuringViewModel
     {
         [Required]
         public string HashIdMain { get; set; }
         [Required]
         public string HashIdSubordinate { get; set; }
+        [Required]
+        public uint RowVersionSubordinateSubdivision { get; set; }
     }
 }

@@ -7,6 +7,7 @@ using TradeUnionCommittee.BLL.Utilities;
 using TradeUnionCommittee.Common.ActualResults;
 using TradeUnionCommittee.Common.Enums;
 using TradeUnionCommittee.DAL.Entities;
+using TradeUnionCommittee.DAL.Enums;
 using TradeUnionCommittee.DAL.Interfaces;
 
 namespace TradeUnionCommittee.BLL.Services.Directory
@@ -27,6 +28,11 @@ namespace TradeUnionCommittee.BLL.Services.Directory
         public async Task<ActualResult<IEnumerable<SubdivisionDTO>>> GetAllAsync() => 
             _mapperService.Mapper.Map<ActualResult<IEnumerable<SubdivisionDTO>>>(await _database.SubdivisionsRepository.Find(x => x.IdSubordinate == null));
 
+        public async Task<ActualResult<SubdivisionDTO>> GetAsync(string hashId)
+        {
+            var id = _hashIdUtilities.DecryptLong(hashId, Enums.Services.Subdivision);
+            return _mapperService.Mapper.Map<ActualResult<SubdivisionDTO>>(await _database.SubdivisionsRepository.Get(id));
+        }
 
         public async Task<ActualResult<IEnumerable<SubdivisionDTO>>> GetSubordinateSubdivisions(string hashId)
         {
@@ -34,15 +40,17 @@ namespace TradeUnionCommittee.BLL.Services.Directory
             return _mapperService.Mapper.Map<ActualResult<IEnumerable<SubdivisionDTO>>>(await _database.SubdivisionsRepository.Find(x => x.IdSubordinate == id));
         }
 
-        public async Task<ActualResult<SubdivisionDTO>> GetAsync(string hashId)
+        public async Task<Dictionary<string,string>> GetSubordinateSubdivisionsForMvc(string hashId)
         {
-            var id = _hashIdUtilities.DecryptLong(hashId, Enums.Services.Subdivision);
-            return _mapperService.Mapper.Map<ActualResult<SubdivisionDTO>>(await _database.SubdivisionsRepository.Get(id));
+            var subordinateSubdivisions = await GetSubordinateSubdivisions(hashId);
+            return subordinateSubdivisions.Result.ToDictionary(subdivision => $"{subdivision.HashIdMain},{subdivision.RowVersion}", subdivision => subdivision.Name);
         }
+
+        //-------------------------------------------------------------------------------------------------------------------
 
         public async Task<ActualResult> CreateMainSubdivisionAsync(SubdivisionDTO dto)
         {
-            if (!await CheckNameAsync(dto.Name) && !await CheckAbbreviationAsync(dto.Name))
+            if (!await CheckNameAsync(dto.Name) && !await CheckAbbreviationAsync(dto.Abbreviation))
             {
                 await _database.SubdivisionsRepository.Create(_mapperService.Mapper.Map<Subdivisions>(dto));
                 return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
@@ -52,7 +60,7 @@ namespace TradeUnionCommittee.BLL.Services.Directory
 
         public async Task<ActualResult> CreateSubordinateSubdivisionAsync(SubdivisionDTO dto)
         {
-            if (!await CheckNameAsync(dto.Name) && !await CheckAbbreviationAsync(dto.Name))
+            if (!await CheckNameAsync(dto.Name) && !await CheckAbbreviationAsync(dto.Abbreviation))
             {
                 await _database.SubdivisionsRepository.Create(_mapperService.Mapper.Map<Subdivisions>(dto));
                 return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
@@ -60,66 +68,44 @@ namespace TradeUnionCommittee.BLL.Services.Directory
             return new ActualResult(Errors.DuplicateData);
         }
 
+        //-------------------------------------------------------------------------------------------------------------------
+
         public async Task<ActualResult> UpdateNameSubdivisionAsync(SubdivisionDTO dto)
         {
-            var id = _hashIdUtilities.DecryptLong(dto.HashIdMain, Enums.Services.Subdivision);
             if (!await CheckNameAsync(dto.Name))
             {
-                var subdivision = await _database.SubdivisionsRepository.Find(x => x.Id == id);
-                var result = subdivision.Result.FirstOrDefault();
-                if (result != null)
-                {
-                    result.Name = dto.Name;
-                    await _database.SubdivisionsRepository.Update(result);
-                    return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
-                }
-                return new ActualResult(Errors.TupleDeleted);
+                var model  = _mapperService.Mapper.Map<Subdivisions>(dto);
+                model.SubdivisionUpdate = SubdivisionUpdate.Name;
+                await _database.SubdivisionsRepository.Update(model);
+                return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
             }
             return new ActualResult(Errors.DuplicateData);
         }
 
         public async Task<ActualResult> UpdateAbbreviationSubdivisionAsync(SubdivisionDTO dto)
         {
-            var id = _hashIdUtilities.DecryptLong(dto.HashIdMain, Enums.Services.Subdivision);
-            if (!await CheckNameAsync(dto.Name))
+            if (!await CheckNameAsync(dto.Abbreviation))
             {
-                var subdivision = await _database.SubdivisionsRepository.Find(x => x.Id == id);
-                var result = subdivision.Result.FirstOrDefault();
-                if (result != null)
-                {
-                    result.Abbreviation = dto.Abbreviation;
-                    await _database.SubdivisionsRepository.Update(result);
-                    return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
-                }
-                return new ActualResult(Errors.TupleDeleted);
+                var model = _mapperService.Mapper.Map<Subdivisions>(dto);
+                model.SubdivisionUpdate = SubdivisionUpdate.Abbreviation;
+                await _database.SubdivisionsRepository.Update(model);
+                return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
             }
             return new ActualResult(Errors.DuplicateData);
         }
+
+        public async Task<ActualResult> RestructuringUnits(RestructuringSubdivisionDTO dto)
+        {
+            await _database.SubdivisionsRepository.Update(_mapperService.Mapper.Map<Subdivisions>(dto));
+            return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
+        }
+
+        //-------------------------------------------------------------------------------------------------------------------
 
         public async Task<ActualResult> DeleteAsync(string hashId)
         {
             await _database.SubdivisionsRepository.Delete(_hashIdUtilities.DecryptLong(hashId, Enums.Services.Subdivision));
             return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
-        }
-
-        public async Task<ActualResult> RestructuringUnits(SubdivisionDTO dto)
-        {
-            var idMainSubdivisions = _hashIdUtilities.DecryptLong(dto.HashIdMain, Enums.Services.Subdivision);
-            var idSubordinateSubdivisions = _hashIdUtilities.DecryptLong(dto.HashIdSubordinate, Enums.Services.Subdivision);
-            var subdivision = await _database.SubdivisionsRepository.Find(x => x.Id == idSubordinateSubdivisions);
-            var result = subdivision.Result.FirstOrDefault();
-            if (result != null)
-            {
-                result.IdSubordinate = idMainSubdivisions;
-                await _database.SubdivisionsRepository.Update(result);
-                return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
-            }
-            return new ActualResult(Errors.TupleDeleted);
-        }
-
-        public void Dispose()
-        {
-            _database.Dispose();
         }
 
         //-------------------------------------------------------------------------------------------------------------------
@@ -134,6 +120,13 @@ namespace TradeUnionCommittee.BLL.Services.Directory
         {
             var result = await _database.SubdivisionsRepository.Find(p => p.Abbreviation == name);
             return result.Result.Any();
+        }
+
+        //-------------------------------------------------------------------------------------------------------------------
+
+        public void Dispose()
+        {
+            _database.Dispose();
         }
     }
 }

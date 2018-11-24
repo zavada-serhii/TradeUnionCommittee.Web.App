@@ -204,9 +204,9 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Directory
         public async Task<IActionResult> Restructuring(string id)
         {
             if (id == null) return NotFound();
-            var subordinateSubdivision = await _services.GetSubordinateSubdivisions(id);
+            var subordinateSubdivision = await _services.GetSubordinateSubdivisionsForMvc(id);
             ViewBag.MainSubdivision = await _dropDownList.GetMainSubdivision();
-            ViewBag.SubordinateSubdivision = new SelectList(subordinateSubdivision.Result, "HashIdMain", "Name");
+            ViewBag.SubordinateSubdivision = new SelectList(subordinateSubdivision, "Key", "Value");
             return View();
         }
 
@@ -217,7 +217,7 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Directory
         {
             if (ModelState.IsValid)
             {
-                var result = await _services.RestructuringUnits(_mapper.Map<SubdivisionDTO>(vm));
+                var result = await _services.RestructuringUnits(_mapper.Map<RestructuringSubdivisionDTO>(vm));
                 if(result.IsValid)
                 {
                     await _systemAuditService.AuditAsync(User.Identity.Name, Operations.Update, Tables.Subdivisions);

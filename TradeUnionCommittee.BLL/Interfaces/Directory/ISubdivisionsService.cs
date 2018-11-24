@@ -13,8 +13,9 @@ namespace TradeUnionCommittee.BLL.Interfaces.Directory
         Task<ActualResult> UpdateNameSubdivisionAsync(SubdivisionDTO dto);
         Task<ActualResult> UpdateAbbreviationSubdivisionAsync(SubdivisionDTO dto);
         Task<ActualResult<IEnumerable<SubdivisionDTO>>> GetSubordinateSubdivisions(string hashId);
+        Task<Dictionary<string, string>> GetSubordinateSubdivisionsForMvc(string hashId);
         Task<ActualResult> CreateSubordinateSubdivisionAsync(SubdivisionDTO dto);
-        Task<ActualResult> RestructuringUnits(SubdivisionDTO dto);
+        Task<ActualResult> RestructuringUnits(RestructuringSubdivisionDTO dto);
         Task<ActualResult> DeleteAsync(string hashId);
         Task<bool> CheckNameAsync(string name);
         Task<bool> CheckAbbreviationAsync(string name);
