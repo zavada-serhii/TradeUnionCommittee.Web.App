@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.DTO;
@@ -17,13 +18,15 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Directory
         private readonly IOops _oops;
         private readonly IMapper _mapper;
         private readonly ISystemAuditService _systemAuditService;
+        private readonly IHttpContextAccessor _accessor;
 
-        public PositionController(IPositionService services, IOops oops, IMapper mapper, ISystemAuditService systemAuditService)
+        public PositionController(IPositionService services, IOops oops, IMapper mapper, ISystemAuditService systemAuditService, IHttpContextAccessor accessor)
         {
             _services = services;
             _oops = oops;
             _mapper = mapper;
             _systemAuditService = systemAuditService;
+            _accessor = accessor;
         }
 
         //------------------------------------------------------------------------------------------------------------------------------------------
@@ -55,7 +58,7 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Directory
                 var result = await _services.CreateAsync(_mapper.Map<DirectoryDTO>(vm));
                 if (result.IsValid)
                 {
-                    await _systemAuditService.AuditAsync(User.Identity.Name, Operations.Insert, Tables.Position);
+                    await _systemAuditService.AuditAsync(User.Identity.Name, _accessor.HttpContext.Connection.RemoteIpAddress.ToString(), Operations.Insert, Tables.Position);
                     return RedirectToAction("Index");
                 }
                 return _oops.OutPutError("Position", "Index", result.ErrorsList);
@@ -85,7 +88,7 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Directory
                 var result = await _services.UpdateAsync(_mapper.Map<DirectoryDTO>(vm));
                 if (result.IsValid)
                 {
-                    await _systemAuditService.AuditAsync(User.Identity.Name, Operations.Update, Tables.Position);
+                    await _systemAuditService.AuditAsync(User.Identity.Name, _accessor.HttpContext.Connection.RemoteIpAddress.ToString(), Operations.Update, Tables.Position);
                     return RedirectToAction("Index");
                 }
                 return _oops.OutPutError("Position", "Index", result.ErrorsList);
@@ -113,7 +116,7 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Directory
             var result = await _services.DeleteAsync(id);
             if (result.IsValid)
             {
-                await _systemAuditService.AuditAsync(User.Identity.Name, Operations.Delete, Tables.Position);
+                await _systemAuditService.AuditAsync(User.Identity.Name, _accessor.HttpContext.Connection.RemoteIpAddress.ToString(), Operations.Delete, Tables.Position);
                 return RedirectToAction("Index");
             }
             return _oops.OutPutError("Position", "Index", result.ErrorsList);

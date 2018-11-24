@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.DTO;
@@ -17,12 +18,14 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Directory
         private readonly IOops _oops;
         private readonly IMapper _mapper;
         private readonly ISystemAuditService _systemAuditService;
+        private readonly IHttpContextAccessor _accessor;
 
-        public HobbyController(IHobbyService services, IOops oops, IMapper mapper, ISystemAuditService systemAuditService)
+        public HobbyController(IHobbyService services, IOops oops, IMapper mapper, ISystemAuditService systemAuditService, IHttpContextAccessor accessor)
         {
             _services = services;
             _mapper = mapper;
             _systemAuditService = systemAuditService;
+            _accessor = accessor;
             _oops = oops;
         }
 
@@ -55,7 +58,7 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Directory
                 var result = await _services.CreateAsync(_mapper.Map<DirectoryDTO>(vm));
                 if (result.IsValid)
                 {
-                    await _systemAuditService.AuditAsync(User.Identity.Name, Operations.Insert, Tables.Hobby);
+                    await _systemAuditService.AuditAsync(User.Identity.Name, _accessor.HttpContext.Connection.RemoteIpAddress.ToString(), Operations.Insert, Tables.Hobby);
                     return RedirectToAction("Index");
                 }
                 return _oops.OutPutError("Hobby", "Index", result.ErrorsList);
@@ -85,7 +88,7 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Directory
                 var result = await _services.UpdateAsync(_mapper.Map<DirectoryDTO>(vm));
                 if (result.IsValid)
                 {
-                    await _systemAuditService.AuditAsync(User.Identity.Name, Operations.Update, Tables.Hobby);
+                    await _systemAuditService.AuditAsync(User.Identity.Name, _accessor.HttpContext.Connection.RemoteIpAddress.ToString(), Operations.Update, Tables.Hobby);
                     return RedirectToAction("Index");
                 }
                 return _oops.OutPutError("Hobby", "Index", result.ErrorsList);
@@ -113,7 +116,7 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Directory
             var result = await _services.DeleteAsync(id);
             if (result.IsValid)
             {
-                await _systemAuditService.AuditAsync(User.Identity.Name, Operations.Delete, Tables.Hobby);
+                await _systemAuditService.AuditAsync(User.Identity.Name, _accessor.HttpContext.Connection.RemoteIpAddress.ToString(), Operations.Delete, Tables.Hobby);
                 return RedirectToAction("Index");
             }
             return _oops.OutPutError("Hobby", "Index", result.ErrorsList);
