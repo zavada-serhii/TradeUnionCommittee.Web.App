@@ -13,8 +13,6 @@ namespace TradeUnionCommittee.Web.Api.Configuration
         /// <returns>IMapper.</returns>
         public static IMapper ConfigureAutoMapper()
         {
-            string nullVarible = null;
-
             return new MapperConfiguration(map =>
             {
                 //-- Controller Mapper ---------------------------------------------------------------------------------------------------------
