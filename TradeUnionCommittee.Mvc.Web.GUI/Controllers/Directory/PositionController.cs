@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using TradeUnionCommittee.BLL.DTO;
 using TradeUnionCommittee.BLL.Enums;
 using TradeUnionCommittee.BLL.Interfaces.Directory;
@@ -17,13 +18,15 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Directory
         private readonly IOops _oops;
         private readonly IMapper _mapper;
         private readonly ISystemAuditService _systemAuditService;
+        private readonly IHttpContextAccessor _accessor;
 
-        public PositionController(IPositionService services, IOops oops, IMapper mapper, ISystemAuditService systemAuditService)
+        public PositionController(IPositionService services, IOops oops, IMapper mapper, ISystemAuditService systemAuditService, IHttpContextAccessor accessor)
         {
             _services = services;
             _oops = oops;
             _mapper = mapper;
             _systemAuditService = systemAuditService;
+            _accessor = accessor;
         }
 
         //------------------------------------------------------------------------------------------------------------------------------------------
@@ -55,7 +58,7 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Directory
                 var result = await _services.CreateAsync(_mapper.Map<DirectoryDTO>(vm));
                 if (result.IsValid)
                 {
-                    await _systemAuditService.AuditAsync(User.Identity.Name, Operations.Insert, Tables.Position);
+                    await _systemAuditService.AuditWithIpAsync(User.Identity.Name, _accessor.HttpContext.Connection.RemoteIpAddress.ToString(), Operations.Insert, Tables.Position);
                     return RedirectToAction("Index");
                 }
                 return _oops.OutPutError("Position", "Index", result.ErrorsList);

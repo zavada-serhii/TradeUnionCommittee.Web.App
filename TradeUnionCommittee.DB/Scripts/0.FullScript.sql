@@ -799,6 +799,7 @@ CREATE TABLE audit."Journal"
 (
  "Guid"               VARCHAR(36)             NOT NULL  PRIMARY KEY,
  "Operation"          audit."Operations"      NOT NULL,
+ "IpUser"			  CIDR 					  NOT NULL,
  "DateTime"           TimeStamp               NOT NULL,
  "EmailUser"          VARCHAR(256)            NOT NULL,
  "Table"              audit."Tables"          NOT NULL

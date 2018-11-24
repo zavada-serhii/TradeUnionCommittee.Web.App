@@ -36,6 +36,19 @@ namespace TradeUnionCommittee.BLL.Services.SystemAudit
             }
         }
 
+        public async Task AuditWithIpAsync(string email, string ipUser, Enums.Operations operation, Enums.Tables table)
+        {
+            await _database.SystemAuditRepository.AuditWithIpAsync(new Journal { EmailUser = email, IpUser = ipUser, Operation = (Operations)operation, Table = (Tables)table });
+        }
+
+        public async Task AuditWithIpAsync(string email, string ipUser, Enums.Operations operation, Enums.Tables[] tables)
+        {
+            foreach (var table in tables)
+            {
+                await AuditWithIpAsync(email, ipUser, operation, table);
+            }
+        }
+
         public async Task<ActualResult<IEnumerable<JournalDTO>>> FilterAsync(string email, DateTime startDate, DateTime endDate)
         {
             var existingPartitionInDb = await _database.SystemAuditRepository.GetExistingPartitionInDbAsync();
