@@ -43,11 +43,11 @@ namespace TradeUnionCommittee.DAL.Repositories
             }
         }
 
-        public virtual async Task<ActualResult<IEnumerable<T>>> Find(Func<T, bool> predicate)
+        public virtual async Task<ActualResult<IEnumerable<T>>> Find(Expression<Func<T, bool>> predicate)
         {
             try
             {
-                return await Task.Run(() => new ActualResult<IEnumerable<T>> { Result = _db.Set<T>().AsNoTracking().Where(predicate).ToList() });
+                return new ActualResult<IEnumerable<T>> { Result = await _db.Set<T>().AsNoTracking().Where(predicate).ToListAsync() };
             }
             catch (Exception e)
             {
@@ -110,15 +110,11 @@ namespace TradeUnionCommittee.DAL.Repositories
             }
         }
 
-        public virtual async Task<ActualResult<IEnumerable<T>>> GetWithInclude(Func<T, bool> predicate, params Expression<Func<T, object>>[] includeProperties)
+        public virtual async Task<ActualResult<IEnumerable<T>>> GetWithInclude(Expression<Func<T, bool>> predicate, params Expression<Func<T, object>>[] includeProperties)
         {
             try
             {
-                return await Task.Run(() =>
-                {
-                    var query = Include(includeProperties);
-                    return new ActualResult<IEnumerable<T>> { Result = query.Where(predicate).ToList() };
-                });
+                return new ActualResult<IEnumerable<T>> { Result = await Include(includeProperties).Where(predicate).ToListAsync() };
             }
             catch (Exception e)
             {
@@ -130,8 +126,7 @@ namespace TradeUnionCommittee.DAL.Repositories
 
         private IQueryable<T> Include(params Expression<Func<T, object>>[] includeProperties)
         {
-            var query = _db.Set<T>().AsNoTracking();
-            return includeProperties.Aggregate(query, (current, includeProperty) => current.Include(includeProperty));
+            return includeProperties.Aggregate(_db.Set<T>().AsNoTracking(), (current, includeProperty) => current.Include(includeProperty));
         }
     }
 }

@@ -14,6 +14,8 @@ using System.IO.Compression;
 using System.Linq;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.ResponseCompression;
+using Microsoft.Extensions.Logging;
+using Serilog;
 using Swashbuckle.AspNetCore.SwaggerUI;
 using TradeUnionCommittee.BLL.Extensions;
 using TradeUnionCommittee.BLL.Utilities;
@@ -26,6 +28,7 @@ namespace TradeUnionCommittee.Web.Api
     {
         public Startup(IConfiguration configuration)
         {
+            Log.Logger = new LoggerConfiguration().ReadFrom.Configuration(configuration).CreateLogger();
             Configuration = configuration;
         }
 
@@ -84,8 +87,10 @@ namespace TradeUnionCommittee.Web.Api
             DependencyInjectionSystem(services);
         }
 
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
+            loggerFactory.AddSerilog();
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
