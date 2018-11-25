@@ -8,12 +8,14 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.IO.Compression;
+using Serilog;
 using TradeUnionCommittee.BLL.Extensions;
 using TradeUnionCommittee.BLL.Utilities;
 using TradeUnionCommittee.Mvc.Web.GUI.Configuration;
 using TradeUnionCommittee.Mvc.Web.GUI.Configuration.DropDownLists;
 using TradeUnionCommittee.Mvc.Web.GUI.Controllers.Oops;
 using TradeUnionCommittee.ViewModels.Extensions;
+using Microsoft.Extensions.Logging;
 
 namespace TradeUnionCommittee.Mvc.Web.GUI
 {
@@ -21,6 +23,7 @@ namespace TradeUnionCommittee.Mvc.Web.GUI
     {
         public Startup(IConfiguration configuration)
         {
+            Log.Logger = new LoggerConfiguration().ReadFrom.Configuration(configuration).CreateLogger();
             Configuration = configuration;
         }
 
@@ -71,8 +74,10 @@ namespace TradeUnionCommittee.Mvc.Web.GUI
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
+            loggerFactory.AddSerilog();
+
             //env.EnvironmentName = EnvironmentName.Production;
 
             if (env.IsDevelopment())
