@@ -210,6 +210,11 @@ namespace TradeUnionCommittee.BLL.Utilities
 
                     //------------------------------------------------------------------------------
 
+                    map.CreateMap<PrivateHouseEmployees, PrivateHouseEmployeesDTO>()
+                        .ForMember(x => x.HashId, opt => opt.MapFrom(c => _hashIdUtilities.EncryptLong(c.Id, Enums.Services.PrivateHouseEmployees)))
+                        .ForMember(x => x.HashIdEmployee, opt => opt.MapFrom(c => _hashIdUtilities.EncryptLong(c.IdEmployee, Enums.Services.Employee)))
+                        .ReverseMap();
+
                 }).CreateMapper();
             }
         }

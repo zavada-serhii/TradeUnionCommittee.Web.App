@@ -16,6 +16,7 @@
         Subdivision = 14,
         Departmental = 15,
         Dormitory = 16,
-        Employee = 17
+        Employee = 17,
+        PrivateHouseEmployees = 18
     }
 }

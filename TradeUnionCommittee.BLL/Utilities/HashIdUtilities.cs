@@ -108,6 +108,8 @@ namespace TradeUnionCommittee.BLL.Utilities
                     return "DormitoryService";
                 case Enums.Services.Employee:
                     return "EmployeeService";
+                case Enums.Services.PrivateHouseEmployees:
+                    return "PrivateHouseEmployees";
                 default:
                     return string.Empty;
             }

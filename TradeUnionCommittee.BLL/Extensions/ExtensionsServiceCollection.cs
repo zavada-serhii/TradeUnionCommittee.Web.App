@@ -2,12 +2,14 @@
 using TradeUnionCommittee.BLL.Interfaces.Account;
 using TradeUnionCommittee.BLL.Interfaces.Directory;
 using TradeUnionCommittee.BLL.Interfaces.Employee;
+using TradeUnionCommittee.BLL.Interfaces.Lists;
 using TradeUnionCommittee.BLL.Interfaces.PDF;
 using TradeUnionCommittee.BLL.Interfaces.Search;
 using TradeUnionCommittee.BLL.Interfaces.SystemAudit;
 using TradeUnionCommittee.BLL.Services.Account;
 using TradeUnionCommittee.BLL.Services.Directory;
 using TradeUnionCommittee.BLL.Services.Employee;
+using TradeUnionCommittee.BLL.Services.Lists;
 using TradeUnionCommittee.BLL.Services.PDF;
 using TradeUnionCommittee.BLL.Services.Search;
 using TradeUnionCommittee.BLL.Services.SystemAudit;
@@ -48,6 +50,8 @@ namespace TradeUnionCommittee.BLL.Extensions
             services.AddScoped<ISubdivisionsService, SubdivisionsService>();
             services.AddScoped<IDormitoryService, DormitoryService>();
             services.AddScoped<IDepartmentalService, DepartmentalService>();
+
+            services.AddScoped<IPrivateHouseEmployeesService, PrivateHouseEmployeesService>();
 
             services.AddScoped<ISearchService, SearchService>();
             services.AddScoped<ISystemAuditService, SystemAuditService>();
