@@ -16,6 +16,7 @@
     <ProjectReference Include="..\TradeUnionCommittee.Common\TradeUnionCommittee.Common.csproj" />
     <ProjectReference Include="..\TradeUnionCommittee.DAL\TradeUnionCommittee.DAL.csproj" />
     <ProjectReference Include="..\TradeUnionCommittee.DataAnalysis.Service\TradeUnionCommittee.DataAnalysis.Service.csproj" />
+    <ProjectReference Include="..\TradeUnionCommittee.PDF.Service\TradeUnionCommittee.PDF.Service.csproj" />
   </ItemGroup>
 
   <ItemGroup>
