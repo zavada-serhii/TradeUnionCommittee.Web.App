@@ -1,6 +1,6 @@
 ﻿namespace TradeUnionCommittee.BLL.Enums
 {
-    public enum ReportType
+    public enum TypeReport
     {
         All = 0,
         MaterialAid = 1,

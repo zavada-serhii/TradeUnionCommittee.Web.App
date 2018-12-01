@@ -1,15 +1,16 @@
-﻿using System;
+﻿using iTextSharp.text;
+using iTextSharp.text.pdf;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using iTextSharp.text;
-using iTextSharp.text.pdf;
-using TradeUnionCommittee.DAL.Entities;
+using TradeUnionCommittee.PDF.Service.Entities;
+using TradeUnionCommittee.PDF.Service.Enums;
 
-namespace TradeUnionCommittee.BLL.PDF.ReportTemplates
+namespace TradeUnionCommittee.PDF.Service.ReportTemplates
 {
     internal class EventTemplate : BaseSettings
     {
-        public decimal CreateBody(Document doc, IEnumerable<EventEmployees> model)
+        public decimal CreateBody(Document doc, IEnumerable<EventEmployeeEntity> model)
         {
             var table = new PdfPTable(5);
 
@@ -20,7 +21,7 @@ namespace TradeUnionCommittee.BLL.PDF.ReportTemplates
 
             //---------------------------------------------------------------
 
-            AddCell(table, FontBold, 1, $"Назва {GetEventName(model.First().IdEventNavigation.Type)}");
+            AddCell(table, FontBold, 1, $"Назва {GetEventName(model.FirstOrDefault().TypeEvent)}");
             AddCell(table, FontBold, 1, "Розмір дотації");
             AddCell(table, FontBold, 1, "Розмір знижки");
             AddCell(table, FontBold, 1, "Дата початку");
@@ -28,7 +29,7 @@ namespace TradeUnionCommittee.BLL.PDF.ReportTemplates
 
             foreach (var ev in model)
             {
-                AddCell(table, Font, 1, $"{ev.IdEventNavigation.Name}");
+                AddCell(table, Font, 1, $"{ev.Name}");
                 AddCell(table, Font, 1, $"{ev.Amount} {Сurrency}");
                 AddCell(table, Font, 1, $"{ev.Discount} {Сurrency}");
                 AddCell(table, Font, 1, $"{ev.StartDate:dd/MM/yyyy}");
@@ -51,9 +52,9 @@ namespace TradeUnionCommittee.BLL.PDF.ReportTemplates
             return generalSum;
         }
 
-        private string GetEventName(TypeEvent @event)
+        private string GetEventName(TypeEvent typeEvent)
         {
-            switch (@event)
+            switch (typeEvent)
             {
                 case TypeEvent.Travel:
                     return "Поїздки";
@@ -62,7 +63,7 @@ namespace TradeUnionCommittee.BLL.PDF.ReportTemplates
                 case TypeEvent.Tour:
                     return "Путівки";
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(@event), @event, null);
+                    throw new ArgumentOutOfRangeException(nameof(typeEvent), typeEvent, null);
             }
         }
     }

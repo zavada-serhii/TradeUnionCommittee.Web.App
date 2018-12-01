@@ -8,6 +8,7 @@
         DuplicateData = 4,
         InvalidLoginOrPassword = 5,
         DataBaseError = 6,
-        NotFound = 7
+        NotFound = 7,
+        FileNotFound = 8
     }
 }

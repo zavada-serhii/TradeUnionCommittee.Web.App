@@ -19,10 +19,4 @@
     <ProjectReference Include="..\TradeUnionCommittee.PDF.Service\TradeUnionCommittee.PDF.Service.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <None Update="PDF\Fonts\TimesNewRoman.ttf">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-
 </Project>

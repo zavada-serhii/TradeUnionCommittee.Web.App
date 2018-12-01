@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.DTO;
+using TradeUnionCommittee.BLL.Enums;
 using TradeUnionCommittee.BLL.Interfaces.Directory;
 using TradeUnionCommittee.BLL.Interfaces.PDF;
 using TradeUnionCommittee.BLL.Utilities;
@@ -17,14 +19,12 @@ namespace TradeUnionCommittee.BLL.Services.Directory
         private readonly IUnitOfWork _database;
         private readonly IAutoMapperUtilities _mapperService;
         private readonly IHashIdUtilities _hashIdUtilities;
-        private readonly IPdfService _pdfService;
 
-        public PositionService(IUnitOfWork database, IAutoMapperUtilities mapperService, IHashIdUtilities hashIdUtilities, IPdfService pdfService)
+        public PositionService(IUnitOfWork database, IAutoMapperUtilities mapperService, IHashIdUtilities hashIdUtilities)
         {
             _database = database;
             _mapperService = mapperService;
             _hashIdUtilities = hashIdUtilities;
-            _pdfService = pdfService;
         }
 
         public async Task<ActualResult<IEnumerable<DirectoryDTO>>> GetAllAsync() =>
@@ -32,20 +32,6 @@ namespace TradeUnionCommittee.BLL.Services.Directory
 
         public async Task<ActualResult<DirectoryDTO>> GetAsync(string hashId)
         {
-            //var reportPdfDto = new ReportPdfDTO
-            //{
-            //    HashUserId = 1,
-            //    PathToSave = @"E:\PDF\Report\",
-            //    StartDate = DateTime.Now.Date.AddYears(-15),
-            //    EndDate = DateTime.Now.Date.AddYears(5)
-            //};
-
-            //for (var i = 0; i < 8; i++)
-            //{
-            //    reportPdfDto.Type = (ReportType)i;
-            //    await _pdfService.CreateReport(reportPdfDto);
-            //}
-
             var id = _hashIdUtilities.DecryptLong(hashId, Enums.Services.Position);
             return _mapperService.Mapper.Map<ActualResult<DirectoryDTO>>(await _database.PositionRepository.Get(id));
         }
@@ -86,7 +72,6 @@ namespace TradeUnionCommittee.BLL.Services.Directory
         public void Dispose()
         {
             _database.Dispose();
-            _pdfService.Dispose();
         }
     }
 }

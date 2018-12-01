@@ -1,21 +1,21 @@
-﻿using System;
+﻿using iTextSharp.text;
+using iTextSharp.text.pdf;
+using System;
 using System.IO;
 using System.Reflection;
-using iTextSharp.text;
-using iTextSharp.text.pdf;
 
-namespace TradeUnionCommittee.BLL.PDF
+namespace TradeUnionCommittee.PDF.Service
 {
     public class BaseSettings
     {
-        private readonly string _basePathToFont = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+        protected string BasePath => Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
         protected readonly Font Font;
         protected readonly Font FontBold;
         protected const string Сurrency = "грн";
 
         protected BaseSettings()
         {
-            var baseFont = BaseFont.CreateFont($@"{_basePathToFont}\PDF\Fonts\TimesNewRoman.ttf", BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
+            var baseFont = BaseFont.CreateFont($@"{BasePath}\Fonts\TimesNewRoman.ttf", BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
             Font = new Font(baseFont, 14, Font.NORMAL);
             FontBold = new Font(baseFont, 12, Font.BOLD);
         }

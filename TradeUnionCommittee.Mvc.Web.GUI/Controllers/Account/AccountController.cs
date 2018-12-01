@@ -41,7 +41,7 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Account
         {
             if (ModelState.IsValid)
             {
-                var result = await _accountService.Login(model.Email, model.Password, AuthorizationType.Cookie);
+                var result = await _accountService.Login(model.Email, model.Password, TypeAuthorization.Cookie);
                 if (result.IsValid)
                 {
                     if (!string.IsNullOrEmpty(model.ReturnUrl) && Url.IsLocalUrl(model.ReturnUrl))
