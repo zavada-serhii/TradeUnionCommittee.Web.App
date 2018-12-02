@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.DTO;
 using TradeUnionCommittee.BLL.Enums;
+using TradeUnionCommittee.BLL.Extensions;
 using TradeUnionCommittee.BLL.Interfaces.Search;
 using TradeUnionCommittee.BLL.Utilities;
 using TradeUnionCommittee.Common.ActualResults;
@@ -230,7 +231,7 @@ namespace TradeUnionCommittee.BLL.Services.Search
 
         //------------------------------------------------------------------------------------------------------------------------------------------
 
-        public async Task<ActualResult<long>> SearchEmployee(EmployeeType type, string value)
+        public async Task<ActualResult<string>> SearchEmployee(EmployeeType type, string value)
         {
             switch (type)
             {
@@ -239,39 +240,39 @@ namespace TradeUnionCommittee.BLL.Services.Search
                     var firstOrDefaultMobilePhone = searchByMobilePhone.Result.FirstOrDefault();
                     if (firstOrDefaultMobilePhone != null)
                     {
-                        return new ActualResult<long> { Result = firstOrDefaultMobilePhone.Id };
+                        return new ActualResult<string> { Result = _hashIdUtilities.EncryptLong(firstOrDefaultMobilePhone.Id, Enums.Services.Employee) };
                     }
-                    return new ActualResult<long>(Errors.NotFound);
+                    return new ActualResult<string>(Errors.NotFound);
 
                 case EmployeeType.CityPhone:
-                    var searchByCityPhone = await _database.EmployeeRepository.Find(x => x.CityPhone == value);
+                    var searchByCityPhone = await _database.EmployeeRepository.Find(x => x.CityPhone == value.AddMaskForCityPhone());
                     var firstOrDefaultCityPhone = searchByCityPhone.Result.FirstOrDefault();
                     if (firstOrDefaultCityPhone != null)
                     {
-                        return new ActualResult<long> { Result = firstOrDefaultCityPhone.Id };
+                        return new ActualResult<string> { Result = _hashIdUtilities.EncryptLong(firstOrDefaultCityPhone.Id, Enums.Services.Employee) };
                     }
-                    return new ActualResult<long>(Errors.NotFound);
+                    return new ActualResult<string>(Errors.NotFound);
 
                 case EmployeeType.IdentificationСode:
                     var searchByIdentificationСode = await _database.EmployeeRepository.Find(x => x.IdentificationСode == value);
                     var firstOrDefaultIdentificationСode = searchByIdentificationСode.Result.FirstOrDefault();
                     if (firstOrDefaultIdentificationСode != null)
                     {
-                        return new ActualResult<long> { Result = firstOrDefaultIdentificationСode.Id };
+                        return new ActualResult<string> { Result = _hashIdUtilities.EncryptLong(firstOrDefaultIdentificationСode.Id, Enums.Services.Employee) };
                     }
-                    return new ActualResult<long>(Errors.NotFound);
+                    return new ActualResult<string>(Errors.NotFound);
 
                 case EmployeeType.MechnikovCard:
                     var searchByMechnikovCard = await _database.EmployeeRepository.Find(x => x.MechnikovCard == value);
                     var firstOrDefaultMechnikovCard = searchByMechnikovCard.Result.FirstOrDefault();
                     if (firstOrDefaultMechnikovCard != null)
                     {
-                        return new ActualResult<long> { Result = firstOrDefaultMechnikovCard.Id };
+                        return new ActualResult<string> { Result = _hashIdUtilities.EncryptLong(firstOrDefaultMechnikovCard.Id, Enums.Services.Employee) };
                     }
-                    return new ActualResult<long>(Errors.NotFound);
+                    return new ActualResult<string>(Errors.NotFound);
 
                 default:
-                    return new ActualResult<long>(Errors.NotFound);
+                    return new ActualResult<string>(Errors.NotFound);
             }
         }
 

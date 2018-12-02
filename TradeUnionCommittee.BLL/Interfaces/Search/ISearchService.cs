@@ -16,7 +16,7 @@ namespace TradeUnionCommittee.BLL.Interfaces.Search
         Task<ActualResult<IEnumerable<ResultSearchDTO>>> SearchAccommodation(AccommodationType type, string dormitory, string departmental);
         Task<ActualResult<IEnumerable<ResultSearchDTO>>> SearchBirthDate(CoverageType type, DateTime startDate, DateTime endDate);
         Task<ActualResult<IEnumerable<ResultSearchDTO>>> SearchHobby(CoverageType type, string hobby);
-        Task<ActualResult<long>> SearchEmployee(EmployeeType type, string value);
+        Task<ActualResult<string>> SearchEmployee(EmployeeType type, string value);
         void Dispose();
     }
 }
