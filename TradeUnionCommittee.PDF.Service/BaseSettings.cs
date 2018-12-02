@@ -8,7 +8,9 @@ namespace TradeUnionCommittee.PDF.Service
 {
     public class BaseSettings
     {
-        protected string BasePath => Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+        private static string BasePath => Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+        private readonly string _pathToContainer = $@"{BasePath}\PDF Container";
+        protected string PathToFile => $@"{_pathToContainer}\{Guid.NewGuid()}.pdf";
         protected readonly Font Font;
         protected readonly Font FontBold;
         protected const string Сurrency = "грн";
@@ -18,6 +20,7 @@ namespace TradeUnionCommittee.PDF.Service
             var baseFont = BaseFont.CreateFont($@"{BasePath}\Fonts\TimesNewRoman.ttf", BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
             Font = new Font(baseFont, 14, Font.NORMAL);
             FontBold = new Font(baseFont, 12, Font.BOLD);
+            CheckDirectory();
         }
 
         protected void AddEmptyParagraph(IElementListener document, int count)
@@ -36,6 +39,15 @@ namespace TradeUnionCommittee.PDF.Service
                 HorizontalAlignment = Element.ALIGN_CENTER,
                 Colspan = colspan
             });
+        }
+
+        private void CheckDirectory()
+        {
+            var dirInfo = new DirectoryInfo(_pathToContainer);
+            if (!dirInfo.Exists)
+            {
+                dirInfo.Create();
+            }
         }
     }
 }

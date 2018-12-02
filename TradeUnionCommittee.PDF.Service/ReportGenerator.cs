@@ -21,13 +21,9 @@ namespace TradeUnionCommittee.PDF.Service
 
         public string Generate(ReportModel model)
         {
-            var path = $@"{BasePath}\PDF Container";
-            CheckDirectory(path);
-            var pathToFile = $@"{path}\{Guid.NewGuid()}.pdf";
-
             try
             {
-                using (var stream = new FileStream(pathToFile, FileMode.Create))
+                using (var stream = new FileStream(PathToFile, FileMode.Create))
                 {
                     var document = new Document();
                     var writer = PdfWriter.GetInstance(document, stream);
@@ -53,7 +49,7 @@ namespace TradeUnionCommittee.PDF.Service
             {
                 return string.Empty;
             }
-            return pathToFile;
+            return PathToFile;
         }
 
         private void AddNameReport(ReportModel model, IElementListener doc)
@@ -190,17 +186,6 @@ namespace TradeUnionCommittee.PDF.Service
                 doc.Add(new Paragraph($"Cумма - {sum} {Сurrency}", Font) { Alignment = Element.ALIGN_RIGHT });
 
                 AddEmptyParagraph(doc, 2);
-            }
-        }
-
-        //----------------------------------------------------------------------------------------------
-
-        private void CheckDirectory(string path)
-        {
-            var dirInfo = new DirectoryInfo(path);
-            if (!dirInfo.Exists)
-            {
-                dirInfo.Create();
             }
         }
     }
