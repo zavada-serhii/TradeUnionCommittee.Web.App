@@ -8,9 +8,9 @@ namespace TradeUnionCommittee.PDF.Service
 {
     public class BaseSettings
     {
-        private static string BasePath => Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+        private static readonly string BasePath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
         private readonly string _pathToContainer = $@"{BasePath}\PDF Container";
-        protected string PathToFile => $@"{_pathToContainer}\{Guid.NewGuid()}.pdf";
+        protected readonly string PathToFile;
         protected readonly Font Font;
         protected readonly Font FontBold;
         protected const string Сurrency = "грн";
@@ -21,6 +21,7 @@ namespace TradeUnionCommittee.PDF.Service
             Font = new Font(baseFont, 14, Font.NORMAL);
             FontBold = new Font(baseFont, 12, Font.BOLD);
             CheckDirectory();
+            PathToFile = $@"{_pathToContainer}\{Guid.NewGuid()}.pdf";
         }
 
         protected void AddEmptyParagraph(IElementListener document, int count)

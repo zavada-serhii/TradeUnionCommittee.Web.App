@@ -49,6 +49,8 @@ namespace TradeUnionCommittee.BLL.Services.PDF
             return new ActualResult<byte[]>(Errors.FileNotFound);
         }
 
+        //------------------------------------------------------------------------------------------
+
         private async Task<ReportModel> FillModelReport(ReportPdfDTO dto)
         {
             var model = new ReportModel
