@@ -9,7 +9,8 @@ namespace TradeUnionCommittee.DAL.Interfaces
     public interface IRepository<T> where T: class
     {
         Task<ActualResult<IEnumerable<T>>> GetAll();
-        Task<ActualResult<T>> Get(long id);
+        Task<ActualResult<T>> GetById(long id);
+        Task<ActualResult<T>> GetByProperty(Expression<Func<T, bool>> predicate);
         Task<ActualResult<IEnumerable<T>>> Find(Expression<Func<T, bool>> predicate);
         Task<ActualResult> Create(T item);
         Task<ActualResult> Update(T item);

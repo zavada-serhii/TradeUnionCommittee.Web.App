@@ -71,7 +71,7 @@ namespace TradeUnionCommittee.BLL.Services.Employee
         {
             var resultSearchByHashId = await _database
                 .EmployeeRepository
-                .Get(_hashIdUtilities.DecryptLong(hashId, Enums.Services.Employee));
+                .GetById(_hashIdUtilities.DecryptLong(hashId, Enums.Services.Employee));
             return _mapperService.Mapper.Map<ActualResult<GeneralInfoEmployeeDTO>>(resultSearchByHashId);
         }
 

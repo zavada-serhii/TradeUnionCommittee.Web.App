@@ -236,38 +236,34 @@ namespace TradeUnionCommittee.BLL.Services.Search
             switch (type)
             {
                 case EmployeeType.MobilePhone:
-                    var searchByMobilePhone = await _database.EmployeeRepository.Find(x => x.MobilePhone == value);
-                    var firstOrDefaultMobilePhone = searchByMobilePhone.Result.FirstOrDefault();
-                    if (firstOrDefaultMobilePhone != null)
+                    var searchByMobilePhone = await _database.EmployeeRepository.GetByProperty(x => x.MobilePhone == value);
+                    if (searchByMobilePhone.Result != null)
                     {
-                        return new ActualResult<string> { Result = _hashIdUtilities.EncryptLong(firstOrDefaultMobilePhone.Id, Enums.Services.Employee) };
+                        return new ActualResult<string> { Result = _hashIdUtilities.EncryptLong(searchByMobilePhone.Result.Id, Enums.Services.Employee) };
                     }
                     return new ActualResult<string>(Errors.NotFound);
 
                 case EmployeeType.CityPhone:
-                    var searchByCityPhone = await _database.EmployeeRepository.Find(x => x.CityPhone == value.AddMaskForCityPhone());
-                    var firstOrDefaultCityPhone = searchByCityPhone.Result.FirstOrDefault();
-                    if (firstOrDefaultCityPhone != null)
+                    var searchByCityPhone = await _database.EmployeeRepository.GetByProperty(x => x.CityPhone == value.AddMaskForCityPhone());
+                    if (searchByCityPhone.Result != null)
                     {
-                        return new ActualResult<string> { Result = _hashIdUtilities.EncryptLong(firstOrDefaultCityPhone.Id, Enums.Services.Employee) };
+                        return new ActualResult<string> { Result = _hashIdUtilities.EncryptLong(searchByCityPhone.Result.Id, Enums.Services.Employee) };
                     }
                     return new ActualResult<string>(Errors.NotFound);
 
                 case EmployeeType.IdentificationСode:
-                    var searchByIdentificationСode = await _database.EmployeeRepository.Find(x => x.IdentificationСode == value);
-                    var firstOrDefaultIdentificationСode = searchByIdentificationСode.Result.FirstOrDefault();
-                    if (firstOrDefaultIdentificationСode != null)
+                    var searchByIdentificationСode = await _database.EmployeeRepository.GetByProperty(x => x.IdentificationСode == value);
+                    if (searchByIdentificationСode.Result != null)
                     {
-                        return new ActualResult<string> { Result = _hashIdUtilities.EncryptLong(firstOrDefaultIdentificationСode.Id, Enums.Services.Employee) };
+                        return new ActualResult<string> { Result = _hashIdUtilities.EncryptLong(searchByIdentificationСode.Result.Id, Enums.Services.Employee) };
                     }
                     return new ActualResult<string>(Errors.NotFound);
 
                 case EmployeeType.MechnikovCard:
-                    var searchByMechnikovCard = await _database.EmployeeRepository.Find(x => x.MechnikovCard == value);
-                    var firstOrDefaultMechnikovCard = searchByMechnikovCard.Result.FirstOrDefault();
-                    if (firstOrDefaultMechnikovCard != null)
+                    var searchByMechnikovCard = await _database.EmployeeRepository.GetByProperty(x => x.MechnikovCard == value);
+                    if (searchByMechnikovCard.Result != null)
                     {
-                        return new ActualResult<string> { Result = _hashIdUtilities.EncryptLong(firstOrDefaultMechnikovCard.Id, Enums.Services.Employee) };
+                        return new ActualResult<string> { Result = _hashIdUtilities.EncryptLong(searchByMechnikovCard.Result.Id, Enums.Services.Employee) };
                     }
                     return new ActualResult<string>(Errors.NotFound);
 
@@ -301,7 +297,7 @@ namespace TradeUnionCommittee.BLL.Services.Search
                 {
                     if (employee.PositionEmployees.IdSubdivisionNavigation.IdSubordinate != null)
                     {
-                        var subdivision = Task.Run(async() => await _database.SubdivisionsRepository.Get(employee.PositionEmployees.IdSubdivisionNavigation.IdSubordinate.Value));
+                        var subdivision = Task.Run(async() => await _database.SubdivisionsRepository.GetById(employee.PositionEmployees.IdSubdivisionNavigation.IdSubordinate.Value));
                         mainSubdivision = subdivision.Result.Result.Name;
                         mainSubdivisionAbbreviation = subdivision.Result.Result.Abbreviation;
                         subordinateSubdivision = employee.PositionEmployees.IdSubdivisionNavigation.Name;

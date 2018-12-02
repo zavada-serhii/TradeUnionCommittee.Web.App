@@ -30,7 +30,7 @@ namespace TradeUnionCommittee.BLL.Services.Directory
         public async Task<ActualResult<SubdivisionDTO>> GetAsync(string hashId)
         {
             var id = _hashIdUtilities.DecryptLong(hashId, Enums.Services.Subdivision);
-            return _mapperService.Mapper.Map<ActualResult<SubdivisionDTO>>(await _database.SubdivisionsRepository.Get(id));
+            return _mapperService.Mapper.Map<ActualResult<SubdivisionDTO>>(await _database.SubdivisionsRepository.GetById(id));
         }
 
         public async Task<ActualResult<IEnumerable<SubdivisionDTO>>> GetSubordinateSubdivisions(string hashId)

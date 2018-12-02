@@ -31,7 +31,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists
         public async Task<ActualResult<PrivateHouseEmployeesDTO>> GetAsync(string hashId)
         {
             var id = _hashIdUtilities.DecryptLong(hashId, Enums.Services.PrivateHouseEmployees);
-            return _mapperService.Mapper.Map<ActualResult<PrivateHouseEmployeesDTO>>(await _database.PrivateHouseEmployeesRepository.Get(id));
+            return _mapperService.Mapper.Map<ActualResult<PrivateHouseEmployeesDTO>>(await _database.PrivateHouseEmployeesRepository.GetById(id));
         }
 
         public void Dispose()

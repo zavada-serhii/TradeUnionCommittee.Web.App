@@ -102,7 +102,7 @@ namespace TradeUnionCommittee.BLL.Services.PDF
 
         private async Task<string> GetFullNameEmployee(ReportPdfDTO dto)
         {
-            var employee = await _database.EmployeeRepository.Get(_hashIdUtilities.DecryptLong(dto.HashEmployeeId, Enums.Services.Employee));
+            var employee = await _database.EmployeeRepository.GetById(_hashIdUtilities.DecryptLong(dto.HashEmployeeId, Enums.Services.Employee));
             var result = employee.Result;
             return $"{result.FirstName} {result.SecondName} {result.Patronymic}";
         }

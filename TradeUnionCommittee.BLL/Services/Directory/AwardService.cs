@@ -30,7 +30,7 @@ namespace TradeUnionCommittee.BLL.Services.Directory
         public async Task<ActualResult<DirectoryDTO>> GetAsync(string hashId)
         {
             var id =  _hashIdUtilities.DecryptLong(hashId, Enums.Services.Award);
-            return _mapperService.Mapper.Map<ActualResult<DirectoryDTO>>(await _database.AwardRepository.Get(id));
+            return _mapperService.Mapper.Map<ActualResult<DirectoryDTO>>(await _database.AwardRepository.GetById(id));
         }
 
         public async Task<ActualResult> CreateAsync(DirectoryDTO dto)
