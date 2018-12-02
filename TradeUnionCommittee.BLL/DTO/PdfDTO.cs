@@ -11,7 +11,7 @@ namespace TradeUnionCommittee.BLL.DTO
 
     public class ReportPdfDTO : BasePdfDTO
     {
-        public string HashUserId { get; set; }
+        public string HashEmployeeId { get; set; }
         public TypeReport Type { get; set; }
     }
 }

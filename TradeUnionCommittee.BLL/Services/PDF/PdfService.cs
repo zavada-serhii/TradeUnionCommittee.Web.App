@@ -100,14 +100,14 @@ namespace TradeUnionCommittee.BLL.Services.PDF
 
         private async Task<string> GetFullNameEmployee(ReportPdfDTO dto)
         {
-            var employee = await _database.EmployeeRepository.Get(_hashIdUtilities.DecryptLong(dto.HashUserId, Enums.Services.Employee));
+            var employee = await _database.EmployeeRepository.Get(_hashIdUtilities.DecryptLong(dto.HashEmployeeId, Enums.Services.Employee));
             var result = employee.Result;
             return $"{result.FirstName} {result.SecondName} {result.Patronymic}";
         }
 
         private async Task<IEnumerable<MaterialIncentivesEmployeeEntity>> GetMaterialAid(ReportPdfDTO dto)
         {
-            var id = _hashIdUtilities.DecryptLong(dto.HashUserId, Enums.Services.Employee);
+            var id = _hashIdUtilities.DecryptLong(dto.HashEmployeeId, Enums.Services.Employee);
             var result = await _database
                 .MaterialAidEmployeesRepository
                 .GetWithInclude(x => x.DateIssue.Between(dto.StartDate, dto.EndDate) &&
@@ -118,7 +118,7 @@ namespace TradeUnionCommittee.BLL.Services.PDF
 
         private async Task<IEnumerable<MaterialIncentivesEmployeeEntity>> GetAward(ReportPdfDTO dto)
         {
-            var id = _hashIdUtilities.DecryptLong(dto.HashUserId, Enums.Services.Employee);
+            var id = _hashIdUtilities.DecryptLong(dto.HashEmployeeId, Enums.Services.Employee);
             var result = await _database
                 .AwardEmployeesRepository
                 .GetWithInclude(x => x.DateIssue.Between(dto.StartDate, dto.EndDate) &&
@@ -129,7 +129,7 @@ namespace TradeUnionCommittee.BLL.Services.PDF
 
         private async Task<IEnumerable<CulturalEmployeeEntity>> GetCultural(ReportPdfDTO dto)
         {
-            var id = _hashIdUtilities.DecryptLong(dto.HashUserId, Enums.Services.Employee);
+            var id = _hashIdUtilities.DecryptLong(dto.HashEmployeeId, Enums.Services.Employee);
             var result = await _database
                 .CulturalEmployeesRepository
                 .GetWithInclude(x => x.DateVisit.Between(dto.StartDate, dto.EndDate) &&
@@ -140,7 +140,7 @@ namespace TradeUnionCommittee.BLL.Services.PDF
 
         private async Task<IEnumerable<EventEmployeeEntity>> GetEvent(ReportPdfDTO dto, TypeEvent typeEvent)
         {
-            var id = _hashIdUtilities.DecryptLong(dto.HashUserId, Enums.Services.Employee);
+            var id = _hashIdUtilities.DecryptLong(dto.HashEmployeeId, Enums.Services.Employee);
             var result = await _database
                 .EventEmployeesRepository
                 .GetWithInclude(x => x.StartDate.Between(dto.StartDate, dto.EndDate) &&
@@ -153,7 +153,7 @@ namespace TradeUnionCommittee.BLL.Services.PDF
 
         private async Task<IEnumerable<GiftEmployeeEntity>> GetGift(ReportPdfDTO dto)
         {
-            var id = _hashIdUtilities.DecryptLong(dto.HashUserId, Enums.Services.Employee);
+            var id = _hashIdUtilities.DecryptLong(dto.HashEmployeeId, Enums.Services.Employee);
             var result = await _database
                 .GiftEmployeesRepository
                 .GetWithInclude(x => x.DateGift.Between(dto.StartDate, dto.EndDate) && x.IdEmployee == id);

@@ -23,35 +23,35 @@ namespace TradeUnionCommittee.PDF.Service
         {
             var path = $@"{BasePath}\PDF Container";
             CheckDirectory(path);
-            var pathToFile = $@"{path}\{model.FullNameEmployee}.{DateTime.Now:dd.MM.yyyy}.{Guid.NewGuid()}.pdf";
-
-            var document = new Document();
-            var writer = PdfWriter.GetInstance(document, new FileStream(pathToFile, FileMode.Create));
+            var pathToFile = $@"{path}\{Guid.NewGuid()}.pdf";
 
             try
             {
-                document.Open();
+                using (var stream = new FileStream(pathToFile, FileMode.Create))
+                {
+                    var document = new Document();
+                    var writer = PdfWriter.GetInstance(document, stream);
 
-                AddNameReport(model, document);
-                document.Add(new Paragraph(model.FullNameEmployee, FontBold) { Alignment = Element.ALIGN_CENTER });
-                AddPeriod(model, document);
+                    document.Open();
 
-                AddBodyReport(model, document);
+                    AddNameReport(model, document);
+                    document.Add(new Paragraph(model.FullNameEmployee, FontBold) { Alignment = Element.ALIGN_CENTER });
+                    AddPeriod(model, document);
 
-                AddEmptyParagraph(document, 2);
-                AddAllGeneralSum(model.Type, document);
+                    AddBodyReport(model, document);
 
-                document.Add(new Paragraph($"Головний бухгалтер ППО ОНУ імені І.І.Мечникова {new string('_', 10)}  {new string('_', 18)}", Font) { Alignment = Element.ALIGN_RIGHT });
+                    AddEmptyParagraph(document, 2);
+                    AddAllGeneralSum(model.Type, document);
 
+                    document.Add(new Paragraph($"Головний бухгалтер ППО ОНУ імені І.І.Мечникова {new string('_', 10)}  {new string('_', 18)}", Font) { Alignment = Element.ALIGN_RIGHT });
+
+                    document.Close();
+                    writer.Close();
+                }
             }
             catch (Exception)
             {
                 return string.Empty;
-            }
-            finally
-            {
-                document.Close();
-                writer.Close();
             }
             return pathToFile;
         }
@@ -106,25 +106,21 @@ namespace TradeUnionCommittee.PDF.Service
                     FullReport(model, doc);
                     break;
                 case TypeReport.MaterialAid:
-                    _materialAidEmployeesGeneralSum = new MaterialAidTemplate().CreateBody(doc, model.MaterialAidEmployees);
+                    new MaterialAidTemplate().CreateBody(doc, model.MaterialAidEmployees);
                     break;
                 case TypeReport.Award:
-                    _awardEmployeesGeneralSum = new AwardTemplate().CreateBody(doc, model.AwardEmployees);
+                    new AwardTemplate().CreateBody(doc, model.AwardEmployees);
                     break;
                 case TypeReport.Travel:
-                    _travelEventEmployeesGeneralSum = new EventTemplate().CreateBody(doc, model.EventEmployees);
-                    break;
                 case TypeReport.Wellness:
-                    _wellnessEventEmployeesGeneralSum = new EventTemplate().CreateBody(doc, model.EventEmployees);
-                    break;
                 case TypeReport.Tour:
-                    _tourEventEmployeesGeneralSum = new EventTemplate().CreateBody(doc, model.EventEmployees);
+                    new EventTemplate().CreateBody(doc, model.Type, model.EventEmployees);
                     break;
                 case TypeReport.Cultural:
-                    _culturalEmployeesGeneralSum = new CulturalTemplate().CreateBody(doc, model.CulturalEmployees);
+                    new CulturalTemplate().CreateBody(doc, model.CulturalEmployees);
                     break;
                 case TypeReport.Gift:
-                    _giftEmployeesGeneralSum = new GiftTemplate().CreateBody(doc, model.GiftEmployees);
+                    new GiftTemplate().CreateBody(doc, model.GiftEmployees);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -150,21 +146,21 @@ namespace TradeUnionCommittee.PDF.Service
             if (model.EventEmployees.Any(x => x.TypeEvent == TypeEvent.Travel))
             {
                 doc.Add(new Paragraph("Поїздки", FontBold) { Alignment = Element.ALIGN_CENTER });
-                _travelEventEmployeesGeneralSum = new EventTemplate().CreateBody(doc, model.EventEmployees.Where(x => x.TypeEvent == TypeEvent.Travel));
+                _travelEventEmployeesGeneralSum = new EventTemplate().CreateBody(doc, TypeReport.Travel, model.EventEmployees.Where(x => x.TypeEvent == TypeEvent.Travel));
                 AddEmptyParagraph(doc, 2);
             }
 
             if (model.EventEmployees.Any(x => x.TypeEvent == TypeEvent.Wellness))
             {
                 doc.Add(new Paragraph("Оздоровлення", FontBold) { Alignment = Element.ALIGN_CENTER });
-                _wellnessEventEmployeesGeneralSum = new EventTemplate().CreateBody(doc, model.EventEmployees.Where(x => x.TypeEvent == TypeEvent.Wellness));
+                _wellnessEventEmployeesGeneralSum = new EventTemplate().CreateBody(doc, TypeReport.Wellness, model.EventEmployees.Where(x => x.TypeEvent == TypeEvent.Wellness));
                 AddEmptyParagraph(doc, 2);
             }
 
             if (model.EventEmployees.Any(x => x.TypeEvent == TypeEvent.Tour))
             {
                 doc.Add(new Paragraph("Путівки", FontBold) { Alignment = Element.ALIGN_CENTER });
-                _tourEventEmployeesGeneralSum = new EventTemplate().CreateBody(doc, model.EventEmployees.Where(x => x.TypeEvent == TypeEvent.Tour));
+                _tourEventEmployeesGeneralSum = new EventTemplate().CreateBody(doc, TypeReport.Tour, model.EventEmployees.Where(x => x.TypeEvent == TypeEvent.Tour));
                 AddEmptyParagraph(doc, 2);
             }
 

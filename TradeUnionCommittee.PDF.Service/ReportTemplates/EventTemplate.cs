@@ -10,7 +10,7 @@ namespace TradeUnionCommittee.PDF.Service.ReportTemplates
 {
     internal class EventTemplate : BaseSettings
     {
-        public decimal CreateBody(Document doc, IEnumerable<EventEmployeeEntity> model)
+        public decimal CreateBody(Document doc, TypeReport typeReport, IEnumerable<EventEmployeeEntity> model)
         {
             var table = new PdfPTable(5);
 
@@ -21,7 +21,7 @@ namespace TradeUnionCommittee.PDF.Service.ReportTemplates
 
             //---------------------------------------------------------------
 
-            AddCell(table, FontBold, 1, $"Назва {GetEventName(model.FirstOrDefault().TypeEvent)}");
+            AddCell(table, FontBold, 1, $"Назва {GetEventName(typeReport)}");
             AddCell(table, FontBold, 1, "Розмір дотації");
             AddCell(table, FontBold, 1, "Розмір знижки");
             AddCell(table, FontBold, 1, "Дата початку");
@@ -52,15 +52,15 @@ namespace TradeUnionCommittee.PDF.Service.ReportTemplates
             return generalSum;
         }
 
-        private string GetEventName(TypeEvent typeEvent)
+        private string GetEventName(TypeReport typeEvent)
         {
             switch (typeEvent)
             {
-                case TypeEvent.Travel:
+                case TypeReport.Travel:
                     return "Поїздки";
-                case TypeEvent.Wellness:
+                case TypeReport.Wellness:
                     return "Оздоровлення";
-                case TypeEvent.Tour:
+                case TypeReport.Tour:
                     return "Путівки";
                 default:
                     throw new ArgumentOutOfRangeException(nameof(typeEvent), typeEvent, null);
