@@ -5,6 +5,7 @@ using TradeUnionCommittee.BLL.Enums;
 using TradeUnionCommittee.BLL.Extensions;
 using TradeUnionCommittee.DAL.Entities;
 using TradeUnionCommittee.DAL.Enums;
+using TradeUnionCommittee.PDF.Service.Entities;
 
 namespace TradeUnionCommittee.BLL.Utilities
 {
@@ -214,6 +215,32 @@ namespace TradeUnionCommittee.BLL.Utilities
                         .ForMember(x => x.HashId, opt => opt.MapFrom(c => _hashIdUtilities.EncryptLong(c.Id, Enums.Services.PrivateHouseEmployees)))
                         .ForMember(x => x.HashIdEmployee, opt => opt.MapFrom(c => _hashIdUtilities.EncryptLong(c.IdEmployee, Enums.Services.Employee)))
                         .ReverseMap();
+
+
+                    // -- Mapping for PDF service start
+
+                    map.CreateMap<MaterialAidEmployees, MaterialIncentivesEmployeeEntity>()
+                        .ForMember(x => x.Name, opt => opt.MapFrom(c => c.IdMaterialAidNavigation.Name))
+                        .ForMember(x => x.Date, opt => opt.MapFrom(c => c.DateIssue));
+
+                    map.CreateMap<AwardEmployees, MaterialIncentivesEmployeeEntity>()
+                        .ForMember(x => x.Name, opt => opt.MapFrom(c => c.IdAwardNavigation.Name))
+                        .ForMember(x => x.Date, opt => opt.MapFrom(c => c.DateIssue));
+
+                    map.CreateMap<CulturalEmployees, CulturalEmployeeEntity>()
+                        .ForMember(x => x.Name, opt => opt.MapFrom(c => c.IdCulturalNavigation.Name))
+                        .ForMember(x => x.Date, opt => opt.MapFrom(c => c.DateVisit));
+
+                    map.CreateMap<EventEmployees, EventEmployeeEntity>()
+                        .ForMember(x => x.Name, opt => opt.MapFrom(c => c.IdEventNavigation.Name))
+                        .ForMember(x => x.TypeEvent, opt => opt.MapFrom(c => c.IdEventNavigation.Type));
+
+                    map.CreateMap<GiftEmployees, GiftEmployeeEntity>()
+                        .ForMember(x => x.Name, opt => opt.MapFrom(c => c.NameEvent))
+                        .ForMember(x => x.Amount, opt => opt.MapFrom(c => c.Price))
+                        .ForMember(x => x.Date, opt => opt.MapFrom(c => c.DateGift));
+
+                    // -- Mapping for PDF service end
 
                 }).CreateMapper();
             }

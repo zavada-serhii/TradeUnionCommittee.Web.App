@@ -1,13 +1,17 @@
 ﻿using System;
+using TradeUnionCommittee.BLL.Enums;
 
 namespace TradeUnionCommittee.BLL.DTO
 {
-    public class PdfDTO
+    public class BasePdfDTO
     {
-        public long HashUserId { get; set; }
-        public long HashEventId { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
-        public string PathToSave { get; set; }
+    }
+
+    public class ReportPdfDTO : BasePdfDTO
+    {
+        public string HashEmployeeId { get; set; }
+        public TypeReport Type { get; set; }
     }
 }

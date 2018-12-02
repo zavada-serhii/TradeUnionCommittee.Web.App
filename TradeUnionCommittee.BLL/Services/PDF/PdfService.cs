@@ -1,79 +1,95 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using TradeUnionCommittee.BLL.DTO;
 using TradeUnionCommittee.BLL.Enums;
 using TradeUnionCommittee.BLL.Extensions;
 using TradeUnionCommittee.BLL.Interfaces.PDF;
-using TradeUnionCommittee.BLL.PDF;
-using TradeUnionCommittee.BLL.PDF.DTO;
-using TradeUnionCommittee.BLL.PDF.Models;
+using TradeUnionCommittee.BLL.Utilities;
+using TradeUnionCommittee.Common.ActualResults;
+using TradeUnionCommittee.Common.Enums;
 using TradeUnionCommittee.DAL.Entities;
 using TradeUnionCommittee.DAL.Interfaces;
+using TradeUnionCommittee.PDF.Service;
+using TradeUnionCommittee.PDF.Service.Entities;
+using TradeUnionCommittee.PDF.Service.Models;
 
 namespace TradeUnionCommittee.BLL.Services.PDF
 {
     public class PdfService : IPdfService
     {
         private readonly IUnitOfWork _database;
-        private ReportPdfDTO _reportPdfDto;
+        private readonly IAutoMapperUtilities _mapperService;
+        private readonly IHashIdUtilities _hashIdUtilities;
 
-        public PdfService(IUnitOfWork database)
+        public PdfService(IUnitOfWork database, IAutoMapperUtilities mapperService, IHashIdUtilities hashIdUtilities)
         {
             _database = database;
+            _mapperService = mapperService;
+            _hashIdUtilities = hashIdUtilities;
         }
 
         //------------------------------------------------------------------------------------------
 
-        public async Task CreateReport(ReportPdfDTO dto)
+        public async Task<ActualResult<byte[]>> CreateReport(ReportPdfDTO dto)
         {
-            _reportPdfDto = dto;
-            var model = await FillModelReport();
-            new ReportGenerator().Generate(model);
+            var pathToFile = new ReportGenerator().Generate(await FillModelReport(dto));
+            if (!string.IsNullOrEmpty(pathToFile))
+            {
+                byte[] data;
+                using (var fstream = File.OpenRead(pathToFile))
+                {
+                    data = new byte[fstream.Length];
+                    await fstream.ReadAsync(data, 0, data.Length);
+                }
+                return new ActualResult<byte[]> {Result = data};
+            }
+            return new ActualResult<byte[]>(Errors.FileNotFound);
         }
 
         //------------------------------------------------------------------------------------------
 
-        private async Task<ReportModel> FillModelReport()
+        private async Task<ReportModel> FillModelReport(ReportPdfDTO dto)
         {
             var model = new ReportModel
             {
-                Type = _reportPdfDto.Type,
-                PathToSave = _reportPdfDto.PathToSave,
-                FullNameEmployee = await GetFullNameEmployee(),
-                StartDate = _reportPdfDto.StartDate,
-                EndDate = _reportPdfDto.EndDate
+                Type = (TradeUnionCommittee.PDF.Service.Enums.TypeReport)dto.Type,
+                FullNameEmployee = await GetFullNameEmployee(dto),
+                StartDate = dto.StartDate,
+                EndDate = dto.EndDate
             };
 
-            switch (_reportPdfDto.Type)
+            switch (dto.Type)
             {
-                case ReportType.All:
-                    model.MaterialAidEmployees = await GetMaterialAid();
-                    model.AwardEmployees = await GetAward();
-                    model.EventEmployees = await AddAllEvent();
-                    model.CulturalEmployees = await GetCultural();
-                    model.GiftEmployees = await GetGift();
+                case TypeReport.All:
+                    model.MaterialAidEmployees = await GetMaterialAid(dto);
+                    model.AwardEmployees = await GetAward(dto);
+                    model.EventEmployees = await AddAllEvent(dto);
+                    model.CulturalEmployees = await GetCultural(dto);
+                    model.GiftEmployees = await GetGift(dto);
                     break;
-                case ReportType.MaterialAid:
-                    model.MaterialAidEmployees = await GetMaterialAid();
+                case TypeReport.MaterialAid:
+                    model.MaterialAidEmployees = await GetMaterialAid(dto);
                     break;
-                case ReportType.Award:
-                    model.AwardEmployees = await GetAward();
+                case TypeReport.Award:
+                    model.AwardEmployees = await GetAward(dto);
                     break;
-                case ReportType.Travel:
-                    model.EventEmployees = await GetEvent(TypeEvent.Travel);
+                case TypeReport.Travel:
+                    model.EventEmployees = await GetEvent(dto, TypeEvent.Travel);
                     break;
-                case ReportType.Wellness:
-                    model.EventEmployees = await GetEvent(TypeEvent.Wellness);
+                case TypeReport.Wellness:
+                    model.EventEmployees = await GetEvent(dto, TypeEvent.Wellness);
                     break;
-                case ReportType.Tour:
-                    model.EventEmployees = await GetEvent(TypeEvent.Tour);
+                case TypeReport.Tour:
+                    model.EventEmployees = await GetEvent(dto, TypeEvent.Tour);
                     break;
-                case ReportType.Cultural:
-                    model.CulturalEmployees = await GetCultural();
+                case TypeReport.Cultural:
+                    model.CulturalEmployees = await GetCultural(dto);
                     break;
-                case ReportType.Gift:
-                    model.GiftEmployees = await GetGift();
+                case TypeReport.Gift:
+                    model.GiftEmployees = await GetGift(dto);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -84,69 +100,74 @@ namespace TradeUnionCommittee.BLL.Services.PDF
 
         //------------------------------------------------------------------------------------------
 
-        private async Task<string> GetFullNameEmployee()
+        private async Task<string> GetFullNameEmployee(ReportPdfDTO dto)
         {
-            var employee = await _database.EmployeeRepository.Get(_reportPdfDto.HashUserId);
+            var employee = await _database.EmployeeRepository.Get(_hashIdUtilities.DecryptLong(dto.HashEmployeeId, Enums.Services.Employee));
             var result = employee.Result;
             return $"{result.FirstName} {result.SecondName} {result.Patronymic}";
         }
 
-        private async Task<IEnumerable<MaterialAidEmployees>> GetMaterialAid()
+        private async Task<IEnumerable<MaterialIncentivesEmployeeEntity>> GetMaterialAid(ReportPdfDTO dto)
         {
+            var id = _hashIdUtilities.DecryptLong(dto.HashEmployeeId, Enums.Services.Employee);
             var result = await _database
                 .MaterialAidEmployeesRepository
-                .GetWithInclude(x => x.DateIssue.Between(_reportPdfDto.StartDate, _reportPdfDto.EndDate) &&
-                                     x.IdEmployee == _reportPdfDto.HashUserId,
+                .GetWithInclude(x => x.DateIssue.Between(dto.StartDate, dto.EndDate) &&
+                                     x.IdEmployee == id,
                                 p => p.IdMaterialAidNavigation);
-            return result.Result.OrderBy(x => x.DateIssue);
+            return _mapperService.Mapper.Map<IEnumerable<MaterialIncentivesEmployeeEntity>>(result.Result.OrderBy(x => x.DateIssue));
         }
 
-        private async Task<IEnumerable<AwardEmployees>> GetAward()
+        private async Task<IEnumerable<MaterialIncentivesEmployeeEntity>> GetAward(ReportPdfDTO dto)
         {
+            var id = _hashIdUtilities.DecryptLong(dto.HashEmployeeId, Enums.Services.Employee);
             var result = await _database
                 .AwardEmployeesRepository
-                .GetWithInclude(x => x.DateIssue.Between(_reportPdfDto.StartDate, _reportPdfDto.EndDate) &&
-                                     x.IdEmployee == _reportPdfDto.HashUserId,
+                .GetWithInclude(x => x.DateIssue.Between(dto.StartDate, dto.EndDate) &&
+                                     x.IdEmployee == id,
                                 p => p.IdAwardNavigation);
-            return result.Result.OrderBy(x => x.DateIssue);
+            return _mapperService.Mapper.Map<IEnumerable<MaterialIncentivesEmployeeEntity>>(result.Result.OrderBy(x => x.DateIssue));
         }
 
-        private async Task<IEnumerable<CulturalEmployees>> GetCultural()
+        private async Task<IEnumerable<CulturalEmployeeEntity>> GetCultural(ReportPdfDTO dto)
         {
-            var resultReport = await _database
+            var id = _hashIdUtilities.DecryptLong(dto.HashEmployeeId, Enums.Services.Employee);
+            var result = await _database
                 .CulturalEmployeesRepository
-                .GetWithInclude(x => x.DateVisit.Between(_reportPdfDto.StartDate, _reportPdfDto.EndDate) &&
-                                     x.IdEmployee == _reportPdfDto.HashUserId,
+                .GetWithInclude(x => x.DateVisit.Between(dto.StartDate, dto.EndDate) &&
+                                     x.IdEmployee == id,
                                 p => p.IdCulturalNavigation);
-            return resultReport.Result.OrderBy(x => x.DateVisit);
+            return _mapperService.Mapper.Map<IEnumerable<CulturalEmployeeEntity>>(result.Result.OrderBy(x => x.DateVisit));
         }
 
-        private async Task<IEnumerable<EventEmployees>> GetEvent(TypeEvent typeEvent)
+        private async Task<IEnumerable<EventEmployeeEntity>> GetEvent(ReportPdfDTO dto, TypeEvent typeEvent)
         {
-            var resultReport = await _database
+            var id = _hashIdUtilities.DecryptLong(dto.HashEmployeeId, Enums.Services.Employee);
+            var result = await _database
                 .EventEmployeesRepository
-                .GetWithInclude(x => x.StartDate.Between(_reportPdfDto.StartDate, _reportPdfDto.EndDate) &&
-                                     x.EndDate.Between(_reportPdfDto.StartDate, _reportPdfDto.EndDate) &&
+                .GetWithInclude(x => x.StartDate.Between(dto.StartDate, dto.EndDate) &&
+                                     x.EndDate.Between(dto.StartDate, dto.EndDate) &&
                                      x.IdEventNavigation.Type == typeEvent &&
-                                     x.IdEmployee == _reportPdfDto.HashUserId,
+                                     x.IdEmployee == id,
                                 p => p.IdEventNavigation);
-            return resultReport.Result.OrderBy(x => x.StartDate);
+            return _mapperService.Mapper.Map<IEnumerable<EventEmployeeEntity>>(result.Result.OrderBy(x => x.StartDate));
         }
 
-        private async Task<IEnumerable<GiftEmployees>> GetGift()
+        private async Task<IEnumerable<GiftEmployeeEntity>> GetGift(ReportPdfDTO dto)
         {
-            var resultReport = await _database
+            var id = _hashIdUtilities.DecryptLong(dto.HashEmployeeId, Enums.Services.Employee);
+            var result = await _database
                 .GiftEmployeesRepository
-                .GetWithInclude(x => x.DateGift.Between(_reportPdfDto.StartDate, _reportPdfDto.EndDate) && x.IdEmployee == _reportPdfDto.HashUserId);
-            return resultReport.Result.OrderBy(x => x.DateGift);
+                .GetWithInclude(x => x.DateGift.Between(dto.StartDate, dto.EndDate) && x.IdEmployee == id);
+            return _mapperService.Mapper.Map<IEnumerable<GiftEmployeeEntity>>(result.Result.OrderBy(x => x.DateGift));
         }
 
-        private async Task<IEnumerable<EventEmployees>> AddAllEvent()
+        private async Task<IEnumerable<EventEmployeeEntity>> AddAllEvent(ReportPdfDTO dto)
         {
-            var result = new List<EventEmployees>();
-            result.AddRange(await GetEvent(TypeEvent.Travel));
-            result.AddRange(await GetEvent(TypeEvent.Wellness));
-            result.AddRange(await GetEvent(TypeEvent.Tour));
+            var result = new List<EventEmployeeEntity>();
+            result.AddRange(await GetEvent(dto, TypeEvent.Travel));
+            result.AddRange(await GetEvent(dto, TypeEvent.Wellness));
+            result.AddRange(await GetEvent(dto, TypeEvent.Tour));
             return result;
         }
 

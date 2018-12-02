@@ -1,11 +1,12 @@
 ﻿using System.Threading.Tasks;
-using TradeUnionCommittee.BLL.PDF.DTO;
+using TradeUnionCommittee.BLL.DTO;
+using TradeUnionCommittee.Common.ActualResults;
 
 namespace TradeUnionCommittee.BLL.Interfaces.PDF
 {
     public interface IPdfService
     {
-        Task CreateReport(ReportPdfDTO dto);
+        Task<ActualResult<byte[]>> CreateReport(ReportPdfDTO dto);
         void Dispose();
     }
 }

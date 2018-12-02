@@ -1,23 +1,27 @@
-﻿using System;
+﻿using iTextSharp.text;
+using iTextSharp.text.pdf;
+using System;
 using System.IO;
 using System.Reflection;
-using iTextSharp.text;
-using iTextSharp.text.pdf;
 
-namespace TradeUnionCommittee.BLL.PDF
+namespace TradeUnionCommittee.PDF.Service
 {
     public class BaseSettings
     {
-        private readonly string _basePathToFont = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+        private static readonly string BasePath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+        private readonly string _pathToContainer = $@"{BasePath}\PDF Container";
+        protected readonly string PathToFile;
         protected readonly Font Font;
         protected readonly Font FontBold;
         protected const string Сurrency = "грн";
 
         protected BaseSettings()
         {
-            var baseFont = BaseFont.CreateFont($@"{_basePathToFont}\PDF\Fonts\TimesNewRoman.ttf", BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
+            var baseFont = BaseFont.CreateFont($@"{BasePath}\Fonts\TimesNewRoman.ttf", BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
             Font = new Font(baseFont, 14, Font.NORMAL);
             FontBold = new Font(baseFont, 12, Font.BOLD);
+            CheckDirectory();
+            PathToFile = $@"{_pathToContainer}\{Guid.NewGuid()}.pdf";
         }
 
         protected void AddEmptyParagraph(IElementListener document, int count)
@@ -36,6 +40,15 @@ namespace TradeUnionCommittee.BLL.PDF
                 HorizontalAlignment = Element.ALIGN_CENTER,
                 Colspan = colspan
             });
+        }
+
+        private void CheckDirectory()
+        {
+            var dirInfo = new DirectoryInfo(_pathToContainer);
+            if (!dirInfo.Exists)
+            {
+                dirInfo.Create();
+            }
         }
     }
 }

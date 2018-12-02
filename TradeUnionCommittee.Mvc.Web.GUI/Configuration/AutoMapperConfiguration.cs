@@ -71,6 +71,13 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Configuration
 
                 // -- End Mapping for Directory 
 
+
+                // -- Start mapping for Report
+
+                map.CreateMap<PdfReportViewModel, ReportPdfDTO>();
+
+                // -- End Mapping for Report
+
             }).CreateMapper();
         }
 

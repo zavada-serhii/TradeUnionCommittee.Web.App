@@ -58,7 +58,7 @@ namespace TradeUnionCommittee.Web.Api.Controllers.Account
 
         private async Task<ClaimsIdentity> GetIdentity(string username, string password)
         {
-            var account = await _accountService.Login(username, password, AuthorizationType.Token);
+            var account = await _accountService.Login(username, password, TypeAuthorization.Token);
             if (account.IsValid)
             {
                 var role = await _accountService.GetRoleByEmailAsync(username);

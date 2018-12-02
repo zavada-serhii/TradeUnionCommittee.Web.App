@@ -1,14 +1,14 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using iTextSharp.text;
+﻿using iTextSharp.text;
 using iTextSharp.text.pdf;
-using TradeUnionCommittee.DAL.Entities;
+using System.Collections.Generic;
+using System.Linq;
+using TradeUnionCommittee.PDF.Service.Entities;
 
-namespace TradeUnionCommittee.BLL.PDF.ReportTemplates
+namespace TradeUnionCommittee.PDF.Service.ReportTemplates
 {
     internal class CulturalTemplate : BaseSettings
     {
-        public decimal CreateBody(Document doc, IEnumerable<CulturalEmployees> model)
+        public decimal CreateBody(Document doc, IEnumerable<CulturalEmployeeEntity> model)
         {
             var table = new PdfPTable(4);
 
@@ -26,10 +26,10 @@ namespace TradeUnionCommittee.BLL.PDF.ReportTemplates
 
             foreach (var cultural in model)
             {
-                AddCell(table, Font, 1, $"{cultural.IdCulturalNavigation.Name}");
+                AddCell(table, Font, 1, $"{cultural.Name}");
                 AddCell(table, Font, 1, $"{cultural.Amount} {Сurrency}");
                 AddCell(table, Font, 1, $"{cultural.Discount} {Сurrency}");
-                AddCell(table, Font, 1, $"{cultural.DateVisit:dd/MM/yyyy}");
+                AddCell(table, Font, 1, $"{cultural.Date:dd/MM/yyyy}");
             }
 
             doc.Add(table);

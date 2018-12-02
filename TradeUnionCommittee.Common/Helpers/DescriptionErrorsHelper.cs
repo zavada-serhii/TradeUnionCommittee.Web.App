@@ -31,6 +31,8 @@ namespace TradeUnionCommittee.Common.Helpers
 
                 case Errors.NotFound:
                     return "За вашим запитом нічого не знайдено!";
+                case Errors.FileNotFound:
+                    return "Файл не знайдено!";
                 default:
                     throw new ArgumentOutOfRangeException(nameof(error), error, "Ви зламали систему. Вітаю:)");
             }

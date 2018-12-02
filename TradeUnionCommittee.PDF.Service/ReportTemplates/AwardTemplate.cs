@@ -1,14 +1,14 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using iTextSharp.text;
+﻿using iTextSharp.text;
 using iTextSharp.text.pdf;
-using TradeUnionCommittee.DAL.Entities;
+using System.Collections.Generic;
+using System.Linq;
+using TradeUnionCommittee.PDF.Service.Entities;
 
-namespace TradeUnionCommittee.BLL.PDF.ReportTemplates
+namespace TradeUnionCommittee.PDF.Service.ReportTemplates
 {
     internal class AwardTemplate : BaseSettings
     {
-        public decimal CreateBody(Document doc, IEnumerable<AwardEmployees> model)
+        public decimal CreateBody(Document doc, IEnumerable<MaterialIncentivesEmployeeEntity> model)
         {
             var table = new PdfPTable(6);
 
@@ -25,9 +25,9 @@ namespace TradeUnionCommittee.BLL.PDF.ReportTemplates
 
             foreach (var award in model)
             {
-                AddCell(table, Font, 2, $"{award.IdAwardNavigation.Name}");
+                AddCell(table, Font, 2, $"{award.Name}");
                 AddCell(table, Font, 2, $"{award.Amount} {Сurrency}");
-                AddCell(table, Font, 2, $"{award.DateIssue:dd/MM/yyyy}");
+                AddCell(table, Font, 2, $"{award.Date:dd/MM/yyyy}");
             }
 
             doc.Add(table);
@@ -36,7 +36,7 @@ namespace TradeUnionCommittee.BLL.PDF.ReportTemplates
 
             var generalSum = model.Sum(x => x.Amount);
 
-            foreach (var item in model.GroupBy(l => l.IdAwardNavigation.Name).Select(cl => new { cl.First().IdAwardNavigation.Name, Sum = cl.Sum(c => c.Amount) }).ToList())
+            foreach (var item in model.GroupBy(l => l.Name).Select(cl => new { cl.First().Name, Sum = cl.Sum(c => c.Amount) }).ToList())
             {
                 doc.Add(new Paragraph($"Cумма від {item.Name} - {item.Sum} {Сurrency}", Font) { Alignment = Element.ALIGN_RIGHT });
             }
