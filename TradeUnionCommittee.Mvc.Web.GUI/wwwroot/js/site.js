@@ -115,3 +115,9 @@ $('input[value=from-university]').change(function ()
     document.getElementById('idDormitory').disabled = true;
     document.getElementById('idDepartmental').disabled = true;
 });
+
+//------------------------------------------------------------------------------------------------------------------------------------------
+
+$(function () {
+    $('.modal').modal('show');
+});

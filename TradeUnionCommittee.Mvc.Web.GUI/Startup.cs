@@ -60,6 +60,9 @@ namespace TradeUnionCommittee.Mvc.Web.GUI
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
                 .AddTradeUnionCommitteeValidationModule();
 
+            services.AddDistributedMemoryCache();
+            services.AddSession();
+
             services.Configure<GzipCompressionProviderOptions>(options =>
             {
                 options.Level = CompressionLevel.Optimal;
