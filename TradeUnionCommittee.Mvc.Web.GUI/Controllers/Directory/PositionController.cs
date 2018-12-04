@@ -122,9 +122,14 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Directory
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed([Required] string id)
         {
-            await _services.DeleteAsync(id);
-            await _systemAuditService.AuditAsync(User.Identity.Name, _accessor.HttpContext.Connection.RemoteIpAddress.ToString(), Operations.Delete, Tables.Position);
-            return RedirectToAction("Index");
+            var result = await _services.DeleteAsync(id);
+            if (result.IsValid)
+            {
+                await _systemAuditService.AuditAsync(User.Identity.Name, _accessor.HttpContext.Connection.RemoteIpAddress.ToString(), Operations.Delete, Tables.Position);
+                return RedirectToAction("Index");
+            }
+            TempData["ErrorsList"] = result.ErrorsList;
+            return View();
         }
 
         //------------------------------------------------------------------------------------------------------------------------------------------
