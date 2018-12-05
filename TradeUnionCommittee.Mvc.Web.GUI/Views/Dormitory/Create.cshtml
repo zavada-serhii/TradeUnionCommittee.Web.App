@@ -18,7 +18,7 @@
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
                 <div class="row">
-                    
+
                     <div class="form-group col-lg-4 col-xl-4">
                         <label asp-for="NumberDormitory" class="info-label">Номер гутожитку</label>
                         <input asp-for="NumberDormitory" class="form-control" />
@@ -30,7 +30,7 @@
                         <input asp-for="City" type="text" class="form-control">
                         <span asp-validation-for="City" class="text-danger"></span>
                     </div>
-                 
+
                     <div class="form-group col-lg-4 col-xl-4">
                         <label asp-for="Street">Вулиця</label>
                         <input asp-for="Street" type="text" class="form-control">
@@ -38,7 +38,7 @@
                     </div>
 
                 </div>
-                
+
                 <div class="row">
                     <div class="form-group col-lg-4 col-xl-4">
                         <label asp-for="NumberHouse">Номер дому</label>
@@ -63,3 +63,8 @@
         </div>
     </div>
 </section>
+
+@if (TempData["ErrorsList"] != null)
+{
+    await Html.RenderPartialAsync("_Errors", TempData["ErrorsList"]);
+}

@@ -16,55 +16,62 @@
             <div class="row main-block">
                 <table class="table">
                     <thead>
-                    <tr>
-                        <th>
-                            Місто
-                        </th>
-                        <th>
-                            Вулиця
-                        </th>
-                        <th>
-                            Номер дому
-                        </th>
-                        <th>
-                            Номер квартири
-                        </th>
-                        <th></th>
-                    </tr>
+                        <tr>
+                            <th>
+                                Місто
+                            </th>
+                            <th>
+                                Вулиця
+                            </th>
+                            <th>
+                                Номер дому
+                            </th>
+                            <th>
+                                Номер квартири
+                            </th>
+                            <th></th>
+                        </tr>
                     </thead>
                     <tbody>
-                    @foreach (var item in Model)
-                    {
-                        <tr>
-                            <td>
-                                @item.City
-                            </td>
-                            <td>
-                                @item.Street
-                            </td>
-                            <td>
-                                @item.NumberHouse
-                            </td>
-                            <td>
-                                @item.NumberApartment
-                            </td>
+                        @if (TempData["ErrorsList"] == null)
+                        {
+                            foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        @item.City
+                                    </td>
+                                    <td>
+                                        @item.Street
+                                    </td>
+                                    <td>
+                                        @item.NumberHouse
+                                    </td>
+                                    <td>
+                                        @item.NumberApartment
+                                    </td>
 
-                            <td class="text-right">
-                                <div class="btn-group">
-                                    <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown"></button>
-                                    <div class="dropdown-menu">
-                                        <a class="dropdown-item" asp-action="Update" asp-route-id="@item.HashId">Редагувати</a>
+                                    <td class="text-right">
+                                        <div class="btn-group">
+                                            <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown"></button>
+                                            <div class="dropdown-menu">
+                                                <a class="dropdown-item" asp-action="Update" asp-route-id="@item.HashId">Редагувати</a>
 
-                                        @if (User.IsInRole("Admin"))
-                                        {
-                                            <a class="dropdown-item" asp-action="Delete" asp-route-id="@item.HashId">Видалити</a>
-                                        }
-                                    </div>
-                                </div>
-                            </td>
+                                                @if (User.IsInRole("Admin"))
+                                                {
+                                                    <a class="dropdown-item" asp-action="Delete" asp-route-id="@item.HashId">Видалити</a>
+                                                }
+                                            </div>
+                                        </div>
+                                    </td>
 
-                        </tr>
-                    }
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            await Html.RenderPartialAsync("_Errors", TempData["ErrorsList"]);
+                        }
                     </tbody>
                 </table>
             </div>

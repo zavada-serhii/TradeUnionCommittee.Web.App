@@ -13,27 +13,39 @@
                 </div>
             </div>
             <hr>
-            <form asp-action="Restructuring">
-                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                <div class="row">
-                    <div class="form-group col-lg-4 col-xl-6">
-                        <select asp-for="HashIdSubordinate" class="form-control" asp-items="ViewBag.SubordinateSubdivision"></select>
-                    </div>
-                    <div class="form-group col-lg-4 col-xl-6">
-                        <select asp-for="HashIdMain" class="form-control" asp-items="ViewBag.MainSubdivision"></select>
-                    </div>
-                </div>
-                <div class="row justify-content-between">
-                    <div class="form-group col-lg-3">
-                        <div>
-                            <a asp-action="Index">Повернутися</a>
+            @if (TempData["ErrorsList"] == null)
+            {
+                <form asp-action="Restructuring">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="row">
+                        <div class="form-group col-lg-4 col-xl-6">
+                            <select asp-for="HashIdSubordinate" class="form-control" asp-items="ViewBag.SubordinateSubdivision"></select>
+                        </div>
+                        <div class="form-group col-lg-4 col-xl-6">
+                            <select asp-for="HashIdMain" class="form-control" asp-items="ViewBag.MainSubdivision"></select>
                         </div>
                     </div>
-                    <div class="col-md-6 text-right">
-                        <input type="submit" value="Реструктуризувати" class="btn btn-success btn-default" />
+                    <div class="row justify-content-between">
+                        <div class="form-group col-lg-3">
+                            <div>
+                                <a asp-action="Index">Повернутися</a>
+                            </div>
+                        </div>
+                        <div class="col-md-6 text-right">
+                            <input type="submit" value="Реструктуризувати" class="btn btn-success btn-default" />
+                        </div>
                     </div>
-                </div>
-            </form>
+                </form>
+            }
+            else
+            {
+                await Html.RenderPartialAsync("_Errors", TempData["ErrorsList"]);
+            }
         </div>
     </div>
 </section>
+
+@if (TempData["ErrorsListConfirmed"] != null)
+{
+    await Html.RenderPartialAsync("_Errors", TempData["ErrorsListConfirmed"]);
+}

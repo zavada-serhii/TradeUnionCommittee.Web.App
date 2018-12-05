@@ -14,71 +14,77 @@
                 </div>
             </div>
             <hr>
-            <form asp-action="Delete">
+            @if (TempData["ErrorsList"] == null)
+            {
+                <form asp-action="Delete">
 
-                <input type="hidden" asp-for="HashIdEmployee" />
+                    <input type="hidden" asp-for="HashIdEmployee" />
 
-                <dl class="row">
-                    <dt class="col-md-3">
-                        <a>Унікальний номер (ID)</a>
-                    </dt>
-                    <dd class="col-md-5">
-                        <p class="lead" style="font-size: 15px;">@Model.HashIdEmployee</p>
-                    </dd>
-                </dl>
-
-                <dl class="row">
-                    <dt class="col-md-3">
-                        <a>Прiзвище</a>
-                    </dt>
-                    <dd class="col-md-5">
-                        <p class="lead" style="font-size: 15px;">@Model.FirstName</p>
-                    </dd>
-                </dl>
-
-                <dl class="row">
-                    <dt class="col-md-3">
-                        <a>Iм'я</a>
-                    </dt>
-                    <dd class="col-md-5">
-                        <p class="lead" style="font-size: 15px;">@Model.SecondName</p>
-                    </dd>
-                </dl>
-
-                @if (Model.Patronymic != null)
-                {
                     <dl class="row">
                         <dt class="col-md-3">
-                            <a>По батьковi</a>
+                            <a>Унікальний номер (ID)</a>
                         </dt>
                         <dd class="col-md-5">
-                            <p class="lead" style="font-size: 15px;">@Model.Patronymic</p>
+                            <p class="lead" style="font-size: 15px;">@Model.HashIdEmployee</p>
                         </dd>
                     </dl>
-                }
 
-                <dl class="row">
-                    <dt class="col-md-3">
-                        <a>Дата народження</a>
-                    </dt>
-                    <dd class="col-md-5">
-                        <p class="lead" style="font-size: 15px;">@Model.BirthDate.ToString("dd.MM.yyyy")</p>
-                    </dd>
-                </dl>
+                    <dl class="row">
+                        <dt class="col-md-3">
+                            <a>Прiзвище</a>
+                        </dt>
+                        <dd class="col-md-5">
+                            <p class="lead" style="font-size: 15px;">@Model.FirstName</p>
+                        </dd>
+                    </dl>
 
-                <div class="row justify-content-between">
-                    <div class="form-group col-lg-3">
-                        <div>
-                            <a asp-action="Index" asp-controller="Employee" asp-route-id="@Model.HashIdEmployee">Повернутися</a>
+                    <dl class="row">
+                        <dt class="col-md-3">
+                            <a>Iм'я</a>
+                        </dt>
+                        <dd class="col-md-5">
+                            <p class="lead" style="font-size: 15px;">@Model.SecondName</p>
+                        </dd>
+                    </dl>
+
+                    @if (Model.Patronymic != null)
+                    {
+                        <dl class="row">
+                            <dt class="col-md-3">
+                                <a>По батьковi</a>
+                            </dt>
+                            <dd class="col-md-5">
+                                <p class="lead" style="font-size: 15px;">@Model.Patronymic</p>
+                            </dd>
+                        </dl>
+                    }
+
+                    <dl class="row">
+                        <dt class="col-md-3">
+                            <a>Дата народження</a>
+                        </dt>
+                        <dd class="col-md-5">
+                            <p class="lead" style="font-size: 15px;">@Model.BirthDate.ToString("dd.MM.yyyy")</p>
+                        </dd>
+                    </dl>
+
+                    <div class="row justify-content-between">
+                        <div class="form-group col-lg-3">
+                            <div>
+                                <a asp-action="Index" asp-controller="Employee" asp-route-id="@Model.HashIdEmployee">Повернутися</a>
+                            </div>
+                        </div>
+                        <div class="col-md-6 text-right">
+                            <input type="submit" value="Видалити" class="btn btn-danger" />
                         </div>
                     </div>
-                    <div class="col-md-6 text-right">
-                        <input type="submit" value="Видалити" class="btn btn-danger" />
-                    </div>
-                </div>
 
-            </form>
+                </form>
+            }
+            else
+            {
+                await Html.RenderPartialAsync("_Errors", TempData["ErrorsList"]);
+            }
         </div>
     </div>
 </section>
-

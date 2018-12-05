@@ -14,33 +14,45 @@
                 </div>
             </div>
             <hr>
-            <form asp-action="Update">
+            @if (TempData["ErrorsList"] == null)
+            {
+                <form asp-action="Update">
 
-                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-                <input type="hidden" asp-for="HashId" />
-                <input type="hidden" asp-for="RowVersion" />
+                    <input type="hidden" asp-for="HashId" />
+                    <input type="hidden" asp-for="RowVersion" />
 
-                <div class="row">
-                    <div class="form-group col-lg-4 col-xl-4">
-                        <label asp-for="Name">Назва матеріального заохочення</label>
-                        <input asp-for="Name" type="text" class="form-control">
-                        <span asp-validation-for="Name" class="text-danger"></span>
-                    </div>
-                </div>
-
-                <div class="row justify-content-between">
-                    <div class="form-group col-lg-3">
-                        <div>
-                            <a asp-action="Index">Повернутися</a>
+                    <div class="row">
+                        <div class="form-group col-lg-4 col-xl-4">
+                            <label asp-for="Name">Назва матеріального заохочення</label>
+                            <input asp-for="Name" type="text" class="form-control">
+                            <span asp-validation-for="Name" class="text-danger"></span>
                         </div>
                     </div>
-                    <div class="col-md-6 text-right">
-                        <input type="submit" value="Зберегти" class="btn btn-success btn-default" />
-                    </div>
-                </div>
 
-            </form>
+                    <div class="row justify-content-between">
+                        <div class="form-group col-lg-3">
+                            <div>
+                                <a asp-action="Index">Повернутися</a>
+                            </div>
+                        </div>
+                        <div class="col-md-6 text-right">
+                            <input type="submit" value="Зберегти" class="btn btn-success btn-default" />
+                        </div>
+                    </div>
+
+                </form>
+            }
+            else
+            {
+                await Html.RenderPartialAsync("_Errors", TempData["ErrorsList"]);
+            }
         </div>
     </div>
 </section>
+
+@if (TempData["ErrorsListConfirmed"] != null)
+{
+    await Html.RenderPartialAsync("_Errors", TempData["ErrorsListConfirmed"]);
+}

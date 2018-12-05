@@ -15,31 +15,38 @@
                 </div>
             </div>
             <hr>
-            <form asp-action="Delete">
-                    
-                <input type="hidden" asp-for="HashId" />
+            @if (TempData["ErrorsList"] == null)
+            {
+                <form asp-action="Delete">
 
-                <dl class="row">
-                    <dt class="col-md-3">
-                        <a>Назва громадської посади</a>
-                    </dt>
-                    <dd class="col-md-5">
-                        <p class="lead" style="font-size: 15px;">@Model.Name</p>
-                    </dd>
-                </dl>
+                    <input type="hidden" asp-for="HashId" />
 
-                <div class="row justify-content-between">
-                    <div class="form-group col-lg-3">
-                        <div>
-                            <a asp-action="Index">Повернутися</a>
+                    <dl class="row">
+                        <dt class="col-md-3">
+                            <a>Назва громадської посади</a>
+                        </dt>
+                        <dd class="col-md-5">
+                            <p class="lead" style="font-size: 15px;">@Model.Name</p>
+                        </dd>
+                    </dl>
+
+                    <div class="row justify-content-between">
+                        <div class="form-group col-lg-3">
+                            <div>
+                                <a asp-action="Index">Повернутися</a>
+                            </div>
+                        </div>
+                        <div class="col-md-6 text-right">
+                            <input type="submit" value="Видалити" class="btn btn-danger" />
                         </div>
                     </div>
-                    <div class="col-md-6 text-right">
-                        <input type="submit" value="Видалити" class="btn btn-danger" />
-                    </div>
-                </div>
 
-            </form>
+                </form>
+            }
+            else
+            {
+                await Html.RenderPartialAsync("_Errors", TempData["ErrorsList"]);
+            }
         </div>
     </div>
 </section>
