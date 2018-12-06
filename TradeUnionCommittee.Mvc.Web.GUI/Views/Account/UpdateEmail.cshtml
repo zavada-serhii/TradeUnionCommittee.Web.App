@@ -12,33 +12,44 @@
                 </div>
             </div>
             <hr>
-            <form asp-action="UpdateEmail">
-                <div class="row">
+            @if (TempData["ErrorsList"] == null)
+            {
+                <form asp-action="UpdateEmail">
+                    <div class="row">
 
-                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                    <input type="hidden" asp-for="HashIdUser" />
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <input type="hidden" asp-for="HashIdUser" />
 
-                    <div class="form-group col-lg-4 col-xl-3">
-                        <label asp-for="Email" class="info-label">Email</label>
-                        <input asp-for="Email" class="form-control" />
-                        <span asp-validation-for="Email" class="text-danger"></span>
+                        <div class="form-group col-lg-4 col-xl-3">
+                            <label asp-for="Email" class="info-label">Email</label>
+                            <input asp-for="Email" class="form-control" />
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+
                     </div>
 
-                </div>
+                    <div class="row justify-content-between">
+                        <div class="form-group col-lg-3">
+                            <div>
+                                <a asp-action="Index">Повернутися</a>
+                            </div>
+                        </div>
 
-                <div class="row justify-content-between">
-                    <div class="form-group col-lg-3">
-                        <div>
-                            <a asp-action="Index">Повернутися</a>
+                        <div class="col-md-6 text-right">
+                            <input type="submit" value="Зберегти" class="btn btn-success btn-default" />
                         </div>
                     </div>
-
-                    <div class="col-md-6 text-right">
-                        <input type="submit" value="Зберегти" class="btn btn-success btn-default" />
-                    </div>
-                </div>
-            </form>
+                </form>
+            }
+            else
+            {
+                await Html.RenderPartialAsync("_Errors", TempData["ErrorsList"]);
+            }
         </div>
     </div>
 </section>
 
+@if (TempData["ErrorsListConfirmed"] != null)
+{
+    await Html.RenderPartialAsync("_Errors", TempData["ErrorsListConfirmed"]);
+}

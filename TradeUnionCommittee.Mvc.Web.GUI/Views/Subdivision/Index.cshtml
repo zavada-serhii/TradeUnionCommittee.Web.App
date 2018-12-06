@@ -1,4 +1,4 @@
-﻿@model TradeUnionCommittee.Common.ActualResults.ActualResult<IEnumerable<TradeUnionCommittee.BLL.DTO.SubdivisionDTO>>
+﻿@model IEnumerable<TradeUnionCommittee.BLL.DTO.SubdivisionDTO>
 @{
     ViewData["Title"] = "Index";
 }
@@ -30,7 +30,7 @@
                     <tbody>
                         @if (TempData["ErrorsList"] == null)
                         {
-                            foreach (var item in Model.Result)
+                            foreach (var item in Model)
                             {
                                 <tr>
                                     <td>

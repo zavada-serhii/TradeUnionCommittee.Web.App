@@ -136,7 +136,7 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Directory
 
         [AcceptVerbs("Get", "Post")]
         [Authorize(Roles = "Admin,Accountant,Deputy")]
-        public async Task<IActionResult> CheckName(string name)
+        public async Task<IActionResult> CheckName([Required] string name)
         {
             return Json(!await _services.CheckNameAsync(name));
         }

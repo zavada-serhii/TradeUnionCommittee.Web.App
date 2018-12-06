@@ -3,13 +3,13 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.DTO;
 using TradeUnionCommittee.BLL.Enums;
 using TradeUnionCommittee.BLL.Interfaces.Directory;
 using TradeUnionCommittee.BLL.Interfaces.SystemAudit;
 using TradeUnionCommittee.Mvc.Web.GUI.Configuration.DropDownLists;
-using TradeUnionCommittee.Mvc.Web.GUI.Controllers.Oops;
 using TradeUnionCommittee.ViewModels.ViewModels;
 
 namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Directory
@@ -18,16 +18,14 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Directory
     {
         private readonly ISubdivisionsService _services;
         private readonly IDropDownList _dropDownList;
-        private readonly IOops _oops;
         private readonly IMapper _mapper;
         private readonly ISystemAuditService _systemAuditService;
         private readonly IHttpContextAccessor _accessor;
 
-        public SubdivisionController(ISubdivisionsService services, IDropDownList dropDownList, IOops oops, IMapper mapper, ISystemAuditService systemAuditService, IHttpContextAccessor accessor)
+        public SubdivisionController(ISubdivisionsService services, IDropDownList dropDownList, IMapper mapper, ISystemAuditService systemAuditService, IHttpContextAccessor accessor)
         {
             _services = services;
             _dropDownList = dropDownList;
-            _oops = oops;
             _mapper = mapper;
             _systemAuditService = systemAuditService;
             _accessor = accessor;
@@ -40,21 +38,27 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Directory
         public async Task<IActionResult> Index()
         {
             var result = await _services.GetAllAsync();
-            return View(result);
+            if (result.IsValid)
+            {
+                return View(result.Result);
+            }
+            TempData["ErrorsList"] = result.ErrorsList;
+            return View();
         }
 
         //------------------------------------------------------------------------------------------------------------------------------------------
 
         [HttpGet]
         [Authorize(Roles = "Admin,Accountant,Deputy")]
-        public async Task<IActionResult> Details(string id)
+        public async Task<IActionResult> Details([Required] string id)
         {
-            if (id == null) return NotFound();
             var result = await _services.GetSubordinateSubdivisions(id);
-            var nameMainSubdivision = await _services.GetAsync(id);
-            ViewData["IdMainSubdivision"] = id;
-            ViewData["NameMainSubdivision"] = nameMainSubdivision.Result.Name;
-            return result.IsValid ? View(result.Result) : _oops.OutPutError("Subdivision", "Index", result.ErrorsList);
+            if (result.IsValid)
+            {
+                return View(result.Result);
+            }
+            TempData["ErrorsList"] = result.ErrorsList;
+            return View();
         }
 
         //------------------------------------------------------------------------------------------------------------------------------------------
@@ -74,13 +78,12 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Directory
             if (ModelState.IsValid)
             {
                 var result = await _services.CreateMainSubdivisionAsync(_mapper.Map<CreateSubdivisionDTO>(vm));
-
                 if (result.IsValid)
                 {
                     await _systemAuditService.AuditAsync(User.Identity.Name, _accessor.HttpContext.Connection.RemoteIpAddress.ToString(), Operations.Insert, Tables.Subdivisions);
                     return RedirectToAction("Index");
                 }
-                return _oops.OutPutError("Subdivision", "Index", result.ErrorsList);
+                TempData["ErrorsList"] = result.ErrorsList;
             }
             return View(vm);
         }
@@ -89,7 +92,7 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Directory
 
         [HttpGet]
         [Authorize(Roles = "Admin,Accountant,Deputy")]
-        public IActionResult CreateSubordinate(string id)
+        public IActionResult CreateSubordinate([Required] string id)
         {
             return View(new CreateSubordinateSubdivisionViewModel { HashIdMain = id });
         }
@@ -102,13 +105,12 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Directory
             if (ModelState.IsValid)
             {
                 var result = await _services.CreateSubordinateSubdivisionAsync(_mapper.Map<CreateSubordinateSubdivisionDTO>(vm));
-
                 if (result.IsValid)
                 {
                     await _systemAuditService.AuditAsync(User.Identity.Name, _accessor.HttpContext.Connection.RemoteIpAddress.ToString(), Operations.Insert, Tables.Subdivisions);
                     return RedirectToAction("Details", new { id = vm.HashIdMain });
                 }
-                return _oops.OutPutError("Subdivision", "Index", result.ErrorsList);
+                TempData["ErrorsList"] = result.ErrorsList;
             }
             return View(vm);
         }
@@ -117,11 +119,15 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Directory
 
         [HttpGet]
         [Authorize(Roles = "Admin,Accountant,Deputy")]
-        public async Task<IActionResult> UpdateName(string id)
+        public async Task<IActionResult> UpdateName([Required] string id)
         {
-            if (id == null) return NotFound();
             var result = await _services.GetAsync(id);
-            return result.IsValid ? View(_mapper.Map<UpdateNameSubdivisionViewModel>(result.Result)) : _oops.OutPutError("Subdivision", "Index", result.ErrorsList);
+            if (result.IsValid)
+            {
+                return View(_mapper.Map<UpdateNameSubdivisionViewModel>(result.Result));
+            }
+            TempData["ErrorsList"] = result.ErrorsList;
+            return View();
         }
 
         [HttpPost, ActionName("UpdateName")]
@@ -131,15 +137,13 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Directory
         {
             if (ModelState.IsValid)
             {
-                if (vm.HashIdMain == null) return NotFound();
                 var result = await _services.UpdateNameSubdivisionAsync(_mapper.Map<UpdateSubdivisionNameDTO>(vm));
-
                 if (result.IsValid)
                 {
                     await _systemAuditService.AuditAsync(User.Identity.Name, _accessor.HttpContext.Connection.RemoteIpAddress.ToString(), Operations.Update, Tables.Subdivisions);
                     return RedirectToAction("Index");
                 }
-                return _oops.OutPutError("Subdivision", "Index", result.ErrorsList);
+                TempData["ErrorsListConfirmed"] = result.ErrorsList;
             }
             return View(vm);
         }
@@ -148,11 +152,15 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Directory
 
         [HttpGet]
         [Authorize(Roles = "Admin,Accountant,Deputy")]
-        public async Task<IActionResult> UpdateAbbreviation(string id)
+        public async Task<IActionResult> UpdateAbbreviation([Required] string id)
         {
-            if (id == null) return NotFound();
             var result = await _services.GetAsync(id);
-            return result.IsValid ? View(_mapper.Map<UpdateAbbreviationSubdivisionViewModel>(result.Result)) : _oops.OutPutError("Subdivision", "Index", result.ErrorsList);
+            if (result.IsValid)
+            {
+                return View(_mapper.Map<UpdateAbbreviationSubdivisionViewModel>(result.Result));
+            }
+            TempData["ErrorsList"] = result.ErrorsList;
+            return View();
         }
 
         [HttpPost, ActionName("UpdateAbbreviation")]
@@ -162,14 +170,13 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Directory
         {
             if (ModelState.IsValid)
             {
-                if (vm.HashIdMain == null) return NotFound();
                 var result = await _services.UpdateAbbreviationSubdivisionAsync(_mapper.Map<UpdateSubdivisionAbbreviationDTO>(vm));
                 if (result.IsValid)
                 {
                     await _systemAuditService.AuditAsync(User.Identity.Name, _accessor.HttpContext.Connection.RemoteIpAddress.ToString(), Operations.Update, Tables.Subdivisions);
                     return RedirectToAction("Index");
                 }
-                return _oops.OutPutError("Subdivision", "Index", result.ErrorsList);
+                TempData["ErrorsListConfirmed"] = result.ErrorsList;
             }
             return View(vm);
         }
@@ -178,9 +185,8 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Directory
 
         [HttpGet]
         [Authorize(Roles = "Admin,Accountant,Deputy")]
-        public async Task<IActionResult> Restructuring(string id)
+        public async Task<IActionResult> Restructuring([Required] string id)
         {
-            if (id == null) return NotFound();
             var subordinateSubdivision = await _services.GetSubordinateSubdivisionsForMvc(id);
             ViewBag.MainSubdivision = await _dropDownList.GetMainSubdivision();
             ViewBag.SubordinateSubdivision = new SelectList(subordinateSubdivision, "Key", "Value");
@@ -200,7 +206,7 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Directory
                     await _systemAuditService.AuditAsync(User.Identity.Name, _accessor.HttpContext.Connection.RemoteIpAddress.ToString(), Operations.Update, Tables.Subdivisions);
                     return RedirectToAction("Index");
                 }
-                return _oops.OutPutError("Subdivision", "Index", result.ErrorsList);
+                TempData["ErrorsListConfirmed"] = result.ErrorsList;
             }
             return View(vm);
         }
@@ -209,41 +215,44 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Directory
 
         [HttpGet]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Delete(string id)
+        public async Task<IActionResult> Delete([Required] string id)
         {
-            if (id == null) return NotFound();
             var result = await _services.GetAsync(id);
-            return result.IsValid ? View(result.Result) : _oops.OutPutError("Subdivision", "Index", result.ErrorsList);
+            if (result.IsValid)
+            {
+                return View(result.Result);
+            }
+            TempData["ErrorsList"] = result.ErrorsList;
+            return View();
         }
 
         [HttpPost, ActionName("Delete")]
         [Authorize(Roles = "Admin")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(string id)
+        public async Task<IActionResult> DeleteConfirmed([Required] string id)
         {
-            if (id == null) return NotFound();
             var result = await _services.DeleteAsync(id);
-
             if (result.IsValid)
             {
                 await _systemAuditService.AuditAsync(User.Identity.Name, _accessor.HttpContext.Connection.RemoteIpAddress.ToString(), Operations.Delete, Tables.Subdivisions);
                 return RedirectToAction("Index");
             }
-            return _oops.OutPutError("Subdivision", "Index", result.ErrorsList);
+            TempData["ErrorsList"] = result.ErrorsList;
+            return View();
         }
 
         //------------------------------------------------------------------------------------------------------------------------------------------
 
         [AcceptVerbs("Get", "Post")]
         [Authorize(Roles = "Admin,Accountant,Deputy")]
-        public async Task<IActionResult> CheckName(string name)
+        public async Task<IActionResult> CheckName([Required] string name)
         {
             return Json(!await _services.CheckNameAsync(name));
         }
 
         [AcceptVerbs("Get", "Post")]
         [Authorize(Roles = "Admin,Accountant,Deputy")]
-        public async Task<IActionResult> CheckAbbreviation(string abbreviation)
+        public async Task<IActionResult> CheckAbbreviation([Required] string abbreviation)
         {
             return Json(!await _services.CheckAbbreviationAsync(abbreviation));
         }
