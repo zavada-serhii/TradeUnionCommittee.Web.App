@@ -395,3 +395,8 @@
         </div>
     </div>
 </section>
+
+@if (TempData["ErrorsList"] != null)
+{
+    await Html.RenderPartialAsync("_Errors", TempData["ErrorsList"]);
+}

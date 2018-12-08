@@ -16,54 +16,61 @@
             <div class="row main-block">
                 <table class="table">
                     <thead>
-                    <tr>
-                        <th>
-                            Номер гуртожитку
-                        </th>
-                        <th>
-                            Місто
-                        </th>
-                        <th>
-                            Вулиця
-                        </th>
-                        <th>
-                            Номер дому
-                        </th>
-                        <th></th>
-                    </tr>
+                        <tr>
+                            <th>
+                                Номер гуртожитку
+                            </th>
+                            <th>
+                                Місто
+                            </th>
+                            <th>
+                                Вулиця
+                            </th>
+                            <th>
+                                Номер дому
+                            </th>
+                            <th></th>
+                        </tr>
                     </thead>
                     <tbody>
-                        @foreach (var item in Model)
+                        @if (TempData["ErrorsList"] == null)
                         {
-                            <tr>
-                                <td>
-                                    @item.NumberDormitory
-                                </td>
-                                <td>
-                                    @item.City
-                                </td>
-                                <td>
-                                    @item.Street
-                                </td>
-                                <td>
-                                    @item.NumberHouse
-                                </td>
+                            foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        @item.NumberDormitory
+                                    </td>
+                                    <td>
+                                        @item.City
+                                    </td>
+                                    <td>
+                                        @item.Street
+                                    </td>
+                                    <td>
+                                        @item.NumberHouse
+                                    </td>
 
-                                <td class="text-right">
-                                    <div class="btn-group">
-                                        <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown"></button>
-                                        <div class="dropdown-menu">
-                                            <a class="dropdown-item" asp-action="Update" asp-route-id="@item.HashId">Редагувати</a>
+                                    <td class="text-right">
+                                        <div class="btn-group">
+                                            <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown"></button>
+                                            <div class="dropdown-menu">
+                                                <a class="dropdown-item" asp-action="Update" asp-route-id="@item.HashId">Редагувати</a>
 
-                                            @if (User.IsInRole("Admin"))
-                                            {
-                                                <a class="dropdown-item" asp-action="Delete" asp-route-id="@item.HashId">Видалити</a>
-                                            }
+                                                @if (User.IsInRole("Admin"))
+                                                {
+                                                    <a class="dropdown-item" asp-action="Delete" asp-route-id="@item.HashId">Видалити</a>
+                                                }
+                                            </div>
                                         </div>
-                                    </div>
-                                </td>
+                                    </td>
 
-                            </tr>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            await Html.RenderPartialAsync("_Errors", TempData["ErrorsList"]);
                         }
                     </tbody>
                 </table>

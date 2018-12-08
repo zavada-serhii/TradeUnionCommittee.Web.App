@@ -2,13 +2,13 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.DTO;
 using TradeUnionCommittee.BLL.Enums;
 using TradeUnionCommittee.BLL.Interfaces.Employee;
 using TradeUnionCommittee.BLL.Interfaces.SystemAudit;
 using TradeUnionCommittee.Mvc.Web.GUI.Configuration.DropDownLists;
-using TradeUnionCommittee.Mvc.Web.GUI.Controllers.Oops;
 using TradeUnionCommittee.ViewModels.ViewModels;
 
 namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Employee
@@ -17,16 +17,14 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Employee
     {
         private readonly IEmployeeService _employeeService;
         private readonly IDropDownList _dropDownList;
-        private readonly IOops _oops;
         private readonly IMapper _mapper;
         private readonly ISystemAuditService _systemAuditService;
         private readonly IHttpContextAccessor _accessor;
 
-        public EmployeeController(IEmployeeService employeeService, IDropDownList dropDownList, IOops oops, IMapper mapper, ISystemAuditService systemAuditService, IHttpContextAccessor accessor)
+        public EmployeeController(IEmployeeService employeeService, IDropDownList dropDownList, IMapper mapper, ISystemAuditService systemAuditService, IHttpContextAccessor accessor)
         {
             _employeeService = employeeService;
             _dropDownList = dropDownList;
-            _oops = oops;
             _mapper = mapper;
             _systemAuditService = systemAuditService;
             _accessor = accessor;
@@ -39,7 +37,12 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Employee
         public async Task<IActionResult> Index(string id)
         {
             var result = await _employeeService.GetMainInfoEmployeeAsync(id);
-            return View(result.Result);
+            if (result.IsValid)
+            {
+                return View(result.Result);
+            }
+            TempData["ErrorsList"] = result.ErrorsList;
+            return View();
         }
 
         //------------------------------------------------------------------------------------------------------------------------------------------
@@ -87,29 +90,29 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Employee
 
                     return RedirectToAction("Create");
                 }
-                return _oops.OutPutError("Employee", "Create", result.ErrorsList);
+                TempData["ErrorsList"] = result.ErrorsList;
             }
             await FillingDropDownLists();
-            return View("Create", vm);
+            return View(vm);
         }
 
         [AcceptVerbs("Get", "Post")]
         [Authorize(Roles = "Admin,Accountant")]
-        public async Task<IActionResult> GetSubordinateSubdivision(string id)
+        public async Task<IActionResult> GetSubordinateSubdivision([Required] string id)
         {
             return Json(await _dropDownList.GetSubordinateSubdivisions(id));
         }
 
         [AcceptVerbs("Get", "Post")]
         [Authorize(Roles = "Admin,Accountant")]
-        public async Task<IActionResult> CheckIdentificationСode(string identificationСode)
+        public async Task<IActionResult> CheckIdentificationСode([Required] string identificationСode)
         {
             return Json(!await _employeeService.CheckIdentificationСode(identificationСode));
         }
 
         [AcceptVerbs("Get", "Post")]
         [Authorize(Roles = "Admin,Accountant")]
-        public async Task<IActionResult> CheckMechnikovCard(string mechnikovCard)
+        public async Task<IActionResult> CheckMechnikovCard([Required] string mechnikovCard)
         {
             return Json(!await _employeeService.CheckMechnikovCard(mechnikovCard));
         }
@@ -118,13 +121,17 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Employee
 
         [HttpGet]
         [Authorize(Roles = "Admin,Accountant,Deputy")]
-        public async Task<IActionResult> Update(string id)
+        public async Task<IActionResult> Update([Required] string id)
         {
-            if (id == null) return NotFound();
             var result = await _employeeService.GetMainInfoEmployeeAsync(id);
-            await FillingStudyDropDownLists();
-            await FillingScientificDropDownLists();
-            return result.IsValid ? View(_mapper.Map<UpdateEmployeeViewModel>(result.Result)) : _oops.OutPutError("Employee", "Index", result.ErrorsList);
+            if (result.IsValid)
+            {
+                await FillingStudyDropDownLists();
+                await FillingScientificDropDownLists();
+                return View(_mapper.Map<UpdateEmployeeViewModel>(result.Result));
+            }
+            TempData["ErrorsList"] = result.ErrorsList;
+            return View();
         }
 
         [HttpPost, ActionName("Update")]
@@ -141,7 +148,7 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Employee
                     await _systemAuditService.AuditAsync(User.Identity.Name, _accessor.HttpContext.Connection.RemoteIpAddress.ToString(), Operations.Update, Tables.Employee);
                     return RedirectToAction("Index", "Employee", new {id = vm.HashIdEmployee});
                 }
-                return _oops.OutPutError("Employee", "Index", result.ErrorsList);
+                TempData["ErrorsListConfirmed"] = result.ErrorsList;
             }
             await FillingStudyDropDownLists();
             await FillingScientificDropDownLists();
@@ -153,26 +160,30 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Employee
 
         [HttpGet]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Delete(string id)
+        public async Task<IActionResult> Delete([Required] string id)
         {
-            if (id == null) return NotFound();
             var result = await _employeeService.GetMainInfoEmployeeAsync(id);
-            return result.IsValid ? View(result.Result) : _oops.OutPutError("Employee", "Index", result.ErrorsList);
+            if (result.IsValid)
+            {
+                return View(result.Result);
+            }
+            TempData["ErrorsList"] = result.ErrorsList;
+            return View();
         }
 
         [HttpPost, ActionName("Delete")]
         [Authorize(Roles = "Admin")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(string id)
+        public async Task<IActionResult> DeleteConfirmed([Required] string id)
         {
-            if (id == null) return NotFound();
             var result = await _employeeService.DeleteAsync(id);
             if (result.IsValid)
             {
                 await _systemAuditService.AuditAsync(User.Identity.Name, _accessor.HttpContext.Connection.RemoteIpAddress.ToString(), Operations.Delete, Tables.Employee);
                 return RedirectToAction("Directory", "Home");
             }
-            return _oops.OutPutError("Home", "Index", result.ErrorsList);
+            TempData["ErrorsList"] = result.ErrorsList;
+            return View();
         }
 
         //------------------------------------------------------------------------------------------------------------------------------------------

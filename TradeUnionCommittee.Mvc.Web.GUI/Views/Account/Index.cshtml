@@ -1,4 +1,4 @@
-﻿@model TradeUnionCommittee.Common.ActualResults.ActualResult<IEnumerable<TradeUnionCommittee.BLL.DTO.AccountDTO>>
+﻿@model IEnumerable<TradeUnionCommittee.BLL.DTO.AccountDTO>
 @{
     ViewData["Title"] = "Index";
 }
@@ -6,7 +6,7 @@
 <section class="add-user container-fluid">
     <div class="row justify-content-center">
         <div class="col-md-12 add-user_block">
-            
+
             <div class="row">
                 <hr />
                 <div class="form-group">
@@ -16,42 +16,50 @@
             <div class="row main-block">
                 <table class="table">
                     <thead>
-                    <tr>
-                        <th>
-                            Email
-                        </th>
-                        <th>
-                            Роль доступу
-                        </th>
+                        <tr>
+                            <th>
+                                Email
+                            </th>
+                            <th>
+                                Роль доступу
+                            </th>
 
-                        <th></th>
-                    </tr>
+                            <th></th>
+                        </tr>
                     </thead>
                     <tbody>
-                    @foreach (var item in Model.Result)
-                    {
-                        <tr>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.Email)
-                            </td>
 
-                            <td>
-                                @Html.DisplayFor(modelItem => item.Role)
-                            </td>
+                        @if (TempData["ErrorsList"] == null)
+                        {
+                            foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        @item.Email
+                                    </td>
 
-                            <td class="text-right">
-                                <div class="btn-group">
-                                    <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown"></button>
-                                    <div class="dropdown-menu">
-                                        <a class="dropdown-item" asp-action="UpdateEmail" asp-route-id="@item.HashIdUser">Редагувати Email</a>
-                                        <a class="dropdown-item" asp-action="UpdatePassword" asp-route-id="@item.HashIdUser">Редагувати пароль</a>
-                                        <a class="dropdown-item" asp-action="UpdateRole" asp-route-id="@item.HashIdUser">Редагувати роль</a>
-                                        <a class="dropdown-item" asp-action="Delete" asp-route-id="@item.HashIdUser">Видалити</a>
-                                    </div>
-                                </div>
-                            </td>
-                        </tr>
-                    }
+                                    <td>
+                                        @item.Role
+                                    </td>
+
+                                    <td class="text-right">
+                                        <div class="btn-group">
+                                            <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown"></button>
+                                            <div class="dropdown-menu">
+                                                <a class="dropdown-item" asp-action="UpdateEmail" asp-route-id="@item.HashIdUser">Редагувати Email</a>
+                                                <a class="dropdown-item" asp-action="UpdatePassword" asp-route-id="@item.HashIdUser">Редагувати пароль</a>
+                                                <a class="dropdown-item" asp-action="UpdateRole" asp-route-id="@item.HashIdUser">Редагувати роль</a>
+                                                <a class="dropdown-item" asp-action="Delete" asp-route-id="@item.HashIdUser">Видалити</a>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            await Html.RenderPartialAsync("_Errors", TempData["ErrorsList"]);
+                        }
                     </tbody>
                 </table>
             </div>

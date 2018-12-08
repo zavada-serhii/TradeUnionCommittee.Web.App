@@ -6,16 +6,15 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Serilog;
 using System;
 using System.IO.Compression;
-using Serilog;
 using TradeUnionCommittee.BLL.Extensions;
 using TradeUnionCommittee.BLL.Utilities;
 using TradeUnionCommittee.Mvc.Web.GUI.Configuration;
 using TradeUnionCommittee.Mvc.Web.GUI.Configuration.DropDownLists;
-using TradeUnionCommittee.Mvc.Web.GUI.Controllers.Oops;
 using TradeUnionCommittee.ViewModels.Extensions;
-using Microsoft.Extensions.Logging;
 
 namespace TradeUnionCommittee.Mvc.Web.GUI
 {
@@ -59,6 +58,9 @@ namespace TradeUnionCommittee.Mvc.Web.GUI
                 .AddMvc()
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
                 .AddTradeUnionCommitteeValidationModule();
+
+            services.AddDistributedMemoryCache();
+            services.AddSession();
 
             services.Configure<GzipCompressionProviderOptions>(options =>
             {
@@ -107,7 +109,6 @@ namespace TradeUnionCommittee.Mvc.Web.GUI
 
         private void DependencyInjectionSystem(IServiceCollection services)
         {
-            services.AddScoped<IOops, OopsController>();
             services.AddScoped<IDropDownList, DropDownList>();
             services.AddSingleton(cm => AutoMapperConfiguration.ConfigureAutoMapper());
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();

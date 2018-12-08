@@ -13,8 +13,8 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="accordion" id="accordionLeft">
-                                
-                                
+
+
 
                                 <div class="card">
                                     <div class="card-header" id="headingOne">
@@ -39,10 +39,10 @@
                                                     <input asp-for="EndDate" type="date" class="form-control">
                                                     <span asp-validation-for="EndDate" class="text-danger"></span>
                                                 </div>
-                                                <input type="hidden" asp-for="Type" value="@TypeReport.All"/>
-                                                <input type="hidden" asp-for="HashEmployeeId"/>
+                                                <input type="hidden" asp-for="Type" value="@TypeReport.All" />
+                                                <input type="hidden" asp-for="HashEmployeeId" />
                                                 <div class="input-group-append col-md-12">
-                                                    <input type="submit" value="Знайти" class="btn btn-success btn-block"/>
+                                                    <input type="submit" value="Знайти" class="btn btn-success btn-block" />
                                                 </div>
                                             </div>
                                         </form>
@@ -72,10 +72,10 @@
                                                     <input asp-for="EndDate" type="date" class="form-control">
                                                     <span asp-validation-for="EndDate" class="text-danger"></span>
                                                 </div>
-                                                <input type="hidden" asp-for="Type" value="@TypeReport.MaterialAid"/>
-                                                <input type="hidden" asp-for="HashEmployeeId"/>
+                                                <input type="hidden" asp-for="Type" value="@TypeReport.MaterialAid" />
+                                                <input type="hidden" asp-for="HashEmployeeId" />
                                                 <div class="input-group-append col-md-12">
-                                                    <input type="submit" value="Знайти" class="btn btn-success btn-block"/>
+                                                    <input type="submit" value="Знайти" class="btn btn-success btn-block" />
                                                 </div>
                                             </div>
                                         </form>
@@ -105,10 +105,10 @@
                                                     <input asp-for="EndDate" type="date" class="form-control">
                                                     <span asp-validation-for="EndDate" class="text-danger"></span>
                                                 </div>
-                                                <input type="hidden" asp-for="Type" value="@TypeReport.Award"/>
-                                                <input type="hidden" asp-for="HashEmployeeId"/>
+                                                <input type="hidden" asp-for="Type" value="@TypeReport.Award" />
+                                                <input type="hidden" asp-for="HashEmployeeId" />
                                                 <div class="input-group-append col-md-12">
-                                                    <input type="submit" value="Знайти" class="btn btn-success btn-block"/>
+                                                    <input type="submit" value="Знайти" class="btn btn-success btn-block" />
                                                 </div>
                                             </div>
                                         </form>
@@ -138,10 +138,10 @@
                                                     <input asp-for="EndDate" type="date" class="form-control">
                                                     <span asp-validation-for="EndDate" class="text-danger"></span>
                                                 </div>
-                                                <input type="hidden" asp-for="Type" value="@TypeReport.Travel"/>
-                                                <input type="hidden" asp-for="HashEmployeeId"/>
+                                                <input type="hidden" asp-for="Type" value="@TypeReport.Travel" />
+                                                <input type="hidden" asp-for="HashEmployeeId" />
                                                 <div class="input-group-append col-md-12">
-                                                    <input type="submit" value="Знайти" class="btn btn-success btn-block"/>
+                                                    <input type="submit" value="Знайти" class="btn btn-success btn-block" />
                                                 </div>
                                             </div>
                                         </form>
@@ -299,3 +299,8 @@
         </div>
     </div>
 </section>
+
+@if (TempData["ErrorsList"] != null)
+{
+    await Html.RenderPartialAsync("_Errors", TempData["ErrorsList"]);
+}

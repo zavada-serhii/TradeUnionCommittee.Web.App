@@ -14,46 +14,58 @@
                 </div>
             </div>
             <hr>
-            <form asp-action="Update">
-                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            @if (TempData["ErrorsList"] == null)
+            {
+                <form asp-action="Update">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-                <input type="hidden" asp-for="HashId" />
-                <input type="hidden" asp-for="RowVersion" />
+                    <input type="hidden" asp-for="HashId" />
+                    <input type="hidden" asp-for="RowVersion" />
 
-                <div class="row">
+                    <div class="row">
 
-                    <div class="form-group col-lg-4 col-xl-4">
-                        <label asp-for="City">Місто</label>
-                        <input asp-for="City" type="text" class="form-control">
-                        <span asp-validation-for="City" class="text-danger"></span>
+                        <div class="form-group col-lg-4 col-xl-4">
+                            <label asp-for="City">Місто</label>
+                            <input asp-for="City" type="text" class="form-control">
+                            <span asp-validation-for="City" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group col-lg-4 col-xl-4">
+                            <label asp-for="Street">Вулиця</label>
+                            <input asp-for="Street" type="text" class="form-control">
+                            <span asp-validation-for="Street" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group col-lg-4 col-xl-4">
+                            <label asp-for="NumberHouse">Номер дому</label>
+                            <input asp-for="NumberHouse" type="text" class="form-control">
+                            <span asp-validation-for="NumberHouse" class="text-danger"></span>
+                        </div>
+
                     </div>
 
-                    <div class="form-group col-lg-4 col-xl-4">
-                        <label asp-for="Street">Вулиця</label>
-                        <input asp-for="Street" type="text" class="form-control">
-                        <span asp-validation-for="Street" class="text-danger"></span>
-                    </div>
-
-                    <div class="form-group col-lg-4 col-xl-4">
-                        <label asp-for="NumberHouse">Номер дому</label>
-                        <input asp-for="NumberHouse" type="text" class="form-control">
-                        <span asp-validation-for="NumberHouse" class="text-danger"></span>
-                    </div>
-
-                </div>
-
-                <div class="row justify-content-between">
-                    <div class="form-group col-lg-3">
-                        <div>
-                            <a asp-action="Index">Повернутися</a>
+                    <div class="row justify-content-between">
+                        <div class="form-group col-lg-3">
+                            <div>
+                                <a asp-action="Index">Повернутися</a>
+                            </div>
+                        </div>
+                        <div class="col-md-6 text-right">
+                            <input type="submit" value="Зберегти" class="btn btn-success btn-default" />
                         </div>
                     </div>
-                    <div class="col-md-6 text-right">
-                        <input type="submit" value="Зберегти" class="btn btn-success btn-default" />
-                    </div>
-                </div>
 
-            </form>
+                </form>
+            }
+            else
+            {
+                await Html.RenderPartialAsync("_Errors", TempData["ErrorsList"]);
+            }
         </div>
     </div>
 </section>
+
+@if (TempData["ErrorsListConfirmed"] != null)
+{
+    await Html.RenderPartialAsync("_Errors", TempData["ErrorsListConfirmed"]);
+}
