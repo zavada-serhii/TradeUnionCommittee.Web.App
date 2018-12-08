@@ -65,7 +65,7 @@ namespace TradeUnionCommittee.Web.Api
                 .AddTradeUnionCommitteeViewModelsModule()
                 .AddResponseCompression()
                 .AddMvc()
-                .SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
+                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
                 .AddTradeUnionCommitteeValidationModule();
 
             services.AddSwaggerGen(c => 
