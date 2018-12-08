@@ -19,37 +19,37 @@
 
                     <table class="table table-bordered">
                         <thead>
-                        <tr>
-                            <th>#</th>
-                            <th title="Прізвище, ім’я, по батькові">ПІБ</th>
-                            <th title="Дата народження">Д/Н</th>
-                            <th title="Мобільний номер">Моб.номер</th>
-                            <th title="Міский номер">Міс.номер</th>
-                            <th title="Структурний підрозділ">Ст.підрозділ</th>
-                            <th>Кафедра</th>
-                            <th></th>
-                        </tr>
+                            <tr>
+                                <th>#</th>
+                                <th title="Прізвище, ім’я, по батькові">ПІБ</th>
+                                <th title="Дата народження">Д/Н</th>
+                                <th title="Мобільний номер">Моб.номер</th>
+                                <th title="Міский номер">Міс.номер</th>
+                                <th title="Структурний підрозділ">Ст.підрозділ</th>
+                                <th>Кафедра</th>
+                                <th></th>
+                            </tr>
                         </thead>
                         <tbody>
 
-                        @{int counter = 1;}
+                            @{int counter = 1;}
 
-                        @foreach (var res in Model)
-                        {
-                            <tr>
-                                <td>@counter</td>
-                                <td title="@res.FullName">@res.SurnameAndInitials</td>
-                                <td>@res.BirthDate.ToString("dd.MM.yyyy")</td>
-                                <td>@res.MobilePhone</td>
-                                <td>@res.CityPhone</td>
-                                <td title="@res.MainSubdivision">@res.MainSubdivisionAbbreviation</td>
-                                <td title="@res.SubordinateSubdivision">@res.SubordinateSubdivisionAbbreviation</td>
-                                <td>
-                                    <a asp-controller="Employee" asp-action="Index" asp-route-id="@res.HashIdUser">Докладніше</a>
-                                </td>
-                            </tr>
-                            counter++;
-                        }
+                            @foreach (var res in Model)
+                            {
+                                <tr>
+                                    <td>@counter</td>
+                                    <td title="@res.FullName">@res.SurnameAndInitials</td>
+                                    <td>@res.BirthDate.ToString("dd.MM.yyyy")</td>
+                                    <td>@res.MobilePhone</td>
+                                    <td>@res.CityPhone</td>
+                                    <td title="@res.MainSubdivision">@res.MainSubdivisionAbbreviation</td>
+                                    <td title="@res.SubordinateSubdivision">@res.SubordinateSubdivisionAbbreviation</td>
+                                    <td>
+                                        <a asp-controller="Employee" asp-action="Index" asp-route-id="@res.HashIdUser">Докладніше</a>
+                                    </td>
+                                </tr>
+                                counter++;
+                            }
                         </tbody>
                     </table>
 
@@ -59,10 +59,3 @@
         </div>
     </div>
 </section>
-
-
-       
-    
-
-
-
