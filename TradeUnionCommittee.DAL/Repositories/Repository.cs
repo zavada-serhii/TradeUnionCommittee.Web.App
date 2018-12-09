@@ -5,6 +5,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using TradeUnionCommittee.Common.ActualResults;
+using TradeUnionCommittee.Common.Enums;
 using TradeUnionCommittee.DAL.EF;
 using TradeUnionCommittee.DAL.Interfaces;
 
@@ -35,7 +36,8 @@ namespace TradeUnionCommittee.DAL.Repositories
         {
             try
             {
-                return new ActualResult<T> { Result = await _db.Set<T>().FindAsync(id) };
+                var result = await _db.Set<T>().FindAsync(id);
+                return result != null ? new ActualResult<T> { Result = result } : new ActualResult<T>(Errors.TupleDeleted);
             }
             catch (Exception e)
             {

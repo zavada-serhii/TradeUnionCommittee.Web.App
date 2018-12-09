@@ -2,7 +2,7 @@
 
 namespace TradeUnionCommittee.BLL.Interfaces.Directory
 {
-    public interface IHobbyService : IService<DirectoryDTO>, IDirectoryService
+    public interface IHobbyService : IService<DirectoryDTO>, IDirectory<DirectoryDTO>, ICheckName
     {
     }
 }

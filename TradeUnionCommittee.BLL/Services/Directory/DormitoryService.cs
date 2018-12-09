@@ -60,7 +60,7 @@ namespace TradeUnionCommittee.BLL.Services.Directory
             return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
         }
 
-        public async Task<bool> CheckDuplicateDataAsync(DormitoryDTO dto)
+        private async Task<bool> CheckDuplicateDataAsync(DormitoryDTO dto)
         {
             var result = await _database.AddressPublicHouseRepository
                                         .Find(p => p.City == dto.City &&

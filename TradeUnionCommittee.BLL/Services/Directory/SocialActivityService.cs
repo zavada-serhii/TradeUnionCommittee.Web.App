@@ -65,7 +65,6 @@ namespace TradeUnionCommittee.BLL.Services.Directory
             return result.Result.Any();
         }
 
-
         public void Dispose()
         {
             _database.Dispose();

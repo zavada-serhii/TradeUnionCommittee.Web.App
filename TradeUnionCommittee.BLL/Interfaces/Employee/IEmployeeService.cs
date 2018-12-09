@@ -1,10 +1,11 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.DTO;
 using TradeUnionCommittee.Common.ActualResults;
 
 namespace TradeUnionCommittee.BLL.Interfaces.Employee
 {
-    public interface IEmployeeService
+    public interface IEmployeeService : IDisposable
     {
         Task<ActualResult> AddEmployeeAsync(CreateEmployeeDTO dto);
         Task<ActualResult<GeneralInfoEmployeeDTO>> GetMainInfoEmployeeAsync(string hashId);
@@ -12,6 +13,5 @@ namespace TradeUnionCommittee.BLL.Interfaces.Employee
         Task<ActualResult> DeleteAsync(string hashId);
         Task<bool> CheckIdentificationСode(string identificationСode);
         Task<bool> CheckMechnikovCard(string mechnikovCard);
-        void Dispose();
     }
 }

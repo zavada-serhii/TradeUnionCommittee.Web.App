@@ -17,9 +17,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TradeUnionCommittee.ViewMod
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TradeUnionCommittee.Web.Api", "TradeUnionCommittee.Web.Api\TradeUnionCommittee.Web.Api.csproj", "{8B34AC3B-35AD-4B79-B732-C589E494CDDB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TradeUnionCommittee.DataAnalysis.Service", "TradeUnionCommittee.DataAnalysis.Service\TradeUnionCommittee.DataAnalysis.Service.csproj", "{DB545793-4A6F-4215-81C7-DF9FCB78C544}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TradeUnionCommittee.DataAnalysis.Service", "TradeUnionCommittee.DataAnalysis.Service\TradeUnionCommittee.DataAnalysis.Service.csproj", "{DB545793-4A6F-4215-81C7-DF9FCB78C544}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TradeUnionCommittee.PDF.Service", "TradeUnionCommittee.PDF.Service\TradeUnionCommittee.PDF.Service.csproj", "{A2A1BE7E-EDEB-4C5B-9BB3-1159C64B4321}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TradeUnionCommittee.PDF.Service", "TradeUnionCommittee.PDF.Service\TradeUnionCommittee.PDF.Service.csproj", "{A2A1BE7E-EDEB-4C5B-9BB3-1159C64B4321}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

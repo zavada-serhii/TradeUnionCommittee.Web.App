@@ -2,7 +2,7 @@
 
 namespace TradeUnionCommittee.BLL.Interfaces.Directory
 {
-    public interface IDormitoryService : IService<DormitoryDTO>
+    public interface IDormitoryService : IService<DormitoryDTO>, IDirectory<DormitoryDTO>
     {
     }
 }

@@ -34,6 +34,20 @@ namespace TradeUnionCommittee.BLL.Services.Lists
             return _mapperService.Mapper.Map<ActualResult<PrivateHouseEmployeesDTO>>(await _database.PrivateHouseEmployeesRepository.GetById(id));
         }
 
+        public Task<ActualResult> CreateAsync(PrivateHouseEmployeesDTO item)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public Task<ActualResult> UpdateAsync(PrivateHouseEmployeesDTO item)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public Task<ActualResult> DeleteAsync(string hashId)
+        {
+            throw new System.NotImplementedException();
+        }
         public void Dispose()
         {
             _database.Dispose();

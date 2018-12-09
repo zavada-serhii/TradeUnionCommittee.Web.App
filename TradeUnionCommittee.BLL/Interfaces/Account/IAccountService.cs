@@ -1,11 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.DTO;
 using TradeUnionCommittee.Common.ActualResults;
 
 namespace TradeUnionCommittee.BLL.Interfaces.Account
 {
-    public interface IAccountService
+    public interface IAccountService : IDisposable
     {
         Task<ActualResult> Login(string email, string password, Enums.TypeAuthorization type);
         Task<ActualResult> LogOff();
@@ -19,6 +20,5 @@ namespace TradeUnionCommittee.BLL.Interfaces.Account
         Task<ActualResult> DeleteUserAsync(string hashId);
         Task<bool> CheckEmailAsync(string email);
         Task<ActualResult<IEnumerable<RolesDTO>>> GetRoles();
-        void Dispose();
     }
 }

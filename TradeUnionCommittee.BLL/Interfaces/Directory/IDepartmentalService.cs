@@ -5,7 +5,7 @@ using TradeUnionCommittee.Common.ActualResults;
 
 namespace TradeUnionCommittee.BLL.Interfaces.Directory
 {
-    public interface IDepartmentalService : IService<DepartmentalDTO>
+    public interface IDepartmentalService : IService<DepartmentalDTO>, IDirectory<DepartmentalDTO>
     {
         Task<ActualResult<Dictionary<string, string>>> GetAllShortcut();
     }

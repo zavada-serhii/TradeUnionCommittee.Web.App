@@ -2,7 +2,7 @@
 
 namespace TradeUnionCommittee.BLL.Interfaces.Directory
 {
-    public interface ITourService : IService<TourDTO>, IDirectoryService
+    public interface ITourService : IService<TourDTO>, IDirectory<TourDTO>, ICheckName
     {
     }
 }

@@ -1,13 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.DTO;
 using TradeUnionCommittee.Common.ActualResults;
 
 namespace TradeUnionCommittee.BLL.Interfaces.Directory
 {
-    public interface ISubdivisionsService : IDirectoryService
+    public interface ISubdivisionsService : IDisposable, IDirectory<SubdivisionDTO>, ICheckName
     {
-        Task<ActualResult<IEnumerable<SubdivisionDTO>>> GetAllAsync();
         Task<ActualResult<SubdivisionDTO>> GetAsync(string hashId);
         Task<ActualResult<IEnumerable<SubdivisionDTO>>> GetSubordinateSubdivisions(string hashId);
         Task<Dictionary<string, string>> GetSubordinateSubdivisionsForMvc(string hashId);
@@ -21,7 +21,5 @@ namespace TradeUnionCommittee.BLL.Interfaces.Directory
 
         Task<ActualResult> DeleteAsync(string hashId);
         Task<bool> CheckAbbreviationAsync(string name);
-
-        void Dispose();
     }
 }
