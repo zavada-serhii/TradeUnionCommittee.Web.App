@@ -27,7 +27,7 @@ namespace TradeUnionCommittee.DAL.Repositories.SystemAudit
 
             var guid = new NpgsqlParameter("@1", Guid.NewGuid().ToString());
             var operation = new NpgsqlParameter("@2", journal.Operation.ToString());
-            var dateTime = new NpgsqlParameter("@3", DateTime.Now.AddMonths(2));
+            var dateTime = new NpgsqlParameter("@3", DateTime.Now);
             var email = new NpgsqlParameter("@4", journal.EmailUser);
             var table = new NpgsqlParameter("@5", journal.Table.ToString());
             var ip = new NpgsqlParameter("@6", journal.IpUser);
