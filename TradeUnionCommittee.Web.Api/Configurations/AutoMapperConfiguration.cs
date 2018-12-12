@@ -3,7 +3,7 @@ using TradeUnionCommittee.BLL.DTO;
 using TradeUnionCommittee.BLL.Enums;
 using TradeUnionCommittee.ViewModels.ViewModels;
 
-namespace TradeUnionCommittee.Web.Api.Configuration
+namespace TradeUnionCommittee.Web.Api.Configurations
 {
     public class AutoMapperConfiguration
     {

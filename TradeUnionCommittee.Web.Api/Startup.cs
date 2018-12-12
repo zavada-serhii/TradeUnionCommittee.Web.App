@@ -20,7 +20,7 @@ using Swashbuckle.AspNetCore.SwaggerUI;
 using TradeUnionCommittee.BLL.Extensions;
 using TradeUnionCommittee.BLL.Utilities;
 using TradeUnionCommittee.ViewModels.Extensions;
-using TradeUnionCommittee.Web.Api.Configuration;
+using TradeUnionCommittee.Web.Api.Configurations;
 
 namespace TradeUnionCommittee.Web.Api
 {

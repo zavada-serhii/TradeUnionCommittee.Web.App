@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.DTO;
 using TradeUnionCommittee.BLL.Enums;
 using TradeUnionCommittee.BLL.Interfaces.Account;
-using TradeUnionCommittee.Mvc.Web.GUI.Configuration.DropDownLists;
+using TradeUnionCommittee.Mvc.Web.GUI.Controllers.Directory;
 using TradeUnionCommittee.ViewModels.ViewModels;
 
 namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Account
@@ -15,10 +15,10 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Account
     public class AccountController : Controller
     {
         private readonly IAccountService _services;
-        private readonly IDropDownList _dropDownList;
+        private readonly IDirectories _dropDownList;
         private readonly IMapper _mapper;
 
-        public AccountController(IAccountService services, IDropDownList dropDownList, IMapper mapper)
+        public AccountController(IAccountService services, IDirectories dropDownList, IMapper mapper)
         {
             _services = services;
             _dropDownList = dropDownList;

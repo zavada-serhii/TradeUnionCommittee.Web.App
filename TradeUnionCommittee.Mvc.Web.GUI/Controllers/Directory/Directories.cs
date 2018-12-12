@@ -6,9 +6,9 @@ using TradeUnionCommittee.BLL.DTO;
 using TradeUnionCommittee.BLL.Interfaces.Account;
 using TradeUnionCommittee.BLL.Interfaces.Directory;
 
-namespace TradeUnionCommittee.Mvc.Web.GUI.Configuration.DropDownLists
+namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Directory
 {
-    public class DropDownList : IDropDownList
+    public class Directories : IDirectories
     {
         private readonly IAccountService _accountService;
         private readonly IEducationService _educationService;
@@ -29,23 +29,23 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Configuration.DropDownLists
         private readonly IMaterialAidService _materialAidService;
 
 
-        public DropDownList(IAccountService accountService,
-                            IEducationService educationService,
-                            ISubdivisionsService subdivisionsService,
-                            IPositionService positionService,
-                            IDormitoryService dormitoryService,
-                            IDepartmentalService departmentalService,
-                            IQualificationService scientificService,
-                            ISocialActivityService socialActivity,
-                            IPrivilegesService privilegesService,
-                            IHobbyService hobbyService,
-                            ITravelService travelService,
-                            IWellnessService wellnessService,
-                            ITourService tourService,
-                            ICulturalService culturalService,
-                            IActivitiesService activitiesService,
-                            IAwardService awardService,
-                            IMaterialAidService materialAidService)
+        public Directories(IAccountService accountService,
+                           IEducationService educationService,
+                           ISubdivisionsService subdivisionsService,
+                           IPositionService positionService,
+                           IDormitoryService dormitoryService,
+                           IDepartmentalService departmentalService,
+                           IQualificationService scientificService,
+                           ISocialActivityService socialActivity,
+                           IPrivilegesService privilegesService,
+                           IHobbyService hobbyService,
+                           ITravelService travelService,
+                           IWellnessService wellnessService,
+                           ITourService tourService,
+                           ICulturalService culturalService,
+                           IActivitiesService activitiesService,
+                           IAwardService awardService,
+                           IMaterialAidService materialAidService)
         {
             _accountService = accountService;
             _educationService = educationService;
@@ -191,5 +191,29 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Configuration.DropDownLists
             var materialAid = await _materialAidService.GetAllAsync();
             return materialAid.IsValid ? new SelectList(materialAid.Result, "HashId", "Name") : null;
         }
+    }
+
+    public interface IDirectories
+    {
+        Task<SelectList> GetRoles();
+        Task<SelectList> GetLevelEducation();
+        Task<SelectList> GetStudy();
+        Task<SelectList> GetMainSubdivision();
+        Task<List<SubdivisionDTO>> GetSubordinateSubdivisions(string hashId);
+        Task<SelectList> GetPosition();
+        Task<SelectList> GetDormitory();
+        Task<SelectList> GetDepartmental();
+        Task<SelectList> GetScientificTitle();
+        Task<SelectList> GetAcademicDegree();
+        Task<SelectList> GetSocialActivity();
+        Task<SelectList> GetPrivilegies();
+        Task<SelectList> GetHobby();
+        Task<SelectList> GetTravel();
+        Task<SelectList> GetWellness();
+        Task<SelectList> GetTour();
+        Task<SelectList> GetCultural();
+        Task<SelectList> GetActivities();
+        Task<SelectList> GetAward();
+        Task<SelectList> GetMaterialAid();
     }
 }

@@ -9,7 +9,6 @@ using TradeUnionCommittee.BLL.DTO;
 using TradeUnionCommittee.BLL.Enums;
 using TradeUnionCommittee.BLL.Interfaces.Directory;
 using TradeUnionCommittee.BLL.Interfaces.SystemAudit;
-using TradeUnionCommittee.Mvc.Web.GUI.Configuration.DropDownLists;
 using TradeUnionCommittee.ViewModels.ViewModels;
 
 namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Directory
@@ -17,12 +16,12 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Directory
     public class SubdivisionController : Controller
     {
         private readonly ISubdivisionsService _services;
-        private readonly IDropDownList _dropDownList;
+        private readonly IDirectories _dropDownList;
         private readonly IMapper _mapper;
         private readonly ISystemAuditService _systemAuditService;
         private readonly IHttpContextAccessor _accessor;
 
-        public SubdivisionController(ISubdivisionsService services, IDropDownList dropDownList, IMapper mapper, ISystemAuditService systemAuditService, IHttpContextAccessor accessor)
+        public SubdivisionController(ISubdivisionsService services, IDirectories dropDownList, IMapper mapper, ISystemAuditService systemAuditService, IHttpContextAccessor accessor)
         {
             _services = services;
             _dropDownList = dropDownList;

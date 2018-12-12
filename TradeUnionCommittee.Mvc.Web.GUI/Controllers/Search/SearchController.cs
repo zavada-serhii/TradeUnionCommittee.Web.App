@@ -6,16 +6,16 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TradeUnionCommittee.BLL.Enums;
 using TradeUnionCommittee.BLL.Interfaces.Search;
-using TradeUnionCommittee.Mvc.Web.GUI.Configuration.DropDownLists;
+using TradeUnionCommittee.Mvc.Web.GUI.Controllers.Directory;
 
 namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Search
 {
     public class SearchController : Controller
     {
         private readonly ISearchService _searchService;
-        private readonly IDropDownList _dropDownList;
+        private readonly IDirectories _dropDownList;
 
-        public SearchController(ISearchService searchService, IDropDownList dropDownList)
+        public SearchController(ISearchService searchService, IDirectories dropDownList)
         {
             _searchService = searchService;
             _dropDownList = dropDownList;

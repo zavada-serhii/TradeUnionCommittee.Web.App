@@ -8,7 +8,7 @@ using TradeUnionCommittee.BLL.DTO;
 using TradeUnionCommittee.BLL.Enums;
 using TradeUnionCommittee.BLL.Interfaces.Employee;
 using TradeUnionCommittee.BLL.Interfaces.SystemAudit;
-using TradeUnionCommittee.Mvc.Web.GUI.Configuration.DropDownLists;
+using TradeUnionCommittee.Mvc.Web.GUI.Controllers.Directory;
 using TradeUnionCommittee.ViewModels.ViewModels;
 
 namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Employee
@@ -16,12 +16,12 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Employee
     public class EmployeeController : Controller
     {
         private readonly IEmployeeService _employeeService;
-        private readonly IDropDownList _dropDownList;
+        private readonly IDirectories _dropDownList;
         private readonly IMapper _mapper;
         private readonly ISystemAuditService _systemAuditService;
         private readonly IHttpContextAccessor _accessor;
 
-        public EmployeeController(IEmployeeService employeeService, IDropDownList dropDownList, IMapper mapper, ISystemAuditService systemAuditService, IHttpContextAccessor accessor)
+        public EmployeeController(IEmployeeService employeeService, IDirectories dropDownList, IMapper mapper, ISystemAuditService systemAuditService, IHttpContextAccessor accessor)
         {
             _employeeService = employeeService;
             _dropDownList = dropDownList;

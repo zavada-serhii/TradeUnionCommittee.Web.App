@@ -12,8 +12,8 @@ using System;
 using System.IO.Compression;
 using TradeUnionCommittee.BLL.Extensions;
 using TradeUnionCommittee.BLL.Utilities;
-using TradeUnionCommittee.Mvc.Web.GUI.Configuration;
-using TradeUnionCommittee.Mvc.Web.GUI.Configuration.DropDownLists;
+using TradeUnionCommittee.Mvc.Web.GUI.Configurations;
+using TradeUnionCommittee.Mvc.Web.GUI.Controllers.Directory;
 using TradeUnionCommittee.ViewModels.Extensions;
 
 namespace TradeUnionCommittee.Mvc.Web.GUI
@@ -109,7 +109,7 @@ namespace TradeUnionCommittee.Mvc.Web.GUI
 
         private void DependencyInjectionSystem(IServiceCollection services)
         {
-            services.AddScoped<IDropDownList, DropDownList>();
+            services.AddScoped<IDirectories, Directories>();
             services.AddSingleton(cm => AutoMapperConfiguration.ConfigureAutoMapper());
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
         }
