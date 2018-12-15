@@ -214,8 +214,9 @@ namespace TradeUnionCommittee.BLL.Utilities
                     map.CreateMap<PrivateHouseEmployees, PrivateHouseEmployeesDTO>()
                         .ForMember(x => x.HashId, opt => opt.MapFrom(c => _hashIdUtilities.EncryptLong(c.Id, Enums.Services.PrivateHouseEmployees)))
                         .ForMember(x => x.HashIdEmployee, opt => opt.MapFrom(c => _hashIdUtilities.EncryptLong(c.IdEmployee, Enums.Services.Employee)))
-                        .ReverseMap();
-
+                        .ReverseMap()
+                        .ForMember(x => x.Id , opt => opt.MapFrom(c => _hashIdUtilities.DecryptLong(c.HashId, Enums.Services.PrivateHouseEmployees)))
+                        .ForMember(x => x.IdEmployee , opt => opt.MapFrom(c => _hashIdUtilities.DecryptLong(c.HashIdEmployee, Enums.Services.Employee)));
 
                     // -- Mapping for PDF service start
 
