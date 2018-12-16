@@ -80,13 +80,13 @@ namespace TradeUnionCommittee.BLL.Services.Lists
                 var listErrors = new List<string>();
                 if (employee.Result.StartDateTradeUnion > dto.DateReceiving)
                 {
-                    listErrors.Add("Дата вступу в профспілку більша за дату розподілу житла від університету!");
+                    listErrors.Add("Дата вступу в профспілку більша за дату розподілу!");
                 }
                 if (employee.Result.EndDateTradeUnion != null)
                 {
                     if (employee.Result.EndDateTradeUnion < dto.DateReceiving)
                     {
-                        listErrors.Add("Дата виходу з профспілки не може бути меншою, ніж дата розподілу житла від університету!");
+                        listErrors.Add("Дата виходу з профспілки не може бути меншою, ніж дата розподілу!");
                     }
                 }
                 return listErrors.Any() ? new ActualResult(listErrors) : new ActualResult();
