@@ -225,6 +225,14 @@ namespace TradeUnionCommittee.BLL.Utilities
                         .ForMember(x => x.Id, opt => opt.MapFrom(c => _hashIdUtilities.DecryptLong(c.HashId, Enums.Services.PrivateHouseEmployees)))
                         .ForMember(x => x.IdEmployee, opt => opt.MapFrom(c => _hashIdUtilities.DecryptLong(c.HashIdEmployee, Enums.Services.Employee)));
 
+                    map.CreateMap<PublicHouseEmployees, DepartmentalEmployeesDTO>()
+                        .ForMember(x => x.HashIdEmployee, opt => opt.MapFrom(c => _hashIdUtilities.EncryptLong(c.IdEmployee, Enums.Services.Employee)))
+                        .ForMember(x => x.HashIdAddressPublicHouse, opt => opt.MapFrom(c => _hashIdUtilities.EncryptLong(c.IdAddressPublicHouse, Enums.Services.PublicHouseEmployees)))
+                        .ForMember(x => x.Address, opt => opt.MapFrom(c => $"{c.IdAddressPublicHouseNavigation.City}, {c.IdAddressPublicHouseNavigation.Street}, {c.IdAddressPublicHouseNavigation.NumberHouse}"))
+                        .ReverseMap()
+                        .ForMember(x => x.IdAddressPublicHouse, opt => opt.MapFrom(c => _hashIdUtilities.DecryptLong(c.HashIdAddressPublicHouse, Enums.Services.PublicHouseEmployees)))
+                        .ForMember(x => x.IdEmployee, opt => opt.MapFrom(c => _hashIdUtilities.DecryptLong(c.HashIdEmployee, Enums.Services.Employee)));
+
                     // -- Mapping for PDF service start
 
                     map.CreateMap<MaterialAidEmployees, MaterialIncentivesEmployeeEntity>()

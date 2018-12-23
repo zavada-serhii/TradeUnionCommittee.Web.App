@@ -17,6 +17,7 @@
         Departmental = 15,
         Dormitory = 16,
         Employee = 17,
-        PrivateHouseEmployees = 18
+        PrivateHouseEmployees = 18,
+        PublicHouseEmployees = 19
     }
 }
