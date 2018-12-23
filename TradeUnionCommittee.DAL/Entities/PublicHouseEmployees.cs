@@ -5,6 +5,7 @@ namespace TradeUnionCommittee.DAL.Entities
 {
     public class PublicHouseEmployees
     {
+        public long Id { get; set; }
         public long IdAddressPublicHouse { get; set; }
         public long IdEmployee { get; set; }
         public string NumberRoom { get; set; }

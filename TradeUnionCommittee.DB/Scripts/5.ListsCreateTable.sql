@@ -146,10 +146,11 @@ OWNER TO postgres;
 -----------------------------------------------------------------------------------------------------------------------------------------------
 
 CREATE TABLE "PublicHouseEmployees"(
+        "Id" 			BIGSERIAL 	NOT NULL 	PRIMARY KEY,
 	"IdAddressPublicHouse" 	BIGINT 		NOT NULL 	REFERENCES "AddressPublicHouse"("Id"),
 	"IdEmployee"		BIGINT 		NOT NULL 	REFERENCES "Employee"("Id") ON UPDATE CASCADE ON DELETE CASCADE,
 	"NumberRoom" 		VARCHAR,
-	PRIMARY KEY ("IdAddressPublicHouse", "IdEmployee")
+	UNIQUE ("IdAddressPublicHouse", "IdEmployee")
 );
 ALTER TABLE "PublicHouseEmployees"
 OWNER TO postgres;
