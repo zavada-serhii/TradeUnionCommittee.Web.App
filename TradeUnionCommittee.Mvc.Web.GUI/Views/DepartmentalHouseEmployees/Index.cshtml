@@ -1,4 +1,4 @@
-﻿@model IEnumerable<TradeUnionCommittee.BLL.DTO.PrivateHouseEmployeesDTO>
+﻿@model IEnumerable<TradeUnionCommittee.BLL.DTO.PublicHouseEmployeesDTO>
 @{
     ViewData["Title"] = "Index";
 }
@@ -10,7 +10,7 @@
                 <a asp-controller="Employee" asp-action="Index" asp-route-id="@ViewData["HashIdEmployee"]" class="back-link">Повернутися</a>
                 <hr />
                 <div class="form-group">
-                    <a asp-action="Create" asp-route-id="@ViewData["HashIdEmployee"]" class="btn btn-success">Додати житло</a>
+                    <a asp-action="Create" asp-route-id="@ViewData["HashIdEmployee"]" class="btn btn-success">Додати відомче житло</a>
                 </div>
             </div>
             <div class="row main-block">
@@ -18,19 +18,10 @@
                     <thead>
                         <tr>
                             <th>
-                                Місто
+                                Адреса
                             </th>
                             <th>
-                                Вулиця
-                            </th>
-                            <th>
-                                Номер дому
-                            </th>
-                            <th>
-                                Номер квартири
-                            </th>
-                            <th>
-                                Дата розподілу
+                                Номер кімнати
                             </th>
                             <th></th>
                         </tr>
@@ -42,19 +33,10 @@
                             {
                                 <tr>
                                     <td>
-                                        @item.City
+                                        @item.FullAddress
                                     </td>
                                     <td>
-                                        @item.Street
-                                    </td>
-                                    <td>
-                                        @item.NumberHouse
-                                    </td>
-                                    <td>
-                                        @item.NumberApartment
-                                    </td>
-                                    <td>
-                                        @item.DateReceiving.Value.ToString("dd.MM.yyyy")
+                                        @item.NumberRoom
                                     </td>
 
                                     <td class="text-right">

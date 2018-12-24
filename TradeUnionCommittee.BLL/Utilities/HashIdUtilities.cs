@@ -102,14 +102,14 @@ namespace TradeUnionCommittee.BLL.Utilities
                     return "CulturalService";
                 case Enums.Services.Subdivision:
                     return "SubdivisionService";
-                case Enums.Services.Departmental:
-                    return "DepartmentalService";
-                case Enums.Services.Dormitory:
-                    return "DormitoryService";
                 case Enums.Services.Employee:
                     return "EmployeeService";
                 case Enums.Services.PrivateHouseEmployees:
                     return "PrivateHouseEmployees";
+                case Enums.Services.PublicHouseEmployees:
+                    return "PublicHouseEmployees";
+                case Enums.Services.AddressPublicHouse:
+                    return "AddressPublicHouse";
                 default:
                     return string.Empty;
             }

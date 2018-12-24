@@ -8,23 +8,26 @@ using TradeUnionCommittee.BLL.DTO;
 using TradeUnionCommittee.BLL.Enums;
 using TradeUnionCommittee.BLL.Interfaces.Lists;
 using TradeUnionCommittee.BLL.Interfaces.SystemAudit;
+using TradeUnionCommittee.Mvc.Web.GUI.Controllers.Directory;
 using TradeUnionCommittee.ViewModels.ViewModels;
 
 namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Lists
 {
-    public class UniversityHouseEmployeesController : Controller
+    public class DormitoryHouseEmployeesController : Controller
     {
-        private readonly IPrivateHouseEmployeesService _services;
+        private readonly IPublicHouseEmployeesService _services;
+        private readonly IDirectories _directories;
         private readonly IMapper _mapper;
         private readonly ISystemAuditService _systemAuditService;
         private readonly IHttpContextAccessor _accessor;
 
-        public UniversityHouseEmployeesController(IPrivateHouseEmployeesService services, IMapper mapper, ISystemAuditService systemAuditService, IHttpContextAccessor accessor)
+        public DormitoryHouseEmployeesController(IPublicHouseEmployeesService service, IDirectories directories, IMapper mapper, ISystemAuditService systemAuditService, IHttpContextAccessor accessor)
         {
-            _services = services;
+            _services = service;
             _mapper = mapper;
             _systemAuditService = systemAuditService;
             _accessor = accessor;
+            _directories = directories;
         }
 
         //------------------------------------------------------------------------------------------------------------------------------------------
@@ -33,7 +36,7 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Lists
         [Authorize(Roles = "Admin,Accountant")]
         public async Task<IActionResult> Index([Required] string id)
         {
-            var result = await _services.GetAllAsync(id,PrivateHouse.UniversityHouse);
+            var result = await _services.GetAllAsync(id, PublicHouse.Dormitory);
             if (result.IsValid)
             {
                 ViewData["HashIdEmployee"] = id;
@@ -47,22 +50,23 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Lists
 
         [HttpGet]
         [Authorize(Roles = "Admin,Accountant")]
-        public IActionResult Create([Required] string id)
+        public async Task<IActionResult> Create([Required] string id)
         {
-            return View(new CreateUniversityHouseEmployeesViewModel { HashIdEmployee = id });
+            ViewBag.Dormirtory = await _directories.GetDormitory();
+            return View(new CreatePublicHouseEmployeesViewModel { HashIdEmployee = id });
         }
 
         [HttpPost]
         [Authorize(Roles = "Admin,Accountant")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(CreateUniversityHouseEmployeesViewModel vm)
+        public async Task<IActionResult> Create(CreatePublicHouseEmployeesViewModel vm)
         {
             if (ModelState.IsValid)
             {
-                var result = await _services.CreateAsync(_mapper.Map<PrivateHouseEmployeesDTO>(vm),PrivateHouse.UniversityHouse);
+                var result = await _services.CreateAsync(_mapper.Map<PublicHouseEmployeesDTO>(vm));
                 if (result.IsValid)
                 {
-                    await _systemAuditService.AuditAsync(User.Identity.Name, _accessor.HttpContext.Connection.RemoteIpAddress.ToString(), Operations.Insert, Tables.PrivateHouseEmployees);
+                    await _systemAuditService.AuditAsync(User.Identity.Name, _accessor.HttpContext.Connection.RemoteIpAddress.ToString(), Operations.Insert, Tables.PublicHouseEmployees);
                     return RedirectToAction("Index", new { id = vm.HashIdEmployee });
                 }
                 TempData["ErrorsList"] = result.ErrorsList;
@@ -79,7 +83,8 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Lists
             var result = await _services.GetAsync(id);
             if (result.IsValid)
             {
-                return View(_mapper.Map<UpdateUniversityHouseEmployeesViewModel>(result.Result));
+                ViewBag.Dormirtory = await _directories.GetDormitory(result.Result.HashIdAddressPublicHouse);
+                return View(_mapper.Map<UpdatePublicHouseEmployeesViewModel>(result.Result));
             }
             TempData["ErrorsList"] = result.ErrorsList;
             return View();
@@ -88,14 +93,14 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Lists
         [HttpPost, ActionName("Update")]
         [Authorize(Roles = "Admin,Accountant")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> UpdateConfirmed(UpdateUniversityHouseEmployeesViewModel vm)
+        public async Task<IActionResult> UpdateConfirmed(UpdatePublicHouseEmployeesViewModel vm)
         {
             if (ModelState.IsValid)
             {
-                var result = await _services.UpdateAsync(_mapper.Map<PrivateHouseEmployeesDTO>(vm),PrivateHouse.UniversityHouse);
+                var result = await _services.UpdateAsync(_mapper.Map<PublicHouseEmployeesDTO>(vm));
                 if (result.IsValid)
                 {
-                    await _systemAuditService.AuditAsync(User.Identity.Name, _accessor.HttpContext.Connection.RemoteIpAddress.ToString(), Operations.Update, Tables.PrivateHouseEmployees);
+                    await _systemAuditService.AuditAsync(User.Identity.Name, _accessor.HttpContext.Connection.RemoteIpAddress.ToString(), Operations.Update, Tables.PublicHouseEmployees);
                     return RedirectToAction("Index", new { id = vm.HashIdEmployee });
                 }
                 TempData["ErrorsListConfirmed"] = result.ErrorsList;
@@ -126,7 +131,7 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Lists
             var result = await _services.DeleteAsync(id);
             if (result.IsValid)
             {
-                await _systemAuditService.AuditAsync(User.Identity.Name, _accessor.HttpContext.Connection.RemoteIpAddress.ToString(), Operations.Delete, Tables.PrivateHouseEmployees);
+                await _systemAuditService.AuditAsync(User.Identity.Name, _accessor.HttpContext.Connection.RemoteIpAddress.ToString(), Operations.Delete, Tables.PublicHouseEmployees);
                 return RedirectToAction("Index", new { id = hashIdEmployee });
             }
             TempData["ErrorsList"] = result.ErrorsList;

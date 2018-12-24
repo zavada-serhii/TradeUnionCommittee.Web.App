@@ -61,12 +61,16 @@ namespace TradeUnionCommittee.DAL.EF
         public DbSet<SocialActivityEmployees> SocialActivityEmployees { get; set; }
         public DbSet<Subdivisions> Subdivisions { get; set; }
 
-        //------------------------------------------------
+        //------------------------------------------------------------------------------------------------------------------------------------------
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.ForNpgsqlHasEnum(null, "TypeEvent", new[] { "Travel", "Wellness", "Tour" })
-                        .ForNpgsqlHasEnum(null, "TypeHouse", new[] { "Dormitory", "Departmental" });
+            modelBuilder
+                .ForNpgsqlHasEnum("audit", "Operations", new[] { "Select", "Insert", "Update", "Delete" })
+                .ForNpgsqlHasEnum("audit", "Tables", new[] { "Employee", "Children", "GrandChildren", "Family", "Award", "MaterialAid", "Hobby", "Event", "Cultural", "Activities", "Privileges", "SocialActivity", "Position", "Subdivisions", "AddressPublicHouse", "AwardEmployees", "MaterialAidEmployees", "HobbyEmployees", "FluorographyEmployees", "EventEmployees", "CulturalEmployees", "ActivityEmployees", "GiftEmployees", "PrivilegeEmployees", "SocialActivityEmployees", "PositionEmployees", "PublicHouseEmployees", "PrivateHouseEmployees", "ApartmentAccountingEmployees", "EventChildrens", "CulturalChildrens", "HobbyChildrens", "ActivityChildrens", "GiftChildrens", "EventGrandChildrens", "CulturalGrandChildrens", "HobbyGrandChildrens", "ActivityGrandChildrens", "GiftGrandChildrens", "EventFamily", "CulturalFamily", "ActivityFamily" })
+                .ForNpgsqlHasEnum(null, "TypeEvent", new[] { "Travel", "Wellness", "Tour" })
+                .ForNpgsqlHasEnum(null, "TypeHouse", new[] { "Dormitory", "Departmental" })
+                .HasPostgresExtension("pg_trgm");
 
             modelBuilder.Entity<Activities>(entity =>
             {
@@ -394,11 +398,23 @@ namespace TradeUnionCommittee.DAL.EF
 
                 entity.Property(e => e.IdentificationСode).HasColumnType("character varying");
 
+                entity.Property(e => e.LevelEducation)
+                    .IsRequired()
+                    .HasColumnType("character varying");
+
                 entity.Property(e => e.MechnikovCard).HasColumnType("character varying");
 
                 entity.Property(e => e.MobilePhone).HasColumnType("character varying");
 
+                entity.Property(e => e.NameInstitution)
+                    .IsRequired()
+                    .HasColumnType("character varying");
+
                 entity.Property(e => e.Patronymic).HasColumnType("character varying");
+
+                entity.Property(e => e.ScientificDegree).HasColumnType("character varying");
+
+                entity.Property(e => e.ScientificTitle).HasColumnType("character varying");
 
                 entity.Property(e => e.SecondName)
                     .IsRequired()
@@ -409,18 +425,6 @@ namespace TradeUnionCommittee.DAL.EF
                     .HasColumnType("character varying");
 
                 entity.Property(e => e.StartDateTradeUnion).HasColumnType("date");
-
-                entity.Property(e => e.LevelEducation)
-                    .IsRequired()
-                    .HasColumnType("character varying");
-
-                entity.Property(e => e.NameInstitution)
-                    .IsRequired()
-                    .HasColumnType("character varying");
-
-                entity.Property(e => e.ScientificDegree).HasColumnType("character varying");
-
-                entity.Property(e => e.ScientificTitle).HasColumnType("character varying");
             });
 
             modelBuilder.Entity<Event>(entity =>
@@ -864,7 +868,9 @@ namespace TradeUnionCommittee.DAL.EF
 
             modelBuilder.Entity<PublicHouseEmployees>(entity =>
             {
-                entity.HasKey(e => new { e.IdAddressPublicHouse, e.IdEmployee });
+                entity.HasIndex(e => new { e.IdAddressPublicHouse, e.IdEmployee })
+                    .HasName("PublicHouseEmployees_IdAddressPublicHouse_IdEmployee_key")
+                    .IsUnique();
 
                 entity.Property(e => e.NumberRoom).HasColumnType("character varying");
 
@@ -911,15 +917,19 @@ namespace TradeUnionCommittee.DAL.EF
 
             modelBuilder.Entity<Subdivisions>(entity =>
             {
+                entity.HasIndex(e => e.Abbreviation)
+                    .HasName("Subdivisions_Abbreviation_key")
+                    .IsUnique();
+
                 entity.HasIndex(e => e.Name)
                     .HasName("Subdivisions_Name_key")
                     .IsUnique();
 
-                entity.Property(e => e.Name)
+                entity.Property(e => e.Abbreviation)
                     .IsRequired()
                     .HasColumnType("character varying");
 
-                entity.Property(e => e.Abbreviation)
+                entity.Property(e => e.Name)
                     .IsRequired()
                     .HasColumnType("character varying");
 

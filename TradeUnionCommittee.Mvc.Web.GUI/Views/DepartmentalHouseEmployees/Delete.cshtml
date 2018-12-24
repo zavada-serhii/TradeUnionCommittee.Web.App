@@ -1,4 +1,4 @@
-﻿@model TradeUnionCommittee.BLL.DTO.PrivateHouseEmployeesDTO
+﻿@model TradeUnionCommittee.BLL.DTO.PublicHouseEmployeesDTO
 @{
     ViewData["Title"] = "Delete";
 }
@@ -9,8 +9,8 @@
 
             <div class="row align-items-center mt-3">
                 <div class="col-md-10">
-                    <h1>Видалення приватного житла</h1>
-                    <h3 class="text-muted">Ви впевнені, що хочете приватне житло?</h3>
+                    <h1>Видалення відомчого житла</h1>
+                    <h3 class="text-muted">Ви впевнені, що хочете видалити відомче житло?</h3>
                 </div>
             </div>
             <hr>
@@ -23,46 +23,19 @@
 
                     <dl class="row">
                         <dt class="col-md-3">
-                            <a>Місто</a>
+                            <a>Адреса</a>
                         </dt>
                         <dd class="col-md-5">
-                            <p class="lead" style="font-size: 15px;">@Model.City</p>
+                            <p class="lead" style="font-size: 15px;">@Model.FullAddress</p>
                         </dd>
                     </dl>
 
                     <dl class="row">
                         <dt class="col-md-3">
-                            <a>Вулиця</a>
+                            <a>Номер кімнати</a>
                         </dt>
                         <dd class="col-md-5">
-                            <p class="lead" style="font-size: 15px;">@Model.Street</p>
-                        </dd>
-                    </dl>
-
-                    <dl class="row">
-                        <dt class="col-md-3">
-                            <a>Номер дому</a>
-                        </dt>
-                        <dd class="col-md-5">
-                            <p class="lead" style="font-size: 15px;">@Model.NumberHouse</p>
-                        </dd>
-                    </dl>
-
-                    <dl class="row">
-                        <dt class="col-md-3">
-                            <a>Номер квартири</a>
-                        </dt>
-                        <dd class="col-md-5">
-                            <p class="lead" style="font-size: 15px;">@Model.NumberApartment</p>
-                        </dd>
-                    </dl>
-
-                    <dl class="row">
-                        <dt class="col-md-3">
-                            <a>Дата розподілу</a>
-                        </dt>
-                        <dd class="col-md-5">
-                            <p class="lead" style="font-size: 15px;">@Model.DateReceiving.Value.ToString("dd.MM.yyyy")</p>
+                            <p class="lead" style="font-size: 15px;">@Model.NumberRoom</p>
                         </dd>
                     </dl>
 

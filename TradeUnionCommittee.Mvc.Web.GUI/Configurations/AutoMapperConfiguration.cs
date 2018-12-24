@@ -81,8 +81,11 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Configurations
                 map.CreateMap<CreatePrivateHouseEmployeesViewModel, PrivateHouseEmployeesDTO>();
                 map.CreateMap<UpdatePrivateHouseEmployeesViewModel, PrivateHouseEmployeesDTO>().ReverseMap();
 
-                map.CreateMap<CreateUniversityHouseEmployeesViewModel, UniversityHouseEmployeesDTO>();
-                map.CreateMap<UpdateUniversityHouseEmployeesViewModel, UniversityHouseEmployeesDTO>().ReverseMap();
+                map.CreateMap<CreateUniversityHouseEmployeesViewModel, PrivateHouseEmployeesDTO>();
+                map.CreateMap<UpdateUniversityHouseEmployeesViewModel, PrivateHouseEmployeesDTO>().ReverseMap();
+
+                map.CreateMap<CreatePublicHouseEmployeesViewModel, PublicHouseEmployeesDTO>();
+                map.CreateMap<UpdatePublicHouseEmployeesViewModel, PublicHouseEmployeesDTO>().ReverseMap();
 
             }).CreateMapper();
         }

@@ -29,7 +29,7 @@ namespace TradeUnionCommittee.BLL.Services.Directory
 
         public async Task<ActualResult<DormitoryDTO>> GetAsync(string hashId)
         {
-            var id = _hashIdUtilities.DecryptLong(hashId, Enums.Services.Dormitory);
+            var id = _hashIdUtilities.DecryptLong(hashId, Enums.Services.AddressPublicHouse);
             var result = await _database.AddressPublicHouseRepository.Find(x => x.Id == id && x.Type == TypeHouse.Dormitory);
             return _mapperService.Mapper.Map<ActualResult<DormitoryDTO>>(new ActualResult<AddressPublicHouse>{ Result = result.Result.FirstOrDefault()});
         }
@@ -56,7 +56,7 @@ namespace TradeUnionCommittee.BLL.Services.Directory
 
         public async Task<ActualResult> DeleteAsync(string hashId)
         {
-            await _database.AddressPublicHouseRepository.Delete(_hashIdUtilities.DecryptLong(hashId, Enums.Services.Dormitory));
+            await _database.AddressPublicHouseRepository.Delete(_hashIdUtilities.DecryptLong(hashId, Enums.Services.AddressPublicHouse));
             return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
         }
 

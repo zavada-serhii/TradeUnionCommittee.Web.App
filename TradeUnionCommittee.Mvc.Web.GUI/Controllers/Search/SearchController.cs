@@ -80,9 +80,9 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Search
         [HttpPost]
         [Authorize(Roles = "Admin,Accountant,Deputy")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> SearchAccommodation([Bind("typeAccommodation,idDormitory,idDepartmental")] string typeAccommodation, string idDormitory, string idDepartmental)
+        public async Task<IActionResult> SearchAccommodation([Bind("typeAccommodation,hashId")] string typeAccommodation, string hashId)
         {
-            var result = await _searchService.SearchAccommodation(TemporaryConverterAccommodation(typeAccommodation), idDormitory, idDepartmental);
+            var result = await _searchService.SearchAccommodation(TemporaryConverterAccommodation(typeAccommodation), hashId);
             return View("ResultSearch", result.Result);
         }
 

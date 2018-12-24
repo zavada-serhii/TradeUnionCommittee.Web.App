@@ -30,13 +30,13 @@ namespace TradeUnionCommittee.BLL.Services.Directory
         public async Task<ActualResult<Dictionary<string, string>>> GetAllShortcut()
         {
             var departmental = await _database.AddressPublicHouseRepository.Find(x => x.Type == TypeHouse.Departmental);
-            var dictionary = departmental.Result.ToDictionary(result => _hashIdUtilities.EncryptLong(result.Id, Enums.Services.Departmental), result => result.City + " " + result.Street + " " + result.NumberHouse);
+            var dictionary = departmental.Result.ToDictionary(result => _hashIdUtilities.EncryptLong(result.Id, Enums.Services.AddressPublicHouse), result => $"{result.City}, {result.Street}, {result.NumberHouse}");
             return new ActualResult<Dictionary<string, string>> { Result = dictionary };
         }
 
         public async Task<ActualResult<DepartmentalDTO>> GetAsync(string hashId)
         {
-            var id = _hashIdUtilities.DecryptLong(hashId, Enums.Services.Departmental);
+            var id = _hashIdUtilities.DecryptLong(hashId, Enums.Services.AddressPublicHouse);
             var result = await _database.AddressPublicHouseRepository.Find(x => x.Id == id && x.Type == TypeHouse.Departmental);
             return _mapperService.Mapper.Map<ActualResult<DepartmentalDTO>>(new ActualResult<AddressPublicHouse> { Result = result.Result.FirstOrDefault() });
         }
@@ -63,7 +63,7 @@ namespace TradeUnionCommittee.BLL.Services.Directory
 
         public async Task<ActualResult> DeleteAsync(string hashId)
         {
-            await _database.AddressPublicHouseRepository.Delete(_hashIdUtilities.DecryptLong(hashId, Enums.Services.Departmental));
+            await _database.AddressPublicHouseRepository.Delete(_hashIdUtilities.DecryptLong(hashId, Enums.Services.AddressPublicHouse));
             return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
         }
 
