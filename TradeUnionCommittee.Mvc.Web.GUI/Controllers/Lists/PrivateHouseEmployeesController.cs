@@ -33,7 +33,7 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Lists
         [Authorize(Roles = "Admin,Accountant")]
         public async Task<IActionResult> Index([Required] string id)
         {
-            var result = await _services.GetAllAsync(id);
+            var result = await _services.GetAllAsync(id, PrivateHouse.PrivateHouse);
             if (result.IsValid)
             {
                 ViewData["HashIdEmployee"] = id;
@@ -59,7 +59,7 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Lists
         {
             if (ModelState.IsValid)
             {
-                var result = await _services.CreateAsync(_mapper.Map<PrivateHouseEmployeesDTO>(vm));
+                var result = await _services.CreateAsync(_mapper.Map<PrivateHouseEmployeesDTO>(vm), PrivateHouse.PrivateHouse);
                 if (result.IsValid)
                 {
                     await _systemAuditService.AuditAsync(User.Identity.Name, _accessor.HttpContext.Connection.RemoteIpAddress.ToString(), Operations.Insert, Tables.PrivateHouseEmployees);
@@ -92,7 +92,7 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Lists
         {
             if (ModelState.IsValid)
             {
-                var result = await _services.UpdateAsync(_mapper.Map<PrivateHouseEmployeesDTO>(vm));
+                var result = await _services.UpdateAsync(_mapper.Map<PrivateHouseEmployeesDTO>(vm), PrivateHouse.PrivateHouse);
                 if (result.IsValid)
                 {
                     await _systemAuditService.AuditAsync(User.Identity.Name, _accessor.HttpContext.Connection.RemoteIpAddress.ToString(), Operations.Update, Tables.PrivateHouseEmployees);

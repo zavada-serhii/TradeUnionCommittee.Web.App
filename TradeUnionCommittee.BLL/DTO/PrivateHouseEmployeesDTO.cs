@@ -10,11 +10,7 @@ namespace TradeUnionCommittee.BLL.DTO
         public string Street { get; set; }
         public string NumberHouse { get; set; }
         public string NumberApartment { get; set; }
-        public uint RowVersion { get; set; }
-    }
-
-    public class UniversityHouseEmployeesDTO : PrivateHouseEmployeesDTO
-    {
         public DateTime? DateReceiving { get; set; }
+        public uint RowVersion { get; set; }
     }
 }

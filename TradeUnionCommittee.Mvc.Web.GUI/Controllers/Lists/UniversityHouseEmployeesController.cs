@@ -14,12 +14,12 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Lists
 {
     public class UniversityHouseEmployeesController : Controller
     {
-        private readonly IUniversityHouseEmployeesService _services;
+        private readonly IPrivateHouseEmployeesService _services;
         private readonly IMapper _mapper;
         private readonly ISystemAuditService _systemAuditService;
         private readonly IHttpContextAccessor _accessor;
 
-        public UniversityHouseEmployeesController(IUniversityHouseEmployeesService services, IMapper mapper, ISystemAuditService systemAuditService, IHttpContextAccessor accessor)
+        public UniversityHouseEmployeesController(IPrivateHouseEmployeesService services, IMapper mapper, ISystemAuditService systemAuditService, IHttpContextAccessor accessor)
         {
             _services = services;
             _mapper = mapper;
@@ -33,7 +33,7 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Lists
         [Authorize(Roles = "Admin,Accountant")]
         public async Task<IActionResult> Index([Required] string id)
         {
-            var result = await _services.GetAllAsync(id);
+            var result = await _services.GetAllAsync(id,PrivateHouse.UniversityHouse);
             if (result.IsValid)
             {
                 ViewData["HashIdEmployee"] = id;
@@ -59,7 +59,7 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Lists
         {
             if (ModelState.IsValid)
             {
-                var result = await _services.CreateAsync(_mapper.Map<UniversityHouseEmployeesDTO>(vm));
+                var result = await _services.CreateAsync(_mapper.Map<PrivateHouseEmployeesDTO>(vm),PrivateHouse.UniversityHouse);
                 if (result.IsValid)
                 {
                     await _systemAuditService.AuditAsync(User.Identity.Name, _accessor.HttpContext.Connection.RemoteIpAddress.ToString(), Operations.Insert, Tables.PrivateHouseEmployees);
@@ -92,7 +92,7 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Lists
         {
             if (ModelState.IsValid)
             {
-                var result = await _services.UpdateAsync(_mapper.Map<UniversityHouseEmployeesDTO>(vm));
+                var result = await _services.UpdateAsync(_mapper.Map<PrivateHouseEmployeesDTO>(vm),PrivateHouse.UniversityHouse);
                 if (result.IsValid)
                 {
                     await _systemAuditService.AuditAsync(User.Identity.Name, _accessor.HttpContext.Connection.RemoteIpAddress.ToString(), Operations.Update, Tables.PrivateHouseEmployees);
