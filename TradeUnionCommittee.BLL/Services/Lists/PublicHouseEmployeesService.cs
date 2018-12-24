@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.DTO;
+using TradeUnionCommittee.BLL.Enums;
 using TradeUnionCommittee.BLL.Interfaces.Lists;
 using TradeUnionCommittee.BLL.Utilities;
 using TradeUnionCommittee.Common.ActualResults;
@@ -9,42 +11,41 @@ using TradeUnionCommittee.DAL.Interfaces;
 
 namespace TradeUnionCommittee.BLL.Services.Lists
 {
-    public class DepartmentalEmployeesService : IDepartmentalEmployeesService
+    public class PublicHouseEmployeesService : IPublicHouseEmployeesService
     {
         private readonly IUnitOfWork _database;
         private readonly IAutoMapperUtilities _mapperService;
         private readonly IHashIdUtilities _hashIdUtilities;
 
-        public DepartmentalEmployeesService(IUnitOfWork database, IAutoMapperUtilities mapperService, IHashIdUtilities hashIdUtilities)
+        public PublicHouseEmployeesService(IUnitOfWork database, IAutoMapperUtilities mapperService, IHashIdUtilities hashIdUtilities)
         {
             _database = database;
             _mapperService = mapperService;
             _hashIdUtilities = hashIdUtilities;
         }
 
-        public async Task<ActualResult<IEnumerable<DepartmentalEmployeesDTO>>> GetAllAsync(string hashIdEmployee)
+        public async Task<ActualResult<IEnumerable<PublicHouseEmployeesDTO>>> GetAllAsync(string hashIdEmployee, PublicHouse type)
         {
             var idEmployee = _hashIdUtilities.DecryptLong(hashIdEmployee, Enums.Services.Employee);
             var result = await _database.PublicHouseEmployeesRepository
-                                        .GetWithInclude(x => x.IdEmployee == idEmployee && x.IdAddressPublicHouseNavigation.Type == TypeHouse.Departmental,
+                                        .GetWithInclude(x => x.IdEmployee == idEmployee && x.IdAddressPublicHouseNavigation.Type == Converter(type),
                                                         c => c.IdAddressPublicHouseNavigation);
-            return _mapperService.Mapper.Map<ActualResult<IEnumerable<DepartmentalEmployeesDTO>>>(result);
+            return _mapperService.Mapper.Map<ActualResult<IEnumerable<PublicHouseEmployeesDTO>>>(result);
         }
 
-        public async Task<ActualResult<DepartmentalEmployeesDTO>> GetAsync(string hashId, string hashIdEmployee)
+        public async Task<ActualResult<PublicHouseEmployeesDTO>> GetAsync(string hashId)
         {
             var id = _hashIdUtilities.DecryptLong(hashId, Enums.Services.PublicHouseEmployees);
-            var idEmployee = _hashIdUtilities.DecryptLong(hashIdEmployee, Enums.Services.Employee);
-            return _mapperService.Mapper.Map<ActualResult<DepartmentalEmployeesDTO>>(await _database.PublicHouseEmployeesRepository.GetByProperty(x => x.IdEmployee == idEmployee && x.IdAddressPublicHouse == id));
+            return _mapperService.Mapper.Map<ActualResult<PublicHouseEmployeesDTO>>(await _database.PublicHouseEmployeesRepository.GetByProperty(x => x.Id == id));
         }
 
-        public async Task<ActualResult> CreateAsync(DepartmentalEmployeesDTO item)
+        public async Task<ActualResult> CreateAsync(PublicHouseEmployeesDTO item)
         {
             await _database.PublicHouseEmployeesRepository.Create(_mapperService.Mapper.Map<PublicHouseEmployees>(item));
             return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
         }
 
-        public async Task<ActualResult> UpdateAsync(DepartmentalEmployeesDTO item)
+        public async Task<ActualResult> UpdateAsync(PublicHouseEmployeesDTO item)
         {
             await _database.PublicHouseEmployeesRepository.Update(_mapperService.Mapper.Map<PublicHouseEmployees>(item));
             return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
@@ -59,6 +60,19 @@ namespace TradeUnionCommittee.BLL.Services.Lists
         public void Dispose()
         {
             _database.Dispose();
+        }
+
+        private TypeHouse Converter(PublicHouse type)
+        {
+            switch (type)
+            {
+                case PublicHouse.Dormitory:
+                    return TypeHouse.Dormitory;
+                case PublicHouse.Departmental:
+                    return TypeHouse.Departmental;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(type), type, null);
+            }
         }
     }
 }

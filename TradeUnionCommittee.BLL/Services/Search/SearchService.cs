@@ -131,26 +131,19 @@ namespace TradeUnionCommittee.BLL.Services.Search
         //------------------------------------------------------------------------------------------------------------------------------------------
 
         
-        public async Task<ActualResult<IEnumerable<ResultSearchDTO>>> SearchAccommodation(AccommodationType type, string dormitory, string departmental)
+        public async Task<ActualResult<IEnumerable<ResultSearchDTO>>> SearchAccommodation(AccommodationType type, string hashId)
         {
+            var id = _hashIdUtilities.DecryptLong(hashId, Enums.Services.AddressPublicHouse);
             switch (type)
             {
                 case AccommodationType.Dormitory:
-                    var idDormitory = _hashIdUtilities.DecryptLong(dormitory, Enums.Services.Dormitory);
-                    var searchByDormitory = await _database
-                        .EmployeeRepository
-                        .GetWithInclude(x => x.PublicHouseEmployees.Any(t => t.IdAddressPublicHouse == idDormitory),
-                                        p => p.PositionEmployees.IdSubdivisionNavigation.InverseIdSubordinateNavigation,
-                                        p => p.PublicHouseEmployees);
-                    return new ActualResult<IEnumerable<ResultSearchDTO>> { Result = ResultFormation(searchByDormitory.Result) };
                 case AccommodationType.Departmental:
-                    var idDepartmental = _hashIdUtilities.DecryptLong(departmental, Enums.Services.Departmental);
-                    var searchByDepartmental = await _database
+                    var searchByPublicHouse = await _database
                         .EmployeeRepository
-                        .GetWithInclude(x => x.PublicHouseEmployees.Any(t => t.IdAddressPublicHouse == idDepartmental),
+                        .GetWithInclude(x => x.PublicHouseEmployees.Any(t => t.IdAddressPublicHouse == id),
                                         p => p.PositionEmployees.IdSubdivisionNavigation.InverseIdSubordinateNavigation,
                                         p => p.PublicHouseEmployees);
-                    return new ActualResult<IEnumerable<ResultSearchDTO>> { Result = ResultFormation(searchByDepartmental.Result) };
+                    return new ActualResult<IEnumerable<ResultSearchDTO>> { Result = ResultFormation(searchByPublicHouse.Result) };
                 case AccommodationType.FromUniversity:
                     var searchByFromUniversity = await _database
                         .EmployeeRepository

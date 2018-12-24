@@ -14,10 +14,10 @@
         Activities = 12,
         Cultural = 13,
         Subdivision = 14,
-        Departmental = 15,
-        Dormitory = 16,
         Employee = 17,
         PrivateHouseEmployees = 18,
-        PublicHouseEmployees = 19
+        PublicHouseEmployees = 19,
+
+        AddressPublicHouse = 20
     }
 }

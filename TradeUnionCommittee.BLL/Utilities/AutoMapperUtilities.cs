@@ -141,15 +141,15 @@ namespace TradeUnionCommittee.BLL.Utilities
                     //----------------------------------------------
 
                     map.CreateMap<AddressPublicHouse, DormitoryDTO>()
-                        .ForMember(d => d.HashId, c => c.MapFrom(x => _hashIdUtilities.EncryptLong(x.Id, Enums.Services.Dormitory)))
+                        .ForMember(d => d.HashId, c => c.MapFrom(x => _hashIdUtilities.EncryptLong(x.Id, Enums.Services.AddressPublicHouse)))
                         .ReverseMap()
-                        .ForMember(d => d.Id, c => c.MapFrom(x => _hashIdUtilities.DecryptLong(x.HashId, Enums.Services.Dormitory)))
+                        .ForMember(d => d.Id, c => c.MapFrom(x => _hashIdUtilities.DecryptLong(x.HashId, Enums.Services.AddressPublicHouse)))
                         .ForMember(d => d.Type, c => c.MapFrom(x => TypeHouse.Dormitory));
 
                     map.CreateMap<AddressPublicHouse, DepartmentalDTO>()
-                        .ForMember(d => d.HashId, c => c.MapFrom(x => _hashIdUtilities.EncryptLong(x.Id, Enums.Services.Departmental)))
+                        .ForMember(d => d.HashId, c => c.MapFrom(x => _hashIdUtilities.EncryptLong(x.Id, Enums.Services.AddressPublicHouse)))
                         .ReverseMap()
-                        .ForMember(d => d.Id, c => c.MapFrom(x => _hashIdUtilities.DecryptLong(x.HashId, Enums.Services.Departmental)))
+                        .ForMember(d => d.Id, c => c.MapFrom(x => _hashIdUtilities.DecryptLong(x.HashId, Enums.Services.AddressPublicHouse)))
                         .ForMember(d => d.Type, c => c.MapFrom(x => TypeHouse.Departmental));
 
                     //------------------------------------------------------------------------------
@@ -225,13 +225,14 @@ namespace TradeUnionCommittee.BLL.Utilities
                         .ForMember(x => x.Id, opt => opt.MapFrom(c => _hashIdUtilities.DecryptLong(c.HashId, Enums.Services.PrivateHouseEmployees)))
                         .ForMember(x => x.IdEmployee, opt => opt.MapFrom(c => _hashIdUtilities.DecryptLong(c.HashIdEmployee, Enums.Services.Employee)));
 
-                    map.CreateMap<PublicHouseEmployees, DepartmentalEmployeesDTO>()
+                    map.CreateMap<PublicHouseEmployees, PublicHouseEmployeesDTO>()
+                        .ForMember(x => x.HashId, opt => opt.MapFrom(c => _hashIdUtilities.EncryptLong(c.Id, Enums.Services.PublicHouseEmployees)))
                         .ForMember(x => x.HashIdEmployee, opt => opt.MapFrom(c => _hashIdUtilities.EncryptLong(c.IdEmployee, Enums.Services.Employee)))
-                        .ForMember(x => x.HashIdAddressPublicHouse, opt => opt.MapFrom(c => _hashIdUtilities.EncryptLong(c.IdAddressPublicHouse, Enums.Services.PublicHouseEmployees)))
-                        .ForMember(x => x.Address, opt => opt.MapFrom(c => $"{c.IdAddressPublicHouseNavigation.City}, {c.IdAddressPublicHouseNavigation.Street}, {c.IdAddressPublicHouseNavigation.NumberHouse}"))
+                        .ForMember(x => x.FullAddress, opt => opt.MapFrom(c => $"{c.IdAddressPublicHouseNavigation.City}, {c.IdAddressPublicHouseNavigation.Street}, {c.IdAddressPublicHouseNavigation.NumberHouse}"))
                         .ReverseMap()
-                        .ForMember(x => x.IdAddressPublicHouse, opt => opt.MapFrom(c => _hashIdUtilities.DecryptLong(c.HashIdAddressPublicHouse, Enums.Services.PublicHouseEmployees)))
-                        .ForMember(x => x.IdEmployee, opt => opt.MapFrom(c => _hashIdUtilities.DecryptLong(c.HashIdEmployee, Enums.Services.Employee)));
+                        .ForMember(x => x.Id, opt => opt.MapFrom(c => _hashIdUtilities.DecryptLong(c.HashId, Enums.Services.PublicHouseEmployees)))
+                        .ForMember(x => x.IdEmployee, opt => opt.MapFrom(c => _hashIdUtilities.DecryptLong(c.HashIdEmployee, Enums.Services.Employee)))
+                        .ForMember(x => x.IdAddressPublicHouse, opt => opt.MapFrom(c => _hashIdUtilities.DecryptLong(c.HashIdAddressPublicHouse, Enums.Services.AddressPublicHouse)));
 
                     // -- Mapping for PDF service start
 
@@ -295,9 +296,9 @@ namespace TradeUnionCommittee.BLL.Utilities
             switch (type)
             {
                 case AccommodationType.Dormitory:
-                    return _hashIdUtilities.DecryptLong(hashIdDormitory, Enums.Services.Dormitory);
+                    return _hashIdUtilities.DecryptLong(hashIdDormitory, Enums.Services.AddressPublicHouse);
                 case AccommodationType.Departmental:
-                    return _hashIdUtilities.DecryptLong(hashIdDepartmental, Enums.Services.Departmental);
+                    return _hashIdUtilities.DecryptLong(hashIdDepartmental, Enums.Services.AddressPublicHouse);
                 default:
                     throw new ArgumentOutOfRangeException(nameof(type), type, null);
             }
