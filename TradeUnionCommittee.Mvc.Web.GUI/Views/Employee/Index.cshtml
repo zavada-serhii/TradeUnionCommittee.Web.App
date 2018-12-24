@@ -20,8 +20,8 @@
                             <div class="dropdown-menu">
                                 <a class="dropdown-item" asp-controller="PrivateHouseEmployees" asp-action="Index" asp-route-id="@Model.HashIdEmployee">Приватне житло</a>
                                 <a class="dropdown-item" asp-controller="UniversityHouseEmployees" asp-action="Index" asp-route-id="@Model.HashIdEmployee">Надане університетом</a>
-                                <a class="dropdown-item" href="#">Відомче житло</a>
-                                <a class="dropdown-item" href="#">Гуртожиток</a>
+                                <a class="dropdown-item" asp-controller="DepartmentalHouseEmployees" asp-action="Index" asp-route-id="@Model.HashIdEmployee">Відомче житло</a>
+                                <a class="dropdown-item" asp-controller="DormitoryHouseEmployees" asp-action="Index" asp-route-id="@Model.HashIdEmployee">Гуртожиток</a>
                             </div>
                         </li>
 
