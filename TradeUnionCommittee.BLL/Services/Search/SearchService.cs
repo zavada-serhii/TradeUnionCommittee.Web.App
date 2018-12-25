@@ -18,32 +18,19 @@ namespace TradeUnionCommittee.BLL.Services.Search
     {
         private readonly IUnitOfWork _database;
         private readonly IHashIdUtilities _hashIdUtilities;
+        private readonly IAutoMapperUtilities _mapperService;
 
-        public SearchService(IUnitOfWork database, IHashIdUtilities hashIdUtilities)
+        public SearchService(IUnitOfWork database, IHashIdUtilities hashIdUtilities, IAutoMapperUtilities mapperService)
         {
             _database = database;
             _hashIdUtilities = hashIdUtilities;
+            _mapperService = mapperService;
         }
 
         //------------------------------------------------------------------------------------------------------------------------------------------
 
-        public async Task<ActualResult<IEnumerable<ResultSearchDTO>>> SearchFullName(string fullName)
-        {
-            var ids = await _database.SearchRepository.SearchByFullName(fullName, TrigramSearch.Gist);
-            if (!ids.Any()) return new ActualResult<IEnumerable<ResultSearchDTO>>();
-
-            var listEmployee = new List<DAL.Entities.Employee>();
-
-            foreach (var id in ids)
-            {
-                var employees = await _database
-                    .EmployeeRepository
-                    .GetWithInclude(x => x.Id == id, p => p.PositionEmployees.IdSubdivisionNavigation.InverseIdSubordinateNavigation);
-                listEmployee.Add(employees.Result.FirstOrDefault());
-            }
-
-            return new ActualResult<IEnumerable<ResultSearchDTO>> { Result = ResultFormation(listEmployee) };
-        }
+        public async Task<IEnumerable<ResultSearchDTO>> SearchFullName(string fullName) => 
+            _mapperService.Mapper.Map<IEnumerable<ResultSearchDTO>>(await _database.SearchRepository.SearchByFullName(fullName, TrigramSearch.Gist));
 
         //------------------------------------------------------------------------------------------------------------------------------------------
 
