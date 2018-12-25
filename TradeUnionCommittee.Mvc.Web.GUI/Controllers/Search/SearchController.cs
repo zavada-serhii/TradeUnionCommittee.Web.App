@@ -38,8 +38,7 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Search
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> SearchFullName([Bind("fullname")] string fullname)
         {
-            var result = await _searchService.SearchFullName(fullname);
-            return View("ResultSearch",result.Result);
+            return View("ResultSearch", await _searchService.SearchFullName(fullname));
         }
 
         //------------------------------------------------------------------------------------------------------------------------------------------

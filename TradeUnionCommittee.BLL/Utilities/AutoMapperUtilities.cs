@@ -5,6 +5,7 @@ using TradeUnionCommittee.BLL.Enums;
 using TradeUnionCommittee.BLL.Extensions;
 using TradeUnionCommittee.DAL.Entities;
 using TradeUnionCommittee.DAL.Enums;
+using TradeUnionCommittee.DAL.Repositories.Search;
 using TradeUnionCommittee.PDF.Service.Entities;
 
 namespace TradeUnionCommittee.BLL.Utilities
@@ -252,6 +253,15 @@ namespace TradeUnionCommittee.BLL.Utilities
                         .ForMember(x => x.Date, opt => opt.MapFrom(c => c.DateGift));
 
                     // -- Mapping for PDF service end
+
+
+
+                    // -- Mapping for Search by Full Name start
+
+                    map.CreateMap<ResultFullNameSearch, ResultSearchDTO>()
+                        .ForMember(x => x.HashIdUser, opt => opt.MapFrom(c => _hashIdUtilities.EncryptLong(c.Id, Enums.Services.Employee)));
+
+                    // -- Mapping for Search by Full Name end
 
                 }).CreateMapper();
             }
