@@ -53,6 +53,7 @@ namespace TradeUnionCommittee.BLL.Extensions
 
             services.AddScoped<IPrivateHouseEmployeesService, PrivateHouseEmployeesService>();
             services.AddScoped<IPublicHouseEmployeesService, PublicHouseEmployeesService>();
+            services.AddScoped<IPositionEmployeesService, PositionEmployeesService>();
 
             services.AddScoped<ISearchService, SearchService>();
             services.AddScoped<ISystemAuditService, SystemAuditService>();

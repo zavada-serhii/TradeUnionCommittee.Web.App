@@ -17,7 +17,7 @@
         Employee = 17,
         PrivateHouseEmployees = 18,
         PublicHouseEmployees = 19,
-
-        AddressPublicHouse = 20
+        AddressPublicHouse = 20,
+        PositionEmployees = 21
     }
 }

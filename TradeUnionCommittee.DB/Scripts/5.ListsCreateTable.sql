@@ -136,8 +136,8 @@ CREATE TABLE "PositionEmployees"(
 	"IdSubdivision"		BIGINT 		NOT NULL	REFERENCES "Subdivisions"("Id"),
 	"IdPosition"		BIGINT 		NOT NULL	REFERENCES "Position"("Id"),
 	"CheckPosition" 	BOOLEAN 	NOT NULL,
-	"StartDate" 		DATE,
-	"EndDate"		DATE, 						
+	"StartDate" 		DATE		NOT NULL,
+	"EndDate"			DATE, 						
 	UNIQUE("IdEmployee")
 );
 ALTER TABLE "PositionEmployees"
