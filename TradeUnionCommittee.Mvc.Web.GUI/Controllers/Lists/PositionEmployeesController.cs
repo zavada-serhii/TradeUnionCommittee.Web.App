@@ -72,5 +72,13 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Lists
             ViewBag.Subdivisions = await _directories.GetTreeSubdivisions(idSubdivisions);
             ViewBag.Position = await _directories.GetPosition(idPosition);
         }
+
+        //------------------------------------------------------------------------------------------------------------------------------------------
+
+        protected override void Dispose(bool disposing)
+        {
+            _services.Dispose();
+            base.Dispose(disposing);
+        }
     }
 }
