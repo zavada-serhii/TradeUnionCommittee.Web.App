@@ -11,6 +11,7 @@ namespace TradeUnionCommittee.BLL.Interfaces.Directory
         Task<ActualResult<SubdivisionDTO>> GetAsync(string hashId);
         Task<ActualResult<IEnumerable<SubdivisionDTO>>> GetSubordinateSubdivisions(string hashId);
         Task<Dictionary<string, string>> GetSubordinateSubdivisionsForMvc(string hashId);
+        Task<IEnumerable<TreeSubdivisionsDTO>> GetTreeSubdivisions();
 
         Task<ActualResult> CreateMainSubdivisionAsync(CreateSubdivisionDTO dto);
         Task<ActualResult> CreateSubordinateSubdivisionAsync(CreateSubordinateSubdivisionDTO dto);

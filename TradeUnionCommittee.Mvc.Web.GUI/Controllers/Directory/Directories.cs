@@ -102,6 +102,31 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Directory
             return listSubordinateSubdivision;
         }
 
+        public async Task<IEnumerable<SelectListItem>> GetTreeSubdivisions(string hashIdSelectedValue = null)
+        {
+            var treeSubdivisions = await _subdivisionsService.GetTreeSubdivisions();
+            var subdivision = treeSubdivisions.ToList();
+            var group = subdivision.Select(m => new SelectListGroup { Name = m.GroupName }).ToList();
+            var items = new List<SelectListItem>();
+            var j = 0;
+            for (var i = 0; i < subdivision.Count; i++)
+            {
+                for (; j < group.Count;)
+                {
+                    items.AddRange(subdivision.ElementAt(i).Subdivisions.Select(subdivisionDto => new SelectListItem
+                    {
+                        Value = subdivisionDto.HashIdMain,
+                        Text = subdivisionDto.Name,
+                        Group = group[j],
+                        Selected = subdivisionDto.HashIdMain == hashIdSelectedValue
+                    }));
+                    break;
+                }
+                j++;
+            }
+            return items;
+        }
+
         public async Task<SelectList> GetPosition()
         {
             var position = await _positionService.GetAllAsync();
@@ -200,6 +225,7 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Directory
         Task<SelectList> GetStudy();
         Task<SelectList> GetMainSubdivision();
         Task<List<SubdivisionDTO>> GetSubordinateSubdivisions(string hashId);
+        Task<IEnumerable<SelectListItem>> GetTreeSubdivisions(string hashIdSelectedValue = null);
         Task<SelectList> GetPosition();
         Task<SelectList> GetDormitory(string hashIdSelectedValue = null);
         Task<SelectList> GetDepartmental(string hashIdSelectedValue = null);

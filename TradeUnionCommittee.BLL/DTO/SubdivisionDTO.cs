@@ -1,4 +1,6 @@
-﻿namespace TradeUnionCommittee.BLL.DTO
+﻿using System.Collections.Generic;
+
+namespace TradeUnionCommittee.BLL.DTO
 {
     public abstract class BaseUpdateDTO
     {
@@ -50,5 +52,11 @@
         public override string HashIdMain { get; set; }
         public string HashIdSubordinate { get; set; }
         public override uint RowVersion { get; set; }
+    }
+
+    public class TreeSubdivisionsDTO
+    {
+        public string GroupName { get; set; }
+        public IEnumerable<SubdivisionDTO> Subdivisions { get; set; }
     }
 }

@@ -47,6 +47,36 @@ namespace TradeUnionCommittee.BLL.Services.Directory
 
         //-------------------------------------------------------------------------------------------------------------------
 
+        public async Task<IEnumerable<TreeSubdivisionsDTO>> GetTreeSubdivisions()
+        {
+            var subdivisions = await _database.SubdivisionsRepository.GetWithInclude(x => x.IdSubordinate == null, c => c.InverseIdSubordinateNavigation);
+            return subdivisions.Result.Select(subdivision => new TreeSubdivisionsDTO
+            {
+                GroupName = subdivision.Name,
+                Subdivisions = FormationTree(subdivision)
+            }).ToList();
+        }
+
+        private IEnumerable<SubdivisionDTO> FormationTree(Subdivisions subdivisions)
+        {
+            var list = new List<SubdivisionDTO>
+            {
+                new SubdivisionDTO
+                {
+                    HashIdMain = _hashIdUtilities.EncryptLong(subdivisions.Id, Enums.Services.Subdivision),
+                    Name = subdivisions.Name
+                }
+            };
+            list.AddRange(subdivisions.InverseIdSubordinateNavigation.Select(subdivision => new SubdivisionDTO
+            {
+                HashIdMain = _hashIdUtilities.EncryptLong(subdivision.Id, Enums.Services.Subdivision),
+                Name = subdivision.Name
+            }));
+            return list;
+        }
+
+        //-------------------------------------------------------------------------------------------------------------------
+
         public async Task<ActualResult> CreateMainSubdivisionAsync(CreateSubdivisionDTO dto)
         {
             if (!await CheckNameAsync(dto.Name) && !await CheckAbbreviationAsync(dto.Abbreviation))
