@@ -1,8 +1,11 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.DTO;
 using TradeUnionCommittee.BLL.Interfaces.Lists;
 using TradeUnionCommittee.BLL.Utilities;
 using TradeUnionCommittee.Common.ActualResults;
+using TradeUnionCommittee.Common.Enums;
 using TradeUnionCommittee.DAL.Entities;
 using TradeUnionCommittee.DAL.Interfaces;
 
@@ -29,13 +32,35 @@ namespace TradeUnionCommittee.BLL.Services.Lists
 
         public async Task<ActualResult> UpdateAsync(PositionEmployeesDTO dto)
         {
-            await _database.PositionEmployeesRepository.Update(_mapperService.Mapper.Map<PositionEmployees>(dto));
-            return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
+            var check = await CheckDate(dto);
+            if (check.IsValid)
+            {
+                await _database.PositionEmployeesRepository.Update(_mapperService.Mapper.Map<PositionEmployees>(dto));
+                return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
+            }
+            return check;
         }
 
         public void Dispose()
         {
             _database.Dispose();
+        }
+
+        //--------------- Business Logic ---------------
+
+        private async Task<ActualResult> CheckDate(PositionEmployeesDTO dto)
+        {
+            var employee = await _database.EmployeeRepository.GetById(_hashIdUtilities.DecryptLong(dto.HashIdEmployee, Enums.Services.Employee));
+            if (employee.IsValid)
+            {
+                var listErrors = new List<string>();
+                if (dto.StartDate.Year < employee.Result.StartYearWork)
+                {
+                    listErrors.Add($"Рік дати початку менший року початку роботи в ОНУ - {employee.Result.StartYearWork}!");
+                }
+                return listErrors.Any() ? new ActualResult(listErrors) : new ActualResult();
+            }
+            return new ActualResult(Errors.TupleDeleted);
         }
     }
 }

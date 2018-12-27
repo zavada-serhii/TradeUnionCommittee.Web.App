@@ -34,7 +34,7 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Lists
 
         [HttpGet]
         [Authorize(Roles = "Admin,Accountant,Deputy")]
-        public async Task<IActionResult> Index([Required] string id)
+        public async Task<IActionResult> Update([Required] string id)
         {
             var result = await _services.GetAsync(id);
             if (result.IsValid)
@@ -46,7 +46,7 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Lists
             return View();
         }
 
-        [HttpPost]
+        [HttpPost, ActionName("Update")]
         [Authorize(Roles = "Admin,Accountant,Deputy")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Update(UpdatePositionEmployeesViewModel vm)
@@ -57,12 +57,12 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Lists
                 if (result.IsValid)
                 {
                     await _systemAuditService.AuditAsync(User.Identity.Name, _accessor.HttpContext.Connection.RemoteIpAddress.ToString(), Operations.Update, Tables.PositionEmployees);
-                    return RedirectToAction("Index", new { id = vm.HashIdEmployee });
+                    return RedirectToAction("Update", new { id = vm.HashIdEmployee });
                 }
                 TempData["ErrorsListConfirmed"] = result.ErrorsList;
             }
             await FillingDropDownLists(vm.HashIdSubdivision, vm.HashIdPosition);
-            return View("Index", vm);
+            return View(vm);
         }
 
         //------------------------------------------------------------------------------------------------------------------------------------------

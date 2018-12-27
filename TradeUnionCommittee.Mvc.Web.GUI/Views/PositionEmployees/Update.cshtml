@@ -1,6 +1,7 @@
 ﻿@model TradeUnionCommittee.ViewModels.ViewModels.UpdatePositionEmployeesViewModel
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Update";
+    Layout = "_Layout";
 }
 
 <section class="add-user container-fluid">
@@ -49,11 +50,11 @@
                             <span asp-validation-for="EndDate" class="text-danger"></span>
                         </div>
                     </div>
-                    
+
                     <div class="row">
                         <div class="form-group col-lg-3">
                             <label class="custom-control custom-checkbox">
-                                <input type="checkbox" id="logic-field" asp-for="CheckPosition" class="custom-control-input dinamic">
+                                <input type="checkbox" asp-for="CheckPosition" class="custom-control-input dinamic">
                                 <span class="custom-control-indicator"></span>
                                 <span class="custom-control-description">В даний час на посаді?</span>
                             </label>

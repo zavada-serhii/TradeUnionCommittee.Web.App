@@ -33,8 +33,11 @@ if ($('input[name=TypeAccommodation]:checked').val())
 
 $('input[type="checkbox"]:checked').each(function ()
 {
-    var checkedChekbox = $(this).attr('id');
-    $('.' + checkedChekbox)[0].classList.remove('invisible');
+    if (window.location.pathname.search('/PositionEmployees/Update/'))
+    {
+        var checkedChekbox = $(this).attr('id');
+        $('.' + checkedChekbox)[0].classList.remove('invisible');
+    }
 });
 
 $('#editable-select-LevelEducation').editableSelect();
