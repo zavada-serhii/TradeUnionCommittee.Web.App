@@ -127,10 +127,10 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Directory
             return items;
         }
 
-        public async Task<SelectList> GetPosition()
+        public async Task<SelectList> GetPosition(string hashIdSelectedValue = null)
         {
             var position = await _positionService.GetAllAsync();
-            return position.IsValid ? new SelectList(position.Result, "HashId", "Name") : null;
+            return position.IsValid ? new SelectList(position.Result, "HashId", "Name", hashIdSelectedValue) : null;
         }
 
         public async Task<SelectList> GetDormitory(string hashIdSelectedValue = null)
@@ -226,7 +226,7 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Directory
         Task<SelectList> GetMainSubdivision();
         Task<List<SubdivisionDTO>> GetSubordinateSubdivisions(string hashId);
         Task<IEnumerable<SelectListItem>> GetTreeSubdivisions(string hashIdSelectedValue = null);
-        Task<SelectList> GetPosition();
+        Task<SelectList> GetPosition(string hashIdSelectedValue = null);
         Task<SelectList> GetDormitory(string hashIdSelectedValue = null);
         Task<SelectList> GetDepartmental(string hashIdSelectedValue = null);
         Task<SelectList> GetScientificTitle();

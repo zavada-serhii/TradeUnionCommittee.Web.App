@@ -3,6 +3,7 @@ using TradeUnionCommittee.BLL.DTO;
 using TradeUnionCommittee.BLL.Interfaces.Lists;
 using TradeUnionCommittee.BLL.Utilities;
 using TradeUnionCommittee.Common.ActualResults;
+using TradeUnionCommittee.DAL.Entities;
 using TradeUnionCommittee.DAL.Interfaces;
 
 namespace TradeUnionCommittee.BLL.Services.Lists
@@ -26,19 +27,10 @@ namespace TradeUnionCommittee.BLL.Services.Lists
             return _mapperService.Mapper.Map<ActualResult<PositionEmployeesDTO>>(await _database.PositionEmployeesRepository.GetByProperty(x => x.IdEmployee == id));
         }
 
-        public Task<ActualResult> CreateAsync(PositionEmployeesDTO item)
+        public async Task<ActualResult> UpdateAsync(PositionEmployeesDTO dto)
         {
-            throw new System.NotImplementedException();
-        }
-
-        public Task<ActualResult> UpdateAsync(PositionEmployeesDTO item)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public Task<ActualResult> DeleteAsync(string hashId)
-        {
-            throw new System.NotImplementedException();
+            await _database.PositionEmployeesRepository.Update(_mapperService.Mapper.Map<PositionEmployees>(dto));
+            return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
         }
 
         public void Dispose()

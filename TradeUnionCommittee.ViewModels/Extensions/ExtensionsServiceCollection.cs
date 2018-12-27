@@ -12,6 +12,7 @@ namespace TradeUnionCommittee.ViewModels.Extensions
             services.AddScoped<IValidator<CreateEmployeeViewModel>, CreateEmployeeValidation>();
             services.AddScoped<IValidator<UpdateEmployeeViewModel>, UpdateEmployeeValidation>();
             services.AddScoped<IValidator<PdfReportViewModel>, PdfReportValidation>();
+            services.AddScoped<IValidator<UpdatePositionEmployeesViewModel>, PositionEmployeesValidation>();
             return services;
         }
     }
