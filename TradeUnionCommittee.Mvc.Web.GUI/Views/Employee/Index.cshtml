@@ -29,8 +29,8 @@
                             <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Посади та Пiльга</a>
                             <div class="dropdown-menu">
                                 <a class="dropdown-item" asp-controller="PositionEmployees" asp-action="Update" asp-route-id="@Model.HashIdEmployee">Основна посада</a>
-                                <a class="dropdown-item" href="#">Громадська посада</a>
-                                <a class="dropdown-item" href="#">Пiльга</a>
+                                <a class="dropdown-item" asp-controller="SocialActivityEmployees" asp-action="Index" asp-route-id="@Model.HashIdEmployee">Громадська посада</a>
+                                <a class="dropdown-item" asp-controller="PrivilegeEmployees" asp-action="Index" asp-route-id="@Model.HashIdEmployee">Пiльга</a>
                             </div>
                         </li>
 
