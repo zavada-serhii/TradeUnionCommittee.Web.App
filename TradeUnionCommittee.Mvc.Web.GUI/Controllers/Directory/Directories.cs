@@ -157,16 +157,16 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Directory
             return academicDegree.IsValid ? new SelectList(academicDegree.Result) : null;
         }
 
-        public async Task<SelectList> GetSocialActivity()
+        public async Task<SelectList> GetSocialActivity(string hashIdSelectedValue = null)
         {
             var socialActivity = await _socialActivity.GetAllAsync();
-            return socialActivity.IsValid ? new SelectList(socialActivity.Result, "HashId", "Name") : null;
+            return socialActivity.IsValid ? new SelectList(socialActivity.Result, "HashId", "Name", hashIdSelectedValue) : null;
         }
 
-        public async Task<SelectList> GetPrivilegies()
+        public async Task<SelectList> GetPrivilegies(string hashIdSelectedValue = null)
         {
             var privilegies = await _privilegesService.GetAllAsync();
-            return privilegies.IsValid ? new SelectList(privilegies.Result, "HashId", "Name") : null;
+            return privilegies.IsValid ? new SelectList(privilegies.Result, "HashId", "Name", hashIdSelectedValue) : null;
         }
 
         public async Task<SelectList> GetHobby()
@@ -231,8 +231,8 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Directory
         Task<SelectList> GetDepartmental(string hashIdSelectedValue = null);
         Task<SelectList> GetScientificTitle();
         Task<SelectList> GetAcademicDegree();
-        Task<SelectList> GetSocialActivity();
-        Task<SelectList> GetPrivilegies();
+        Task<SelectList> GetSocialActivity(string hashIdSelectedValue = null);
+        Task<SelectList> GetPrivilegies(string hashIdSelectedValue = null);
         Task<SelectList> GetHobby();
         Task<SelectList> GetTravel();
         Task<SelectList> GetWellness();

@@ -112,6 +112,10 @@ namespace TradeUnionCommittee.BLL.Utilities
                     return "AddressPublicHouse";
                 case Enums.Services.PositionEmployees:
                     return "PositionEmployees";
+                case Enums.Services.SocialActivityEmployees:
+                    return "SocialActivityEmployees";
+                case Enums.Services.PrivilegeEmployees:
+                    return "PrivilegeEmployees";
                 default:
                     return string.Empty;
             }

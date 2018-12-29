@@ -42,7 +42,7 @@ namespace TradeUnionCommittee.BLL.Services.Search
 
                 var searchByGenderAndSubdivision = await _database
                     .EmployeeRepository
-                    .GetWithInclude(x => x.Sex == gender &&
+                    .GetWithIncludeToList(x => x.Sex == gender &&
                                     (x.PositionEmployees.IdSubdivisionNavigation.Id == idSubdivision ||
                                     x.PositionEmployees.IdSubdivisionNavigation.IdSubordinate == idSubdivision), 
                                     p => p.PositionEmployees.IdSubdivisionNavigation.InverseIdSubordinateNavigation);
@@ -52,7 +52,7 @@ namespace TradeUnionCommittee.BLL.Services.Search
 
             var searchByGender = await _database
                 .EmployeeRepository
-                .GetWithInclude(x => x.Sex == gender, p => p.PositionEmployees.IdSubdivisionNavigation.InverseIdSubordinateNavigation);
+                .GetWithIncludeToList(x => x.Sex == gender, p => p.PositionEmployees.IdSubdivisionNavigation.InverseIdSubordinateNavigation);
 
             return new ActualResult<IEnumerable<ResultSearchDTO>> {Result = ResultFormation(searchByGender.Result)};
         }
@@ -69,7 +69,7 @@ namespace TradeUnionCommittee.BLL.Services.Search
 
                 var searchByGenderAndSubdivision = await _database
                     .EmployeeRepository
-                    .GetWithInclude(x => x.PositionEmployees.IdPosition == idPosition &&
+                    .GetWithIncludeToList(x => x.PositionEmployees.IdPosition == idPosition &&
                                          (x.PositionEmployees.IdSubdivisionNavigation.Id == idSubdivision ||
                                          x.PositionEmployees.IdSubdivisionNavigation.IdSubordinate == idSubdivision),
                                     p => p.PositionEmployees.IdSubdivisionNavigation.InverseIdSubordinateNavigation);
@@ -79,7 +79,7 @@ namespace TradeUnionCommittee.BLL.Services.Search
 
             var searchByGender = await _database
                 .EmployeeRepository
-                .GetWithInclude(x => x.PositionEmployees.IdPosition == idPosition, 
+                .GetWithIncludeToList(x => x.PositionEmployees.IdPosition == idPosition, 
                                 p => p.PositionEmployees.IdSubdivisionNavigation.InverseIdSubordinateNavigation);
 
             return new ActualResult<IEnumerable<ResultSearchDTO>> { Result = ResultFormation(searchByGender.Result) };
@@ -97,7 +97,7 @@ namespace TradeUnionCommittee.BLL.Services.Search
 
                 var searchByGenderAndSubdivision = await _database
                     .EmployeeRepository
-                    .GetWithInclude(x => x.PrivilegeEmployees.IdPrivileges == idPrivilege &&
+                    .GetWithIncludeToList(x => x.PrivilegeEmployees.IdPrivileges == idPrivilege &&
                                          (x.PositionEmployees.IdSubdivisionNavigation.Id == idSubdivision ||
                                          x.PositionEmployees.IdSubdivisionNavigation.IdSubordinate == idSubdivision),
                                     p => p.PositionEmployees.IdSubdivisionNavigation.InverseIdSubordinateNavigation,
@@ -108,7 +108,7 @@ namespace TradeUnionCommittee.BLL.Services.Search
 
             var searchByGender = await _database
                 .EmployeeRepository
-                .GetWithInclude(x => x.PrivilegeEmployees.IdPrivileges == idPrivilege,
+                .GetWithIncludeToList(x => x.PrivilegeEmployees.IdPrivileges == idPrivilege,
                                 p => p.PositionEmployees.IdSubdivisionNavigation.InverseIdSubordinateNavigation,
                                 p => p.PrivilegeEmployees);
 
@@ -127,14 +127,14 @@ namespace TradeUnionCommittee.BLL.Services.Search
                 case AccommodationType.Departmental:
                     var searchByPublicHouse = await _database
                         .EmployeeRepository
-                        .GetWithInclude(x => x.PublicHouseEmployees.Any(t => t.IdAddressPublicHouse == id),
+                        .GetWithIncludeToList(x => x.PublicHouseEmployees.Any(t => t.IdAddressPublicHouse == id),
                                         p => p.PositionEmployees.IdSubdivisionNavigation.InverseIdSubordinateNavigation,
                                         p => p.PublicHouseEmployees);
                     return new ActualResult<IEnumerable<ResultSearchDTO>> { Result = ResultFormation(searchByPublicHouse.Result) };
                 case AccommodationType.FromUniversity:
                     var searchByFromUniversity = await _database
                         .EmployeeRepository
-                        .GetWithInclude(x => x.PrivateHouseEmployees.Any(t => t.DateReceiving != null),
+                        .GetWithIncludeToList(x => x.PrivateHouseEmployees.Any(t => t.DateReceiving != null),
                                         p => p.PositionEmployees.IdSubdivisionNavigation.InverseIdSubordinateNavigation,
                                         p => p.PrivateHouseEmployees);
                     return new ActualResult<IEnumerable<ResultSearchDTO>> { Result = ResultFormation(searchByFromUniversity.Result) };
@@ -152,20 +152,20 @@ namespace TradeUnionCommittee.BLL.Services.Search
                 case CoverageType.Employee:
                     var searchByEmployeeBirthDate = await _database
                         .EmployeeRepository
-                        .GetWithInclude(x => x.BirthDate >= startDate && x.BirthDate <= endDate,
+                        .GetWithIncludeToList(x => x.BirthDate >= startDate && x.BirthDate <= endDate,
                                         p => p.PositionEmployees.IdSubdivisionNavigation.InverseIdSubordinateNavigation);
                     return new ActualResult<IEnumerable<ResultSearchDTO>> { Result = ResultFormation(searchByEmployeeBirthDate.Result) };
                 case CoverageType.Children:
                     var searchByChildrenBirthDate = await _database
                         .EmployeeRepository
-                        .GetWithInclude(x => x.Children.Any(t => t.BirthDate >= startDate && t.BirthDate <= endDate),
+                        .GetWithIncludeToList(x => x.Children.Any(t => t.BirthDate >= startDate && t.BirthDate <= endDate),
                                         p => p.PositionEmployees.IdSubdivisionNavigation.InverseIdSubordinateNavigation,
                                         p => p.Children);
                     return new ActualResult<IEnumerable<ResultSearchDTO>> { Result = ResultFormation(searchByChildrenBirthDate.Result) };
                 case CoverageType.GrandChildren:
                     var searchByGrandChildrenBirthDate = await _database
                         .EmployeeRepository
-                        .GetWithInclude(x => x.GrandChildren.Any(t => t.BirthDate >= startDate && t.BirthDate <= endDate),
+                        .GetWithIncludeToList(x => x.GrandChildren.Any(t => t.BirthDate >= startDate && t.BirthDate <= endDate),
                                         p => p.PositionEmployees.IdSubdivisionNavigation.InverseIdSubordinateNavigation,
                                         p => p.GrandChildren);
                     return new ActualResult<IEnumerable<ResultSearchDTO>> { Result = ResultFormation(searchByGrandChildrenBirthDate.Result) };
@@ -185,14 +185,14 @@ namespace TradeUnionCommittee.BLL.Services.Search
                 case CoverageType.Employee:
                     var searchByEmployeeHobby = await _database
                         .EmployeeRepository
-                        .GetWithInclude(x => x.HobbyEmployees.Any(t => t.IdHobby == idHobby),
+                        .GetWithIncludeToList(x => x.HobbyEmployees.Any(t => t.IdHobby == idHobby),
                                         p => p.PositionEmployees.IdSubdivisionNavigation.InverseIdSubordinateNavigation,
                                         p => p.HobbyEmployees);
                     return new ActualResult<IEnumerable<ResultSearchDTO>> { Result = ResultFormation(searchByEmployeeHobby.Result) };
                 case CoverageType.Children:
                     var searchByChildrenHobby = await _database
                         .ChildrenRepository
-                        .GetWithInclude(x => x.HobbyChildrens.Any(t => t.IdHobby == idHobby),
+                        .GetWithIncludeToList(x => x.HobbyChildrens.Any(t => t.IdHobby == idHobby),
                                         p => p.HobbyChildrens,
                                         p => p.IdEmployeeNavigation.PositionEmployees.IdSubdivisionNavigation.InverseIdSubordinateNavigation);
                     return new ActualResult<IEnumerable<ResultSearchDTO>> { Result = ResultFormation(searchByChildrenHobby.Result.Select(x => x.IdEmployeeNavigation)) };
@@ -200,7 +200,7 @@ namespace TradeUnionCommittee.BLL.Services.Search
                 case CoverageType.GrandChildren:
                     var searchByGrandChildrenHobby = await _database
                         .GrandChildrenRepository
-                        .GetWithInclude(x => x.HobbyGrandChildrens.Any(t => t.IdHobby == idHobby),
+                        .GetWithIncludeToList(x => x.HobbyGrandChildrens.Any(t => t.IdHobby == idHobby),
                                         p => p.HobbyGrandChildrens,
                                         p => p.IdEmployeeNavigation.PositionEmployees.IdSubdivisionNavigation.InverseIdSubordinateNavigation);
                     return new ActualResult<IEnumerable<ResultSearchDTO>> { Result = ResultFormation(searchByGrandChildrenHobby.Result.Select(x => x.IdEmployeeNavigation)) };

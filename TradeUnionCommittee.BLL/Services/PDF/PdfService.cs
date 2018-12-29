@@ -112,7 +112,7 @@ namespace TradeUnionCommittee.BLL.Services.PDF
             var id = _hashIdUtilities.DecryptLong(dto.HashEmployeeId, Enums.Services.Employee);
             var result = await _database
                 .MaterialAidEmployeesRepository
-                .GetWithInclude(x => x.DateIssue.Between(dto.StartDate, dto.EndDate) &&
+                .GetWithIncludeToList(x => x.DateIssue.Between(dto.StartDate, dto.EndDate) &&
                                      x.IdEmployee == id,
                                 p => p.IdMaterialAidNavigation);
             return _mapperService.Mapper.Map<IEnumerable<MaterialIncentivesEmployeeEntity>>(result.Result.OrderBy(x => x.DateIssue));
@@ -123,7 +123,7 @@ namespace TradeUnionCommittee.BLL.Services.PDF
             var id = _hashIdUtilities.DecryptLong(dto.HashEmployeeId, Enums.Services.Employee);
             var result = await _database
                 .AwardEmployeesRepository
-                .GetWithInclude(x => x.DateIssue.Between(dto.StartDate, dto.EndDate) &&
+                .GetWithIncludeToList(x => x.DateIssue.Between(dto.StartDate, dto.EndDate) &&
                                      x.IdEmployee == id,
                                 p => p.IdAwardNavigation);
             return _mapperService.Mapper.Map<IEnumerable<MaterialIncentivesEmployeeEntity>>(result.Result.OrderBy(x => x.DateIssue));
@@ -134,7 +134,7 @@ namespace TradeUnionCommittee.BLL.Services.PDF
             var id = _hashIdUtilities.DecryptLong(dto.HashEmployeeId, Enums.Services.Employee);
             var result = await _database
                 .CulturalEmployeesRepository
-                .GetWithInclude(x => x.DateVisit.Between(dto.StartDate, dto.EndDate) &&
+                .GetWithIncludeToList(x => x.DateVisit.Between(dto.StartDate, dto.EndDate) &&
                                      x.IdEmployee == id,
                                 p => p.IdCulturalNavigation);
             return _mapperService.Mapper.Map<IEnumerable<CulturalEmployeeEntity>>(result.Result.OrderBy(x => x.DateVisit));
@@ -145,7 +145,7 @@ namespace TradeUnionCommittee.BLL.Services.PDF
             var id = _hashIdUtilities.DecryptLong(dto.HashEmployeeId, Enums.Services.Employee);
             var result = await _database
                 .EventEmployeesRepository
-                .GetWithInclude(x => x.StartDate.Between(dto.StartDate, dto.EndDate) &&
+                .GetWithIncludeToList(x => x.StartDate.Between(dto.StartDate, dto.EndDate) &&
                                      x.EndDate.Between(dto.StartDate, dto.EndDate) &&
                                      x.IdEventNavigation.Type == typeEvent &&
                                      x.IdEmployee == id,
@@ -158,7 +158,7 @@ namespace TradeUnionCommittee.BLL.Services.PDF
             var id = _hashIdUtilities.DecryptLong(dto.HashEmployeeId, Enums.Services.Employee);
             var result = await _database
                 .GiftEmployeesRepository
-                .GetWithInclude(x => x.DateGift.Between(dto.StartDate, dto.EndDate) && x.IdEmployee == id);
+                .GetWithIncludeToList(x => x.DateGift.Between(dto.StartDate, dto.EndDate) && x.IdEmployee == id);
             return _mapperService.Mapper.Map<IEnumerable<GiftEmployeeEntity>>(result.Result.OrderBy(x => x.DateGift));
         }
 

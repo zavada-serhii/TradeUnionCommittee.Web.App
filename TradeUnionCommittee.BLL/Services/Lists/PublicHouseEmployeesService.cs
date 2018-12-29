@@ -29,7 +29,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists
         {
             var idEmployee = _hashIdUtilities.DecryptLong(hashIdEmployee, Enums.Services.Employee);
             var result = await _database.PublicHouseEmployeesRepository
-                                        .GetWithInclude(x => x.IdEmployee == idEmployee && x.IdAddressPublicHouseNavigation.Type == Converter(type),
+                                        .GetWithIncludeToList(x => x.IdEmployee == idEmployee && x.IdAddressPublicHouseNavigation.Type == Converter(type),
                                                         c => c.IdAddressPublicHouseNavigation);
             return _mapperService.Mapper.Map<ActualResult<IEnumerable<PublicHouseEmployeesDTO>>>(result);
         }
@@ -38,7 +38,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists
         {
             var id = _hashIdUtilities.DecryptLong(hashId, Enums.Services.PublicHouseEmployees);
             var result = await _database.PublicHouseEmployeesRepository
-                .GetWithInclude(x => x.Id == id,
+                .GetWithIncludeToList(x => x.Id == id,
                                 c => c.IdAddressPublicHouseNavigation);
             return result.IsValid
                 ? _mapperService.Mapper.Map<ActualResult<PublicHouseEmployeesDTO>>(new ActualResult<PublicHouseEmployees> { Result = result.Result.FirstOrDefault() })

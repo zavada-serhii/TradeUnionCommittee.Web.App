@@ -18,6 +18,8 @@
         PrivateHouseEmployees = 18,
         PublicHouseEmployees = 19,
         AddressPublicHouse = 20,
-        PositionEmployees = 21
+        PositionEmployees = 21,
+        SocialActivityEmployees = 22,
+        PrivilegeEmployees = 23
     }
 }

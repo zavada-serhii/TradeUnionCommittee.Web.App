@@ -49,7 +49,7 @@ namespace TradeUnionCommittee.BLL.Services.Directory
 
         public async Task<IEnumerable<TreeSubdivisionsDTO>> GetTreeSubdivisions()
         {
-            var subdivisions = await _database.SubdivisionsRepository.GetWithInclude(x => x.IdSubordinate == null, c => c.InverseIdSubordinateNavigation);
+            var subdivisions = await _database.SubdivisionsRepository.GetWithIncludeToList(x => x.IdSubordinate == null, c => c.InverseIdSubordinateNavigation);
             return subdivisions.Result.Select(subdivision => new TreeSubdivisionsDTO
             {
                 GroupName = subdivision.Name,

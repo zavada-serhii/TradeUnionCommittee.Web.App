@@ -112,7 +112,7 @@ namespace TradeUnionCommittee.DAL.Repositories
             }
         }
 
-        public virtual async Task<ActualResult<IEnumerable<T>>> GetWithInclude(params Expression<Func<T, object>>[] includeProperties)
+        public virtual async Task<ActualResult<IEnumerable<T>>> GetWithIncludeToList(params Expression<Func<T, object>>[] includeProperties)
         {
             try
             {
@@ -124,7 +124,7 @@ namespace TradeUnionCommittee.DAL.Repositories
             }
         }
 
-        public virtual async Task<ActualResult<IEnumerable<T>>> GetWithInclude(Expression<Func<T, bool>> predicate, params Expression<Func<T, object>>[] includeProperties)
+        public virtual async Task<ActualResult<IEnumerable<T>>> GetWithIncludeToList(Expression<Func<T, bool>> predicate, params Expression<Func<T, object>>[] includeProperties)
         {
             try
             {
@@ -133,6 +133,18 @@ namespace TradeUnionCommittee.DAL.Repositories
             catch (Exception e)
             {
                 return new ActualResult<IEnumerable<T>>(e.Message);
+            }
+        }
+
+        public virtual async Task<ActualResult<T>> GetWithInclude(Expression<Func<T, bool>> predicate, params Expression<Func<T, object>>[] includeProperties)
+        {
+            try
+            {
+                return new ActualResult<T> { Result = await Include(includeProperties).FirstOrDefaultAsync(predicate) };
+            }
+            catch (Exception e)
+            {
+                return new ActualResult<T>(e.Message);
             }
         }
 
