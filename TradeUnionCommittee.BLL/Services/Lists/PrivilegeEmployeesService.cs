@@ -30,6 +30,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists
 
         public async Task<ActualResult> CreateAsync(PrivilegeEmployeesDTO dto)
         {
+            dto.CheckPrivileges = true;
             await _database.PrivilegeEmployeesRepository.Create(_mapperService.Mapper.Map<PrivilegeEmployees>(dto));
             return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
         }

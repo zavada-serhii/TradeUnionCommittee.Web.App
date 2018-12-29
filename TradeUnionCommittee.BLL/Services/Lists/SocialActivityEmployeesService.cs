@@ -30,6 +30,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists
 
         public async Task<ActualResult> CreateAsync(SocialActivityEmployeesDTO dto)
         {
+            dto.CheckSocialActivity = true;
             await _database.SocialActivityEmployeesRepository.Create(_mapperService.Mapper.Map<SocialActivityEmployees>(dto));
             return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
         }

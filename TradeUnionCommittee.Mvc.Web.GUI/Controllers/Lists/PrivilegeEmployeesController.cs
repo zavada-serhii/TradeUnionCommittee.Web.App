@@ -2,6 +2,10 @@
 
 namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Lists
 {
+    //PrivilegeEmployeesDTO
+    //CreatePrivilegeEmployeesViewModel
+    //UpdatePrivilegeEmployeesViewModel
+
     public class PrivilegeEmployeesController : Controller
     {
         public IActionResult Index()
