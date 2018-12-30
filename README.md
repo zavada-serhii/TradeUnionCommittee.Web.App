@@ -5,15 +5,13 @@ Information system for the primary trade union organization of the Odessa Nation
 ![](https://github.com/zavada-sergey/TradeUnionCommitteeCoreWebApp/blob/master/TradeUnionCommittee.DB/ER-Diagram/0.System%20Architecture.PNG)
 
 # Road map on the next 6 month
-Priority
-
-	HobbyEmployees
-	Family
-	Children	=> HobbyChildrens
-	GrandChildren	=> HobbyGrandChildrens
-	
-	Data Analysis API && Data Analysis Service
-	Dashboard
+- Priority
+	- [] HobbyEmployees
+	- [] Family
+	- [] Children		=> HobbyChildrens
+	- [] GrandChildren	=> HobbyGrandChildrens
+	- [] Data Analysis API && Data Analysis Service
+	- [] Dashboard
 
 Secondary
 
