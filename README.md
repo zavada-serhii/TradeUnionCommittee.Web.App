@@ -3,3 +3,41 @@ Information system for the primary trade union organization of the Odessa Nation
 
 # System architecture
 ![](https://github.com/zavada-sergey/TradeUnionCommitteeCoreWebApp/blob/master/TradeUnionCommittee.DB/ER-Diagram/0.System%20Architecture.PNG)
+
+# Road map
+Priority
+	HobbyEmployees
+	Family
+	Children	=> HobbyChildrens
+	GrandChildren	=> HobbyGrandChildrens
+	
+	DataAnalysis.API && DataAnalysis.Service
+	Dashboard
+
+Secondary
+	AwardEmployees
+	MaterialAidEmployees
+	EventEmployees (Travel, Wellness, Tour)
+	ActivityEmployees
+	CulturalEmployees
+	GiftEmployees
+	FluorographyEmployees
+	ApartmentAccountingEmployees
+
+At last
+	EventFamily (Travel, Wellness, Tour)
+	ActivityFamily
+	CulturalFamily
+
+	EventChildrens (Travel, Wellness, Tour)
+	ActivityChildrens
+	CulturalChildrens
+	GiftChildrens
+
+	EventGrandChildrens (Travel, Tour)
+	ActivityGrandChildrens
+	CulturalGrandChildrens
+	GiftGrandChildrens
+
+	SystemAudit
+	Testing & Bug fixing
