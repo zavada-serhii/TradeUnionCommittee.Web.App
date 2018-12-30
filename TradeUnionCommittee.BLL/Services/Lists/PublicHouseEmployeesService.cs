@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.DTO;
 using TradeUnionCommittee.BLL.Enums;
@@ -37,12 +36,8 @@ namespace TradeUnionCommittee.BLL.Services.Lists
         public async Task<ActualResult<PublicHouseEmployeesDTO>> GetAsync(string hashId)
         {
             var id = _hashIdUtilities.DecryptLong(hashId, Enums.Services.PublicHouseEmployees);
-            var result = await _database.PublicHouseEmployeesRepository
-                .GetWithIncludeToList(x => x.Id == id,
-                                c => c.IdAddressPublicHouseNavigation);
-            return result.IsValid
-                ? _mapperService.Mapper.Map<ActualResult<PublicHouseEmployeesDTO>>(new ActualResult<PublicHouseEmployees> { Result = result.Result.FirstOrDefault() })
-                : new ActualResult<PublicHouseEmployeesDTO>(result.ErrorsList);
+            var result = await _database.PublicHouseEmployeesRepository.GetWithInclude(x => x.Id == id, c => c.IdAddressPublicHouseNavigation);
+            return _mapperService.Mapper.Map<ActualResult<PublicHouseEmployeesDTO>>(result);
         }
 
         public async Task<ActualResult> CreateAsync(PublicHouseEmployeesDTO item)
