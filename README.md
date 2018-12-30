@@ -7,11 +7,13 @@ Information system for the primary trade union organization of the Odessa Nation
 # Road map on the next 6 month
 - Priority
 	-  - [ ] HobbyEmployees
-	- [] Family
-	- [] Children		=> HobbyChildrens
-	- [] GrandChildren	=> HobbyGrandChildrens
-	- [] Data Analysis API && Data Analysis Service
-	- [] Dashboard
+	-  - [ ] Family
+	-  - [ ] Children
+	-  - [ ] HobbyChildrens
+	-  - [ ] GrandChildren
+	-  - [ ] HobbyGrandChildrens
+	-  - [ ] Data Analysis API && Data Analysis Service
+	-  - [ ] Dashboard
 
 Secondary
 
