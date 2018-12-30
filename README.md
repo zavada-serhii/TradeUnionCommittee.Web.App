@@ -4,7 +4,7 @@ Information system for the primary trade union organization of the Odessa Nation
 # System architecture
 ![](https://github.com/zavada-sergey/TradeUnionCommitteeCoreWebApp/blob/master/TradeUnionCommittee.DB/ER-Diagram/0.System%20Architecture.PNG)
 
-# Road map
+# Road map on the next 6 - 8 month
 Priority
 
 	HobbyEmployees
