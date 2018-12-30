@@ -15,32 +15,29 @@ Information system for the primary trade union organization of the Odessa Nation
 	-  - [ ] Data Analysis API && Data Analysis Service
 	-  - [ ] Dashboard
 
-Secondary
+- Secondary
+	-  - [ ] AwardEmployees
+	-  - [ ] MaterialAidEmployees
+	-  - [ ] EventEmployees (Travel, Wellness, Tour)
+	-  - [ ] ActivityEmployees
+	-  - [ ] CulturalEmployees
+	-  - [ ] GiftEmployees
+	-  - [ ] FluorographyEmployees
+	-  - [ ] ApartmentAccountingEmployees
 
-	AwardEmployees
-	MaterialAidEmployees
-	EventEmployees (Travel, Wellness, Tour)
-	ActivityEmployees
-	CulturalEmployees
-	GiftEmployees
-	FluorographyEmployees
-	ApartmentAccountingEmployees
+- At last
+	-  - [ ] EventFamily (Travel, Wellness, Tour)
+	-  - [ ] ActivityFamily
+	-  - [ ] CulturalFamily
+	-  - [ ] EventChildrens (Travel, Wellness, Tour)
+	-  - [ ] ActivityChildrens
+	-  - [ ] CulturalChildrens
+	-  - [ ] GiftChildrens
+	-  - [ ] EventGrandChildrens (Travel, Tour)
+	-  - [ ] ActivityGrandChildrens
+	-  - [ ] CulturalGrandChildrens
+	-  - [ ] GiftGrandChildrens
+	-  - [ ] System Audit
+	-  - [ ] Testing && Bug fixing
 
-At last
-
-	EventFamily (Travel, Wellness, Tour)
-	ActivityFamily
-	CulturalFamily
-
-	EventChildrens (Travel, Wellness, Tour)
-	ActivityChildrens
-	CulturalChildrens
-	GiftChildrens
-
-	EventGrandChildrens (Travel, Tour)
-	ActivityGrandChildrens
-	CulturalGrandChildrens
-	GiftGrandChildrens
-
-	SystemAudit
-	Testing && Bug fixing
+- [ ] Release
