@@ -31,14 +31,17 @@
                     </div>
                 </div>
 
-                <fieldset class="form-group">
-                    <legend>Примiтка</legend>
-                    <div class="row">
-                        <div class="form-group col-lg-12">
-                            <p class="h4">@Model.Note</p>
+                if (!string.IsNullOrEmpty(Model.Note) || !string.IsNullOrWhiteSpace(Model.Note))
+                {
+                    <fieldset class="form-group">
+                        <legend>Примiтка</legend>
+                        <div class="row">
+                            <div class="form-group col-lg-12">
+                                <p class="h4">@Model.Note</p>
+                            </div>
                         </div>
-                    </div>
-                </fieldset>
+                    </fieldset>
+                }
             }
 
             <div class="row justify-content-between">
