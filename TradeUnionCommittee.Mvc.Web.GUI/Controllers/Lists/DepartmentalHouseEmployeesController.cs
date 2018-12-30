@@ -126,9 +126,9 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Lists
         [HttpPost, ActionName("Delete")]
         [Authorize(Roles = "Admin")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed([Required] string id, [Required] string hashIdEmployee)
+        public async Task<IActionResult> DeleteConfirmed([Required] string hashId, [Required] string hashIdEmployee)
         {
-            var result = await _services.DeleteAsync(id);
+            var result = await _services.DeleteAsync(hashId);
             if (result.IsValid)
             {
                 await _systemAuditService.AuditAsync(User.Identity.Name, _accessor.HttpContext.Connection.RemoteIpAddress.ToString(), Operations.Delete, Tables.PublicHouseEmployees);
