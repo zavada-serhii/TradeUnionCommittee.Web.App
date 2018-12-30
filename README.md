@@ -6,6 +6,7 @@ Information system for the primary trade union organization of the Odessa Nation
 
 # Road map
 Priority
+
 	HobbyEmployees
 	Family
 	Children	=> HobbyChildrens
@@ -15,6 +16,7 @@ Priority
 	Dashboard
 
 Secondary
+
 	AwardEmployees
 	MaterialAidEmployees
 	EventEmployees (Travel, Wellness, Tour)
@@ -25,6 +27,7 @@ Secondary
 	ApartmentAccountingEmployees
 
 At last
+
 	EventFamily (Travel, Wellness, Tour)
 	ActivityFamily
 	CulturalFamily
