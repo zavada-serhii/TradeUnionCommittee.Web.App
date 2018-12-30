@@ -1,7 +1,72 @@
-﻿
+﻿@model TradeUnionCommittee.BLL.DTO.PrivilegeEmployeesDTO
 @{
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<section class="add-user container-fluid">
+    <div class="row justify-content-center">
+        <div class="col-md-12 add-user_block">
 
+            <div class="row align-items-center mt-3">
+                <div class="col-md-10">
+                    <h1>Пільга</h1>
+                </div>
+            </div>
+            <hr>
+
+            @{ var result = Model != null;}
+
+            @if (result)
+            {
+                <div class="row">
+                    <div class="form-group col-md-6">
+                        <label>Назва пільги</label>
+                        <p class="h4">@Model.NamePrivileges</p>
+                    </div>
+
+                    @{ var checkPrivileges = Model.CheckPrivileges ? "Так" : "Ні";}
+                    <div class="form-group col-md-6">
+                        <label>В даний час на пільзі</label>
+                        <p class="h4">@checkPrivileges</p>
+                    </div>
+                </div>
+
+                <fieldset class="form-group">
+                    <legend>Примiтка</legend>
+                    <div class="row">
+                        <div class="form-group col-lg-12">
+                            <p class="h4">@Model.Note</p>
+                        </div>
+                    </div>
+                </fieldset>
+            }
+
+            <div class="row justify-content-between">
+                <div class="form-group col-lg-3">
+                    <div>
+                        <a asp-controller="Employee" asp-route-id="@ViewData["HashIdEmployee"]" asp-action="Index">Повернутися</a>
+                    </div>
+                </div>
+
+                @if (result)
+                {
+                    <div class="col-md-6 text-right">
+                        <a asp-action="Update" asp-route-id="@Model.HashIdEmployee" class="btn btn-success">Редагувати</a>
+
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <a asp-action="Delete" asp-route-id="@Model.HashIdEmployee" class="btn btn-danger">Видалити</a>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <div class="col-md-6 text-right">
+                        <a asp-action="Create" asp-route-id="@ViewData["HashIdEmployee"]" class="btn btn-success">Додати пільгу</a>
+                    </div>
+                }
+            </div>
+
+        </div>
+    </div>
+</section>
