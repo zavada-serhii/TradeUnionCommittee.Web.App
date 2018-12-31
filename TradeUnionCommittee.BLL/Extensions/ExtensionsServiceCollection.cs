@@ -57,6 +57,8 @@ namespace TradeUnionCommittee.BLL.Extensions
             services.AddScoped<ISocialActivityEmployeesService, SocialActivityEmployeesService>();
             services.AddScoped<IPrivilegeEmployeesService, PrivilegeEmployeesService>();
 
+            services.AddScoped<IHobbyEmployeesService, HobbyEmployeesService>();
+
             services.AddScoped<ISearchService, SearchService>();
             services.AddScoped<ISystemAuditService, SystemAuditService>();
             services.AddScoped<IPdfService, PdfService>();

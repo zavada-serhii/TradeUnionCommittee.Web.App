@@ -20,6 +20,7 @@
         AddressPublicHouse = 20,
         PositionEmployees = 21,
         SocialActivityEmployees = 22,
-        PrivilegeEmployees = 23
+        PrivilegeEmployees = 23,
+        HobbyEmployees = 24
     }
 }

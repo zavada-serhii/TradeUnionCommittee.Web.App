@@ -263,6 +263,17 @@ namespace TradeUnionCommittee.BLL.Utilities
                         .ForMember(x => x.HashIdPrivileges, opt => opt.MapFrom(c => _hashIdUtilities.EncryptLong(c.IdPrivileges, Enums.Services.Privileges)))
                         .ForMember(x => x.NamePrivileges, opt => opt.MapFrom(c => c.IdPrivilegesNavigation.Name));
 
+                    map.CreateMap<HobbyEmployeesDTO, HobbyEmployees>()
+                        .ForMember(x => x.Id, opt => opt.MapFrom(c => _hashIdUtilities.DecryptLong(c.HashId, Enums.Services.HobbyEmployees)))
+                        .ForMember(x => x.IdEmployee, opt => opt.MapFrom(c => _hashIdUtilities.DecryptLong(c.HashIdEmployee, Enums.Services.Employee)))
+                        .ForMember(x => x.IdHobby, opt => opt.MapFrom(c => _hashIdUtilities.DecryptLong(c.HashIdHobby, Enums.Services.Hobby)))
+                        .ForMember(x => x.IdHobbyNavigation, opt => opt.MapFrom(c => _nullValue))
+                        .ReverseMap()
+                        .ForMember(x => x.HashId, opt => opt.MapFrom(c => _hashIdUtilities.EncryptLong(c.Id, Enums.Services.HobbyEmployees)))
+                        .ForMember(x => x.HashIdEmployee, opt => opt.MapFrom(c => _hashIdUtilities.EncryptLong(c.IdEmployee, Enums.Services.Employee)))
+                        .ForMember(x => x.HashIdHobby, opt => opt.MapFrom(c => _hashIdUtilities.EncryptLong(c.IdHobby, Enums.Services.Hobby)))
+                        .ForMember(x => x.NameHobby, opt => opt.MapFrom(c => c.IdHobbyNavigation.Name));
+
                     // -- Mapping for PDF service start
 
                     map.CreateMap<MaterialAidEmployees, MaterialIncentivesEmployeeEntity>()

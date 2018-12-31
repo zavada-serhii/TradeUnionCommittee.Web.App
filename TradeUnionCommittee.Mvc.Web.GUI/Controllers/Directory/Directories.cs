@@ -169,10 +169,10 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Directory
             return privilegies.IsValid ? new SelectList(privilegies.Result, "HashId", "Name", hashIdSelectedValue) : null;
         }
 
-        public async Task<SelectList> GetHobby()
+        public async Task<SelectList> GetHobby(string hashIdSelectedValue = null)
         {
             var hobby = await _hobbyService.GetAllAsync();
-            return hobby.IsValid ? new SelectList(hobby.Result, "HashId", "Name") : null;
+            return hobby.IsValid ? new SelectList(hobby.Result, "HashId", "Name", hashIdSelectedValue) : null;
         }
 
         public async Task<SelectList> GetTravel()
@@ -233,7 +233,7 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Directory
         Task<SelectList> GetAcademicDegree();
         Task<SelectList> GetSocialActivity(string hashIdSelectedValue = null);
         Task<SelectList> GetPrivilegies(string hashIdSelectedValue = null);
-        Task<SelectList> GetHobby();
+        Task<SelectList> GetHobby(string hashIdSelectedValue = null);
         Task<SelectList> GetTravel();
         Task<SelectList> GetWellness();
         Task<SelectList> GetTour();
