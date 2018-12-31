@@ -1,16 +1,18 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
+using System.Threading.Tasks;
+using TradeUnionCommittee.BLL.DTO;
+using TradeUnionCommittee.BLL.Enums;
 using TradeUnionCommittee.BLL.Interfaces.Lists;
 using TradeUnionCommittee.BLL.Interfaces.SystemAudit;
 using TradeUnionCommittee.Mvc.Web.GUI.Controllers.Directory;
+using TradeUnionCommittee.ViewModels.ViewModels;
 
 namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Lists
 {
-    //HobbyEmployeesDTO
-    //CreateHobbyEmployeesViewModel
-    //UpdateHobbyEmployeesViewModel
-
     public class HobbyEmployeesController : Controller
     {
         private readonly IHobbyEmployeesService _services;
@@ -29,25 +31,121 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Lists
         }
 
         //------------------------------------------------------------------------------------------------------------------------------------------
-        
-        public IActionResult Index()
+
+        [HttpGet]
+        [Authorize(Roles = "Admin,Accountant,Deputy")]
+        public async Task<IActionResult> Index([Required] string id)
         {
+            var result = await _services.GetAllAsync(id);
+            if (result.IsValid)
+            {
+                ViewData["HashIdEmployee"] = id;
+                return View(result.Result);
+            }
+            TempData["ErrorsList"] = result.ErrorsList;
             return View();
         }
 
-        public IActionResult Create()
+        //------------------------------------------------------------------------------------------------------------------------------------------
+
+        [HttpGet]
+        [Authorize(Roles = "Admin,Accountant,Deputy")]
+        public async Task<IActionResult> Create([Required] string id)
         {
+            ViewBag.Hobby = await _directories.GetHobby();
+            return View(new CreateHobbyEmployeesViewModel { HashIdEmployee = id });
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Admin,Accountant,Deputy")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create(CreateHobbyEmployeesViewModel vm)
+        {
+            if (ModelState.IsValid)
+            {
+                var result = await _services.CreateAsync(_mapper.Map<HobbyEmployeesDTO>(vm));
+                if (result.IsValid)
+                {
+                    await _systemAuditService.AuditAsync(User.Identity.Name, _accessor.HttpContext.Connection.RemoteIpAddress.ToString(), Operations.Insert, Tables.HobbyEmployees);
+                    return RedirectToAction("Index", new { id = vm.HashIdEmployee });
+                }
+                TempData["ErrorsList"] = result.ErrorsList;
+            }
+            ViewBag.Hobby = await _directories.GetHobby();
+            return View(vm);
+        }
+
+        //------------------------------------------------------------------------------------------------------------------------------------------
+
+        [HttpGet]
+        [Authorize(Roles = "Admin,Accountant,Deputy")]
+        public async Task<IActionResult> Update([Required] string id)
+        {
+            var result = await _services.GetAsync(id);
+            if (result.IsValid)
+            {
+                ViewBag.Hobby = await _directories.GetHobby(result.Result.HashIdHobby);
+                return View(_mapper.Map<UpdateHobbyEmployeesViewModel>(result.Result));
+            }
+            TempData["ErrorsList"] = result.ErrorsList;
             return View();
         }
 
-        public IActionResult Update()
+        [HttpPost, ActionName("Update")]
+        [Authorize(Roles = "Admin,Accountant,Deputy")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Update(UpdateHobbyEmployeesViewModel vm)
         {
+            if (ModelState.IsValid)
+            {
+                var result = await _services.UpdateAsync(_mapper.Map<HobbyEmployeesDTO>(vm));
+                if (result.IsValid)
+                {
+                    await _systemAuditService.AuditAsync(User.Identity.Name, _accessor.HttpContext.Connection.RemoteIpAddress.ToString(), Operations.Update, Tables.HobbyEmployees);
+                    return RedirectToAction("Index", new { id = vm.HashIdEmployee });
+                }
+                TempData["ErrorsListConfirmed"] = result.ErrorsList;
+            }
+            ViewBag.Hobby = await _directories.GetHobby(vm.HashIdHobby);
+            return View(vm);
+        }
+
+        //------------------------------------------------------------------------------------------------------------------------------------------
+
+        [HttpGet]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Delete([Required] string id)
+        {
+            var result = await _services.GetAsync(id);
+            if (result.IsValid)
+            {
+                return View(result.Result);
+            }
+            TempData["ErrorsList"] = result.ErrorsList;
             return View();
         }
 
-        public IActionResult Delete()
+        [HttpPost, ActionName("Delete")]
+        [Authorize(Roles = "Admin")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed([Required] string hashId, [Required] string hashIdEmployee)
         {
+            var result = await _services.DeleteAsync(hashId);
+            if (result.IsValid)
+            {
+                await _systemAuditService.AuditAsync(User.Identity.Name, _accessor.HttpContext.Connection.RemoteIpAddress.ToString(), Operations.Delete, Tables.HobbyEmployees);
+                return RedirectToAction("Index", new { id = hashIdEmployee });
+            }
+            TempData["ErrorsList"] = result.ErrorsList;
             return View();
+        }
+
+        //------------------------------------------------------------------------------------------------------------------------------------------
+
+        protected override void Dispose(bool disposing)
+        {
+            _services.Dispose();
+            base.Dispose(disposing);
         }
     }
 }
