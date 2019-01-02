@@ -16,6 +16,11 @@ namespace TradeUnionCommittee.BLL.Extensions
             return yearsPassed;
         }
 
+        public static int? CalculateAgeForNull(this DateTime? birthDate)
+        {
+            return birthDate?.CalculateAge();
+        }
+
         public static bool Between(this DateTime input, DateTime startDate, DateTime endDate)
         {
             return input >= startDate && input <= endDate;

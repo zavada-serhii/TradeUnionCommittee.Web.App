@@ -21,6 +21,9 @@
         PositionEmployees = 21,
         SocialActivityEmployees = 22,
         PrivilegeEmployees = 23,
-        HobbyEmployees = 24
+        HobbyEmployees = 24,
+        Family = 25,
+        Children = 26,
+        GrandChildren = 27
     }
 }

@@ -34,6 +34,10 @@ namespace TradeUnionCommittee.BLL.Extensions
             services.AddScoped<IAccountService, AccountService>();
 
             services.AddScoped<IEmployeeService, EmployeeService>();
+            services.AddScoped<IFamilyService, FamilyService>();
+            services.AddScoped<IChildrenService, ChildrenService>();
+            services.AddScoped<IGrandChildrenService, GrandChildrenService>();
+
             services.AddScoped<IEducationService, EducationService>();
             services.AddScoped<IQualificationService, QualificationService>();
             services.AddScoped<IPositionService, PositionService>();

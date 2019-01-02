@@ -274,6 +274,33 @@ namespace TradeUnionCommittee.BLL.Utilities
                         .ForMember(x => x.HashIdHobby, opt => opt.MapFrom(c => _hashIdUtilities.EncryptLong(c.IdHobby, Enums.Services.Hobby)))
                         .ForMember(x => x.NameHobby, opt => opt.MapFrom(c => c.IdHobbyNavigation.Name));
 
+                    map.CreateMap<FamilyDTO, Family>()
+                        .ForMember(x => x.Id, opt => opt.MapFrom(c => _hashIdUtilities.DecryptLong(c.HashId, Enums.Services.Family)))
+                        .ForMember(x => x.IdEmployee, opt => opt.MapFrom(c => _hashIdUtilities.DecryptLong(c.HashIdEmployee, Enums.Services.Employee)))
+                        .ReverseMap()
+                        .ForMember(x => x.HashId, opt => opt.MapFrom(c => _hashIdUtilities.EncryptLong(c.Id, Enums.Services.Family)))
+                        .ForMember(x => x.HashIdEmployee, opt => opt.MapFrom(c => _hashIdUtilities.EncryptLong(c.IdEmployee, Enums.Services.Employee)))
+                        .ForMember(x => x.FullName, opt => opt.MapFrom(c => $"{c.FirstName} {c.SecondName} {c.Patronymic}"))
+                        .ForMember(x => x.Age, opt => opt.MapFrom(c => c.BirthDate.CalculateAgeForNull()));
+
+                    map.CreateMap<ChildrenDTO, Children>()
+                        .ForMember(x => x.Id, opt => opt.MapFrom(c => _hashIdUtilities.DecryptLong(c.HashId, Enums.Services.Children)))
+                        .ForMember(x => x.IdEmployee, opt => opt.MapFrom(c => _hashIdUtilities.DecryptLong(c.HashIdEmployee, Enums.Services.Employee)))
+                        .ReverseMap()
+                        .ForMember(x => x.HashId, opt => opt.MapFrom(c => _hashIdUtilities.EncryptLong(c.Id, Enums.Services.Children)))
+                        .ForMember(x => x.HashIdEmployee, opt => opt.MapFrom(c => _hashIdUtilities.EncryptLong(c.IdEmployee, Enums.Services.Employee)))
+                        .ForMember(x => x.FullName, opt => opt.MapFrom(c => $"{c.FirstName} {c.SecondName} {c.Patronymic}"))
+                        .ForMember(x => x.Age, opt => opt.MapFrom(c => c.BirthDate.CalculateAge()));
+
+                    map.CreateMap<GrandChildrenDTO, GrandChildren>()
+                        .ForMember(x => x.Id, opt => opt.MapFrom(c => _hashIdUtilities.DecryptLong(c.HashId, Enums.Services.GrandChildren)))
+                        .ForMember(x => x.IdEmployee, opt => opt.MapFrom(c => _hashIdUtilities.DecryptLong(c.HashIdEmployee, Enums.Services.Employee)))
+                        .ReverseMap()
+                        .ForMember(x => x.HashId, opt => opt.MapFrom(c => _hashIdUtilities.EncryptLong(c.Id, Enums.Services.GrandChildren)))
+                        .ForMember(x => x.HashIdEmployee, opt => opt.MapFrom(c => _hashIdUtilities.EncryptLong(c.IdEmployee, Enums.Services.Employee)))
+                        .ForMember(x => x.FullName, opt => opt.MapFrom(c => $"{c.FirstName} {c.SecondName} {c.Patronymic}"))
+                        .ForMember(x => x.Age, opt => opt.MapFrom(c => c.BirthDate.CalculateAge()));
+
                     // -- Mapping for PDF service start
 
                     map.CreateMap<MaterialAidEmployees, MaterialIncentivesEmployeeEntity>()
