@@ -2,13 +2,13 @@
 using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.DTO;
 using TradeUnionCommittee.BLL.Enums;
-using TradeUnionCommittee.BLL.Interfaces.Employee;
+using TradeUnionCommittee.BLL.Interfaces.General;
 using TradeUnionCommittee.BLL.Utilities;
 using TradeUnionCommittee.Common.ActualResults;
 using TradeUnionCommittee.DAL.Entities;
 using TradeUnionCommittee.DAL.Interfaces;
 
-namespace TradeUnionCommittee.BLL.Services.Employee
+namespace TradeUnionCommittee.BLL.Services.General
 {
     public class EmployeeService : IEmployeeService
     {

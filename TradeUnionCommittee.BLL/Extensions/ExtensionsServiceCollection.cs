@@ -1,14 +1,14 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using TradeUnionCommittee.BLL.Interfaces.Account;
 using TradeUnionCommittee.BLL.Interfaces.Directory;
-using TradeUnionCommittee.BLL.Interfaces.Employee;
+using TradeUnionCommittee.BLL.Interfaces.General;
 using TradeUnionCommittee.BLL.Interfaces.Lists;
 using TradeUnionCommittee.BLL.Interfaces.PDF;
 using TradeUnionCommittee.BLL.Interfaces.Search;
 using TradeUnionCommittee.BLL.Interfaces.SystemAudit;
 using TradeUnionCommittee.BLL.Services.Account;
 using TradeUnionCommittee.BLL.Services.Directory;
-using TradeUnionCommittee.BLL.Services.Employee;
+using TradeUnionCommittee.BLL.Services.General;
 using TradeUnionCommittee.BLL.Services.Lists;
 using TradeUnionCommittee.BLL.Services.PDF;
 using TradeUnionCommittee.BLL.Services.Search;

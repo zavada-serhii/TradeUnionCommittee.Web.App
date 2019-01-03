@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.DTO;
 using TradeUnionCommittee.Common.ActualResults;
 
-namespace TradeUnionCommittee.BLL.Interfaces.Employee
+namespace TradeUnionCommittee.BLL.Interfaces.General
 {
     public interface IEmployeeService : IDisposable
     {

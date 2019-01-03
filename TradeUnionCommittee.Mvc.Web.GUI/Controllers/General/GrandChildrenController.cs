@@ -6,20 +6,20 @@ using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.DTO;
 using TradeUnionCommittee.BLL.Enums;
-using TradeUnionCommittee.BLL.Interfaces.Lists;
+using TradeUnionCommittee.BLL.Interfaces.General;
 using TradeUnionCommittee.BLL.Interfaces.SystemAudit;
 using TradeUnionCommittee.ViewModels.ViewModels;
 
-namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Lists
+namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.General
 {
-    public class FamilyController : Controller
+    public class GrandChildrenController : Controller
     {
-        private readonly IFamilyService _services;
+        private readonly IGrandChildrenService _services;
         private readonly IMapper _mapper;
         private readonly ISystemAuditService _systemAuditService;
         private readonly IHttpContextAccessor _accessor;
 
-        public FamilyController(IFamilyService services, IMapper mapper, ISystemAuditService systemAuditService, IHttpContextAccessor accessor)
+        public GrandChildrenController(IGrandChildrenService services, IMapper mapper, ISystemAuditService systemAuditService, IHttpContextAccessor accessor)
         {
             _services = services;
             _mapper = mapper;
@@ -49,20 +49,20 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Lists
         [Authorize(Roles = "Admin,Accountant,Deputy")]
         public IActionResult Create([Required] string id)
         {
-            return View(new CreateFamilyViewModel { HashIdEmployee = id });
+            return View(new CreateGrandChildrenViewModel { HashIdEmployee = id });
         }
 
         [HttpPost]
         [Authorize(Roles = "Admin,Accountant,Deputy")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(CreateFamilyViewModel vm)
+        public async Task<IActionResult> Create(CreateGrandChildrenViewModel vm)
         {
             if (ModelState.IsValid)
             {
-                var result = await _services.CreateAsync(_mapper.Map<FamilyDTO>(vm));
+                var result = await _services.CreateAsync(_mapper.Map<GrandChildrenDTO>(vm));
                 if (result.IsValid)
                 {
-                    await _systemAuditService.AuditAsync(User.Identity.Name, _accessor.HttpContext.Connection.RemoteIpAddress.ToString(), Operations.Insert, Tables.Family);
+                    await _systemAuditService.AuditAsync(User.Identity.Name, _accessor.HttpContext.Connection.RemoteIpAddress.ToString(), Operations.Insert, Tables.GrandChildren);
                     return RedirectToAction("Index", new { id = vm.HashIdEmployee });
                 }
                 TempData["ErrorsList"] = result.ErrorsList;
@@ -79,7 +79,7 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Lists
             var result = await _services.GetAsync(id);
             if (result.IsValid)
             {
-                return View(_mapper.Map<UpdateFamilyViewModel>(result.Result));
+                return View(_mapper.Map<UpdateGrandChildrenViewModel>(result.Result));
             }
             TempData["ErrorsList"] = result.ErrorsList;
             return View();
@@ -88,14 +88,14 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Lists
         [HttpPost, ActionName("Update")]
         [Authorize(Roles = "Admin,Accountant,Deputy")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Update(UpdateFamilyViewModel vm)
+        public async Task<IActionResult> Update(UpdateGrandChildrenViewModel vm)
         {
             if (ModelState.IsValid)
             {
-                var result = await _services.UpdateAsync(_mapper.Map<FamilyDTO>(vm));
+                var result = await _services.UpdateAsync(_mapper.Map<GrandChildrenDTO>(vm));
                 if (result.IsValid)
                 {
-                    await _systemAuditService.AuditAsync(User.Identity.Name, _accessor.HttpContext.Connection.RemoteIpAddress.ToString(), Operations.Update, Tables.Family);
+                    await _systemAuditService.AuditAsync(User.Identity.Name, _accessor.HttpContext.Connection.RemoteIpAddress.ToString(), Operations.Update, Tables.GrandChildren);
                     return RedirectToAction("Index", new { id = vm.HashIdEmployee });
                 }
                 TempData["ErrorsListConfirmed"] = result.ErrorsList;
@@ -126,7 +126,7 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Lists
             var result = await _services.DeleteAsync(hashId);
             if (result.IsValid)
             {
-                await _systemAuditService.AuditAsync(User.Identity.Name, _accessor.HttpContext.Connection.RemoteIpAddress.ToString(), Operations.Delete, Tables.Family);
+                await _systemAuditService.AuditAsync(User.Identity.Name, _accessor.HttpContext.Connection.RemoteIpAddress.ToString(), Operations.Delete, Tables.GrandChildren);
                 return RedirectToAction("Index", new { id = hashIdEmployee });
             }
             TempData["ErrorsList"] = result.ErrorsList;
