@@ -5,6 +5,8 @@ namespace TradeUnionCommittee.ViewModels.ViewModels
 {
     public abstract class CreateBaseFamilyViewModel
     {
+        [Required]
+        public string HashIdEmployee { get; set; }
         [Required(ErrorMessage = "Прізвище не може бути порожнім!")]
         public string FirstName { get; set; }
         [Required(ErrorMessage = "Ім'я не може бути порожнім!")]
@@ -16,8 +18,6 @@ namespace TradeUnionCommittee.ViewModels.ViewModels
     {
         [Required]
         public string HashId { get; set; }
-        [Required]
-        public string HashIdEmployee { get; set; }
         [Required]
         public uint RowVersion { get; set; }
     }
