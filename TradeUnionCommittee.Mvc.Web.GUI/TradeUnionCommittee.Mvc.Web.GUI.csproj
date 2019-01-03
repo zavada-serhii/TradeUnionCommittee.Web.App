@@ -35,4 +35,9 @@
     <ProjectReference Include="..\TradeUnionCommittee.ViewModels\TradeUnionCommittee.ViewModels.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Views\Children\" />
+    <Folder Include="Views\GrandChildren\" />
+  </ItemGroup>
+
 </Project>

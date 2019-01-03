@@ -67,9 +67,9 @@
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Сім'я</a>
                             <div class="dropdown-menu">
-                                <a class="dropdown-item" href="#">Члени ciмї</a>
-                                <a class="dropdown-item" href="#">Дiти</a>
-                                <a class="dropdown-item" href="#">Онуки</a>
+                                <a class="dropdown-item" asp-controller="Family" asp-action="Index" asp-route-id="@Model.HashIdEmployee">Члени ciмї</a>
+                                <a class="dropdown-item" asp-controller="Children" asp-action="Index" asp-route-id="@Model.HashIdEmployee">Дiти</a>
+                                <a class="dropdown-item" asp-controller="GrandChildren" asp-action="Index" asp-route-id="@Model.HashIdEmployee">Онуки</a>
                             </div>
                         </li>
 
