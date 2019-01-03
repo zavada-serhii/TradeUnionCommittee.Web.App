@@ -6,12 +6,12 @@ using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.DTO;
 using TradeUnionCommittee.BLL.Enums;
-using TradeUnionCommittee.BLL.Interfaces.Employee;
+using TradeUnionCommittee.BLL.Interfaces.General;
 using TradeUnionCommittee.BLL.Interfaces.SystemAudit;
 using TradeUnionCommittee.Mvc.Web.GUI.Controllers.Directory;
 using TradeUnionCommittee.ViewModels.ViewModels;
 
-namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Employee
+namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.General
 {
     public class EmployeeController : Controller
     {

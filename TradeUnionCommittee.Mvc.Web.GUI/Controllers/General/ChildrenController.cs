@@ -6,11 +6,11 @@ using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.DTO;
 using TradeUnionCommittee.BLL.Enums;
-using TradeUnionCommittee.BLL.Interfaces.Lists;
+using TradeUnionCommittee.BLL.Interfaces.General;
 using TradeUnionCommittee.BLL.Interfaces.SystemAudit;
 using TradeUnionCommittee.ViewModels.ViewModels;
 
-namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Lists
+namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.General
 {
     public class ChildrenController : Controller
     {
