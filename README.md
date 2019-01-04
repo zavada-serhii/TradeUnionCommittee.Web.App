@@ -9,11 +9,11 @@ Information system for the primary trade union organization of the Odessa Nation
 	-  - [x] HobbyEmployees
 	-  - [x] Family
 	-  - [x] Children
-	-  - [ ] HobbyChildrens
+	-  - [x] HobbyChildrens
 	-  - [x] GrandChildren
-	-  - [ ] HobbyGrandChildrens
+	-  - [x] HobbyGrandChildrens
+	-  - [ ] Dashboard for Data Analysis
 	-  - [ ] Data Analysis API && Data Analysis Service
-	-  - [ ] Dashboard
 
 - Secondary
 	-  - [ ] AwardEmployees
