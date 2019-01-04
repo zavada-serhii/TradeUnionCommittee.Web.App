@@ -24,6 +24,8 @@
         HobbyEmployees = 24,
         Family = 25,
         Children = 26,
-        GrandChildren = 27
+        GrandChildren = 27,
+        HobbyChildrens = 28,
+        HobbyGrandChildrens = 29
     }
 }

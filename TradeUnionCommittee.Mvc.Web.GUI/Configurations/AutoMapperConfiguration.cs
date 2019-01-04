@@ -107,6 +107,12 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Configurations
                 map.CreateMap<CreateGrandChildrenViewModel, GrandChildrenDTO>();
                 map.CreateMap<UpdateGrandChildrenViewModel, GrandChildrenDTO>().ReverseMap();
 
+                map.CreateMap<CreateHobbyChildrensViewModel, HobbyChildrensDTO>();
+                map.CreateMap<UpdateHobbyChildrensViewModel, HobbyChildrensDTO>().ReverseMap();
+
+                map.CreateMap<CreateHobbyGrandChildrensViewModel, HobbyGrandChildrensDTO>();
+                map.CreateMap<UpdateHobbyGrandChildrensViewModel, HobbyGrandChildrensDTO>().ReverseMap();
+
             }).CreateMapper();
         }
 

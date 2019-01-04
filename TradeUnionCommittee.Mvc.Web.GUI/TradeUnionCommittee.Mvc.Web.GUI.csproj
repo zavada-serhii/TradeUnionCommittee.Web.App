@@ -38,6 +38,7 @@
   <ItemGroup>
     <Folder Include="Views\Children\" />
     <Folder Include="Views\GrandChildren\" />
+    <Folder Include="Views\HobbyGrandChildrens\" />
   </ItemGroup>
 
 </Project>
