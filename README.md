@@ -12,7 +12,7 @@ Information system for the primary trade union organization of the Odessa Nation
 	-  - [x] HobbyChildrens
 	-  - [x] GrandChildren
 	-  - [x] HobbyGrandChildrens
-	-  - [ ] Dashboard for Data Analysis
+	-  - [x] Dashboard for Data Analysis
 	-  - [ ] Data Analysis API && Data Analysis Service
 
 - Secondary

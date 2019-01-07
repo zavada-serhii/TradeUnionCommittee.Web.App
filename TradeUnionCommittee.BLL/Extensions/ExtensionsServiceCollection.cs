@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using TradeUnionCommittee.BLL.Interfaces.Account;
+using TradeUnionCommittee.BLL.Interfaces.Dashboard;
 using TradeUnionCommittee.BLL.Interfaces.Directory;
 using TradeUnionCommittee.BLL.Interfaces.General;
 using TradeUnionCommittee.BLL.Interfaces.Lists;
@@ -7,6 +8,7 @@ using TradeUnionCommittee.BLL.Interfaces.PDF;
 using TradeUnionCommittee.BLL.Interfaces.Search;
 using TradeUnionCommittee.BLL.Interfaces.SystemAudit;
 using TradeUnionCommittee.BLL.Services.Account;
+using TradeUnionCommittee.BLL.Services.Dashboard;
 using TradeUnionCommittee.BLL.Services.Directory;
 using TradeUnionCommittee.BLL.Services.General;
 using TradeUnionCommittee.BLL.Services.Lists;
@@ -31,43 +33,44 @@ namespace TradeUnionCommittee.BLL.Extensions
             // Injection All Service
             //---------------------------------------------------------------------------------------------
             
-            services.AddScoped<IAccountService, AccountService>();
+            services.AddTransient<IAccountService, AccountService>();
+            services.AddTransient<IDashboardService, DashboardService>();
 
-            services.AddScoped<IEmployeeService, EmployeeService>();
-            services.AddScoped<IFamilyService, FamilyService>();
-            services.AddScoped<IChildrenService, ChildrenService>();
-            services.AddScoped<IGrandChildrenService, GrandChildrenService>();
+            services.AddTransient<IEmployeeService, EmployeeService>();
+            services.AddTransient<IFamilyService, FamilyService>();
+            services.AddTransient<IChildrenService, ChildrenService>();
+            services.AddTransient<IGrandChildrenService, GrandChildrenService>();
 
-            services.AddScoped<IEducationService, EducationService>();
-            services.AddScoped<IQualificationService, QualificationService>();
-            services.AddScoped<IPositionService, PositionService>();
-            services.AddScoped<ISocialActivityService, SocialActivityService>();
-            services.AddScoped<IPrivilegesService, PrivilegesService>();
-            services.AddScoped<IAwardService, AwardService>();
-            services.AddScoped<IMaterialAidService, MaterialAidService>();
-            services.AddScoped<IHobbyService, HobbyService>();
-            services.AddScoped<ITravelService, TravelService>();
-            services.AddScoped<IWellnessService, WellnessService>();
-            services.AddScoped<ITourService, TourService>();
-            services.AddScoped<IActivitiesService, ActivitiesService>();
-            services.AddScoped<ICulturalService, CulturalService>();
-            services.AddScoped<ISubdivisionsService, SubdivisionsService>();
-            services.AddScoped<IDormitoryService, DormitoryService>();
-            services.AddScoped<IDepartmentalService, DepartmentalService>();
+            services.AddTransient<IEducationService, EducationService>();
+            services.AddTransient<IQualificationService, QualificationService>();
+            services.AddTransient<IPositionService, PositionService>();
+            services.AddTransient<ISocialActivityService, SocialActivityService>();
+            services.AddTransient<IPrivilegesService, PrivilegesService>();
+            services.AddTransient<IAwardService, AwardService>();
+            services.AddTransient<IMaterialAidService, MaterialAidService>();
+            services.AddTransient<IHobbyService, HobbyService>();
+            services.AddTransient<ITravelService, TravelService>();
+            services.AddTransient<IWellnessService, WellnessService>();
+            services.AddTransient<ITourService, TourService>();
+            services.AddTransient<IActivitiesService, ActivitiesService>();
+            services.AddTransient<ICulturalService, CulturalService>();
+            services.AddTransient<ISubdivisionsService, SubdivisionsService>();
+            services.AddTransient<IDormitoryService, DormitoryService>();
+            services.AddTransient<IDepartmentalService, DepartmentalService>();
 
-            services.AddScoped<IPrivateHouseEmployeesService, PrivateHouseEmployeesService>();
-            services.AddScoped<IPublicHouseEmployeesService, PublicHouseEmployeesService>();
-            services.AddScoped<IPositionEmployeesService, PositionEmployeesService>();
-            services.AddScoped<ISocialActivityEmployeesService, SocialActivityEmployeesService>();
-            services.AddScoped<IPrivilegeEmployeesService, PrivilegeEmployeesService>();
+            services.AddTransient<IPrivateHouseEmployeesService, PrivateHouseEmployeesService>();
+            services.AddTransient<IPublicHouseEmployeesService, PublicHouseEmployeesService>();
+            services.AddTransient<IPositionEmployeesService, PositionEmployeesService>();
+            services.AddTransient<ISocialActivityEmployeesService, SocialActivityEmployeesService>();
+            services.AddTransient<IPrivilegeEmployeesService, PrivilegeEmployeesService>();
 
-            services.AddScoped<IHobbyEmployeesService, HobbyEmployeesService>();
-            services.AddScoped<IHobbyChildrensService, HobbyChildrensService>();
-            services.AddScoped<IHobbyGrandChildrensService, HobbyGrandChildrensService>();
+            services.AddTransient<IHobbyEmployeesService, HobbyEmployeesService>();
+            services.AddTransient<IHobbyChildrensService, HobbyChildrensService>();
+            services.AddTransient<IHobbyGrandChildrensService, HobbyGrandChildrensService>();
 
-            services.AddScoped<ISearchService, SearchService>();
-            services.AddScoped<ISystemAuditService, SystemAuditService>();
-            services.AddScoped<IPdfService, PdfService>();
+            services.AddTransient<ISearchService, SearchService>();
+            services.AddTransient<ISystemAuditService, SystemAuditService>();
+            services.AddTransient<IPdfService, PdfService>();
 
             //---------------------------------------------------------------------------------------------
 

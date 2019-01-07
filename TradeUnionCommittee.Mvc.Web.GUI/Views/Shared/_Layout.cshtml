@@ -20,77 +20,81 @@
     </environment>
 </head>
 <body>
-    
-<nav class="navbar navbar-expand-lg fixed-top bg-dark navbar-dark">
-    
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExample08" aria-controls="navbarsExample08" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
 
-    <!-- Links -->
-    <div class="collapse navbar-collapse justify-content-md-center" id="navbarsExample08">
-        
-        <ul class="navbar-nav">
+    <nav class="navbar navbar-expand-lg fixed-top bg-dark navbar-dark">
 
-            @if (User.IsInRole("Admin") || User.IsInRole("Accountant"))
-            {
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExample08" aria-controls="navbarsExample08" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <!-- Links -->
+        <div class="collapse navbar-collapse justify-content-md-center" id="navbarsExample08">
+
+            <ul class="navbar-nav">
+
+                @if (User.IsInRole("Admin") || User.IsInRole("Accountant"))
+                {
+                    <li class="nav-item">
+                        <a class="nav-link" asp-area="" asp-controller="Employee" asp-action="Create">Додати співробітника</a>
+                    </li>
+                }
+
                 <li class="nav-item">
-                    <a class="nav-link" asp-area="" asp-controller="Employee" asp-action="Create">Додати співробітника</a>
+                    <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Directory">Довідники</a>
                 </li>
-            }
 
-            <li class="nav-item">
-                <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Directory">Довідники</a>
-            </li>
+                @if (User.IsInRole("Admin"))
+                {
+                    <li class="nav-item">
+                        <a class="nav-link" asp-area="" asp-controller="Account" asp-action="Index">Користувачі</a>
+                    </li>
 
-            @if (User.IsInRole("Admin"))
-            {
+                    <li class="nav-item">
+                        <a class="nav-link" asp-area="" asp-controller="Dashboard" asp-action="Index">Аналітика</a>
+                    </li>
+                }
+
                 <li class="nav-item">
-                    <a class="nav-link" asp-area="" asp-controller="Account" asp-action="Index">Користувачі</a>
+                    <a class="nav-link" asp-area="" asp-controller="Search" asp-action="Index">Пошуки</a>
                 </li>
-            }
 
-            <li class="nav-item">
-                <a class="nav-link" asp-area="" asp-controller="Search" asp-action="Index">Пошуки</a>
-            </li>
+                <li class="nav-item">
+                    <a class="nav-link" asp-area="" asp-controller="Account" asp-action="SignOut">Вийти</a>
+                </li>
 
-            <li class="nav-item">
-                <a class="nav-link" asp-area="" asp-controller="Account" asp-action="SignOut">Вийти</a>
-            </li>
+            </ul>
+        </div>
+    </nav>
 
-        </ul>
+    <div class="container body-content">
+        <br>
+        @RenderBody()
+        <hr />
+        <footer>
+            <p>&copy; ППО ОНУ ім. І.І. Мечникова - @DateTime.Now.Year</p>
+        </footer>
     </div>
-</nav>
 
-<div class="container body-content">
-    <br>
-    @RenderBody()
-    <hr/>
-    <footer>
-        <p>&copy; ППО ОНУ ім. І.І. Мечникова - @DateTime.Now.Year</p>
-    </footer>
-</div>
-
-<environment include="Development">
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/popper/umd/popper.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
-    <script src="~/lib/jquery-editable-select/jquery-editable-select.min.js"></script>
-    <script src="~/lib/jquery-masked-input/jquery.maskedinput.min.js"></script>
-    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
-    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
-    <script src="~/js/site.js"></script>
-</environment>
-<environment exclude="Development">
-    <script src="~/lib/jquery/dist/jquery.min.js" asp-append-version="true"></script>
-    <script src="~/lib/popper/umd/popper.min.js" asp-append-version="true"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.min.js" asp-append-version="true"></script>
-    <script src="~/lib/jquery-editable-select/jquery-editable-select.min.js" asp-append-version="true"></script>
-    <script src="~/lib/jquery-masked-input/jquery.maskedinput.min.js" asp-append-version="true"></script>
-    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js" asp-append-version="true"></script>
-    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js" asp-append-version="true"></script>
-    <script src="~/js/site.min.js" asp-append-version="true"></script>
-</environment>
-@RenderSection("Scripts", required: false)
+    <environment include="Development">
+        <script src="~/lib/jquery/dist/jquery.min.js"></script>
+        <script src="~/lib/popper/umd/popper.min.js"></script>
+        <script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
+        <script src="~/lib/jquery-editable-select/jquery-editable-select.min.js"></script>
+        <script src="~/lib/jquery-masked-input/jquery.maskedinput.min.js"></script>
+        <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+        <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+        <script src="~/js/site.js"></script>
+    </environment>
+    <environment exclude="Development">
+        <script src="~/lib/jquery/dist/jquery.min.js" asp-append-version="true"></script>
+        <script src="~/lib/popper/umd/popper.min.js" asp-append-version="true"></script>
+        <script src="~/lib/bootstrap/dist/js/bootstrap.min.js" asp-append-version="true"></script>
+        <script src="~/lib/jquery-editable-select/jquery-editable-select.min.js" asp-append-version="true"></script>
+        <script src="~/lib/jquery-masked-input/jquery.maskedinput.min.js" asp-append-version="true"></script>
+        <script src="~/lib/jquery-validation/dist/jquery.validate.min.js" asp-append-version="true"></script>
+        <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js" asp-append-version="true"></script>
+        <script src="~/js/site.min.js" asp-append-version="true"></script>
+    </environment>
+    @RenderSection("Scripts", required: false)
 </body>
 </html>

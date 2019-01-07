@@ -109,7 +109,7 @@ namespace TradeUnionCommittee.Mvc.Web.GUI
 
         private void DependencyInjectionSystem(IServiceCollection services)
         {
-            services.AddScoped<IDirectories, Directories>();
+            services.AddTransient<IDirectories, Directories>();
             services.AddSingleton(cm => AutoMapperConfiguration.ConfigureAutoMapper());
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
         }
