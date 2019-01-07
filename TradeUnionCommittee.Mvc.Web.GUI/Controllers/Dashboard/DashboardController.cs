@@ -34,6 +34,34 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Dashboard
             return Json(_services.PieData_Test());
         }
 
+        [HttpGet]
+        [Authorize(Roles = "Admin")]
+        public IActionResult BarData()
+        {
+            return Json(_services.BarData_Test());
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "Admin")]
+        public IActionResult AreaData()
+        {
+            return Json(_services.AreaData_Test());
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "Admin")]
+        public IActionResult RadarData()
+        {
+            return Json(_services.RadarData_Test());
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "Admin")]
+        public IActionResult LineData()
+        {
+            return Json(_services.LineData_Test());
+        }
+
         //------------------------------------------------------------------------------------------------------------------------------------------
 
         protected override void Dispose(bool disposing)
