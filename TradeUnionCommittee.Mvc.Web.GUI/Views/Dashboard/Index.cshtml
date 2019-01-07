@@ -169,10 +169,37 @@
                     </div>
                 </div>
                 <!--Tab 7 end-->
-                
+
 
 
             </div>
         </div>
     </div>
 </section>
+
+@section Scripts
+{
+    <environment include="Development">
+        <script src="~/lib/chart.js/Chart.min.js"></script>
+        <script src="~/lib/codepen/colour.palette.generator.js"></script>
+        <script src="~/js/analytics/chart-pie-demo.js"></script>
+        <script src="~/js/analytics/chart-bar-demo.js"></script>
+        <script src="~/js/analytics/chart-area-demo.js"></script>
+        <script src="~/js/analytics/chart-radar-demo.js"></script>
+        <script src="~/js/analytics/chart-line-demo.js"></script>
+        <script src="~/js/analytics/chart-bubble-demo.js"></script>
+        <script src="~/js/analytics/chart-scatter-demo.js"></script>
+    </environment>
+
+    <environment exclude="Development">
+        <script src="~/lib/chart.js/Chart.min.js" asp-append-version="true"></script>
+        <script src="~/lib/codepen/colour.palette.generator.js" asp-append-version="true"></script>
+        <script src="~/js/analytics/chart-pie-demo.js" asp-append-version="true"></script>
+        <script src="~/js/analytics/chart-bar-demo.js" asp-append-version="true"></script>
+        <script src="~/js/analytics/chart-area-demo.js" asp-append-version="true"></script>
+        <script src="~/js/analytics/chart-radar-demo.js" asp-append-version="true"></script>
+        <script src="~/js/analytics/chart-line-demo.js" asp-append-version="true"></script>
+        <script src="~/js/analytics/chart-bubble-demo.js" asp-append-version="true"></script>
+        <script src="~/js/analytics/chart-scatter-demo.js" asp-append-version="true"></script>
+    </environment>
+}

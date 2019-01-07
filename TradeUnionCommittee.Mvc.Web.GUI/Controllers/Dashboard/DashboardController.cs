@@ -27,6 +27,15 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Dashboard
 
         //------------------------------------------------------------------------------------------------------------------------------------------
 
+        [HttpGet]
+        [Authorize(Roles = "Admin")]
+        public IActionResult PieData()
+        {
+            return Json(_services.PieData_Test());
+        }
+
+        //------------------------------------------------------------------------------------------------------------------------------------------
+
         protected override void Dispose(bool disposing)
         {
             _services.Dispose();
