@@ -26,14 +26,14 @@ namespace TradeUnionCommittee.DAL.Repositories.Account
 
         //-----------------------------------------------------------------------------------
 
-        public async Task<ActualResult> Login(string email, string password, AuthorizationType type)
+        public async Task<ActualResult> Login(string email, string password, bool rememberMe, AuthorizationType type)
         {
             try
             {
                 switch (type)
                 {
                     case AuthorizationType.Cookie:
-                        var resultCookie = await _signInManager.PasswordSignInAsync(email, password, false, false);
+                        var resultCookie = await _signInManager.PasswordSignInAsync(email, password, rememberMe, false);
                         return resultCookie.Succeeded ? new ActualResult() : new ActualResult(Errors.InvalidLoginOrPassword);
                     case AuthorizationType.Token:
                         var user = await _userManager.FindByNameAsync(email);

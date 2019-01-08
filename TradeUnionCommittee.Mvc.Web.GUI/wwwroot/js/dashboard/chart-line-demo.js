@@ -6,8 +6,8 @@ $('#lineChart').ready(function () {
                 labels: result.labels,
                 datasets: [
                     {
-                        label: result.dataSets[0].label,
-                        data: result.dataSets[0].data,
+                        label: result.data[0].label,
+                        data: result.data[0].data,
                         backgroundColor: [
                             'rgba(105, 0, 132, .2)',
                         ],
@@ -17,8 +17,8 @@ $('#lineChart').ready(function () {
                         borderWidth: 2
                     },
                     {
-                        label: result.dataSets[1].label,
-                        data: result.dataSets[1].data,
+                        label: result.data[1].label,
+                        data: result.data[1].data,
                         backgroundColor: [
                             'rgba(0, 250, 220, .2)',
                         ],
@@ -28,8 +28,8 @@ $('#lineChart').ready(function () {
                         borderWidth: 2
                     },
                     {
-                        label: result.dataSets[2].label,
-                        data: result.dataSets[2].data,
+                        label: result.data[2].label,
+                        data: result.data[2].data,
                         backgroundColor: [
                             'rgba(0, 137, 132, .2)',
                         ],

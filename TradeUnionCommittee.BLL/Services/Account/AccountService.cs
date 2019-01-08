@@ -22,9 +22,9 @@ namespace TradeUnionCommittee.BLL.Services.Account
             _mapperService = mapperService;
         }
 
-        public async Task<ActualResult> Login(string email, string password, Enums.TypeAuthorization type)
+        public async Task<ActualResult> Login(string email, string password, bool rememberMe, Enums.TypeAuthorization type)
         {
-            var result = await _database.AccountRepository.Login(email, password, (AuthorizationType)type);
+            var result = await _database.AccountRepository.Login(email, password, rememberMe, (AuthorizationType)type);
             return result.IsValid ? new ActualResult() : new ActualResult<string>(Errors.InvalidLoginOrPassword);
         }
 
