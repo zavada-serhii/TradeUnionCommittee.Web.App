@@ -14,7 +14,7 @@ namespace TradeUnionCommittee.DAL.Extensions
         {
             services.AddDbContext<TradeUnionCommitteeEmployeesCoreContext>(options => options.UseNpgsql(connectionString));
             services.AddIdentity<User, IdentityRole>().AddEntityFrameworkStores<TradeUnionCommitteeEmployeesCoreContext>();
-            services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddTransient<IUnitOfWork, UnitOfWork>();
             return services;
         }
     }
