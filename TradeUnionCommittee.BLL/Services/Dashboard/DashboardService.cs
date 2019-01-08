@@ -67,7 +67,7 @@ namespace TradeUnionCommittee.BLL.Services.Dashboard
             return new RadarResult
             {
                 Labels = RandomString(count),
-                DataSets = radar
+                Data = radar
             };
         }
 
@@ -88,7 +88,7 @@ namespace TradeUnionCommittee.BLL.Services.Dashboard
             return new LineResult
             {
                 Labels = RandomString(count),
-                DataSets = line
+                Data = line
             };
         }
 

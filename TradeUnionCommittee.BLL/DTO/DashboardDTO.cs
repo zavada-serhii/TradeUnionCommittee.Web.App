@@ -2,9 +2,9 @@
 
 namespace TradeUnionCommittee.BLL.DTO
 {
-    public abstract class BaseDashboardResult
+    public abstract class BaseDashboardResult<T>
     {
-        public IEnumerable<double> Data { get; set; }
+        public IEnumerable<T> Data { get; set; }
         public IEnumerable<string> Labels { get; set; }
     }
 
@@ -16,21 +16,13 @@ namespace TradeUnionCommittee.BLL.DTO
 
     //------------------------------------------------------------------------------------------------------------------------------------------
 
-    public class PieResult : BaseDashboardResult { }
+    public class PieResult : BaseDashboardResult<double> { }
 
-    public class BarResult : BaseDashboardResult { }
+    public class BarResult : BaseDashboardResult<double> { }
 
-    public class AreaResult : BaseDashboardResult { }
+    public class AreaResult : BaseDashboardResult<double> { }
 
-    public class RadarResult
-    {
-        public IEnumerable<string> Labels { get; set; }
-        public IEnumerable<DataSet> DataSets { get; set; }
-    }
+    public class RadarResult : BaseDashboardResult<DataSet> { }
 
-    public class LineResult
-    {
-        public IEnumerable<string> Labels { get; set; }
-        public IEnumerable<DataSet> DataSets { get; set; }
-    }
+    public class LineResult : BaseDashboardResult<DataSet> { }
 }
