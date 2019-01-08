@@ -17,6 +17,7 @@ namespace TradeUnionCommittee.ViewModels.ViewModels
     public class LoginViewModel : BaseLoginViewModel
     {
         public string ReturnUrl { get; set; }
+        public bool RememberMe { get; set; }
     }
 
     public class CreateAccountViewModel

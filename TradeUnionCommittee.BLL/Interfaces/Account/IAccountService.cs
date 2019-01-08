@@ -8,7 +8,7 @@ namespace TradeUnionCommittee.BLL.Interfaces.Account
 {
     public interface IAccountService : IDisposable
     {
-        Task<ActualResult> Login(string email, string password, Enums.TypeAuthorization type);
+        Task<ActualResult> Login(string email, string password, bool rememberMe, Enums.TypeAuthorization type);
         Task<ActualResult> LogOff();
         Task<ActualResult<IEnumerable<AccountDTO>>> GetAllUsersAsync();
         Task<ActualResult<AccountDTO>> GetUserAsync(string hashId);

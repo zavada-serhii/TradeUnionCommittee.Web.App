@@ -8,7 +8,7 @@ namespace TradeUnionCommittee.DAL.Interfaces
 {
     public interface IAccountRepository
     {
-        Task<ActualResult> Login(string email, string password, AuthorizationType type);
+        Task<ActualResult> Login(string email, string password, bool rememberMe, AuthorizationType type);
         Task<ActualResult> LogOff();
         Task<ActualResult<IEnumerable<User>>> GetAllUsersAsync();
         Task<ActualResult<User>> GetUserAsync(string id);
