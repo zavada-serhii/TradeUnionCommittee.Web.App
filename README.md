@@ -39,5 +39,3 @@ Information system for the primary trade union organization of the Odessa Nation
 	-  - [ ] GiftGrandChildrens
 	-  - [ ] System Audit
 	-  - [ ] Testing && Bug fixing
-
-- [ ] Release
