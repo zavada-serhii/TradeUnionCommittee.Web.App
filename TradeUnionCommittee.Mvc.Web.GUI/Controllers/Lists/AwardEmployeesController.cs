@@ -14,10 +14,6 @@ using TradeUnionCommittee.ViewModels.ViewModels;
 
 namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Lists
 {
-    //CreateAwardEmployeesViewModel
-    //UpdateAwardEmployeesViewModel
-    //AwardEmployeesDTO
-
     public class AwardEmployeesController : Controller
     {
         private readonly IAwardEmployeesService _services;

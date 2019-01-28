@@ -16,8 +16,8 @@ Information system for the primary trade union organization of the Odessa Nation
 	-  - [ ] Data Analysis API && Data Analysis Service
 
 - Secondary
-	-  - [ ] AwardEmployees
-	-  - [ ] MaterialAidEmployees
+	-  - [x] AwardEmployees
+	-  - [x] MaterialAidEmployees
 	-  - [ ] EventEmployees (Travel, Wellness, Tour)
 	-  - [ ] ActivityEmployees
 	-  - [ ] CulturalEmployees

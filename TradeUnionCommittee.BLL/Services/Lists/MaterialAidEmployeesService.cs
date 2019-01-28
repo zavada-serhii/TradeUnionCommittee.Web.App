@@ -50,7 +50,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists
 
         public async Task<ActualResult> DeleteAsync(string hashId)
         {
-            await _database.AwardEmployeesRepository.Delete(_hashIdUtilities.DecryptLong(hashId, Enums.Services.MaterialAidEmployees));
+            await _database.MaterialAidEmployeesRepository.Delete(_hashIdUtilities.DecryptLong(hashId, Enums.Services.MaterialAidEmployees));
             return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
         }
 

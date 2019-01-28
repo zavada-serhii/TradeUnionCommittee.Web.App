@@ -14,10 +14,6 @@ using TradeUnionCommittee.ViewModels.ViewModels;
 
 namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Lists
 {
-    //CreateMaterialAidEmployeesViewModel
-    //UpdateMaterialAidEmployeesViewModel
-    //MaterialAidEmployeesDTO
-
     public class MaterialAidEmployeesController : Controller
     {
         private readonly IMaterialAidEmployeesService _services;
