@@ -128,6 +128,10 @@ namespace TradeUnionCommittee.BLL.Utilities
                     return "HobbyChildrens";
                 case Enums.Services.HobbyGrandChildrens:
                     return "HobbyGrandChildrens";
+                case Enums.Services.AwardEmployees:
+                    return "AwardEmployees";
+                case Enums.Services.MaterialAidEmployees:
+                    return "MaterialAidEmployees";
                 default:
                     return string.Empty;
             }

@@ -323,6 +323,28 @@ namespace TradeUnionCommittee.BLL.Utilities
                         .ForMember(x => x.HashIdHobby, opt => opt.MapFrom(c => _hashIdUtilities.EncryptLong(c.IdHobby, Enums.Services.Hobby)))
                         .ForMember(x => x.NameHobby, opt => opt.MapFrom(c => c.IdHobbyNavigation.Name));
 
+                    map.CreateMap<AwardEmployeesDTO, AwardEmployees>()
+                        .ForMember(x => x.Id, opt => opt.MapFrom(c => _hashIdUtilities.DecryptLong(c.HashId, Enums.Services.AwardEmployees)))
+                        .ForMember(x => x.IdEmployee, opt => opt.MapFrom(c => _hashIdUtilities.DecryptLong(c.HashIdEmployee, Enums.Services.Employee)))
+                        .ForMember(x => x.IdAward, opt => opt.MapFrom(c => _hashIdUtilities.DecryptLong(c.HashIdAward, Enums.Services.Award)))
+                        .ForMember(x => x.IdAwardNavigation, opt => opt.MapFrom(c => _nullValue))
+                        .ReverseMap()
+                        .ForMember(x => x.HashId, opt => opt.MapFrom(c => _hashIdUtilities.EncryptLong(c.Id, Enums.Services.AwardEmployees)))
+                        .ForMember(x => x.HashIdEmployee, opt => opt.MapFrom(c => _hashIdUtilities.EncryptLong(c.IdEmployee, Enums.Services.Employee)))
+                        .ForMember(x => x.HashIdAward, opt => opt.MapFrom(c => _hashIdUtilities.EncryptLong(c.IdAward, Enums.Services.Award)))
+                        .ForMember(x => x.NameAward, opt => opt.MapFrom(c => c.IdAwardNavigation.Name));
+
+                    map.CreateMap<MaterialAidEmployeesDTO, MaterialAidEmployees>()
+                        .ForMember(x => x.Id, opt => opt.MapFrom(c => _hashIdUtilities.DecryptLong(c.HashId, Enums.Services.MaterialAidEmployees)))
+                        .ForMember(x => x.IdEmployee, opt => opt.MapFrom(c => _hashIdUtilities.DecryptLong(c.HashIdEmployee, Enums.Services.Employee)))
+                        .ForMember(x => x.IdMaterialAid, opt => opt.MapFrom(c => _hashIdUtilities.DecryptLong(c.HashIdMaterialAid, Enums.Services.MaterialAid)))
+                        .ForMember(x => x.IdMaterialAidNavigation, opt => opt.MapFrom(c => _nullValue))
+                        .ReverseMap()
+                        .ForMember(x => x.HashId, opt => opt.MapFrom(c => _hashIdUtilities.EncryptLong(c.Id, Enums.Services.MaterialAidEmployees)))
+                        .ForMember(x => x.HashIdEmployee, opt => opt.MapFrom(c => _hashIdUtilities.EncryptLong(c.IdEmployee, Enums.Services.Employee)))
+                        .ForMember(x => x.HashIdMaterialAid, opt => opt.MapFrom(c => _hashIdUtilities.EncryptLong(c.IdMaterialAid, Enums.Services.MaterialAid)))
+                        .ForMember(x => x.NameMaterialAid, opt => opt.MapFrom(c => c.IdMaterialAidNavigation.Name));
+
                     // -- Mapping for PDF service start
 
                     map.CreateMap<MaterialAidEmployees, MaterialIncentivesEmployeeEntity>()

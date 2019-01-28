@@ -34,14 +34,16 @@
                             </div>
                         </li>
 
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Заохочення</a>
-                            <div class="dropdown-menu">
-                                <a class="dropdown-item" href="#">Премiї</a>
-                                <a class="dropdown-item" href="#">Матерiальнi допомоги</a>
-
-                            </div>
-                        </li>
+                        @if (User.IsInRole("Admin") || User.IsInRole("Accountant"))
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Заохочення</a>
+                                <div class="dropdown-menu">
+                                    <a class="dropdown-item" asp-controller="AwardEmployees" asp-action="Index" asp-route-id="@Model.HashIdEmployee">Премiї</a>
+                                    <a class="dropdown-item" asp-controller="MaterialAidEmployees" asp-action="Index" asp-route-id="@Model.HashIdEmployee">Матерiальнi допомоги</a>
+                                </div>
+                            </li>
+                        }
 
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Заходи та хобi</a>
@@ -302,6 +304,6 @@
                 </div>
 
             </div>
-         }
+        }
     </div>
 </section>

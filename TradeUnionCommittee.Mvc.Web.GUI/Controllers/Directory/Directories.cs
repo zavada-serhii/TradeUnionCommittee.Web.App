@@ -205,16 +205,16 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Directory
             return activities.IsValid ? new SelectList(activities.Result, "HashId", "Name") : null;
         }
 
-        public async Task<SelectList> GetAward()
+        public async Task<SelectList> GetAward(string hashIdSelectedValue = null)
         {
             var award = await _awardService.GetAllAsync();
-            return award.IsValid ? new SelectList(award.Result, "HashId", "Name") : null;
+            return award.IsValid ? new SelectList(award.Result, "HashId", "Name", hashIdSelectedValue) : null;
         }
 
-        public async Task<SelectList> GetMaterialAid()
+        public async Task<SelectList> GetMaterialAid(string hashIdSelectedValue = null)
         {
             var materialAid = await _materialAidService.GetAllAsync();
-            return materialAid.IsValid ? new SelectList(materialAid.Result, "HashId", "Name") : null;
+            return materialAid.IsValid ? new SelectList(materialAid.Result, "HashId", "Name", hashIdSelectedValue) : null;
         }
     }
 
@@ -239,7 +239,7 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Directory
         Task<SelectList> GetTour();
         Task<SelectList> GetCultural();
         Task<SelectList> GetActivities();
-        Task<SelectList> GetAward();
-        Task<SelectList> GetMaterialAid();
+        Task<SelectList> GetAward(string hashIdSelectedValue = null);
+        Task<SelectList> GetMaterialAid(string hashIdSelectedValue = null);
     }
 }

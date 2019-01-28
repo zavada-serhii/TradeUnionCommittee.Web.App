@@ -63,6 +63,8 @@ namespace TradeUnionCommittee.BLL.Extensions
             services.AddTransient<IPositionEmployeesService, PositionEmployeesService>();
             services.AddTransient<ISocialActivityEmployeesService, SocialActivityEmployeesService>();
             services.AddTransient<IPrivilegeEmployeesService, PrivilegeEmployeesService>();
+            services.AddTransient<IAwardEmployeesService, AwardEmployeesService>();
+            services.AddTransient<IMaterialAidEmployeesService, MaterialAidEmployeesService>();
 
             services.AddTransient<IHobbyEmployeesService, HobbyEmployeesService>();
             services.AddTransient<IHobbyChildrensService, HobbyChildrensService>();

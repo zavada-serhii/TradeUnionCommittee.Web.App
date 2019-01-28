@@ -26,6 +26,8 @@
         Children = 26,
         GrandChildren = 27,
         HobbyChildrens = 28,
-        HobbyGrandChildrens = 29
+        HobbyGrandChildrens = 29,
+        AwardEmployees = 30,
+        MaterialAidEmployees = 31
     }
 }
