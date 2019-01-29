@@ -132,6 +132,12 @@ namespace TradeUnionCommittee.BLL.Utilities
                     return "AwardEmployees";
                 case Enums.Services.MaterialAidEmployees:
                     return "MaterialAidEmployees";
+                case Enums.Services.TravelEmployees:
+                    return "TravelEmployeesService";
+                case Enums.Services.WellnessEmployees:
+                    return "WellnessEmployeesService";
+                case Enums.Services.TourEmployees:
+                    return "TourEmployeesService";
                 default:
                     return string.Empty;
             }

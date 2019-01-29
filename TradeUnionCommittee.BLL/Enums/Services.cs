@@ -28,6 +28,9 @@
         HobbyChildrens = 28,
         HobbyGrandChildrens = 29,
         AwardEmployees = 30,
-        MaterialAidEmployees = 31
+        MaterialAidEmployees = 31,
+        TravelEmployees = 32,
+        WellnessEmployees = 33,
+        TourEmployees = 34
     }
 }

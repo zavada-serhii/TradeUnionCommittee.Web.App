@@ -345,6 +345,39 @@ namespace TradeUnionCommittee.BLL.Utilities
                         .ForMember(x => x.HashIdMaterialAid, opt => opt.MapFrom(c => _hashIdUtilities.EncryptLong(c.IdMaterialAid, Enums.Services.MaterialAid)))
                         .ForMember(x => x.NameMaterialAid, opt => opt.MapFrom(c => c.IdMaterialAidNavigation.Name));
 
+                    map.CreateMap<TravelEmployeesDTO, EventEmployees>()
+                        .ForMember(x => x.Id, opt => opt.MapFrom(c => _hashIdUtilities.DecryptLong(c.HashId, Enums.Services.TravelEmployees)))
+                        .ForMember(x => x.IdEmployee, opt => opt.MapFrom(c => _hashIdUtilities.DecryptLong(c.HashIdEmployee, Enums.Services.Employee)))
+                        .ForMember(x => x.IdEvent, opt => opt.MapFrom(c => _hashIdUtilities.DecryptLong(c.HashIdEvent, Enums.Services.Travel)))
+                        .ForMember(x => x.IdEventNavigation, opt => opt.MapFrom(c => _nullValue))
+                        .ReverseMap()
+                        .ForMember(x => x.HashId, opt => opt.MapFrom(c => _hashIdUtilities.EncryptLong(c.Id, Enums.Services.TravelEmployees)))
+                        .ForMember(x => x.HashIdEmployee, opt => opt.MapFrom(c => _hashIdUtilities.EncryptLong(c.IdEmployee, Enums.Services.Employee)))
+                        .ForMember(x => x.HashIdEvent, opt => opt.MapFrom(c => _hashIdUtilities.EncryptLong(c.IdEvent, Enums.Services.Travel)))
+                        .ForMember(x => x.NameEvent, opt => opt.MapFrom(c => c.IdEventNavigation.Name));
+
+                    map.CreateMap<WellnessEmployeesDTO, EventEmployees>()
+                        .ForMember(x => x.Id, opt => opt.MapFrom(c => _hashIdUtilities.DecryptLong(c.HashId, Enums.Services.WellnessEmployees)))
+                        .ForMember(x => x.IdEmployee, opt => opt.MapFrom(c => _hashIdUtilities.DecryptLong(c.HashIdEmployee, Enums.Services.Employee)))
+                        .ForMember(x => x.IdEvent, opt => opt.MapFrom(c => _hashIdUtilities.DecryptLong(c.HashIdEvent, Enums.Services.Wellness)))
+                        .ForMember(x => x.IdEventNavigation, opt => opt.MapFrom(c => _nullValue))
+                        .ReverseMap()
+                        .ForMember(x => x.HashId, opt => opt.MapFrom(c => _hashIdUtilities.EncryptLong(c.Id, Enums.Services.WellnessEmployees)))
+                        .ForMember(x => x.HashIdEmployee, opt => opt.MapFrom(c => _hashIdUtilities.EncryptLong(c.IdEmployee, Enums.Services.Employee)))
+                        .ForMember(x => x.HashIdEvent, opt => opt.MapFrom(c => _hashIdUtilities.EncryptLong(c.IdEvent, Enums.Services.Wellness)))
+                        .ForMember(x => x.NameEvent, opt => opt.MapFrom(c => c.IdEventNavigation.Name));
+
+                    map.CreateMap<TourEmployeesDTO, EventEmployees>()
+                        .ForMember(x => x.Id, opt => opt.MapFrom(c => _hashIdUtilities.DecryptLong(c.HashId, Enums.Services.TourEmployees)))
+                        .ForMember(x => x.IdEmployee, opt => opt.MapFrom(c => _hashIdUtilities.DecryptLong(c.HashIdEmployee, Enums.Services.Employee)))
+                        .ForMember(x => x.IdEvent, opt => opt.MapFrom(c => _hashIdUtilities.DecryptLong(c.HashIdEvent, Enums.Services.Tour)))
+                        .ForMember(x => x.IdEventNavigation, opt => opt.MapFrom(c => _nullValue))
+                        .ReverseMap()
+                        .ForMember(x => x.HashId, opt => opt.MapFrom(c => _hashIdUtilities.EncryptLong(c.Id, Enums.Services.TourEmployees)))
+                        .ForMember(x => x.HashIdEmployee, opt => opt.MapFrom(c => _hashIdUtilities.EncryptLong(c.IdEmployee, Enums.Services.Employee)))
+                        .ForMember(x => x.HashIdEvent, opt => opt.MapFrom(c => _hashIdUtilities.EncryptLong(c.IdEvent, Enums.Services.Tour)))
+                        .ForMember(x => x.NameEvent, opt => opt.MapFrom(c => c.IdEventNavigation.Name));
+
                     // -- Mapping for PDF service start
 
                     map.CreateMap<MaterialAidEmployees, MaterialIncentivesEmployeeEntity>()
