@@ -2,7 +2,7 @@
 
 namespace TradeUnionCommittee.BLL.DTO
 {
-    public abstract class EventEmployeesDTO
+    public  class EventEmployeesDTO
     {
         public string HashId { get; set; }
         public string HashIdEmployee { get; set; }

@@ -175,22 +175,22 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Directory
             return hobby.IsValid ? new SelectList(hobby.Result, "HashId", "Name", hashIdSelectedValue) : null;
         }
 
-        public async Task<SelectList> GetTravel()
+        public async Task<SelectList> GetTravel(string hashIdSelectedValue = null)
         {
             var travel = await _travelService.GetAllAsync();
-            return travel.IsValid ? new SelectList(travel.Result, "HashId", "Name") : null;
+            return travel.IsValid ? new SelectList(travel.Result, "HashId", "Name", hashIdSelectedValue) : null;
         }
 
-        public async Task<SelectList> GetWellness()
+        public async Task<SelectList> GetWellness(string hashIdSelectedValue = null)
         {
             var wellness = await _wellnessService.GetAllAsync();
-            return wellness.IsValid ? new SelectList(wellness.Result, "HashId", "Name") : null;
+            return wellness.IsValid ? new SelectList(wellness.Result, "HashId", "Name", hashIdSelectedValue) : null;
         }
 
-        public async Task<SelectList> GetTour()
+        public async Task<SelectList> GetTour(string hashIdSelectedValue = null)
         {
             var tour = await _tourService.GetAllAsync();
-            return tour.IsValid ? new SelectList(tour.Result, "HashId", "Name") : null;
+            return tour.IsValid ? new SelectList(tour.Result, "HashId", "Name", hashIdSelectedValue) : null;
         }
 
         public async Task<SelectList> GetCultural()
@@ -234,9 +234,9 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Directory
         Task<SelectList> GetSocialActivity(string hashIdSelectedValue = null);
         Task<SelectList> GetPrivilegies(string hashIdSelectedValue = null);
         Task<SelectList> GetHobby(string hashIdSelectedValue = null);
-        Task<SelectList> GetTravel();
-        Task<SelectList> GetWellness();
-        Task<SelectList> GetTour();
+        Task<SelectList> GetTravel(string hashIdSelectedValue = null);
+        Task<SelectList> GetWellness(string hashIdSelectedValue = null);
+        Task<SelectList> GetTour(string hashIdSelectedValue = null);
         Task<SelectList> GetCultural();
         Task<SelectList> GetActivities();
         Task<SelectList> GetAward(string hashIdSelectedValue = null);

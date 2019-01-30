@@ -48,9 +48,12 @@
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Заходи та хобi</a>
                             <div class="dropdown-menu">
-                                <a class="dropdown-item" href="#">Поїздки</a>
-                                <a class="dropdown-item" href="#">Оздоровлення</a>
-                                <a class="dropdown-item" href="#">Путівки</a>
+                                <a class="dropdown-item" asp-controller="TravelEmployees" asp-action="Index" asp-route-id="@Model.HashIdEmployee">Поїздки</a>
+                                <a class="dropdown-item" asp-controller="WellnessEmployees" asp-action="Index" asp-route-id="@Model.HashIdEmployee">Оздоровлення</a>
+                                @if (User.IsInRole("Admin") || User.IsInRole("Accountant"))
+                                {
+                                    <a class="dropdown-item" asp-controller="TourEmployees" asp-action="Index" asp-route-id="@Model.HashIdEmployee">Путівки</a>
+                                }
                                 <a class="dropdown-item" href="#">Заходи</a>
                                 <a class="dropdown-item" href="#">Культурно-просвітницькі заклади</a>
                                 <a class="dropdown-item" href="#">Подарунки</a>
