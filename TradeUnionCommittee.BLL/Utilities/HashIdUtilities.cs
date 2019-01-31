@@ -1,4 +1,5 @@
-﻿using HashidsNet;
+﻿using System.Linq;
+using HashidsNet;
 using TradeUnionCommittee.BLL.Exceptions;
 
 namespace TradeUnionCommittee.BLL.Utilities
@@ -46,7 +47,7 @@ namespace TradeUnionCommittee.BLL.Utilities
 
         private Hashids ObjectHashids(Enums.Services service)
         {
-            return new Hashids($"{_salt} {AdditionalSalt(service)}", _minHashLenght, _alphabet, _seps);
+            return new Hashids($"{_salt}-{service}Service|{_salt.Reverse()}", _minHashLenght, _alphabet, _seps);
         }
 
         public string EncryptLong(long plainLong, Enums.Services service)
@@ -74,7 +75,7 @@ namespace TradeUnionCommittee.BLL.Utilities
             return addOrRemoveMinus ? hash.Insert(8, "-").Insert(13, "-").Insert(18, "-").Insert(23, "-") : hash.Replace("-", string.Empty);
         }
 
-        private string AdditionalSalt(Enums.Services service)
+        private string AdditionalSalt(Enums.Services service, string salt)
         {
             switch (service)
             {
@@ -105,33 +106,33 @@ namespace TradeUnionCommittee.BLL.Utilities
                 case Enums.Services.Employee:
                     return "EmployeeService";
                 case Enums.Services.PrivateHouseEmployees:
-                    return "PrivateHouseEmployees";
+                    return "PrivateHouseEmployeesService";
                 case Enums.Services.PublicHouseEmployees:
-                    return "PublicHouseEmployees";
+                    return "PublicHouseEmployeesService";
                 case Enums.Services.AddressPublicHouse:
-                    return "AddressPublicHouse";
+                    return "AddressPublicHouseService";
                 case Enums.Services.PositionEmployees:
-                    return "PositionEmployees";
+                    return "PositionEmployeesService";
                 case Enums.Services.SocialActivityEmployees:
-                    return "SocialActivityEmployees";
+                    return "SocialActivityEmployeesService";
                 case Enums.Services.PrivilegeEmployees:
-                    return "PrivilegeEmployees";
+                    return "PrivilegeEmployeesService";
                 case Enums.Services.HobbyEmployees:
-                    return "HobbyEmployees";
+                    return "HobbyEmployeesService";
                 case Enums.Services.Family:
-                    return "Family";
+                    return "FamilyService";
                 case Enums.Services.Children:
-                    return "Children";
+                    return "ChildrenService";
                 case Enums.Services.GrandChildren:
-                    return "GrandChildren";
+                    return "GrandChildrenService";
                 case Enums.Services.HobbyChildrens:
-                    return "HobbyChildrens";
+                    return "HobbyChildrensService";
                 case Enums.Services.HobbyGrandChildrens:
-                    return "HobbyGrandChildrens";
+                    return "HobbyGrandChildrensService";
                 case Enums.Services.AwardEmployees:
-                    return "AwardEmployees";
+                    return "AwardEmployeesService";
                 case Enums.Services.MaterialAidEmployees:
-                    return "MaterialAidEmployees";
+                    return "MaterialAidEmployeesService";
                 case Enums.Services.TravelEmployees:
                     return "TravelEmployeesService";
                 case Enums.Services.WellnessEmployees:
