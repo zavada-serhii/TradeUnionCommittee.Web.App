@@ -1,7 +1,88 @@
-﻿
+﻿@model TradeUnionCommittee.BLL.DTO.GiftEmployeesDTO
 @{
     ViewData["Title"] = "Delete";
 }
 
-<h1>Delete</h1>
+<section class="add-user container-fluid">
+    <div class="row justify-content-center">
+        <div class="col-md-12 add-user_block">
 
+            <div class="row align-items-center mt-3">
+                <div class="col-md-10">
+                    <h1>Видалення подарунку</h1>
+                    <h3 class="text-muted">Ви впевнені, що хочете видалити подарунок?</h3>
+                </div>
+            </div>
+            <hr>
+            @if (TempData["ErrorsList"] == null)
+            {
+                <form asp-action="Delete">
+
+                    <input type="hidden" asp-for="HashId" />
+                    <input type="hidden" asp-for="HashIdEmployee" />
+
+                    <dl class="row">
+                        <dt class="col-md-3">
+                            <a>Назва заходу</a>
+                        </dt>
+                        <dd class="col-md-5">
+                            <p class="lead" style="font-size: 15px;">@Model.NameEvent</p>
+                        </dd>
+                    </dl>
+
+                    <dl class="row">
+                        <dt class="col-md-3">
+                            <a>Назва подарунку</a>
+                        </dt>
+                        <dd class="col-md-5">
+                            <p class="lead" style="font-size: 15px;">@Model.NameGift</p>
+                        </dd>
+                    </dl>
+
+                    <dl class="row">
+                        <dt class="col-md-3">
+                            <a>Ціна</a>
+                        </dt>
+                        <dd class="col-md-5">
+                            <p class="lead" style="font-size: 15px;">@Model.Price.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("uk-UA"))</p>
+                        </dd>
+                    </dl>
+
+                    <dl class="row">
+                        <dt class="col-md-3">
+                            <a>Знижка</a>
+                        </dt>
+                        <dd class="col-md-5">
+                            <p class="lead" style="font-size: 15px;">@Model.Discount.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("uk-UA"))</p>
+                        </dd>
+                    </dl>
+
+                    <dl class="row">
+                        <dt class="col-md-3">
+                            <a>Дата отримання</a>
+                        </dt>
+                        <dd class="col-md-5">
+                            <p class="lead" style="font-size: 15px;">@Model.DateGift.ToString("dd.MM.yyyy")</p>
+                        </dd>
+                    </dl>
+
+                    <div class="row justify-content-between">
+                        <div class="form-group col-lg-3">
+                            <div>
+                                <a asp-action="Index" asp-route-id="@Model.HashIdEmployee">Повернутися</a>
+                            </div>
+                        </div>
+                        <div class="col-md-6 text-right">
+                            <input type="submit" value="Видалити" class="btn btn-danger" />
+                        </div>
+                    </div>
+
+                </form>
+            }
+            else
+            {
+                await Html.RenderPartialAsync("_Errors", TempData["ErrorsList"]);
+            }
+        </div>
+    </div>
+</section>
