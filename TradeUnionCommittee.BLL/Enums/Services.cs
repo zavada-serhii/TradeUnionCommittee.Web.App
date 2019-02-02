@@ -31,6 +31,9 @@
         MaterialAidEmployees = 31,
         TravelEmployees = 32,
         WellnessEmployees = 33,
-        TourEmployees = 34
+        TourEmployees = 34,
+        ActivityEmployees = 35,
+        CulturalEmployees = 36,
+        GiftEmployees = 37
     }
 }

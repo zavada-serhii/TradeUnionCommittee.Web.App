@@ -40,6 +40,8 @@
     <Folder Include="Views\GrandChildren\" />
     <Folder Include="Views\HobbyGrandChildrens\" />
     <Folder Include="Views\MaterialAidEmployees\" />
+    <Folder Include="Views\CulturalEmployees\" />
+    <Folder Include="Views\GiftEmployees\" />
     <Folder Include="Views\TourEmployees\" />
     <Folder Include="Views\WellnessEmployees\" />
   </ItemGroup>

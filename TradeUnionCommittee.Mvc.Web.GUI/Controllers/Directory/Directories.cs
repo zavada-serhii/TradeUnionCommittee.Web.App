@@ -193,16 +193,16 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Directory
             return tour.IsValid ? new SelectList(tour.Result, "HashId", "Name", hashIdSelectedValue) : null;
         }
 
-        public async Task<SelectList> GetCultural()
+        public async Task<SelectList> GetCultural(string hashIdSelectedValue = null)
         {
             var cultural = await _culturalService.GetAllAsync();
-            return cultural.IsValid ? new SelectList(cultural.Result, "HashId", "Name") : null;
+            return cultural.IsValid ? new SelectList(cultural.Result, "HashId", "Name", hashIdSelectedValue) : null;
         }
 
-        public async Task<SelectList> GetActivities()
+        public async Task<SelectList> GetActivities(string hashIdSelectedValue = null)
         {
             var activities = await _activitiesService.GetAllAsync();
-            return activities.IsValid ? new SelectList(activities.Result, "HashId", "Name") : null;
+            return activities.IsValid ? new SelectList(activities.Result, "HashId", "Name", hashIdSelectedValue) : null;
         }
 
         public async Task<SelectList> GetAward(string hashIdSelectedValue = null)
@@ -237,8 +237,8 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Directory
         Task<SelectList> GetTravel(string hashIdSelectedValue = null);
         Task<SelectList> GetWellness(string hashIdSelectedValue = null);
         Task<SelectList> GetTour(string hashIdSelectedValue = null);
-        Task<SelectList> GetCultural();
-        Task<SelectList> GetActivities();
+        Task<SelectList> GetCultural(string hashIdSelectedValue = null);
+        Task<SelectList> GetActivities(string hashIdSelectedValue = null);
         Task<SelectList> GetAward(string hashIdSelectedValue = null);
         Task<SelectList> GetMaterialAid(string hashIdSelectedValue = null);
     }
