@@ -3,5 +3,107 @@
     ViewData["Title"] = "Delete";
 }
 
-<h1>Delete</h1>
+<section class="add-user container-fluid">
+    <div class="row justify-content-center">
+        <div class="col-md-12 add-user_block">
 
+            <div class="row align-items-center mt-3">
+                <div class="col-md-10">
+                    <h1>Видалення з обліку</h1>
+                    <h3 class="text-muted">Ви впевнені, що хочете видалити з обліку?</h3>
+                </div>
+            </div>
+            <hr>
+            @if (TempData["ErrorsList"] == null)
+            {
+                <form asp-action="Delete">
+
+                    <input type="hidden" asp-for="HashId" />
+                    <input type="hidden" asp-for="HashIdEmployee" />
+
+                    <dl class="row">
+                        <dt class="col-md-3">
+                            <a>Кількість членів сім'ї</a>
+                        </dt>
+                        <dd class="col-md-5">
+                            <p class="lead" style="font-size: 15px;">@Model.FamilyComposition</p>
+                        </dd>
+                    </dl>
+
+                    <dl class="row">
+                        <dt class="col-md-3">
+                            <a>Назва адміністрації</a>
+                        </dt>
+                        <dd class="col-md-5">
+                            <p class="lead" style="font-size: 15px;">@Model.NameAdministration</p>
+                        </dd>
+                    </dl>
+
+                    <dl class="row">
+                        <dt class="col-md-3">
+                            <a>Черговість</a>
+                        </dt>
+                        <dd class="col-md-5">
+                            <p class="lead" style="font-size: 15px;">@Model.PriorityType</p>
+                        </dd>
+                    </dl>
+                    
+                    <dl class="row">
+                        <dt class="col-md-3">
+                            <a>Дата прийняття</a>
+                        </dt>
+                        <dd class="col-md-5">
+                            <p class="lead" style="font-size: 15px;">@Model.DateAdoption.ToString("dd.MM.yyyy")</p>
+                        </dd>
+                    </dl>
+                    
+                    @if (@Model.DateInclusion != null)
+                    {
+                        <dl class="row">
+                            <dt class="col-md-3">
+                                <a>Дата для пільговиків</a>
+                            </dt>
+                            <dd class="col-md-5">
+                                <p class="lead" style="font-size: 15px;">@Model.DateInclusion?.ToString("dd.MM.yyyy")</p>
+                            </dd>
+                        </dl>
+                    }
+
+                    <dl class="row">
+                        <dt class="col-md-3">
+                            <a>Посада</a>
+                        </dt>
+                        <dd class="col-md-5">
+                            <p class="lead" style="font-size: 15px;">@Model.Position</p>
+                        </dd>
+                    </dl>
+                    
+                    <dl class="row">
+                        <dt class="col-md-3">
+                            <a>Рік початку роботи в ОНУ</a>
+                        </dt>
+                        <dd class="col-md-5">
+                            <p class="lead" style="font-size: 15px;">@Model.StartYearWork</p>
+                        </dd>
+                    </dl>
+
+                    <div class="row justify-content-between">
+                        <div class="form-group col-lg-3">
+                            <div>
+                                <a asp-action="Index" asp-route-id="@Model.HashIdEmployee">Повернутися</a>
+                            </div>
+                        </div>
+                        <div class="col-md-6 text-right">
+                            <input type="submit" value="Видалити" class="btn btn-danger" />
+                        </div>
+                    </div>
+
+                </form>
+            }
+            else
+            {
+                await Html.RenderPartialAsync("_Errors", TempData["ErrorsList"]);
+            }
+        </div>
+    </div>
+</section>

@@ -15,7 +15,6 @@ namespace TradeUnionCommittee.ViewModels.ViewModels
         public string PriorityType { get; set; }
         [Required(ErrorMessage = "Дата прийняття на облік не може бути порожньою!")]
         public DateTime DateAdoption { get; set; }
-        [Required(ErrorMessage = "Дата для пільговиків не може бути порожньою!")]
         public DateTime? DateInclusion { get; set; }
         [Required(ErrorMessage = "Посада не може бути порожньою!")]
         public string Position { get; set; }

@@ -393,7 +393,7 @@ CREATE TABLE "FluorographyEmployees"(
 	"Id" 			BIGSERIAL 	NOT NULL 	PRIMARY KEY,
 	"IdEmployee"		BIGINT 		NOT NULL 	REFERENCES "Employee"("Id") ON UPDATE CASCADE ON DELETE CASCADE,
 	"PlacePassing" 		VARCHAR 	NOT NULL,
-	"Result" 		VARCHAR 	NOT NULL	CHECK ("Result" ~ '^Norm$'::TEXT OR "Result" ~ '^Deviation$'::TEXT), 
+	"Result" 		VARCHAR 	NOT NULL, 
 	"DatePassage"		DATE 		NOT NULL,
 	UNIQUE ("IdEmployee","Result","DatePassage")
 );

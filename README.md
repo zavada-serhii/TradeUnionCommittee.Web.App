@@ -22,8 +22,8 @@ Information system for the primary trade union organization of the Odessa Nation
 	-  - [x] ActivityEmployees
 	-  - [x] CulturalEmployees
 	-  - [x] GiftEmployees
-	-  - [ ] FluorographyEmployees
-	-  - [ ] ApartmentAccountingEmployees
+	-  - [x] FluorographyEmployees
+	-  - [x] ApartmentAccountingEmployees
 
 - At last
 	-  - [ ] EventFamily (Travel, Wellness, Tour)
