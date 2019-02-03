@@ -34,6 +34,8 @@
         TourEmployees = 34,
         ActivityEmployees = 35,
         CulturalEmployees = 36,
-        GiftEmployees = 37
+        GiftEmployees = 37,
+        FluorographyEmployees = 38,
+        ApartmentAccountingEmployees = 39
     }
 }

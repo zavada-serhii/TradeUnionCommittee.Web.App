@@ -137,6 +137,12 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Configurations
                 map.CreateMap<CreateGiftEmployeesViewModel, GiftEmployeesDTO>();
                 map.CreateMap<UpdateGiftEmployeesViewModel, GiftEmployeesDTO>().ReverseMap();
 
+                map.CreateMap<CreateFluorographyEmployeesViewModel, FluorographyEmployeesDTO>();
+                map.CreateMap<UpdateFluorographyEmployeesViewModel, FluorographyEmployeesDTO>().ReverseMap();
+
+                map.CreateMap<CreateApartmentAccountingEmployeesViewModel, ApartmentAccountingEmployeesDTO>();
+                map.CreateMap<UpdateApartmentAccountingEmployeesViewModel, ApartmentAccountingEmployeesDTO>().ReverseMap();
+
             }).CreateMapper();
         }
 

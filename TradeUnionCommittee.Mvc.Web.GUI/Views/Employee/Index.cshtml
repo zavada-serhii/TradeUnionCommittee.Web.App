@@ -64,8 +64,8 @@
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Додаткова інформація</a>
                             <div class="dropdown-menu">
-                                <a class="dropdown-item" href="#">Флюрографічні обстеження</a>
-                                <a class="dropdown-item" href="#">Квартирний облік</a>
+                                <a class="dropdown-item" asp-controller="FluorographyEmployees" asp-action="Index" asp-route-id="@Model.HashIdEmployee">Флюрографічні обстеження</a>
+                                <a class="dropdown-item" asp-controller="ApartmentAccountingEmployees" asp-action="Index" asp-route-id="@Model.HashIdEmployee">Квартирний облік</a>
                             </div>
                         </li>
 
