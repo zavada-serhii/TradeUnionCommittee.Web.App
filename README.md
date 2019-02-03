@@ -19,9 +19,9 @@ Information system for the primary trade union organization of the Odessa Nation
 	-  - [x] AwardEmployees
 	-  - [x] MaterialAidEmployees
 	-  - [x] EventEmployees (Travel, Wellness, Tour)
-	-  - [ ] ActivityEmployees
-	-  - [ ] CulturalEmployees
-	-  - [ ] GiftEmployees
+	-  - [x] ActivityEmployees
+	-  - [x] CulturalEmployees
+	-  - [x] GiftEmployees
 	-  - [ ] FluorographyEmployees
 	-  - [ ] ApartmentAccountingEmployees
 
