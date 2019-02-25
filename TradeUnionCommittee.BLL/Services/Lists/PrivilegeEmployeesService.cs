@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
+using TradeUnionCommittee.BLL.Configurations;
 using TradeUnionCommittee.BLL.DTO;
 using TradeUnionCommittee.BLL.Interfaces.Lists;
-using TradeUnionCommittee.BLL.Utilities;
 using TradeUnionCommittee.Common.ActualResults;
 using TradeUnionCommittee.DAL.Entities;
 using TradeUnionCommittee.DAL.Interfaces;
@@ -11,10 +11,10 @@ namespace TradeUnionCommittee.BLL.Services.Lists
     public class PrivilegeEmployeesService : IPrivilegeEmployeesService
     {
         private readonly IUnitOfWork _database;
-        private readonly IAutoMapperUtilities _mapperService;
-        private readonly IHashIdUtilities _hashIdUtilities;
+        private readonly IAutoMapperConfiguration _mapperService;
+        private readonly IHashIdConfiguration _hashIdUtilities;
 
-        public PrivilegeEmployeesService(IUnitOfWork database, IAutoMapperUtilities mapperService, IHashIdUtilities hashIdUtilities)
+        public PrivilegeEmployeesService(IUnitOfWork database, IAutoMapperConfiguration mapperService, IHashIdConfiguration hashIdUtilities)
         {
             _database = database;
             _mapperService = mapperService;

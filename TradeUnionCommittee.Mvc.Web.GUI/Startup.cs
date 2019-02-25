@@ -10,8 +10,8 @@ using Microsoft.Extensions.Logging;
 using Serilog;
 using System;
 using System.IO.Compression;
+using TradeUnionCommittee.BLL.Configurations;
 using TradeUnionCommittee.BLL.Extensions;
-using TradeUnionCommittee.BLL.Utilities;
 using TradeUnionCommittee.Mvc.Web.GUI.Configurations;
 using TradeUnionCommittee.Mvc.Web.GUI.Controllers.Directory;
 using TradeUnionCommittee.ViewModels.Extensions;
@@ -52,7 +52,7 @@ namespace TradeUnionCommittee.Mvc.Web.GUI
                 : Configuration.GetConnectionString("DefaultConnection");
 
             services
-                .AddTradeUnionCommitteeServiceModule(connectionString, Configuration.GetSection("HashIdUtilitiesSettings").Get<HashIdUtilitiesSetting>())
+                .AddTradeUnionCommitteeServiceModule(connectionString, Configuration.GetSection("HashIdConfigurationSetting").Get<HashIdConfigurationSetting>())
                 .AddTradeUnionCommitteeViewModelsModule()
                 .AddResponseCompression()
                 .AddMvc()

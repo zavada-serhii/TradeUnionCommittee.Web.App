@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using TradeUnionCommittee.BLL.Configurations;
 using TradeUnionCommittee.BLL.DTO;
 using TradeUnionCommittee.BLL.Enums;
 using TradeUnionCommittee.BLL.Extensions;
 using TradeUnionCommittee.BLL.Interfaces.PDF;
-using TradeUnionCommittee.BLL.Utilities;
 using TradeUnionCommittee.Common.ActualResults;
 using TradeUnionCommittee.Common.Enums;
 using TradeUnionCommittee.DAL.Entities;
@@ -21,10 +21,10 @@ namespace TradeUnionCommittee.BLL.Services.PDF
     public class PdfService : IPdfService
     {
         private readonly IUnitOfWork _database;
-        private readonly IAutoMapperUtilities _mapperService;
-        private readonly IHashIdUtilities _hashIdUtilities;
+        private readonly IAutoMapperConfiguration _mapperService;
+        private readonly IHashIdConfiguration _hashIdUtilities;
 
-        public PdfService(IUnitOfWork database, IAutoMapperUtilities mapperService, IHashIdUtilities hashIdUtilities)
+        public PdfService(IUnitOfWork database, IAutoMapperConfiguration mapperService, IHashIdConfiguration hashIdUtilities)
         {
             _database = database;
             _mapperService = mapperService;

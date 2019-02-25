@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using TradeUnionCommittee.BLL.Configurations;
 using TradeUnionCommittee.BLL.DTO;
 using TradeUnionCommittee.BLL.Interfaces.Account;
-using TradeUnionCommittee.BLL.Utilities;
 using TradeUnionCommittee.Common.ActualResults;
 using TradeUnionCommittee.Common.Enums;
 using TradeUnionCommittee.DAL.Entities;
@@ -14,9 +14,9 @@ namespace TradeUnionCommittee.BLL.Services.Account
     public class AccountService : IAccountService
     {
         private readonly IUnitOfWork _database;
-        private readonly IAutoMapperUtilities _mapperService;
+        private readonly IAutoMapperConfiguration _mapperService;
 
-        public AccountService(IUnitOfWork database, IAutoMapperUtilities mapperService)
+        public AccountService(IUnitOfWork database, IAutoMapperConfiguration mapperService)
         {
             _database = database;
             _mapperService = mapperService;

@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using TradeUnionCommittee.BLL.Configurations;
 using TradeUnionCommittee.BLL.Interfaces.Account;
 using TradeUnionCommittee.BLL.Interfaces.Dashboard;
 using TradeUnionCommittee.BLL.Interfaces.Directory;
@@ -15,20 +16,19 @@ using TradeUnionCommittee.BLL.Services.Lists;
 using TradeUnionCommittee.BLL.Services.PDF;
 using TradeUnionCommittee.BLL.Services.Search;
 using TradeUnionCommittee.BLL.Services.SystemAudit;
-using TradeUnionCommittee.BLL.Utilities;
 using TradeUnionCommittee.DAL.Extensions;
 
 namespace TradeUnionCommittee.BLL.Extensions
 {
     public static class ExtensionsServiceCollection
     {
-        public static IServiceCollection AddTradeUnionCommitteeServiceModule(this IServiceCollection services, string connectionString, HashIdUtilitiesSetting setting)
+        public static IServiceCollection AddTradeUnionCommitteeServiceModule(this IServiceCollection services, string connectionString, HashIdConfigurationSetting setting)
         {
-            // Injection UnitOfWork, HashIdUtilities, AutoMapper
+            // Injection UnitOfWork, HashIdConfiguration, AutoMapperConfiguration
 
             services.AddUnitOfWork(connectionString);
-            services.AddSingleton<IHashIdUtilities, HashIdUtilities>(x => new HashIdUtilities(setting));
-            services.AddSingleton<IAutoMapperUtilities, AutoMapperUtilities>();
+            services.AddSingleton<IHashIdConfiguration, HashIdConfiguration>(x => new HashIdConfiguration(setting));
+            services.AddSingleton<IAutoMapperConfiguration, AutoMapperConfiguration>();
 
             // Injection All Service
             //---------------------------------------------------------------------------------------------

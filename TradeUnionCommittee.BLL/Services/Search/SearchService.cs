@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TradeUnionCommittee.BLL.Configurations;
 using TradeUnionCommittee.BLL.DTO;
 using TradeUnionCommittee.BLL.Enums;
 using TradeUnionCommittee.BLL.Extensions;
 using TradeUnionCommittee.BLL.Interfaces.Search;
-using TradeUnionCommittee.BLL.Utilities;
 using TradeUnionCommittee.Common.ActualResults;
 using TradeUnionCommittee.Common.Enums;
 using TradeUnionCommittee.DAL.Enums;
@@ -17,10 +17,10 @@ namespace TradeUnionCommittee.BLL.Services.Search
     public class SearchService : ISearchService
     {
         private readonly IUnitOfWork _database;
-        private readonly IHashIdUtilities _hashIdUtilities;
-        private readonly IAutoMapperUtilities _mapperService;
+        private readonly IHashIdConfiguration _hashIdUtilities;
+        private readonly IAutoMapperConfiguration _mapperService;
 
-        public SearchService(IUnitOfWork database, IHashIdUtilities hashIdUtilities, IAutoMapperUtilities mapperService)
+        public SearchService(IUnitOfWork database, IHashIdConfiguration hashIdUtilities, IAutoMapperConfiguration mapperService)
         {
             _database = database;
             _hashIdUtilities = hashIdUtilities;

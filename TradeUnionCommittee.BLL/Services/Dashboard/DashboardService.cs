@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using TradeUnionCommittee.BLL.Configurations;
 using TradeUnionCommittee.BLL.DTO;
 using TradeUnionCommittee.BLL.Interfaces.Dashboard;
-using TradeUnionCommittee.BLL.Utilities;
 using TradeUnionCommittee.DAL.Interfaces;
 
 namespace TradeUnionCommittee.BLL.Services.Dashboard
@@ -11,9 +11,9 @@ namespace TradeUnionCommittee.BLL.Services.Dashboard
     public class DashboardService : IDashboardService
     {
         private readonly IUnitOfWork _database;
-        private readonly IAutoMapperUtilities _mapperService;
+        private readonly IAutoMapperConfiguration _mapperService;
 
-        public DashboardService(IUnitOfWork database, IAutoMapperUtilities mapperService)
+        public DashboardService(IUnitOfWork database, IAutoMapperConfiguration mapperService)
         {
             _database = database;
             _mapperService = mapperService;
