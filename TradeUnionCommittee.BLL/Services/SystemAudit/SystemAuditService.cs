@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TradeUnionCommittee.BLL.Configurations;
 using TradeUnionCommittee.BLL.DTO;
 using TradeUnionCommittee.BLL.Extensions;
 using TradeUnionCommittee.BLL.Interfaces.SystemAudit;
-using TradeUnionCommittee.BLL.Utilities;
 using TradeUnionCommittee.Common.ActualResults;
 using TradeUnionCommittee.DAL.Entities;
 using TradeUnionCommittee.DAL.Interfaces;
@@ -15,9 +15,9 @@ namespace TradeUnionCommittee.BLL.Services.SystemAudit
     public class SystemAuditService : ISystemAuditService
     {
         private readonly IUnitOfWork _database;
-        private readonly IAutoMapperUtilities _mapperService;
+        private readonly IAutoMapperConfiguration _mapperService;
 
-        public SystemAuditService(IUnitOfWork database, IAutoMapperUtilities mapperService)
+        public SystemAuditService(IUnitOfWork database, IAutoMapperConfiguration mapperService)
         {
             _database = database;
             _mapperService = mapperService;

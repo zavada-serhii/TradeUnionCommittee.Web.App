@@ -17,8 +17,8 @@ using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.Extensions.Logging;
 using Serilog;
 using Swashbuckle.AspNetCore.SwaggerUI;
+using TradeUnionCommittee.BLL.Configurations;
 using TradeUnionCommittee.BLL.Extensions;
-using TradeUnionCommittee.BLL.Utilities;
 using TradeUnionCommittee.ViewModels.Extensions;
 using TradeUnionCommittee.Web.Api.Configurations;
 
@@ -61,7 +61,7 @@ namespace TradeUnionCommittee.Web.Api
                 : Configuration.GetConnectionString("DefaultConnection");
 
             services
-                .AddTradeUnionCommitteeServiceModule(connectionString, Configuration.GetSection("HashIdUtilitiesSettings").Get<HashIdUtilitiesSetting>())
+                .AddTradeUnionCommitteeServiceModule(connectionString, Configuration.GetSection("HashIdConfigurationSetting").Get<HashIdConfigurationSetting>())
                 .AddTradeUnionCommitteeViewModelsModule()
                 .AddResponseCompression()
                 .AddMvc()

@@ -153,7 +153,7 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Configurations
 
         private static uint GetRowVersion(string hash)
         {
-            uint.TryParse(hash.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)[1], out uint result);
+            uint.TryParse(hash.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)[1], out var result);
             return result;
         }
 

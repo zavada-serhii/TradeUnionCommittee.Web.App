@@ -1,5 +1,5 @@
-﻿using AutoMapper;
-using System;
+﻿using System;
+using AutoMapper;
 using TradeUnionCommittee.BLL.DTO;
 using TradeUnionCommittee.BLL.Enums;
 using TradeUnionCommittee.BLL.Extensions;
@@ -8,21 +8,21 @@ using TradeUnionCommittee.DAL.Enums;
 using TradeUnionCommittee.DAL.Repositories.Search;
 using TradeUnionCommittee.PDF.Service.Entities;
 
-namespace TradeUnionCommittee.BLL.Utilities
+namespace TradeUnionCommittee.BLL.Configurations
 {
-    public interface IAutoMapperUtilities
+    public interface IAutoMapperConfiguration
     {
         IMapper Mapper { get; }
     }
 
     //------------------------------------------------------------------------------
 
-    internal sealed class AutoMapperUtilities : IAutoMapperUtilities
+    internal sealed class AutoMapperConfiguration : IAutoMapperConfiguration
     {
-        private readonly IHashIdUtilities _hashIdUtilities;
+        private readonly IHashIdConfiguration _hashIdUtilities;
         private readonly object _nullValue = null;
 
-        public AutoMapperUtilities(IHashIdUtilities hashIdUtilities)
+        public AutoMapperConfiguration(IHashIdConfiguration hashIdUtilities)
         {
             _hashIdUtilities = hashIdUtilities;
         }
