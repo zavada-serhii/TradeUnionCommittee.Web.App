@@ -36,6 +36,11 @@
         CulturalEmployees = 36,
         GiftEmployees = 37,
         FluorographyEmployees = 38,
-        ApartmentAccountingEmployees = 39
+        ApartmentAccountingEmployees = 39,
+        TravelFamily = 40,
+        WellnessFamily = 41,
+        TourFamily = 42,
+        ActivityFamily = 43,
+        CulturalFamily = 44
     }
 }
