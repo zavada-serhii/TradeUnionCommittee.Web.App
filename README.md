@@ -29,13 +29,19 @@ Information system for the primary trade union organization of the Odessa Nation
 	-  - [x] EventFamily (Travel, Wellness, Tour)
 	-  - [x] ActivityFamily
 	-  - [x] CulturalFamily
+
 	-  - [ ] EventChildrens (Travel, Wellness, Tour)
 	-  - [ ] ActivityChildrens
 	-  - [ ] CulturalChildrens
 	-  - [ ] GiftChildrens
+
 	-  - [ ] EventGrandChildrens (Travel, Tour)
 	-  - [ ] ActivityGrandChildrens
 	-  - [ ] CulturalGrandChildrens
 	-  - [ ] GiftGrandChildrens
+
+- Other
 	-  - [ ] System Audit
-	-  - [ ] Testing && Bug fixing
+	-  - [ ] Logging
+	-  - [ ] Unit Tests
+	-  - [ ] Manual testing
