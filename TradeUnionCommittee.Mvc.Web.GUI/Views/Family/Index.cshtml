@@ -59,16 +59,16 @@
                                                     <a class="dropdown-item" asp-action="Delete" asp-route-id="@item.HashId">Видалити</a>
                                                 }
 
-                                                <a class="dropdown-item" href="#">Поїздки</a>
-                                                <a class="dropdown-item" href="#">Оздоровлення</a>
+                                                <a class="dropdown-item" asp-controller="TravelFamily" asp-action="Index" asp-route-id="@item.HashId">Поїздки</a>
+                                                <a class="dropdown-item" asp-controller="WellnessFamily" asp-action="Index" asp-route-id="@item.HashId">Оздоровлення</a>
 
                                                 @if (User.IsInRole("Admin") || User.IsInRole("Accountant"))
                                                 {
-                                                    <a class="dropdown-item" href="#">Путівки</a>
+                                                    <a class="dropdown-item" asp-controller="TourFamily" asp-action="Index" asp-route-id="@item.HashId">Путівки</a>
                                                 }
 
-                                                <a class="dropdown-item" href="#">Заходи</a>
-                                                <a class="dropdown-item" href="#">Культурно-просвітницькі заклади</a>
+                                                <a class="dropdown-item" asp-controller="ActivityFamily" asp-action="Index" asp-route-id="@item.HashId">Заходи</a>
+                                                <a class="dropdown-item" asp-controller="CulturalFamily" asp-action="Index" asp-route-id="@item.HashId">Культурно-просвітницькі заклади</a>
                                             </div>
                                         </div>
                                     </td>
