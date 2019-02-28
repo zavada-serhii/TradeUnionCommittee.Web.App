@@ -14,11 +14,6 @@ using TradeUnionCommittee.ViewModels.ViewModels;
 
 namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Lists
 {
-    //IWellnessFamilyService
-    //WellnessFamilyDTO
-    //CreateEventFamilyViewModel
-    //UpdateEventFamilyViewModel
-
     public class WellnessFamilyController : Controller
     {
         private readonly IWellnessFamilyService _services;
@@ -46,6 +41,7 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Lists
             if (result.IsValid)
             {
                 ViewData["HashIdFamily"] = id;
+                ViewData["HashIdEmployee"] = await _services.GetHashIdEmployee(id);
                 return View(result.Result);
             }
             TempData["ErrorsList"] = result.ErrorsList;

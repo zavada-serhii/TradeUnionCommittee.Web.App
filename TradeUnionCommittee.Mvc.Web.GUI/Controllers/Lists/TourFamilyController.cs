@@ -14,11 +14,6 @@ using TradeUnionCommittee.ViewModels.ViewModels;
 
 namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Lists
 {
-    //ITourFamilyService
-    //TourFamilyDTO
-    //CreateEventFamilyViewModel
-    //UpdateEventFamilyViewModel
-
     public class TourFamilyController : Controller
     {
         private readonly ITourFamilyService _services;
@@ -46,6 +41,7 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Lists
             if (result.IsValid)
             {
                 ViewData["HashIdFamily"] = id;
+                ViewData["HashIdEmployee"] = await _services.GetHashIdEmployee(id);
                 return View(result.Result);
             }
             TempData["ErrorsList"] = result.ErrorsList;

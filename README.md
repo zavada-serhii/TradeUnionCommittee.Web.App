@@ -26,9 +26,9 @@ Information system for the primary trade union organization of the Odessa Nation
 	-  - [x] ApartmentAccountingEmployees
 
 - At last
-	-  - [ ] EventFamily (Travel, Wellness, Tour)
-	-  - [ ] ActivityFamily
-	-  - [ ] CulturalFamily
+	-  - [x] EventFamily (Travel, Wellness, Tour)
+	-  - [x] ActivityFamily
+	-  - [x] CulturalFamily
 	-  - [ ] EventChildrens (Travel, Wellness, Tour)
 	-  - [ ] ActivityChildrens
 	-  - [ ] CulturalChildrens
