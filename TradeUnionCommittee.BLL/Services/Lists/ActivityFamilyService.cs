@@ -4,6 +4,7 @@ using TradeUnionCommittee.BLL.Configurations;
 using TradeUnionCommittee.BLL.DTO;
 using TradeUnionCommittee.BLL.Interfaces.Lists;
 using TradeUnionCommittee.Common.ActualResults;
+using TradeUnionCommittee.DAL.Entities;
 using TradeUnionCommittee.DAL.Interfaces;
 
 namespace TradeUnionCommittee.BLL.Services.Lists
@@ -21,34 +22,43 @@ namespace TradeUnionCommittee.BLL.Services.Lists
             _hashIdUtilities = hashIdUtilities;
         }
 
-        public Task<ActualResult<IEnumerable<ActivityFamilyDTO>>> GetAllAsync(string hashIdEmployee)
+        public async Task<ActualResult<IEnumerable<ActivityFamilyDTO>>> GetAllAsync(string hashIdFamily)
         {
-            throw new System.NotImplementedException();
+            var id = _hashIdUtilities.DecryptLong(hashIdFamily, Enums.Services.Family);
+            var result = await _database.ActivityFamilyRepository.GetWithIncludeToList(x => x.IdFamily == id, c => c.IdActivitiesNavigation);
+            return _mapperService.Mapper.Map<ActualResult<IEnumerable<ActivityFamilyDTO>>>(result);
         }
 
-        public Task<ActualResult<ActivityFamilyDTO>> GetAsync(string hashId)
+        public async Task<ActualResult<ActivityFamilyDTO>> GetAsync(string hashId)
         {
-            throw new System.NotImplementedException();
+            var id = _hashIdUtilities.DecryptLong(hashId, Enums.Services.ActivityFamily);
+            var result = await _database.ActivityFamilyRepository.GetWithInclude(x => x.Id == id, c => c.IdActivitiesNavigation);
+            return _mapperService.Mapper.Map<ActualResult<ActivityFamilyDTO>>(result);
         }
 
-        public Task<ActualResult> CreateAsync(ActivityFamilyDTO item)
+        public async Task<ActualResult> CreateAsync(ActivityFamilyDTO item)
         {
-            throw new System.NotImplementedException();
+            await _database.ActivityFamilyRepository.Create(_mapperService.Mapper.Map<ActivityFamily>(item));
+            return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
         }
 
-        public Task<ActualResult> UpdateAsync(ActivityFamilyDTO item)
+        public async Task<ActualResult> UpdateAsync(ActivityFamilyDTO item)
         {
-            throw new System.NotImplementedException();
+            await _database.ActivityFamilyRepository.Update(_mapperService.Mapper.Map<ActivityFamily>(item));
+            return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
         }
 
-        public Task<ActualResult> DeleteAsync(string hashId)
+        public async Task<ActualResult> DeleteAsync(string hashId)
         {
-            throw new System.NotImplementedException();
+            await _database.ActivityFamilyRepository.Delete(_hashIdUtilities.DecryptLong(hashId, Enums.Services.ActivityFamily));
+            return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
         }
 
         public void Dispose()
         {
             _database.Dispose();
         }
+
+        //--------------- Business Logic ---------------
     }
 }

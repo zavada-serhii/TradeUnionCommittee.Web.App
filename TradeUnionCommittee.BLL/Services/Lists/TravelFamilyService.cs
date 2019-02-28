@@ -1,10 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.Configurations;
 using TradeUnionCommittee.BLL.DTO;
 using TradeUnionCommittee.BLL.Interfaces.Lists;
 using TradeUnionCommittee.Common.ActualResults;
+using TradeUnionCommittee.DAL.Entities;
 using TradeUnionCommittee.DAL.Interfaces;
 
 namespace TradeUnionCommittee.BLL.Services.Lists
@@ -22,34 +22,46 @@ namespace TradeUnionCommittee.BLL.Services.Lists
             _hashIdUtilities = hashIdUtilities;
         }
 
-        public Task<ActualResult<IEnumerable<TravelFamilyDTO>>> GetAllAsync(string hashIdFamily)
+        public async Task<ActualResult<IEnumerable<TravelFamilyDTO>>> GetAllAsync(string hashIdFamily)
         {
-            throw new NotImplementedException();
+            var id = _hashIdUtilities.DecryptLong(hashIdFamily, Enums.Services.Family);
+            var result = await _database.EventFamilyRepository
+                .GetWithIncludeToList(x => x.IdFamily == id &&
+                                           x.IdEventNavigation.Type == TypeEvent.Travel,
+                                      c => c.IdEventNavigation);
+            return _mapperService.Mapper.Map<ActualResult<IEnumerable<TravelFamilyDTO>>>(result);
         }
 
-        public Task<ActualResult<TravelFamilyDTO>> GetAsync(string hashId)
+        public async Task<ActualResult<TravelFamilyDTO>> GetAsync(string hashId)
         {
-            throw new NotImplementedException();
+            var id = _hashIdUtilities.DecryptLong(hashId, Enums.Services.TravelFamily);
+            var result = await _database.EventFamilyRepository.GetWithInclude(x => x.Id == id, c => c.IdEventNavigation);
+            return _mapperService.Mapper.Map<ActualResult<TravelFamilyDTO>>(result);
         }
 
-        public Task<ActualResult> CreateAsync(TravelFamilyDTO item)
+        public async Task<ActualResult> CreateAsync(TravelFamilyDTO item)
         {
-            throw new NotImplementedException();
+            await _database.EventFamilyRepository.Create(_mapperService.Mapper.Map<EventFamily>(item));
+            return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
         }
 
-        public Task<ActualResult> UpdateAsync(TravelFamilyDTO item)
+        public async Task<ActualResult> UpdateAsync(TravelFamilyDTO item)
         {
-            throw new NotImplementedException();
+            await _database.EventFamilyRepository.Update(_mapperService.Mapper.Map<EventFamily>(item));
+            return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
         }
 
-        public Task<ActualResult> DeleteAsync(string hashId)
+        public async Task<ActualResult> DeleteAsync(string hashId)
         {
-            throw new NotImplementedException();
+            await _database.EventFamilyRepository.Delete(_hashIdUtilities.DecryptLong(hashId, Enums.Services.TravelFamily));
+            return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
         }
 
         public void Dispose()
         {
             _database.Dispose();
         }
+
+        //--------------- Business Logic ---------------
     }
 }
