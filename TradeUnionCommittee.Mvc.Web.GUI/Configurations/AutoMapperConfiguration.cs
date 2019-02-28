@@ -143,6 +143,23 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Configurations
                 map.CreateMap<CreateApartmentAccountingEmployeesViewModel, ApartmentAccountingEmployeesDTO>();
                 map.CreateMap<UpdateApartmentAccountingEmployeesViewModel, ApartmentAccountingEmployeesDTO>().ReverseMap();
 
+
+
+                map.CreateMap<CreateEventFamilyViewModel, TravelFamilyDTO>();
+                map.CreateMap<UpdateEventFamilyViewModel, TravelFamilyDTO>().ReverseMap();
+
+                map.CreateMap<CreateEventFamilyViewModel, WellnessFamilyDTO>();
+                map.CreateMap<UpdateEventFamilyViewModel, WellnessFamilyDTO>().ReverseMap();
+
+                map.CreateMap<CreateEventFamilyViewModel, TourFamilyDTO>();
+                map.CreateMap<UpdateEventFamilyViewModel, TourFamilyDTO>().ReverseMap();
+
+                map.CreateMap<CreateActivityFamilyViewModel, ActivityFamilyDTO>();
+                map.CreateMap<UpdateActivityFamilyViewModel, ActivityFamilyDTO>().ReverseMap();
+
+                map.CreateMap<CreateCulturalFamilyViewModel, CulturalFamilyDTO>();
+                map.CreateMap<UpdateCulturalFamilyViewModel, CulturalFamilyDTO>().ReverseMap();
+
             }).CreateMapper();
         }
 
