@@ -19,7 +19,7 @@ namespace TradeUnionCommittee.ViewModels.ViewModels.Children
         public DateTime DateGift { get; set; }
     }
 
-    public class UpdateGiftChildrenViewModel
+    public class UpdateGiftChildrenViewModel : CreateGiftChildrenViewModel
     {
         [Required]
         public string HashId { get; set; }

@@ -17,7 +17,7 @@ namespace TradeUnionCommittee.ViewModels.ViewModels.Children
         public DateTime DateVisit { get; set; }
     }
 
-    public class UpdateCulturalChildrenViewModel
+    public class UpdateCulturalChildrenViewModel : CreateCulturalChildrenViewModel
     {
         [Required]
         public string HashId { get; set; }

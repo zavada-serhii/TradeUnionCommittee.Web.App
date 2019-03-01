@@ -13,7 +13,7 @@ namespace TradeUnionCommittee.ViewModels.ViewModels.Children
         public DateTime DateEvent { get; set; }
     }
 
-    public class UpdateActivityChildrenViewModel
+    public class UpdateActivityChildrenViewModel : CreateActivityChildrenViewModel
     {
         [Required]
         public string HashId { get; set; }
