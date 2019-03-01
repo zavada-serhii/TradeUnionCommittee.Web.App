@@ -2,15 +2,15 @@
 
 namespace TradeUnionCommittee.BLL.Interfaces.Lists.Children
 {
-    public interface ITravelChildrenService : IList<TravelChildrenDTO>, IService<TravelChildrenDTO>, IHashIdEmployee
+    public interface ITravelChildrenService : IList<TravelChildrenDTO>, IService<TravelChildrenDTO>
     {
     }
 
-    public interface IWellnessChildrenService : IList<WellnessChildrenDTO>, IService<WellnessChildrenDTO>, IHashIdEmployee
+    public interface IWellnessChildrenService : IList<WellnessChildrenDTO>, IService<WellnessChildrenDTO>
     {
     }
 
-    public interface ITourChildrenService : IList<TourChildrenDTO>, IService<TourChildrenDTO>, IHashIdEmployee
+    public interface ITourChildrenService : IList<TourChildrenDTO>, IService<TourChildrenDTO>
     {
     }
 }

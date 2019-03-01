@@ -2,7 +2,7 @@
 
 namespace TradeUnionCommittee.BLL.Interfaces.Lists.Children
 {
-    public interface ICulturalChildrenService : IList<CulturalChildrenDTO>, IService<CulturalChildrenDTO>, IHashIdEmployee
+    public interface ICulturalChildrenService : IList<CulturalChildrenDTO>, IService<CulturalChildrenDTO>
     {
     }
 }

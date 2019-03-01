@@ -6,6 +6,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.DTO.Family;
 using TradeUnionCommittee.BLL.Enums;
+using TradeUnionCommittee.BLL.Interfaces.Helpers;
 using TradeUnionCommittee.BLL.Interfaces.Lists.Family;
 using TradeUnionCommittee.BLL.Interfaces.SystemAudit;
 using TradeUnionCommittee.Mvc.Web.GUI.Controllers.Directory;
@@ -21,13 +22,15 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Lists
         private readonly IMapper _mapper;
         private readonly ISystemAuditService _systemAuditService;
         private readonly IHttpContextAccessor _accessor;
+        private readonly IReferenceParent _referenceParent;
 
-        public ActivityFamilyController(IActivityFamilyService services, IDirectories directories, IMapper mapper, ISystemAuditService systemAuditService, IHttpContextAccessor accessor)
+        public ActivityFamilyController(IActivityFamilyService services, IDirectories directories, IMapper mapper, ISystemAuditService systemAuditService, IHttpContextAccessor accessor, IReferenceParent referenceParent)
         {
             _services = services;
             _mapper = mapper;
             _systemAuditService = systemAuditService;
             _accessor = accessor;
+            _referenceParent = referenceParent;
             _directories = directories;
         }
 
@@ -41,7 +44,7 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Lists
             if (result.IsValid)
             {
                 ViewData["HashIdFamily"] = id;
-                ViewData["HashIdEmployee"] = await _services.GetHashIdEmployee(id);
+                ViewData["HashIdEmployee"] = await _referenceParent.GetHashIdEmployeeByFamily(id);
                 return View(result.Result);
             }
             TempData["ErrorsList"] = result.ErrorsList;

@@ -61,10 +61,5 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Children
         {
             _database.Dispose();
         }
-
-        public async Task<string> GetHashIdEmployee(string hashIdHeir)
-        {
-            throw new System.NotImplementedException();
-        }
     }
 }

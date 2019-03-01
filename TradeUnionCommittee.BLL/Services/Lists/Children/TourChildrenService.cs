@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.Configurations;
 using TradeUnionCommittee.BLL.DTO.Children;
@@ -61,11 +60,6 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Children
         public void Dispose()
         {
             _database.Dispose();
-        }
-
-        public Task<string> GetHashIdEmployee(string hashIdHeir)
-        {
-            throw new NotImplementedException();
         }
     }
 }

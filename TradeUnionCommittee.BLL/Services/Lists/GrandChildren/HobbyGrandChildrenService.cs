@@ -54,17 +54,6 @@ namespace TradeUnionCommittee.BLL.Services.Lists.GrandChildren
             return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
         }
 
-        public async Task<string> GetHashIdEmployee(string hashIdGrandChildren)
-        {
-            var id = _hashIdUtilities.DecryptLong(hashIdGrandChildren, Enums.Services.GrandChildren);
-            var result = await _database.GrandChildrenRepository.GetById(id);
-            if (result.IsValid && result.Result != null)
-            {
-                return _hashIdUtilities.EncryptLong(result.Result.IdEmployee, Enums.Services.Employee);
-            }
-            return null;
-        }
-
         public void Dispose()
         {
             _database.Dispose();

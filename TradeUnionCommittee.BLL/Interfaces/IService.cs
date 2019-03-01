@@ -27,9 +27,4 @@ namespace TradeUnionCommittee.BLL.Interfaces
     {
         Task<bool> CheckNameAsync(string name);
     }
-
-    public interface IHashIdEmployee
-    {
-        Task<string> GetHashIdEmployee(string hashIdHeir);
-    }
 }
