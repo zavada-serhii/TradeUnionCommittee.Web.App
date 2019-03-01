@@ -5,6 +5,7 @@ using TradeUnionCommittee.BLL.Configurations;
 using TradeUnionCommittee.BLL.DTO.Children;
 using TradeUnionCommittee.BLL.Interfaces.Lists.Children;
 using TradeUnionCommittee.Common.ActualResults;
+using TradeUnionCommittee.DAL.Entities;
 using TradeUnionCommittee.DAL.Interfaces;
 
 namespace TradeUnionCommittee.BLL.Services.Lists.Children
@@ -22,29 +23,36 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Children
             _hashIdUtilities = hashIdUtilities;
         }
 
-        public Task<ActualResult<IEnumerable<CulturalChildrenDTO>>> GetAllAsync(string hashIdEmployee)
+        public async Task<ActualResult<IEnumerable<CulturalChildrenDTO>>> GetAllAsync(string hashIdChildren)
         {
-            throw new NotImplementedException();
+            var id = _hashIdUtilities.DecryptLong(hashIdChildren, Enums.Services.Children);
+            var result = await _database.CulturalChildrensRepository.GetWithIncludeToList(x => x.IdChildren == id, c => c.IdCulturalNavigation);
+            return _mapperService.Mapper.Map<ActualResult<IEnumerable<CulturalChildrenDTO>>>(result);
         }
 
-        public Task<ActualResult<CulturalChildrenDTO>> GetAsync(string hashId)
+        public async Task<ActualResult<CulturalChildrenDTO>> GetAsync(string hashId)
         {
-            throw new NotImplementedException();
+            var id = _hashIdUtilities.DecryptLong(hashId, Enums.Services.CulturalChildren);
+            var result = await _database.CulturalChildrensRepository.GetWithInclude(x => x.Id == id, c => c.IdCulturalNavigation);
+            return _mapperService.Mapper.Map<ActualResult<CulturalChildrenDTO>>(result);
         }
 
-        public Task<ActualResult> CreateAsync(CulturalChildrenDTO item)
+        public async Task<ActualResult> CreateAsync(CulturalChildrenDTO item)
         {
-            throw new NotImplementedException();
+            await _database.CulturalChildrensRepository.Create(_mapperService.Mapper.Map<CulturalChildrens>(item));
+            return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
         }
 
-        public Task<ActualResult> UpdateAsync(CulturalChildrenDTO item)
+        public async Task<ActualResult> UpdateAsync(CulturalChildrenDTO item)
         {
-            throw new NotImplementedException();
+            await _database.CulturalChildrensRepository.Update(_mapperService.Mapper.Map<CulturalChildrens>(item));
+            return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
         }
 
-        public Task<ActualResult> DeleteAsync(string hashId)
+        public async Task<ActualResult> DeleteAsync(string hashId)
         {
-            throw new NotImplementedException();
+            await _database.CulturalChildrensRepository.Delete(_hashIdUtilities.DecryptLong(hashId, Enums.Services.CulturalChildren));
+            return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
         }
 
         public void Dispose()

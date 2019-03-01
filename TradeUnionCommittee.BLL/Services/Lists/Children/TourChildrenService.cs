@@ -5,6 +5,7 @@ using TradeUnionCommittee.BLL.Configurations;
 using TradeUnionCommittee.BLL.DTO.Children;
 using TradeUnionCommittee.BLL.Interfaces.Lists.Children;
 using TradeUnionCommittee.Common.ActualResults;
+using TradeUnionCommittee.DAL.Entities;
 using TradeUnionCommittee.DAL.Interfaces;
 
 namespace TradeUnionCommittee.BLL.Services.Lists.Children
@@ -22,29 +23,39 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Children
             _hashIdUtilities = hashIdUtilities;
         }
 
-        public Task<ActualResult<IEnumerable<TourChildrenDTO>>> GetAllAsync(string hashIdEmployee)
+        public async Task<ActualResult<IEnumerable<TourChildrenDTO>>> GetAllAsync(string hashIdChildren)
         {
-            throw new NotImplementedException();
+            var id = _hashIdUtilities.DecryptLong(hashIdChildren, Enums.Services.Children);
+            var result = await _database.EventChildrensRepository
+                .GetWithIncludeToList(x => x.IdChildren == id &&
+                                           x.IdEventNavigation.Type == TypeEvent.Tour,
+                                      c => c.IdEventNavigation);
+            return _mapperService.Mapper.Map<ActualResult<IEnumerable<TourChildrenDTO>>>(result);
         }
 
-        public Task<ActualResult<TourChildrenDTO>> GetAsync(string hashId)
+        public async Task<ActualResult<TourChildrenDTO>> GetAsync(string hashId)
         {
-            throw new NotImplementedException();
+            var id = _hashIdUtilities.DecryptLong(hashId, Enums.Services.TourChildren);
+            var result = await _database.EventChildrensRepository.GetWithInclude(x => x.Id == id, c => c.IdEventNavigation);
+            return _mapperService.Mapper.Map<ActualResult<TourChildrenDTO>>(result);
         }
 
-        public Task<ActualResult> CreateAsync(TourChildrenDTO item)
+        public async Task<ActualResult> CreateAsync(TourChildrenDTO item)
         {
-            throw new NotImplementedException();
+            await _database.EventChildrensRepository.Create(_mapperService.Mapper.Map<EventChildrens>(item));
+            return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
         }
 
-        public Task<ActualResult> UpdateAsync(TourChildrenDTO item)
+        public async Task<ActualResult> UpdateAsync(TourChildrenDTO item)
         {
-            throw new NotImplementedException();
+            await _database.EventChildrensRepository.Update(_mapperService.Mapper.Map<EventChildrens>(item));
+            return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
         }
 
-        public Task<ActualResult> DeleteAsync(string hashId)
+        public async Task<ActualResult> DeleteAsync(string hashId)
         {
-            throw new NotImplementedException();
+            await _database.EventChildrensRepository.Delete(_hashIdUtilities.DecryptLong(hashId, Enums.Services.TourChildren));
+            return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
         }
 
         public void Dispose()

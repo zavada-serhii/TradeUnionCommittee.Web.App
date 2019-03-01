@@ -5,6 +5,7 @@ using TradeUnionCommittee.BLL.Configurations;
 using TradeUnionCommittee.BLL.DTO.Children;
 using TradeUnionCommittee.BLL.Interfaces.Lists.Children;
 using TradeUnionCommittee.Common.ActualResults;
+using TradeUnionCommittee.DAL.Entities;
 using TradeUnionCommittee.DAL.Interfaces;
 
 namespace TradeUnionCommittee.BLL.Services.Lists.Children
@@ -22,29 +23,36 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Children
             _hashIdUtilities = hashIdUtilities;
         }
 
-        public Task<ActualResult<IEnumerable<GiftChildrenDTO>>> GetAllAsync(string hashIdEmployee)
+        public async Task<ActualResult<IEnumerable<GiftChildrenDTO>>> GetAllAsync(string hashIdChildren)
         {
-            throw new NotImplementedException();
+            var id = _hashIdUtilities.DecryptLong(hashIdChildren, Enums.Services.Children);
+            var result = await _database.GiftChildrensRepository.Find(x => x.IdChildren == id);
+            return _mapperService.Mapper.Map<ActualResult<IEnumerable<GiftChildrenDTO>>>(result);
         }
 
-        public Task<ActualResult<GiftChildrenDTO>> GetAsync(string hashId)
+        public async Task<ActualResult<GiftChildrenDTO>> GetAsync(string hashId)
         {
-            throw new NotImplementedException();
+            var id = _hashIdUtilities.DecryptLong(hashId, Enums.Services.GiftChildren);
+            var result = await _database.GiftChildrensRepository.GetById(id);
+            return _mapperService.Mapper.Map<ActualResult<GiftChildrenDTO>>(result);
         }
 
-        public Task<ActualResult> CreateAsync(GiftChildrenDTO item)
+        public async Task<ActualResult> CreateAsync(GiftChildrenDTO item)
         {
-            throw new NotImplementedException();
+            await _database.GiftChildrensRepository.Create(_mapperService.Mapper.Map<GiftChildrens>(item));
+            return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
         }
 
-        public Task<ActualResult> UpdateAsync(GiftChildrenDTO item)
+        public async Task<ActualResult> UpdateAsync(GiftChildrenDTO item)
         {
-            throw new NotImplementedException();
+            await _database.GiftChildrensRepository.Update(_mapperService.Mapper.Map<GiftChildrens>(item));
+            return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
         }
 
-        public Task<ActualResult> DeleteAsync(string hashId)
+        public async Task<ActualResult> DeleteAsync(string hashId)
         {
-            throw new NotImplementedException();
+            await _database.GiftChildrensRepository.Delete(_hashIdUtilities.DecryptLong(hashId, Enums.Services.GiftChildren));
+            return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
         }
 
         public void Dispose()
