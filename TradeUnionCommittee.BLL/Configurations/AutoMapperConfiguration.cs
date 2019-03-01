@@ -474,6 +474,61 @@ namespace TradeUnionCommittee.BLL.Configurations
                        .ForMember(x => x.HashIdHobby, opt => opt.MapFrom(c => _hashIdUtilities.EncryptLong(c.IdHobby, Enums.Services.Hobby)))
                        .ForMember(x => x.NameHobby, opt => opt.MapFrom(c => c.IdHobbyNavigation.Name));
 
+                    map.CreateMap<TravelChildrenDTO, EventChildrens>()
+                       .ForMember(x => x.Id, opt => opt.MapFrom(c => _hashIdUtilities.DecryptLong(c.HashId, Enums.Services.TravelChildren)))
+                       .ForMember(x => x.IdChildren, opt => opt.MapFrom(c => _hashIdUtilities.DecryptLong(c.HashIdChildren, Enums.Services.Children)))
+                       .ForMember(x => x.IdEvent, opt => opt.MapFrom(c => _hashIdUtilities.DecryptLong(c.HashIdEvent, Enums.Services.Travel)))
+                       .ForMember(x => x.IdEventNavigation, opt => opt.MapFrom(c => _nullValue))
+                       .ReverseMap()
+                       .ForMember(x => x.HashId, opt => opt.MapFrom(c => _hashIdUtilities.EncryptLong(c.Id, Enums.Services.TravelChildren)))
+                       .ForMember(x => x.HashIdChildren, opt => opt.MapFrom(c => _hashIdUtilities.EncryptLong(c.IdChildren, Enums.Services.Children)))
+                       .ForMember(x => x.HashIdEvent, opt => opt.MapFrom(c => _hashIdUtilities.EncryptLong(c.IdEvent, Enums.Services.Travel)))
+                       .ForMember(x => x.NameEvent, opt => opt.MapFrom(c => c.IdEventNavigation.Name));
+
+                    map.CreateMap<WellnessChildrenDTO, EventChildrens>()
+                        .ForMember(x => x.Id, opt => opt.MapFrom(c => _hashIdUtilities.DecryptLong(c.HashId, Enums.Services.WellnessChildren)))
+                        .ForMember(x => x.IdChildren, opt => opt.MapFrom(c => _hashIdUtilities.DecryptLong(c.HashIdChildren, Enums.Services.Children)))
+                        .ForMember(x => x.IdEvent, opt => opt.MapFrom(c => _hashIdUtilities.DecryptLong(c.HashIdEvent, Enums.Services.Wellness)))
+                        .ForMember(x => x.IdEventNavigation, opt => opt.MapFrom(c => _nullValue))
+                        .ReverseMap()
+                        .ForMember(x => x.HashId, opt => opt.MapFrom(c => _hashIdUtilities.EncryptLong(c.Id, Enums.Services.WellnessChildren)))
+                        .ForMember(x => x.HashIdChildren, opt => opt.MapFrom(c => _hashIdUtilities.EncryptLong(c.IdChildren, Enums.Services.Children)))
+                        .ForMember(x => x.HashIdEvent, opt => opt.MapFrom(c => _hashIdUtilities.EncryptLong(c.IdEvent, Enums.Services.Wellness)))
+                        .ForMember(x => x.NameEvent, opt => opt.MapFrom(c => c.IdEventNavigation.Name));
+
+                    map.CreateMap<TourChildrenDTO, EventChildrens>()
+                        .ForMember(x => x.Id, opt => opt.MapFrom(c => _hashIdUtilities.DecryptLong(c.HashId, Enums.Services.TourChildren)))
+                        .ForMember(x => x.IdChildren, opt => opt.MapFrom(c => _hashIdUtilities.DecryptLong(c.HashIdChildren, Enums.Services.Children)))
+                        .ForMember(x => x.IdEvent, opt => opt.MapFrom(c => _hashIdUtilities.DecryptLong(c.HashIdEvent, Enums.Services.Tour)))
+                        .ForMember(x => x.IdEventNavigation, opt => opt.MapFrom(c => _nullValue))
+                        .ReverseMap()
+                        .ForMember(x => x.HashId, opt => opt.MapFrom(c => _hashIdUtilities.EncryptLong(c.Id, Enums.Services.TourChildren)))
+                        .ForMember(x => x.HashIdChildren, opt => opt.MapFrom(c => _hashIdUtilities.EncryptLong(c.IdChildren, Enums.Services.Children)))
+                        .ForMember(x => x.HashIdEvent, opt => opt.MapFrom(c => _hashIdUtilities.EncryptLong(c.IdEvent, Enums.Services.Tour)))
+                        .ForMember(x => x.NameEvent, opt => opt.MapFrom(c => c.IdEventNavigation.Name));
+
+                    map.CreateMap<ActivityChildrenDTO, ActivityChildrens>()
+                       .ForMember(x => x.Id, opt => opt.MapFrom(c => _hashIdUtilities.DecryptLong(c.HashId, Enums.Services.ActivityChildren)))
+                       .ForMember(x => x.IdChildren, opt => opt.MapFrom(c => _hashIdUtilities.DecryptLong(c.HashIdChildren, Enums.Services.Children)))
+                       .ForMember(x => x.IdActivities, opt => opt.MapFrom(c => _hashIdUtilities.DecryptLong(c.HashIdActivities, Enums.Services.Activities)))
+                       .ForMember(x => x.IdActivitiesNavigation, opt => opt.MapFrom(c => _nullValue))
+                       .ReverseMap()
+                       .ForMember(x => x.HashId, opt => opt.MapFrom(c => _hashIdUtilities.EncryptLong(c.Id, Enums.Services.ActivityChildren)))
+                       .ForMember(x => x.HashIdChildren, opt => opt.MapFrom(c => _hashIdUtilities.EncryptLong(c.IdChildren, Enums.Services.Children)))
+                       .ForMember(x => x.HashIdActivities, opt => opt.MapFrom(c => _hashIdUtilities.EncryptLong(c.IdActivities, Enums.Services.Activities)))
+                       .ForMember(x => x.NameActivities, opt => opt.MapFrom(c => c.IdActivitiesNavigation.Name));
+
+                    map.CreateMap<CulturalChildrenDTO, CulturalChildrens>()
+                        .ForMember(x => x.Id, opt => opt.MapFrom(c => _hashIdUtilities.DecryptLong(c.HashId, Enums.Services.CulturalChildren)))
+                        .ForMember(x => x.IdChildren, opt => opt.MapFrom(c => _hashIdUtilities.DecryptLong(c.HashIdChildren, Enums.Services.Children)))
+                        .ForMember(x => x.IdCultural, opt => opt.MapFrom(c => _hashIdUtilities.DecryptLong(c.HashIdCultural, Enums.Services.Cultural)))
+                        .ForMember(x => x.IdCulturalNavigation, opt => opt.MapFrom(c => _nullValue))
+                        .ReverseMap()
+                        .ForMember(x => x.HashId, opt => opt.MapFrom(c => _hashIdUtilities.EncryptLong(c.Id, Enums.Services.CulturalChildren)))
+                        .ForMember(x => x.HashIdChildren, opt => opt.MapFrom(c => _hashIdUtilities.EncryptLong(c.IdChildren, Enums.Services.Children)))
+                        .ForMember(x => x.HashIdCultural, opt => opt.MapFrom(c => _hashIdUtilities.EncryptLong(c.IdCultural, Enums.Services.Cultural)))
+                        .ForMember(x => x.NameCultural, opt => opt.MapFrom(c => c.IdCulturalNavigation.Name));
+
                     #endregion
 
                     #region Mapping for Grand Children
