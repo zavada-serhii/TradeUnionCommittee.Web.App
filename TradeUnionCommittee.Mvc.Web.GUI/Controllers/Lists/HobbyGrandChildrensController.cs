@@ -15,13 +15,13 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Lists
 {
     public class HobbyGrandChildrensController : Controller
     {
-        private readonly IHobbyGrandChildrensService _services;
+        private readonly IHobbyGrandChildrenService _services;
         private readonly IDirectories _directories;
         private readonly IMapper _mapper;
         private readonly ISystemAuditService _systemAuditService;
         private readonly IHttpContextAccessor _accessor;
 
-        public HobbyGrandChildrensController(IHobbyGrandChildrensService services, IDirectories directories, IMapper mapper, ISystemAuditService systemAuditService, IHttpContextAccessor accessor)
+        public HobbyGrandChildrensController(IHobbyGrandChildrenService services, IDirectories directories, IMapper mapper, ISystemAuditService systemAuditService, IHttpContextAccessor accessor)
         {
             _services = services;
             _mapper = mapper;
@@ -40,6 +40,7 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Lists
             if (result.IsValid)
             {
                 ViewData["HashIdGrandChildren"] = id;
+                ViewData["HashIdEmployee"] = await _services.GetHashIdEmployee(id);
                 return View(result.Result);
             }
             TempData["ErrorsList"] = result.ErrorsList;
@@ -63,7 +64,7 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Lists
         {
             if (ModelState.IsValid)
             {
-                var result = await _services.CreateAsync(_mapper.Map<HobbyGrandChildrensDTO>(vm));
+                var result = await _services.CreateAsync(_mapper.Map<HobbyGrandChildrenDTO>(vm));
                 if (result.IsValid)
                 {
                     await _systemAuditService.AuditAsync(User.Identity.Name, _accessor.HttpContext.Connection.RemoteIpAddress.ToString(), Operations.Insert, Tables.HobbyGrandChildrens);
@@ -98,7 +99,7 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Lists
         {
             if (ModelState.IsValid)
             {
-                var result = await _services.UpdateAsync(_mapper.Map<HobbyGrandChildrensDTO>(vm));
+                var result = await _services.UpdateAsync(_mapper.Map<HobbyGrandChildrenDTO>(vm));
                 if (result.IsValid)
                 {
                     await _systemAuditService.AuditAsync(User.Identity.Name, _accessor.HttpContext.Connection.RemoteIpAddress.ToString(), Operations.Update, Tables.HobbyGrandChildrens);

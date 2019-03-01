@@ -9,7 +9,7 @@
         public uint RowVersion { get; set; }
     }
 
-    public class HobbyChildrensDTO
+    public class HobbyChildrenDTO
     {
         public string HashId { get; set; }
         public string HashIdChildren { get; set; }
@@ -18,7 +18,7 @@
         public uint RowVersion { get; set; }
     }
 
-    public class HobbyGrandChildrensDTO
+    public class HobbyGrandChildrenDTO
     {
         public string HashId { get; set; }
         public string HashIdGrandChildren { get; set; }

@@ -9,40 +9,40 @@ using TradeUnionCommittee.DAL.Interfaces;
 
 namespace TradeUnionCommittee.BLL.Services.Lists
 {
-    public class HobbyChildrensService : IHobbyChildrensService
+    public class HobbyChildrenService : IHobbyChildrenService
     {
         private readonly IUnitOfWork _database;
         private readonly IAutoMapperConfiguration _mapperService;
         private readonly IHashIdConfiguration _hashIdUtilities;
 
-        public HobbyChildrensService(IUnitOfWork database, IAutoMapperConfiguration mapperService, IHashIdConfiguration hashIdUtilities)
+        public HobbyChildrenService(IUnitOfWork database, IAutoMapperConfiguration mapperService, IHashIdConfiguration hashIdUtilities)
         {
             _database = database;
             _mapperService = mapperService;
             _hashIdUtilities = hashIdUtilities;
         }
 
-        public async Task<ActualResult<IEnumerable<HobbyChildrensDTO>>> GetAllAsync(string hashIdChildren)
+        public async Task<ActualResult<IEnumerable<HobbyChildrenDTO>>> GetAllAsync(string hashIdChildren)
         {
             var id = _hashIdUtilities.DecryptLong(hashIdChildren, Enums.Services.Children);
             var result = await _database.HobbyChildrensRepository.GetWithIncludeToList(x => x.IdChildren == id, c => c.IdHobbyNavigation);
-            return _mapperService.Mapper.Map<ActualResult<IEnumerable<HobbyChildrensDTO>>>(result);
+            return _mapperService.Mapper.Map<ActualResult<IEnumerable<HobbyChildrenDTO>>>(result);
         }
 
-        public async Task<ActualResult<HobbyChildrensDTO>> GetAsync(string hashId)
+        public async Task<ActualResult<HobbyChildrenDTO>> GetAsync(string hashId)
         {
-            var id = _hashIdUtilities.DecryptLong(hashId, Enums.Services.HobbyChildrens);
+            var id = _hashIdUtilities.DecryptLong(hashId, Enums.Services.HobbyChildren);
             var result = await _database.HobbyChildrensRepository.GetWithInclude(x => x.Id == id, c => c.IdHobbyNavigation);
-            return _mapperService.Mapper.Map<ActualResult<HobbyChildrensDTO>>(result);
+            return _mapperService.Mapper.Map<ActualResult<HobbyChildrenDTO>>(result);
         }
 
-        public async Task<ActualResult> CreateAsync(HobbyChildrensDTO item)
+        public async Task<ActualResult> CreateAsync(HobbyChildrenDTO item)
         {
             await _database.HobbyChildrensRepository.Create(_mapperService.Mapper.Map<HobbyChildrens>(item));
             return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
         }
 
-        public async Task<ActualResult> UpdateAsync(HobbyChildrensDTO item)
+        public async Task<ActualResult> UpdateAsync(HobbyChildrenDTO item)
         {
             await _database.HobbyChildrensRepository.Update(_mapperService.Mapper.Map<HobbyChildrens>(item));
             return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
@@ -50,8 +50,19 @@ namespace TradeUnionCommittee.BLL.Services.Lists
 
         public async Task<ActualResult> DeleteAsync(string hashId)
         {
-            await _database.HobbyChildrensRepository.Delete(_hashIdUtilities.DecryptLong(hashId, Enums.Services.HobbyChildrens));
+            await _database.HobbyChildrensRepository.Delete(_hashIdUtilities.DecryptLong(hashId, Enums.Services.HobbyChildren));
             return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
+        }
+
+        public async Task<string> GetHashIdEmployee(string hashIdChildren)
+        {
+            var id = _hashIdUtilities.DecryptLong(hashIdChildren, Enums.Services.Children);
+            var result = await _database.ChildrenRepository.GetById(id);
+            if (result.IsValid && result.Result != null)
+            {
+                return _hashIdUtilities.EncryptLong(result.Result.IdEmployee, Enums.Services.Employee);
+            }
+            return null;
         }
 
         public void Dispose()

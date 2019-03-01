@@ -2,7 +2,7 @@
 
 namespace TradeUnionCommittee.BLL.Interfaces.Lists
 {
-    public interface IHobbyChildrensService : IList<HobbyChildrensDTO>, IService<HobbyChildrensDTO>
+    public interface IHobbyChildrenService : IList<HobbyChildrenDTO>, IService<HobbyChildrenDTO>, IHashIdEmployee
     {
     }
 }

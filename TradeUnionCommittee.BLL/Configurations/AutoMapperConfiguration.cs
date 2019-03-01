@@ -463,13 +463,13 @@ namespace TradeUnionCommittee.BLL.Configurations
                        .ForMember(x => x.FullName, opt => opt.MapFrom(c => $"{c.FirstName} {c.SecondName} {c.Patronymic}"))
                        .ForMember(x => x.Age, opt => opt.MapFrom(c => c.BirthDate.CalculateAge()));
 
-                    map.CreateMap<HobbyChildrensDTO, HobbyChildrens>()
-                       .ForMember(x => x.Id, opt => opt.MapFrom(c => _hashIdUtilities.DecryptLong(c.HashId, Enums.Services.HobbyChildrens)))
+                    map.CreateMap<HobbyChildrenDTO, HobbyChildrens>()
+                       .ForMember(x => x.Id, opt => opt.MapFrom(c => _hashIdUtilities.DecryptLong(c.HashId, Enums.Services.HobbyChildren)))
                        .ForMember(x => x.IdChildren, opt => opt.MapFrom(c => _hashIdUtilities.DecryptLong(c.HashIdChildren, Enums.Services.Children)))
                        .ForMember(x => x.IdHobby, opt => opt.MapFrom(c => _hashIdUtilities.DecryptLong(c.HashIdHobby, Enums.Services.Hobby)))
                        .ForMember(x => x.IdHobbyNavigation, opt => opt.MapFrom(c => _nullValue))
                        .ReverseMap()
-                       .ForMember(x => x.HashId, opt => opt.MapFrom(c => _hashIdUtilities.EncryptLong(c.Id, Enums.Services.HobbyChildrens)))
+                       .ForMember(x => x.HashId, opt => opt.MapFrom(c => _hashIdUtilities.EncryptLong(c.Id, Enums.Services.HobbyChildren)))
                        .ForMember(x => x.HashIdChildren, opt => opt.MapFrom(c => _hashIdUtilities.EncryptLong(c.IdChildren, Enums.Services.Children)))
                        .ForMember(x => x.HashIdHobby, opt => opt.MapFrom(c => _hashIdUtilities.EncryptLong(c.IdHobby, Enums.Services.Hobby)))
                        .ForMember(x => x.NameHobby, opt => opt.MapFrom(c => c.IdHobbyNavigation.Name));
@@ -542,13 +542,13 @@ namespace TradeUnionCommittee.BLL.Configurations
                        .ForMember(x => x.FullName, opt => opt.MapFrom(c => $"{c.FirstName} {c.SecondName} {c.Patronymic}"))
                        .ForMember(x => x.Age, opt => opt.MapFrom(c => c.BirthDate.CalculateAge()));
 
-                    map.CreateMap<HobbyGrandChildrensDTO, HobbyGrandChildrens>()
-                        .ForMember(x => x.Id, opt => opt.MapFrom(c => _hashIdUtilities.DecryptLong(c.HashId, Enums.Services.HobbyGrandChildrens)))
+                    map.CreateMap<HobbyGrandChildrenDTO, HobbyGrandChildrens>()
+                        .ForMember(x => x.Id, opt => opt.MapFrom(c => _hashIdUtilities.DecryptLong(c.HashId, Enums.Services.HobbyGrandChildren)))
                         .ForMember(x => x.IdGrandChildren, opt => opt.MapFrom(c => _hashIdUtilities.DecryptLong(c.HashIdGrandChildren, Enums.Services.GrandChildren)))
                         .ForMember(x => x.IdHobby, opt => opt.MapFrom(c => _hashIdUtilities.DecryptLong(c.HashIdHobby, Enums.Services.Hobby)))
                         .ForMember(x => x.IdHobbyNavigation, opt => opt.MapFrom(c => _nullValue))
                         .ReverseMap()
-                        .ForMember(x => x.HashId, opt => opt.MapFrom(c => _hashIdUtilities.EncryptLong(c.Id, Enums.Services.HobbyGrandChildrens)))
+                        .ForMember(x => x.HashId, opt => opt.MapFrom(c => _hashIdUtilities.EncryptLong(c.Id, Enums.Services.HobbyGrandChildren)))
                         .ForMember(x => x.HashIdGrandChildren, opt => opt.MapFrom(c => _hashIdUtilities.EncryptLong(c.IdGrandChildren, Enums.Services.GrandChildren)))
                         .ForMember(x => x.HashIdHobby, opt => opt.MapFrom(c => _hashIdUtilities.EncryptLong(c.IdHobby, Enums.Services.Hobby)))
                         .ForMember(x => x.NameHobby, opt => opt.MapFrom(c => c.IdHobbyNavigation.Name));

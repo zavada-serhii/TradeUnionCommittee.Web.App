@@ -42,7 +42,7 @@
         CulturalFamily,
 
         Children,
-        HobbyChildrens,
+        HobbyChildren,
         TravelChildren,
         WellnessChildren,
         TourChildren,
@@ -51,6 +51,6 @@
         GiftChildren,
 
         GrandChildren,
-        HobbyGrandChildrens,
+        HobbyGrandChildren,
     }
 }
