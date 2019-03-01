@@ -20,7 +20,7 @@ namespace TradeUnionCommittee.ViewModels.ViewModels
 
     //------------------------------------------------------------------------------------------------------------------------------------------
 
-    public class CreateHobbyChildrensViewModel
+    public class CreateHobbyChildrenViewModel
     {
         [Required]
         public string HashIdChildren { get; set; }
@@ -28,7 +28,7 @@ namespace TradeUnionCommittee.ViewModels.ViewModels
         public string HashIdHobby { get; set; }
     }
 
-    public class UpdateHobbyChildrensViewModel : CreateHobbyChildrensViewModel
+    public class UpdateHobbyChildrenViewModel : CreateHobbyChildrenViewModel
     {
         [Required]
         public string HashId { get; set; }
@@ -38,7 +38,7 @@ namespace TradeUnionCommittee.ViewModels.ViewModels
 
     //------------------------------------------------------------------------------------------------------------------------------------------
 
-    public class CreateHobbyGrandChildrensViewModel
+    public class CreateHobbyGrandChildrenViewModel
     {
         [Required]
         public string HashIdGrandChildren { get; set; }
@@ -46,7 +46,7 @@ namespace TradeUnionCommittee.ViewModels.ViewModels
         public string HashIdHobby { get; set; }
     }
 
-    public class UpdateHobbyGrandChildrensViewModel : CreateHobbyGrandChildrensViewModel
+    public class UpdateHobbyGrandChildrenViewModel : CreateHobbyGrandChildrenViewModel
     {
         [Required]
         public string HashId { get; set; }

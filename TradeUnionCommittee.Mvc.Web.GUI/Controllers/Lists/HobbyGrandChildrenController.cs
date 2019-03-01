@@ -13,15 +13,15 @@ using TradeUnionCommittee.ViewModels.ViewModels;
 
 namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Lists
 {
-    public class HobbyChildrensController : Controller
+    public class HobbyGrandChildrenController : Controller
     {
-        private readonly IHobbyChildrenService _services;
+        private readonly IHobbyGrandChildrenService _services;
         private readonly IDirectories _directories;
         private readonly IMapper _mapper;
         private readonly ISystemAuditService _systemAuditService;
         private readonly IHttpContextAccessor _accessor;
 
-        public HobbyChildrensController(IHobbyChildrenService services, IDirectories directories, IMapper mapper, ISystemAuditService systemAuditService, IHttpContextAccessor accessor)
+        public HobbyGrandChildrenController(IHobbyGrandChildrenService services, IDirectories directories, IMapper mapper, ISystemAuditService systemAuditService, IHttpContextAccessor accessor)
         {
             _services = services;
             _mapper = mapper;
@@ -39,7 +39,7 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Lists
             var result = await _services.GetAllAsync(id);
             if (result.IsValid)
             {
-                ViewData["HashIdChildren"] = id;
+                ViewData["HashIdGrandChildren"] = id;
                 ViewData["HashIdEmployee"] = await _services.GetHashIdEmployee(id);
                 return View(result.Result);
             }
@@ -54,21 +54,21 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Lists
         public async Task<IActionResult> Create([Required] string id)
         {
             ViewBag.Hobby = await _directories.GetHobby();
-            return View(new CreateHobbyChildrensViewModel { HashIdChildren = id });
+            return View(new CreateHobbyGrandChildrenViewModel { HashIdGrandChildren = id });
         }
 
         [HttpPost]
         [Authorize(Roles = "Admin,Accountant,Deputy")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(CreateHobbyChildrensViewModel vm)
+        public async Task<IActionResult> Create(CreateHobbyGrandChildrenViewModel vm)
         {
             if (ModelState.IsValid)
             {
-                var result = await _services.CreateAsync(_mapper.Map<HobbyChildrenDTO>(vm));
+                var result = await _services.CreateAsync(_mapper.Map<HobbyGrandChildrenDTO>(vm));
                 if (result.IsValid)
                 {
-                    await _systemAuditService.AuditAsync(User.Identity.Name, _accessor.HttpContext.Connection.RemoteIpAddress.ToString(), Operations.Insert, Tables.HobbyChildrens);
-                    return RedirectToAction("Index", new { id = vm.HashIdChildren });
+                    await _systemAuditService.AuditAsync(User.Identity.Name, _accessor.HttpContext.Connection.RemoteIpAddress.ToString(), Operations.Insert, Tables.HobbyGrandChildrens);
+                    return RedirectToAction("Index", new { id = vm.HashIdGrandChildren });
                 }
                 TempData["ErrorsList"] = result.ErrorsList;
             }
@@ -86,7 +86,7 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Lists
             if (result.IsValid)
             {
                 ViewBag.Hobby = await _directories.GetHobby(result.Result.HashIdHobby);
-                return View(_mapper.Map<UpdateHobbyChildrensViewModel>(result.Result));
+                return View(_mapper.Map<UpdateHobbyGrandChildrenViewModel>(result.Result));
             }
             TempData["ErrorsList"] = result.ErrorsList;
             return View();
@@ -95,15 +95,15 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Lists
         [HttpPost, ActionName("Update")]
         [Authorize(Roles = "Admin,Accountant,Deputy")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Update(UpdateHobbyChildrensViewModel vm)
+        public async Task<IActionResult> Update(UpdateHobbyGrandChildrenViewModel vm)
         {
             if (ModelState.IsValid)
             {
-                var result = await _services.UpdateAsync(_mapper.Map<HobbyChildrenDTO>(vm));
+                var result = await _services.UpdateAsync(_mapper.Map<HobbyGrandChildrenDTO>(vm));
                 if (result.IsValid)
                 {
-                    await _systemAuditService.AuditAsync(User.Identity.Name, _accessor.HttpContext.Connection.RemoteIpAddress.ToString(), Operations.Update, Tables.HobbyChildrens);
-                    return RedirectToAction("Index", new { id = vm.HashIdChildren });
+                    await _systemAuditService.AuditAsync(User.Identity.Name, _accessor.HttpContext.Connection.RemoteIpAddress.ToString(), Operations.Update, Tables.HobbyGrandChildrens);
+                    return RedirectToAction("Index", new { id = vm.HashIdGrandChildren });
                 }
                 TempData["ErrorsListConfirmed"] = result.ErrorsList;
             }
@@ -129,13 +129,13 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Lists
         [HttpPost, ActionName("Delete")]
         [Authorize(Roles = "Admin")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed([Required] string hashId, [Required] string hashIdChildren)
+        public async Task<IActionResult> DeleteConfirmed([Required] string hashId, [Required] string hashIdGrandChildren)
         {
             var result = await _services.DeleteAsync(hashId);
             if (result.IsValid)
             {
-                await _systemAuditService.AuditAsync(User.Identity.Name, _accessor.HttpContext.Connection.RemoteIpAddress.ToString(), Operations.Delete, Tables.HobbyChildrens);
-                return RedirectToAction("Index", new { id = hashIdChildren });
+                await _systemAuditService.AuditAsync(User.Identity.Name, _accessor.HttpContext.Connection.RemoteIpAddress.ToString(), Operations.Delete, Tables.HobbyGrandChildrens);
+                return RedirectToAction("Index", new { id = hashIdGrandChildren });
             }
             TempData["ErrorsList"] = result.ErrorsList;
             return View();

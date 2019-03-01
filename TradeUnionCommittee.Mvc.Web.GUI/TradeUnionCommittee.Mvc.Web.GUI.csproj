@@ -37,7 +37,7 @@
   <ItemGroup>
     <Folder Include="Views\Children\" />
     <Folder Include="Views\GrandChildren\" />
-    <Folder Include="Views\HobbyGrandChildrens\" />
+    <Folder Include="Views\HobbyGrandChildren\" />
     <Folder Include="Views\MaterialAidEmployees\" />
     <Folder Include="Views\CulturalEmployees\" />
     <Folder Include="Views\GiftEmployees\" />

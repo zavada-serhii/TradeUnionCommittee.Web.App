@@ -33,7 +33,6 @@ namespace TradeUnionCommittee.BLL.Configurations
             {
                 return new MapperConfiguration(map =>
                 {
-                    //------------------------------------------------------------------------------
 
                     #region Mapping for User, Role and Journal
 
