@@ -6,12 +6,10 @@ using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.DTO.Family;
 using TradeUnionCommittee.BLL.Enums;
-using TradeUnionCommittee.BLL.Interfaces.Lists;
 using TradeUnionCommittee.BLL.Interfaces.Lists.Family;
 using TradeUnionCommittee.BLL.Interfaces.SystemAudit;
 using TradeUnionCommittee.Mvc.Web.GUI.Controllers.Directory;
 using TradeUnionCommittee.Mvc.Web.GUI.Extensions;
-using TradeUnionCommittee.ViewModels.ViewModels;
 using TradeUnionCommittee.ViewModels.ViewModels.Family;
 
 namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Lists
