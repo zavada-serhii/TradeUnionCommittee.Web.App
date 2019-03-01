@@ -1,11 +1,11 @@
 ﻿using System;
 
-namespace TradeUnionCommittee.BLL.DTO
+namespace TradeUnionCommittee.BLL.DTO.Family
 {
-    public class EventChildrenDTO
+    public class EventFamilyDTO
     {
         public string HashId { get; set; }
-        public string HashIdChildren { get; set; }
+        public string HashIdFamily { get; set; }
         public string HashIdEvent { get; set; }
         public string NameEvent { get; set; }
         public decimal Amount { get; set; }
@@ -15,9 +15,7 @@ namespace TradeUnionCommittee.BLL.DTO
         public uint RowVersion { get; set; }
     }
 
-    public class TravelChildrenDTO : EventChildrenDTO { }
-
-    public class WellnessChildrenDTO : EventChildrenDTO { }
-
-    public class TourChildrenDTO : EventChildrenDTO { }
+    public class TravelFamilyDTO : EventFamilyDTO { }
+    public class WellnessFamilyDTO : EventFamilyDTO { }
+    public class TourFamilyDTO : EventFamilyDTO { }
 }

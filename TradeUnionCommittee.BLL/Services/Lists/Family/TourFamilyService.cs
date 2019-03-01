@@ -1,13 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.Configurations;
-using TradeUnionCommittee.BLL.DTO;
-using TradeUnionCommittee.BLL.Interfaces.Lists;
+using TradeUnionCommittee.BLL.DTO.Family;
+using TradeUnionCommittee.BLL.Interfaces.Lists.Family;
 using TradeUnionCommittee.Common.ActualResults;
 using TradeUnionCommittee.DAL.Entities;
 using TradeUnionCommittee.DAL.Interfaces;
 
-namespace TradeUnionCommittee.BLL.Services.Lists
+namespace TradeUnionCommittee.BLL.Services.Lists.Family
 {
     public class TourFamilyService : ITourFamilyService
     {

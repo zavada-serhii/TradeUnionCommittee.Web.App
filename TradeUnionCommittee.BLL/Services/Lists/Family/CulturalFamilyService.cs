@@ -1,56 +1,56 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.Configurations;
-using TradeUnionCommittee.BLL.DTO;
-using TradeUnionCommittee.BLL.Interfaces.Lists;
+using TradeUnionCommittee.BLL.DTO.Family;
+using TradeUnionCommittee.BLL.Interfaces.Lists.Family;
 using TradeUnionCommittee.Common.ActualResults;
 using TradeUnionCommittee.DAL.Entities;
 using TradeUnionCommittee.DAL.Interfaces;
 
-namespace TradeUnionCommittee.BLL.Services.Lists
+namespace TradeUnionCommittee.BLL.Services.Lists.Family
 {
-    public class ActivityFamilyService : IActivityFamilyService
+    public class CulturalFamilyService : ICulturalFamilyService
     {
         private readonly IUnitOfWork _database;
         private readonly IAutoMapperConfiguration _mapperService;
         private readonly IHashIdConfiguration _hashIdUtilities;
 
-        public ActivityFamilyService(IUnitOfWork database, IAutoMapperConfiguration mapperService, IHashIdConfiguration hashIdUtilities)
+        public CulturalFamilyService(IUnitOfWork database, IAutoMapperConfiguration mapperService, IHashIdConfiguration hashIdUtilities)
         {
             _database = database;
             _mapperService = mapperService;
             _hashIdUtilities = hashIdUtilities;
         }
 
-        public async Task<ActualResult<IEnumerable<ActivityFamilyDTO>>> GetAllAsync(string hashIdFamily)
+        public async Task<ActualResult<IEnumerable<CulturalFamilyDTO>>> GetAllAsync(string hashIdFamily)
         {
             var id = _hashIdUtilities.DecryptLong(hashIdFamily, Enums.Services.Family);
-            var result = await _database.ActivityFamilyRepository.GetWithIncludeToList(x => x.IdFamily == id, c => c.IdActivitiesNavigation);
-            return _mapperService.Mapper.Map<ActualResult<IEnumerable<ActivityFamilyDTO>>>(result);
+            var result = await _database.CulturalFamilyRepository.GetWithIncludeToList(x => x.IdFamily == id, c => c.IdCulturalNavigation);
+            return _mapperService.Mapper.Map<ActualResult<IEnumerable<CulturalFamilyDTO>>>(result);
         }
 
-        public async Task<ActualResult<ActivityFamilyDTO>> GetAsync(string hashId)
+        public async Task<ActualResult<CulturalFamilyDTO>> GetAsync(string hashId)
         {
-            var id = _hashIdUtilities.DecryptLong(hashId, Enums.Services.ActivityFamily);
-            var result = await _database.ActivityFamilyRepository.GetWithInclude(x => x.Id == id, c => c.IdActivitiesNavigation);
-            return _mapperService.Mapper.Map<ActualResult<ActivityFamilyDTO>>(result);
+            var id = _hashIdUtilities.DecryptLong(hashId, Enums.Services.CulturalFamily);
+            var result = await _database.CulturalFamilyRepository.GetWithInclude(x => x.Id == id, c => c.IdCulturalNavigation);
+            return _mapperService.Mapper.Map<ActualResult<CulturalFamilyDTO>>(result);
         }
 
-        public async Task<ActualResult> CreateAsync(ActivityFamilyDTO item)
+        public async Task<ActualResult> CreateAsync(CulturalFamilyDTO item)
         {
-            await _database.ActivityFamilyRepository.Create(_mapperService.Mapper.Map<ActivityFamily>(item));
+            await _database.CulturalFamilyRepository.Create(_mapperService.Mapper.Map<CulturalFamily>(item));
             return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
         }
 
-        public async Task<ActualResult> UpdateAsync(ActivityFamilyDTO item)
+        public async Task<ActualResult> UpdateAsync(CulturalFamilyDTO item)
         {
-            await _database.ActivityFamilyRepository.Update(_mapperService.Mapper.Map<ActivityFamily>(item));
+            await _database.CulturalFamilyRepository.Update(_mapperService.Mapper.Map<CulturalFamily>(item));
             return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
         }
 
         public async Task<ActualResult> DeleteAsync(string hashId)
         {
-            await _database.ActivityFamilyRepository.Delete(_hashIdUtilities.DecryptLong(hashId, Enums.Services.ActivityFamily));
+            await _database.CulturalFamilyRepository.Delete(_hashIdUtilities.DecryptLong(hashId, Enums.Services.CulturalFamily));
             return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
         }
 

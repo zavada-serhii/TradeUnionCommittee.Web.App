@@ -1,6 +1,9 @@
 ﻿using AutoMapper;
 using System;
 using TradeUnionCommittee.BLL.DTO;
+using TradeUnionCommittee.BLL.DTO.Children;
+using TradeUnionCommittee.BLL.DTO.Family;
+using TradeUnionCommittee.BLL.DTO.GrandChildren;
 using TradeUnionCommittee.BLL.Enums;
 using TradeUnionCommittee.BLL.Extensions;
 using TradeUnionCommittee.DAL.Entities;

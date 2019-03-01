@@ -1,11 +1,11 @@
 ﻿using System;
 
-namespace TradeUnionCommittee.BLL.DTO
+namespace TradeUnionCommittee.BLL.DTO.Children
 {
-    public class CulturalFamilyDTO
+    public class CulturalChildrenDTO
     {
         public string HashId { get; set; }
-        public string HashIdFamily { get; set; }
+        public string HashIdChildren { get; set; }
         public string HashIdCultural { get; set; }
         public string NameCultural { get; set; }
         public decimal Amount { get; set; }

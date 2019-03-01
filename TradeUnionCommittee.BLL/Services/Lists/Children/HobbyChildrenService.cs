@@ -1,13 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.Configurations;
-using TradeUnionCommittee.BLL.DTO;
-using TradeUnionCommittee.BLL.Interfaces.Lists;
+using TradeUnionCommittee.BLL.DTO.Children;
+using TradeUnionCommittee.BLL.Interfaces.Lists.Children;
 using TradeUnionCommittee.Common.ActualResults;
 using TradeUnionCommittee.DAL.Entities;
 using TradeUnionCommittee.DAL.Interfaces;
 
-namespace TradeUnionCommittee.BLL.Services.Lists
+namespace TradeUnionCommittee.BLL.Services.Lists.Children
 {
     public class HobbyChildrenService : IHobbyChildrenService
     {

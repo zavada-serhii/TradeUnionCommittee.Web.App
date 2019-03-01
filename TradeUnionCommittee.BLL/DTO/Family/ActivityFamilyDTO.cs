@@ -1,11 +1,11 @@
 ﻿using System;
 
-namespace TradeUnionCommittee.BLL.DTO
+namespace TradeUnionCommittee.BLL.DTO.Family
 {
-    public class ActivityChildrenDTO
+    public class ActivityFamilyDTO
     {
         public string HashId { get; set; }
-        public string HashIdChildren { get; set; }
+        public string HashIdFamily { get; set; }
         public string HashIdActivities { get; set; }
         public string NameActivities { get; set; }
         public DateTime DateEvent { get; set; }

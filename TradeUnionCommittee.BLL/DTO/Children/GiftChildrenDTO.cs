@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace TradeUnionCommittee.BLL.DTO
+namespace TradeUnionCommittee.BLL.DTO.Children
 {
     public class GiftChildrenDTO
     {
