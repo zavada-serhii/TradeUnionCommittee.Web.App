@@ -8,7 +8,7 @@ using TradeUnionCommittee.BLL.DTO.Children;
 using TradeUnionCommittee.BLL.Enums;
 using TradeUnionCommittee.BLL.Interfaces.General;
 using TradeUnionCommittee.BLL.Interfaces.SystemAudit;
-using TradeUnionCommittee.ViewModels.ViewModels;
+using TradeUnionCommittee.ViewModels.ViewModels.Children;
 
 namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.General
 {

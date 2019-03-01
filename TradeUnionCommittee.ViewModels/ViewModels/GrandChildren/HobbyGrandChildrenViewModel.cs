@@ -1,16 +1,16 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace TradeUnionCommittee.ViewModels.ViewModels
+namespace TradeUnionCommittee.ViewModels.ViewModels.GrandChildren
 {
-    public class CreateHobbyEmployeesViewModel
+    public class CreateHobbyGrandChildrenViewModel
     {
         [Required]
-        public string HashIdEmployee { get; set; }
+        public string HashIdGrandChildren { get; set; }
         [Required]
         public string HashIdHobby { get; set; }
     }
 
-    public class UpdateHobbyEmployeesViewModel : CreateHobbyEmployeesViewModel
+    public class UpdateHobbyGrandChildrenViewModel : CreateHobbyGrandChildrenViewModel
     {
         [Required]
         public string HashId { get; set; }
