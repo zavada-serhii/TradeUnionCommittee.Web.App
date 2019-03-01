@@ -6,6 +6,11 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Lists
 {
+    //ITravelChildrenService
+    //TravelChildrenDTO
+    //CreateEventChildrenViewModel
+    //UpdateEventChildrenViewModel
+
     public class TravelChildrenController : Controller
     {
         public IActionResult Index()

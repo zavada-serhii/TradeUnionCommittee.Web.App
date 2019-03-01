@@ -22,22 +22,16 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Configurations
         {
             return new MapperConfiguration(map =>
             {
-                //-- Controller Mapper ---------------------------------------------------------------------------------------------------------
+                #region Mapping for Account
 
                 map.CreateMap<AccountDTO, CreateAccountViewModel>().ReverseMap();
                 map.CreateMap<AccountDTO, UpdateEmailAccountViewModel>().ReverseMap();
                 map.CreateMap<AccountDTO, UpdateRoleAccountViewModel>().ReverseMap();
                 map.CreateMap<AccountDTO, UpdatePasswordAccountViewModel>().ReverseMap();
 
-                map.CreateMap<CreateEmployeeViewModel, CreateEmployeeDTO>()
-                .ForMember(d => d.HashIdSubdivision, opt => opt.MapFrom(c => c.HashIdSubordinateSubdivision ?? c.HashIdMainSubdivision))
-                .ForMember(d => d.TypeAccommodation, opt => opt.MapFrom(x => ConverterAccommodation(x.TypeAccommodation)));
+                #endregion
 
-                map.CreateMap<GeneralInfoEmployeeDTO, UpdateEmployeeViewModel>()
-                    .ForMember(d => d.CityPhone, opt => opt.MapFrom(c => c.CityPhone.Replace("-", string.Empty)))
-                    .ReverseMap();
-
-                // -- Start Mapping for Directory 
+                #region Mapping for Directory 
 
                 map.CreateMap<CreatePositionViewModel, DirectoryDTO>();
                 map.CreateMap<CreateSocialActivityViewModel, DirectoryDTO>();
@@ -75,14 +69,23 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Configurations
                     .ForMember(d => d.HashIdSubordinate, opt => opt.MapFrom(x => GetHashId(x.HashIdSubordinate)))
                     .ForMember(d => d.RowVersion, opt => opt.MapFrom(x => GetRowVersion(x.HashIdSubordinate)));
 
-                // -- End Mapping for Directory 
+                #endregion
 
-
-                // -- Start mapping for Report
+                #region Mapping for Report
 
                 map.CreateMap<PdfReportViewModel, ReportPdfDTO>();
 
-                // -- End Mapping for Report
+                #endregion
+
+                #region Mapping for Employee 
+
+                map.CreateMap<CreateEmployeeViewModel, CreateEmployeeDTO>()
+                    .ForMember(d => d.HashIdSubdivision, opt => opt.MapFrom(c => c.HashIdSubordinateSubdivision ?? c.HashIdMainSubdivision))
+                    .ForMember(d => d.TypeAccommodation, opt => opt.MapFrom(x => ConverterAccommodation(x.TypeAccommodation)));
+
+                map.CreateMap<GeneralInfoEmployeeDTO, UpdateEmployeeViewModel>()
+                    .ForMember(d => d.CityPhone, opt => opt.MapFrom(c => c.CityPhone.Replace("-", string.Empty)))
+                    .ReverseMap();
 
                 map.CreateMap<CreatePrivateHouseEmployeesViewModel, PrivateHouseEmployeesDTO>();
                 map.CreateMap<UpdatePrivateHouseEmployeesViewModel, PrivateHouseEmployeesDTO>().ReverseMap();
@@ -103,21 +106,6 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Configurations
 
                 map.CreateMap<CreateHobbyEmployeesViewModel, HobbyEmployeesDTO>();
                 map.CreateMap<UpdateHobbyEmployeesViewModel, HobbyEmployeesDTO>().ReverseMap();
-
-                map.CreateMap<CreateFamilyViewModel, FamilyDTO>();
-                map.CreateMap<UpdateFamilyViewModel, FamilyDTO>().ReverseMap();
-
-                map.CreateMap<CreateChildrenViewModel, ChildrenDTO>();
-                map.CreateMap<UpdateChildrenViewModel, ChildrenDTO>().ReverseMap();
-
-                map.CreateMap<CreateGrandChildrenViewModel, GrandChildrenDTO>();
-                map.CreateMap<UpdateGrandChildrenViewModel, GrandChildrenDTO>().ReverseMap();
-
-                map.CreateMap<CreateHobbyChildrenViewModel, HobbyChildrenDTO>();
-                map.CreateMap<UpdateHobbyChildrenViewModel, HobbyChildrenDTO>().ReverseMap();
-
-                map.CreateMap<CreateHobbyGrandChildrenViewModel, HobbyGrandChildrenDTO>();
-                map.CreateMap<UpdateHobbyGrandChildrenViewModel, HobbyGrandChildrenDTO>().ReverseMap();
 
                 map.CreateMap<CreateAwardEmployeesViewModel, AwardEmployeesDTO>();
                 map.CreateMap<UpdateAwardEmployeesViewModel, AwardEmployeesDTO>().ReverseMap();
@@ -149,7 +137,12 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Configurations
                 map.CreateMap<CreateApartmentAccountingEmployeesViewModel, ApartmentAccountingEmployeesDTO>();
                 map.CreateMap<UpdateApartmentAccountingEmployeesViewModel, ApartmentAccountingEmployeesDTO>().ReverseMap();
 
+                #endregion
 
+                #region Mapping for Family
+
+                map.CreateMap<CreateFamilyViewModel, FamilyDTO>();
+                map.CreateMap<UpdateFamilyViewModel, FamilyDTO>().ReverseMap();
 
                 map.CreateMap<CreateEventFamilyViewModel, TravelFamilyDTO>();
                 map.CreateMap<UpdateEventFamilyViewModel, TravelFamilyDTO>().ReverseMap();
@@ -165,6 +158,46 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Configurations
 
                 map.CreateMap<CreateCulturalFamilyViewModel, CulturalFamilyDTO>();
                 map.CreateMap<UpdateCulturalFamilyViewModel, CulturalFamilyDTO>().ReverseMap();
+
+                #endregion
+
+                #region Mapping for Children
+
+                map.CreateMap<CreateChildrenViewModel, ChildrenDTO>();
+                map.CreateMap<UpdateChildrenViewModel, ChildrenDTO>().ReverseMap();
+
+                map.CreateMap<CreateHobbyChildrenViewModel, HobbyChildrenDTO>();
+                map.CreateMap<UpdateHobbyChildrenViewModel, HobbyChildrenDTO>().ReverseMap();
+
+                map.CreateMap<CreateEventChildrenViewModel, TravelChildrenDTO>();
+                map.CreateMap<UpdateEventChildrenViewModel, TravelChildrenDTO>().ReverseMap();
+
+                map.CreateMap<CreateEventChildrenViewModel, WellnessChildrenDTO>();
+                map.CreateMap<UpdateEventChildrenViewModel, WellnessChildrenDTO>().ReverseMap();
+
+                map.CreateMap<CreateEventChildrenViewModel, TourChildrenDTO>();
+                map.CreateMap<UpdateEventChildrenViewModel, TourChildrenDTO>().ReverseMap();
+
+                map.CreateMap<CreateActivityChildrenViewModel, ActivityChildrenDTO>();
+                map.CreateMap<UpdateActivityChildrenViewModel, ActivityChildrenDTO>().ReverseMap();
+
+                map.CreateMap<CreateCulturalChildrenViewModel, CulturalChildrenDTO>();
+                map.CreateMap<UpdateCulturalChildrenViewModel, CulturalChildrenDTO>().ReverseMap();
+
+                map.CreateMap<CreateGiftChildrenViewModel, GiftChildrenDTO>();
+                map.CreateMap<UpdateGiftChildrenViewModel, GiftChildrenDTO>().ReverseMap();
+
+                #endregion
+
+                #region Mapping for GrandChildren
+
+                map.CreateMap<CreateGrandChildrenViewModel, GrandChildrenDTO>();
+                map.CreateMap<UpdateGrandChildrenViewModel, GrandChildrenDTO>().ReverseMap();
+
+                map.CreateMap<CreateHobbyGrandChildrenViewModel, HobbyGrandChildrenDTO>();
+                map.CreateMap<UpdateHobbyGrandChildrenViewModel, HobbyGrandChildrenDTO>().ReverseMap();
+
+                #endregion
 
             }).CreateMapper();
         }

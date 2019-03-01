@@ -6,6 +6,11 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Lists
 {
+    //IWellnessChildrenService
+    //WellnessChildrenDTO
+    //CreateEventChildrenViewModel
+    //UpdateEventChildrenViewModel
+
     public class WellnessChildrenController : Controller
     {
         public IActionResult Index()
