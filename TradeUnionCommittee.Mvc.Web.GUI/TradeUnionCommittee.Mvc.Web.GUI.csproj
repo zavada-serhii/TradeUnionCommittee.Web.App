@@ -44,6 +44,11 @@
     <Folder Include="Views\ApartmentAccountingEmployees\" />
     <Folder Include="Views\ActivityFamily\" />
     <Folder Include="Views\CulturalFamily\" />
+    <Folder Include="Views\ActivityChildren\" />
+    <Folder Include="Views\CulturalChildren\" />
+    <Folder Include="Views\GiftChildren\" />
+    <Folder Include="Views\TourChildren\" />
+    <Folder Include="Views\WellnessChildren\" />
     <Folder Include="Views\TourFamily\" />
     <Folder Include="Views\WellnessFamily\" />
     <Folder Include="Views\TourEmployees\" />
