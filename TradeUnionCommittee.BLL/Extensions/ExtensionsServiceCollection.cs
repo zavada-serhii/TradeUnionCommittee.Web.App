@@ -90,6 +90,12 @@ namespace TradeUnionCommittee.BLL.Extensions
 
             services.AddTransient<IChildrenService, ChildrenService>();
             services.AddTransient<IHobbyChildrenService, HobbyChildrenService>();
+            services.AddTransient<ITravelChildrenService, TravelChildrenService>();
+            services.AddTransient<IWellnessChildrenService, WellnessChildrenService>();
+            services.AddTransient<ITourChildrenService, TourChildrenService>();
+            services.AddTransient<IActivityChildrenService, ActivityChildrenService>();
+            services.AddTransient<ICulturalChildrenService, CulturalChildrenService>();
+            services.AddTransient<IGiftChildrenService, GiftChildrenService>();
 
             services.AddTransient<IGrandChildrenService, GrandChildrenService>();
             services.AddTransient<IHobbyGrandChildrenService, HobbyGrandChildrenService>();

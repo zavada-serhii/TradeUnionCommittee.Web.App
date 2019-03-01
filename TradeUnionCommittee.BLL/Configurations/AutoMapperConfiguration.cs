@@ -531,6 +531,13 @@ namespace TradeUnionCommittee.BLL.Configurations
                         .ForMember(x => x.HashIdCultural, opt => opt.MapFrom(c => _hashIdUtilities.EncryptLong(c.IdCultural, Enums.Services.Cultural)))
                         .ForMember(x => x.NameCultural, opt => opt.MapFrom(c => c.IdCulturalNavigation.Name));
 
+                    map.CreateMap<GiftChildrenDTO, GiftChildrens>()
+                        .ForMember(x => x.Id, opt => opt.MapFrom(c => _hashIdUtilities.DecryptLong(c.HashId, Enums.Services.GiftChildren)))
+                        .ForMember(x => x.IdChildren, opt => opt.MapFrom(c => _hashIdUtilities.DecryptLong(c.HashIdChildren, Enums.Services.Children)))
+                        .ReverseMap()
+                        .ForMember(x => x.HashId, opt => opt.MapFrom(c => _hashIdUtilities.EncryptLong(c.Id, Enums.Services.GiftChildren)))
+                        .ForMember(x => x.HashIdChildren, opt => opt.MapFrom(c => _hashIdUtilities.EncryptLong(c.IdChildren, Enums.Services.Children)));
+
                     #endregion
 
                     #region Mapping for Grand Children
