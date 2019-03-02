@@ -47,6 +47,10 @@
     <Folder Include="Views\ActivityChildren\" />
     <Folder Include="Views\CulturalChildren\" />
     <Folder Include="Views\GiftChildren\" />
+    <Folder Include="Views\ActivityGrandChildren\" />
+    <Folder Include="Views\CulturalGrandChildren\" />
+    <Folder Include="Views\GiftGrandChildren\" />
+    <Folder Include="Views\TourGrandChildren\" />
     <Folder Include="Views\TourChildren\" />
     <Folder Include="Views\WellnessChildren\" />
     <Folder Include="Views\TourFamily\" />
