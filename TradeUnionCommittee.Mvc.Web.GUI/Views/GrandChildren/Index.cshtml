@@ -58,16 +58,16 @@
                                                 {
                                                     <a class="dropdown-item" asp-action="Delete" asp-route-id="@item.HashId">Видалити</a>
                                                 }
-                                                <a class="dropdown-item" href="#">Поїздки</a>
+                                                <a class="dropdown-item" asp-controller="TravelGrandChildren" asp-action="Index" asp-route-id="@item.HashId">Поїздки</a>
 
                                                 @if (User.IsInRole("Admin") || User.IsInRole("Accountant"))
                                                 {
-                                                    <a class="dropdown-item" href="#">Путівки</a>
+                                                    <a class="dropdown-item" asp-controller="TourGrandChildren" asp-action="Index" asp-route-id="@item.HashId">Путівки</a>
                                                 }
 
-                                                <a class="dropdown-item" href="#">Заходи</a>
-                                                <a class="dropdown-item" href="#">Культурно-просвітницькі заклади</a>
-                                                <a class="dropdown-item" href="#">Подарунки</a>
+                                                <a class="dropdown-item" asp-controller="ActivityGrandChildren" asp-action="Index" asp-route-id="@item.HashId">Заходи</a>
+                                                <a class="dropdown-item" asp-controller="CulturalGrandChildren" asp-action="Index" asp-route-id="@item.HashId">Культурно-просвітницькі заклади</a>
+                                                <a class="dropdown-item" asp-controller="GiftGrandChildren" asp-action="Index" asp-route-id="@item.HashId">Подарунки</a>
                                                 <a class="dropdown-item" asp-controller="HobbyGrandChildren" asp-action="Index" asp-route-id="@item.HashId">Хобі</a>
                                             </div>
                                         </div>
