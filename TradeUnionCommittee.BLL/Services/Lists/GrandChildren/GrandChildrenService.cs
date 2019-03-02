@@ -2,12 +2,11 @@
 using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.Configurations;
 using TradeUnionCommittee.BLL.DTO.GrandChildren;
-using TradeUnionCommittee.BLL.Interfaces.General;
+using TradeUnionCommittee.BLL.Interfaces.Lists.GrandChildren;
 using TradeUnionCommittee.Common.ActualResults;
-using TradeUnionCommittee.DAL.Entities;
 using TradeUnionCommittee.DAL.Interfaces;
 
-namespace TradeUnionCommittee.BLL.Services.General
+namespace TradeUnionCommittee.BLL.Services.Lists.GrandChildren
 {
     public class GrandChildrenService : IGrandChildrenService
     {
@@ -38,13 +37,13 @@ namespace TradeUnionCommittee.BLL.Services.General
 
         public async Task<ActualResult> CreateAsync(GrandChildrenDTO item)
         {
-            await _database.GrandChildrenRepository.Create(_mapperService.Mapper.Map<GrandChildren>(item));
+            await _database.GrandChildrenRepository.Create(_mapperService.Mapper.Map<DAL.Entities.GrandChildren>(item));
             return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
         }
 
         public async Task<ActualResult> UpdateAsync(GrandChildrenDTO item)
         {
-            await _database.GrandChildrenRepository.Update(_mapperService.Mapper.Map<GrandChildren>(item));
+            await _database.GrandChildrenRepository.Update(_mapperService.Mapper.Map<DAL.Entities.GrandChildren>(item));
             return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
         }
 

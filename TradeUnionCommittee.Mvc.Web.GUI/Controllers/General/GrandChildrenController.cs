@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.DTO.GrandChildren;
 using TradeUnionCommittee.BLL.Enums;
-using TradeUnionCommittee.BLL.Interfaces.General;
+using TradeUnionCommittee.BLL.Interfaces.Lists.GrandChildren;
 using TradeUnionCommittee.BLL.Interfaces.SystemAudit;
 using TradeUnionCommittee.ViewModels.ViewModels.GrandChildren;
 

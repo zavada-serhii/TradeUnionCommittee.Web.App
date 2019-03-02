@@ -1,14 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.Configurations;
-using TradeUnionCommittee.BLL.DTO;
 using TradeUnionCommittee.BLL.DTO.Family;
-using TradeUnionCommittee.BLL.Interfaces.General;
+using TradeUnionCommittee.BLL.Interfaces.Lists.Family;
 using TradeUnionCommittee.Common.ActualResults;
-using TradeUnionCommittee.DAL.Entities;
 using TradeUnionCommittee.DAL.Interfaces;
 
-namespace TradeUnionCommittee.BLL.Services.General
+namespace TradeUnionCommittee.BLL.Services.Lists.Family
 {
     public class FamilyService : IFamilyService
     {
@@ -39,13 +37,13 @@ namespace TradeUnionCommittee.BLL.Services.General
 
         public async Task<ActualResult> CreateAsync(FamilyDTO item)
         {
-            await _database.FamilyRepository.Create(_mapperService.Mapper.Map<Family>(item));
+            await _database.FamilyRepository.Create(_mapperService.Mapper.Map<DAL.Entities.Family>(item));
             return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
         }
 
         public async Task<ActualResult> UpdateAsync(FamilyDTO item)
         {
-            await _database.FamilyRepository.Update(_mapperService.Mapper.Map<Family>(item));
+            await _database.FamilyRepository.Update(_mapperService.Mapper.Map<DAL.Entities.Family>(item));
             return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
         }
 

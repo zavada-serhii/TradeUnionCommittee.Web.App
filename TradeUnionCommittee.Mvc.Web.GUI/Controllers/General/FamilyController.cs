@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.DTO;
 using TradeUnionCommittee.BLL.DTO.Family;
 using TradeUnionCommittee.BLL.Enums;
-using TradeUnionCommittee.BLL.Interfaces.General;
+using TradeUnionCommittee.BLL.Interfaces.Lists.Family;
 using TradeUnionCommittee.BLL.Interfaces.SystemAudit;
 using TradeUnionCommittee.ViewModels.ViewModels;
 using TradeUnionCommittee.ViewModels.ViewModels.Family;
