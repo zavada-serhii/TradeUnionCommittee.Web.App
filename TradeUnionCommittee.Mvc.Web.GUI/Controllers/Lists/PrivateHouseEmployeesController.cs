@@ -10,6 +10,7 @@ using TradeUnionCommittee.BLL.Enums;
 using TradeUnionCommittee.BLL.Interfaces.Lists;
 using TradeUnionCommittee.BLL.Interfaces.SystemAudit;
 using TradeUnionCommittee.ViewModels.ViewModels;
+using TradeUnionCommittee.ViewModels.ViewModels.Employee;
 
 namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Lists
 {

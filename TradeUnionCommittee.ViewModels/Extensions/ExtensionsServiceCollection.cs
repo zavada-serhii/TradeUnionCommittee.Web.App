@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using TradeUnionCommittee.ViewModels.FluentValidation;
 using TradeUnionCommittee.ViewModels.ViewModels;
+using TradeUnionCommittee.ViewModels.ViewModels.Employee;
 
 namespace TradeUnionCommittee.ViewModels.Extensions
 {

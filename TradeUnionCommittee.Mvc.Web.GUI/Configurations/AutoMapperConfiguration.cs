@@ -8,6 +8,7 @@ using TradeUnionCommittee.BLL.DTO.GrandChildren;
 using TradeUnionCommittee.BLL.Enums;
 using TradeUnionCommittee.ViewModels.ViewModels;
 using TradeUnionCommittee.ViewModels.ViewModels.Children;
+using TradeUnionCommittee.ViewModels.ViewModels.Employee;
 using TradeUnionCommittee.ViewModels.ViewModels.Family;
 using TradeUnionCommittee.ViewModels.ViewModels.GrandChildren;
 

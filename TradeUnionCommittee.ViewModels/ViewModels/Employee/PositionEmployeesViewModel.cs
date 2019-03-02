@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace TradeUnionCommittee.ViewModels.ViewModels
+namespace TradeUnionCommittee.ViewModels.ViewModels.Employee
 {
     public class UpdatePositionEmployeesViewModel
     {

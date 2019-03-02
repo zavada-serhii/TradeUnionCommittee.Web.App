@@ -1,21 +1,21 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace TradeUnionCommittee.ViewModels.ViewModels
+namespace TradeUnionCommittee.ViewModels.ViewModels.Employee
 {
-    public class CreateMaterialAidEmployeesViewModel
+    public class CreateAwardEmployeesViewModel
     {
         [Required]
         public string HashIdEmployee { get; set; }
-        [Required(ErrorMessage = "Назва матеріальної допомоги не може бути порожньою!")]
-        public string HashIdMaterialAid { get; set; }
+        [Required(ErrorMessage = "Назва матеріального заохочення не може бути порожньою!")]
+        public string HashIdAward { get; set; }
         [Required(ErrorMessage = "Розмір не може бути порожнім!")]
         public decimal Amount { get; set; }
         [Required(ErrorMessage = "Дата видачі не може бути порожньою!")]
         public DateTime DateIssue { get; set; }
     }
 
-    public class UpdateMaterialAidEmployeesViewModel : CreateMaterialAidEmployeesViewModel
+    public class UpdateAwardEmployeesViewModel : CreateAwardEmployeesViewModel
     {
         [Required]
         public string HashId { get; set; }

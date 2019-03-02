@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using TradeUnionCommittee.ViewModels.ViewModels;
+using TradeUnionCommittee.ViewModels.ViewModels.Employee;
 
 namespace TradeUnionCommittee.ViewModels.FluentValidation
 {
