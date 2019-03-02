@@ -30,10 +30,10 @@ Information system for the primary trade union organization of the Odessa Nation
 	-  - [x] ActivityFamily
 	-  - [x] CulturalFamily
 
-	-  - [ ] EventChildrens (Travel, Wellness, Tour)
-	-  - [ ] ActivityChildrens
-	-  - [ ] CulturalChildrens
-	-  - [ ] GiftChildrens
+	-  - [x] EventChildrens (Travel, Wellness, Tour)
+	-  - [x] ActivityChildrens
+	-  - [x] CulturalChildrens
+	-  - [x] GiftChildrens
 
 	-  - [ ] EventGrandChildrens (Travel, Tour)
 	-  - [ ] ActivityGrandChildrens
