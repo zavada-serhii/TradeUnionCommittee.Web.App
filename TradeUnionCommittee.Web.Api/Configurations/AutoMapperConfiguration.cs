@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using TradeUnionCommittee.BLL.DTO;
+using TradeUnionCommittee.BLL.DTO.Employee;
 using TradeUnionCommittee.BLL.Enums;
 using TradeUnionCommittee.ViewModels.ViewModels;
 

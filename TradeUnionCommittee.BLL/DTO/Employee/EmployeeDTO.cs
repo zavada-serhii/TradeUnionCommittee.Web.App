@@ -1,7 +1,7 @@
 ﻿using System;
 using TradeUnionCommittee.BLL.Enums;
 
-namespace TradeUnionCommittee.BLL.DTO
+namespace TradeUnionCommittee.BLL.DTO.Employee
 {
     public class GeneralInfoEmployeeDTO
     {
