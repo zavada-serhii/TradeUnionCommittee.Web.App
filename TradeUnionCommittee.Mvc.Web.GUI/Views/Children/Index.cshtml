@@ -1,4 +1,4 @@
-﻿@model IEnumerable<TradeUnionCommittee.BLL.DTO.ChildrenDTO>
+﻿@model IEnumerable<TradeUnionCommittee.BLL.DTO.Children.ChildrenDTO>
 @{
     ViewData["Title"] = "Index";
 }
@@ -58,18 +58,18 @@
                                                 {
                                                     <a class="dropdown-item" asp-action="Delete" asp-route-id="@item.HashId">Видалити</a>
                                                 }
-                                                <a class="dropdown-item" href="#">Поїздки</a>
-                                                <a class="dropdown-item" href="#">Оздоровлення</a>
+                                                <a class="dropdown-item" asp-controller="TravelChildren" asp-action="Index" asp-route-id="@item.HashId">Поїздки</a>
+                                                <a class="dropdown-item" asp-controller="WellnessChildren" asp-action="Index" asp-route-id="@item.HashId">Оздоровлення</a>
 
                                                 @if (User.IsInRole("Admin") || User.IsInRole("Accountant"))
                                                 {
-                                                    <a class="dropdown-item" href="#">Путівки</a>
+                                                    <a class="dropdown-item" asp-controller="TourChildren" asp-action="Index" asp-route-id="@item.HashId">Путівки</a>
                                                 }
 
-                                                <a class="dropdown-item" href="#">Заходи</a>
-                                                <a class="dropdown-item" href="#">Культурно-просвітницькі заклади</a>
-                                                <a class="dropdown-item" href="#">Подарунки</a>
-                                                <a class="dropdown-item" asp-controller="HobbyChildrens" asp-action="Index" asp-route-id="@item.HashId">Хобі</a>
+                                                <a class="dropdown-item" asp-controller="ActivityChildren" asp-action="Index" asp-route-id="@item.HashId">Заходи</a>
+                                                <a class="dropdown-item" asp-controller="CulturalChildren" asp-action="Index" asp-route-id="@item.HashId">Культурно-просвітницькі заклади</a>
+                                                <a class="dropdown-item" asp-controller="GiftChildren" asp-action="Index" asp-route-id="@item.HashId">Подарунки</a>
+                                                <a class="dropdown-item" asp-controller="HobbyChildren" asp-action="Index" asp-route-id="@item.HashId">Хобі</a>
                                             </div>
                                         </div>
                                     </td>

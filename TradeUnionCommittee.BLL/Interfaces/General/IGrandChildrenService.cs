@@ -1,4 +1,4 @@
-﻿using TradeUnionCommittee.BLL.DTO;
+﻿using TradeUnionCommittee.BLL.DTO.GrandChildren;
 
 namespace TradeUnionCommittee.BLL.Interfaces.General
 {

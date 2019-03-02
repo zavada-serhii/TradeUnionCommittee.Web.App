@@ -4,7 +4,11 @@ using TradeUnionCommittee.BLL.Interfaces.Account;
 using TradeUnionCommittee.BLL.Interfaces.Dashboard;
 using TradeUnionCommittee.BLL.Interfaces.Directory;
 using TradeUnionCommittee.BLL.Interfaces.General;
+using TradeUnionCommittee.BLL.Interfaces.Helpers;
 using TradeUnionCommittee.BLL.Interfaces.Lists;
+using TradeUnionCommittee.BLL.Interfaces.Lists.Children;
+using TradeUnionCommittee.BLL.Interfaces.Lists.Family;
+using TradeUnionCommittee.BLL.Interfaces.Lists.GrandChildren;
 using TradeUnionCommittee.BLL.Interfaces.PDF;
 using TradeUnionCommittee.BLL.Interfaces.Search;
 using TradeUnionCommittee.BLL.Interfaces.SystemAudit;
@@ -12,7 +16,11 @@ using TradeUnionCommittee.BLL.Services.Account;
 using TradeUnionCommittee.BLL.Services.Dashboard;
 using TradeUnionCommittee.BLL.Services.Directory;
 using TradeUnionCommittee.BLL.Services.General;
+using TradeUnionCommittee.BLL.Services.Helpers;
 using TradeUnionCommittee.BLL.Services.Lists;
+using TradeUnionCommittee.BLL.Services.Lists.Children;
+using TradeUnionCommittee.BLL.Services.Lists.Family;
+using TradeUnionCommittee.BLL.Services.Lists.GrandChildren;
 using TradeUnionCommittee.BLL.Services.PDF;
 using TradeUnionCommittee.BLL.Services.Search;
 using TradeUnionCommittee.BLL.Services.SystemAudit;
@@ -36,10 +44,9 @@ namespace TradeUnionCommittee.BLL.Extensions
             services.AddTransient<IAccountService, AccountService>();
             services.AddTransient<IDashboardService, DashboardService>();
 
-            services.AddTransient<IEmployeeService, EmployeeService>();
-            services.AddTransient<IFamilyService, FamilyService>();
-            services.AddTransient<IChildrenService, ChildrenService>();
-            services.AddTransient<IGrandChildrenService, GrandChildrenService>();
+            services.AddTransient<ISearchService, SearchService>();
+            services.AddTransient<ISystemAuditService, SystemAuditService>();
+            services.AddTransient<IPdfService, PdfService>();
 
             services.AddTransient<IEducationService, EducationService>();
             services.AddTransient<IQualificationService, QualificationService>();
@@ -58,6 +65,7 @@ namespace TradeUnionCommittee.BLL.Extensions
             services.AddTransient<IDormitoryService, DormitoryService>();
             services.AddTransient<IDepartmentalService, DepartmentalService>();
 
+            services.AddTransient<IEmployeeService, EmployeeService>();
             services.AddTransient<IPrivateHouseEmployeesService, PrivateHouseEmployeesService>();
             services.AddTransient<IPublicHouseEmployeesService, PublicHouseEmployeesService>();
             services.AddTransient<IPositionEmployeesService, PositionEmployeesService>();
@@ -75,19 +83,26 @@ namespace TradeUnionCommittee.BLL.Extensions
             services.AddTransient<IApartmentAccountingEmployeesService, ApartmentAccountingEmployeesService>();
             services.AddTransient<IHobbyEmployeesService, HobbyEmployeesService>();
 
+            services.AddTransient<IFamilyService, FamilyService>();
             services.AddTransient<ITravelFamilyService, TravelFamilyService>();
             services.AddTransient<IWellnessFamilyService, WellnessFamilyService>();
             services.AddTransient<ITourFamilyService, TourFamilyService>();
             services.AddTransient<IActivityFamilyService, ActivityFamilyService>();
             services.AddTransient<ICulturalFamilyService, CulturalFamilyService>();
 
-            services.AddTransient<IHobbyChildrensService, HobbyChildrensService>();
+            services.AddTransient<IChildrenService, ChildrenService>();
+            services.AddTransient<IHobbyChildrenService, HobbyChildrenService>();
+            services.AddTransient<ITravelChildrenService, TravelChildrenService>();
+            services.AddTransient<IWellnessChildrenService, WellnessChildrenService>();
+            services.AddTransient<ITourChildrenService, TourChildrenService>();
+            services.AddTransient<IActivityChildrenService, ActivityChildrenService>();
+            services.AddTransient<ICulturalChildrenService, CulturalChildrenService>();
+            services.AddTransient<IGiftChildrenService, GiftChildrenService>();
 
-            services.AddTransient<IHobbyGrandChildrensService, HobbyGrandChildrensService>();
+            services.AddTransient<IGrandChildrenService, GrandChildrenService>();
+            services.AddTransient<IHobbyGrandChildrenService, HobbyGrandChildrenService>();
 
-            services.AddTransient<ISearchService, SearchService>();
-            services.AddTransient<ISystemAuditService, SystemAuditService>();
-            services.AddTransient<IPdfService, PdfService>();
+            services.AddTransient<IReferenceParent, ReferenceParent>();
 
             //---------------------------------------------------------------------------------------------
 

@@ -9,9 +9,9 @@ namespace TradeUnionCommittee.BLL.Extensions
             return phone.Insert(3, "-").Insert(6, "-");
         }
 
-        public static bool EqualsTo(this string str1, string str2)
+        public static bool IsEqual(this string input, string value)
         {
-           return str1.Equals(str2, StringComparison.InvariantCultureIgnoreCase);
+           return input.Equals(value, StringComparison.InvariantCultureIgnoreCase);
         }
     }
 }
