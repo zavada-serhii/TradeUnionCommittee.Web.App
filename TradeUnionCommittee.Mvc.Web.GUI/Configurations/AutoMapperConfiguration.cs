@@ -2,11 +2,13 @@
 using System;
 using TradeUnionCommittee.BLL.DTO;
 using TradeUnionCommittee.BLL.DTO.Children;
+using TradeUnionCommittee.BLL.DTO.Employee;
 using TradeUnionCommittee.BLL.DTO.Family;
 using TradeUnionCommittee.BLL.DTO.GrandChildren;
 using TradeUnionCommittee.BLL.Enums;
 using TradeUnionCommittee.ViewModels.ViewModels;
 using TradeUnionCommittee.ViewModels.ViewModels.Children;
+using TradeUnionCommittee.ViewModels.ViewModels.Employee;
 using TradeUnionCommittee.ViewModels.ViewModels.Family;
 using TradeUnionCommittee.ViewModels.ViewModels.GrandChildren;
 

@@ -2,6 +2,7 @@
 using System;
 using TradeUnionCommittee.BLL.DTO;
 using TradeUnionCommittee.BLL.DTO.Children;
+using TradeUnionCommittee.BLL.DTO.Employee;
 using TradeUnionCommittee.BLL.DTO.Family;
 using TradeUnionCommittee.BLL.DTO.GrandChildren;
 using TradeUnionCommittee.BLL.Enums;

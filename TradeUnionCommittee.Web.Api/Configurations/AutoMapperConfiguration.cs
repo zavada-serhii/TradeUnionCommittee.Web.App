@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using TradeUnionCommittee.BLL.DTO;
+using TradeUnionCommittee.BLL.DTO.Employee;
 using TradeUnionCommittee.BLL.Enums;
 using TradeUnionCommittee.ViewModels.ViewModels;
+using TradeUnionCommittee.ViewModels.ViewModels.Employee;
 
 namespace TradeUnionCommittee.Web.Api.Configurations
 {
