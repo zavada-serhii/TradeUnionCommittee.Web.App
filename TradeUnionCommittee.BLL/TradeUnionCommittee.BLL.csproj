@@ -18,4 +18,8 @@
     <ProjectReference Include="..\TradeUnionCommittee.PDF.Service\TradeUnionCommittee.PDF.Service.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Services\Lists\Employee\" />
+  </ItemGroup>
+
 </Project>

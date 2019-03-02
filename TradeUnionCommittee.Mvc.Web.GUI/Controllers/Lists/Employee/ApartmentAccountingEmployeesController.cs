@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using TradeUnionCommittee.BLL.DTO.Employee;
 using TradeUnionCommittee.BLL.Enums;
 using TradeUnionCommittee.BLL.Interfaces.Lists;
+using TradeUnionCommittee.BLL.Interfaces.Lists.Employee;
 using TradeUnionCommittee.BLL.Interfaces.SystemAudit;
 using TradeUnionCommittee.Mvc.Web.GUI.Extensions;
 using TradeUnionCommittee.ViewModels.ViewModels.Employee;
