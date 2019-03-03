@@ -14,11 +14,6 @@ using TradeUnionCommittee.ViewModels.ViewModels.Children;
 
 namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Lists.Children
 {
-    //IGiftChildrenService
-    //GiftChildrenDTO
-    //CreateGiftChildrenViewModel
-    //UpdateGiftChildrenViewModel
-
     public class GiftChildrenController : Controller
     {
         private readonly IGiftChildrenService _services;

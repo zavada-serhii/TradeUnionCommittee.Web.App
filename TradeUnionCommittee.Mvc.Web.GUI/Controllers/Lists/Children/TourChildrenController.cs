@@ -15,11 +15,6 @@ using TradeUnionCommittee.ViewModels.ViewModels.Children;
 
 namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Lists.Children
 {
-    //ITourChildrenService
-    //TourChildrenDTO
-    //CreateEventChildrenViewModel
-    //UpdateEventChildrenViewModel
-
     public class TourChildrenController : Controller
     {
         private readonly ITourChildrenService _services;

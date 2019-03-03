@@ -15,11 +15,6 @@ using TradeUnionCommittee.ViewModels.ViewModels.Children;
 
 namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Lists.Children
 {
-    //IWellnessChildrenService
-    //WellnessChildrenDTO
-    //CreateEventChildrenViewModel
-    //UpdateEventChildrenViewModel
-
     public class WellnessChildrenController : Controller
     {
         private readonly IWellnessChildrenService _services;
