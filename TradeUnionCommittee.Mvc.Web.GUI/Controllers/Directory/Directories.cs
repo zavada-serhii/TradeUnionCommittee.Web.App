@@ -66,6 +66,12 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Directory
             _materialAidService = materialAidService;
         }
 
+        public async Task<SelectList> GetEmails()
+        {
+            var users = await _accountService.GetAllUsersAsync();
+            return users.IsValid ? new SelectList(users.Result.Select(account => account.Email)) : null;
+        }
+
         public async Task<SelectList> GetRoles()
         {
             var roles = await _accountService.GetRoles();
@@ -220,6 +226,7 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Directory
 
     public interface IDirectories
     {
+        Task<SelectList> GetEmails();
         Task<SelectList> GetRoles();
         Task<SelectList> GetLevelEducation();
         Task<SelectList> GetStudy();
