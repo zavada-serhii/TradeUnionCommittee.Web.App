@@ -49,7 +49,7 @@ namespace TradeUnionCommittee.BLL.Configurations
                         .ForMember(d => d.Name, c => c.MapFrom(x => ConvertToUkrainianLang(x.Name)))
                         .ReverseMap();
 
-                    map.CreateMap<Journal, JournalDTO>().ReverseMap();
+                    //map.CreateMap<Journal, JournalDTO>().ReverseMap();
 
                     #endregion
 
