@@ -563,7 +563,7 @@ namespace TradeUnionCommittee.BLL.Configurations
                         .ForMember(x => x.HashIdHobby, opt => opt.MapFrom(c => _hashIdUtilities.EncryptLong(c.IdHobby, Enums.Services.Hobby)))
                         .ForMember(x => x.NameHobby, opt => opt.MapFrom(c => c.IdHobbyNavigation.Name));
 
-                    map.CreateMap<TourGrandChildrenDTO, EventGrandChildrens>()
+                    map.CreateMap<TravelGrandChildrenDTO, EventGrandChildrens>()
                        .ForMember(x => x.Id, opt => opt.MapFrom(c => _hashIdUtilities.DecryptLong(c.HashId, Enums.Services.TravelGrandChildren)))
                        .ForMember(x => x.IdGrandChildren, opt => opt.MapFrom(c => _hashIdUtilities.DecryptLong(c.HashIdGrandChildren, Enums.Services.GrandChildren)))
                        .ForMember(x => x.IdEvent, opt => opt.MapFrom(c => _hashIdUtilities.DecryptLong(c.HashIdEvent, Enums.Services.Travel)))

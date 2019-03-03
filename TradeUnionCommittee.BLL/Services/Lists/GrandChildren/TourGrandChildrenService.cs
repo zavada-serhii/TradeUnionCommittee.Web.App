@@ -53,7 +53,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists.GrandChildren
 
         public async Task<ActualResult> DeleteAsync(string hashId)
         {
-            await _database.EventChildrensRepository.Delete(_hashIdUtilities.DecryptLong(hashId, Enums.Services.TourGrandChildren));
+            await _database.EventGrandChildrensRepository.Delete(_hashIdUtilities.DecryptLong(hashId, Enums.Services.TourGrandChildren));
             return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
         }
 

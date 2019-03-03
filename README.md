@@ -35,10 +35,10 @@ Information system for the primary trade union organization of the Odessa Nation
 	-  - [x] CulturalChildrens
 	-  - [x] GiftChildrens
 
-	-  - [ ] EventGrandChildrens (Travel, Tour)
-	-  - [ ] ActivityGrandChildrens
-	-  - [ ] CulturalGrandChildrens
-	-  - [ ] GiftGrandChildrens
+	-  - [x] EventGrandChildrens (Travel, Tour)
+	-  - [x] ActivityGrandChildrens
+	-  - [x] CulturalGrandChildrens
+	-  - [x] GiftGrandChildrens
 
 - Other
 	-  - [ ] System Audit
