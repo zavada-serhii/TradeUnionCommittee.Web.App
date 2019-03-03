@@ -15,11 +15,6 @@ using TradeUnionCommittee.ViewModels.ViewModels.Children;
 
 namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Lists.Children
 {
-    //IActivityChildrenService
-    //ActivityChildrenDTO
-    //CreateActivityChildrenViewModel
-    //UpdateActivityChildrenViewModel
-
     public class ActivityChildrenController : Controller
     {
         private readonly IActivityChildrenService _services;

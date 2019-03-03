@@ -563,6 +563,57 @@ namespace TradeUnionCommittee.BLL.Configurations
                         .ForMember(x => x.HashIdHobby, opt => opt.MapFrom(c => _hashIdUtilities.EncryptLong(c.IdHobby, Enums.Services.Hobby)))
                         .ForMember(x => x.NameHobby, opt => opt.MapFrom(c => c.IdHobbyNavigation.Name));
 
+                    map.CreateMap<TravelGrandChildrenDTO, EventGrandChildrens>()
+                       .ForMember(x => x.Id, opt => opt.MapFrom(c => _hashIdUtilities.DecryptLong(c.HashId, Enums.Services.TravelGrandChildren)))
+                       .ForMember(x => x.IdGrandChildren, opt => opt.MapFrom(c => _hashIdUtilities.DecryptLong(c.HashIdGrandChildren, Enums.Services.GrandChildren)))
+                       .ForMember(x => x.IdEvent, opt => opt.MapFrom(c => _hashIdUtilities.DecryptLong(c.HashIdEvent, Enums.Services.Travel)))
+                       .ForMember(x => x.IdEventNavigation, opt => opt.MapFrom(c => _nullValue))
+                       .ReverseMap()
+                       .ForMember(x => x.HashId, opt => opt.MapFrom(c => _hashIdUtilities.EncryptLong(c.Id, Enums.Services.TravelGrandChildren)))
+                       .ForMember(x => x.HashIdGrandChildren, opt => opt.MapFrom(c => _hashIdUtilities.EncryptLong(c.IdGrandChildren, Enums.Services.GrandChildren)))
+                       .ForMember(x => x.HashIdEvent, opt => opt.MapFrom(c => _hashIdUtilities.EncryptLong(c.IdEvent, Enums.Services.Travel)))
+                       .ForMember(x => x.NameEvent, opt => opt.MapFrom(c => c.IdEventNavigation.Name));
+
+                    map.CreateMap<TourGrandChildrenDTO, EventGrandChildrens>()
+                        .ForMember(x => x.Id, opt => opt.MapFrom(c => _hashIdUtilities.DecryptLong(c.HashId, Enums.Services.TourGrandChildren)))
+                        .ForMember(x => x.IdGrandChildren, opt => opt.MapFrom(c => _hashIdUtilities.DecryptLong(c.HashIdGrandChildren, Enums.Services.GrandChildren)))
+                        .ForMember(x => x.IdEvent, opt => opt.MapFrom(c => _hashIdUtilities.DecryptLong(c.HashIdEvent, Enums.Services.Tour)))
+                        .ForMember(x => x.IdEventNavigation, opt => opt.MapFrom(c => _nullValue))
+                        .ReverseMap()
+                        .ForMember(x => x.HashId, opt => opt.MapFrom(c => _hashIdUtilities.EncryptLong(c.Id, Enums.Services.TourGrandChildren)))
+                        .ForMember(x => x.HashIdGrandChildren, opt => opt.MapFrom(c => _hashIdUtilities.EncryptLong(c.IdGrandChildren, Enums.Services.GrandChildren)))
+                        .ForMember(x => x.HashIdEvent, opt => opt.MapFrom(c => _hashIdUtilities.EncryptLong(c.IdEvent, Enums.Services.Tour)))
+                        .ForMember(x => x.NameEvent, opt => opt.MapFrom(c => c.IdEventNavigation.Name));
+
+                    map.CreateMap<ActivityGrandChildrenDTO, ActivityGrandChildrens>()
+                       .ForMember(x => x.Id, opt => opt.MapFrom(c => _hashIdUtilities.DecryptLong(c.HashId, Enums.Services.ActivityGrandChildren)))
+                       .ForMember(x => x.IdGrandChildren, opt => opt.MapFrom(c => _hashIdUtilities.DecryptLong(c.HashIdGrandChildren, Enums.Services.GrandChildren)))
+                       .ForMember(x => x.IdActivities, opt => opt.MapFrom(c => _hashIdUtilities.DecryptLong(c.HashIdActivities, Enums.Services.Activities)))
+                       .ForMember(x => x.IdActivitiesNavigation, opt => opt.MapFrom(c => _nullValue))
+                       .ReverseMap()
+                       .ForMember(x => x.HashId, opt => opt.MapFrom(c => _hashIdUtilities.EncryptLong(c.Id, Enums.Services.ActivityGrandChildren)))
+                       .ForMember(x => x.HashIdGrandChildren, opt => opt.MapFrom(c => _hashIdUtilities.EncryptLong(c.IdGrandChildren, Enums.Services.GrandChildren)))
+                       .ForMember(x => x.HashIdActivities, opt => opt.MapFrom(c => _hashIdUtilities.EncryptLong(c.IdActivities, Enums.Services.Activities)))
+                       .ForMember(x => x.NameActivities, opt => opt.MapFrom(c => c.IdActivitiesNavigation.Name));
+
+                    map.CreateMap<CulturalGrandChildrenDTO, CulturalGrandChildrens>()
+                        .ForMember(x => x.Id, opt => opt.MapFrom(c => _hashIdUtilities.DecryptLong(c.HashId, Enums.Services.CulturalGrandChildren)))
+                        .ForMember(x => x.IdGrandChildren, opt => opt.MapFrom(c => _hashIdUtilities.DecryptLong(c.HashIdGrandChildren, Enums.Services.GrandChildren)))
+                        .ForMember(x => x.IdCultural, opt => opt.MapFrom(c => _hashIdUtilities.DecryptLong(c.HashIdCultural, Enums.Services.Cultural)))
+                        .ForMember(x => x.IdCulturalNavigation, opt => opt.MapFrom(c => _nullValue))
+                        .ReverseMap()
+                        .ForMember(x => x.HashId, opt => opt.MapFrom(c => _hashIdUtilities.EncryptLong(c.Id, Enums.Services.CulturalGrandChildren)))
+                        .ForMember(x => x.HashIdGrandChildren, opt => opt.MapFrom(c => _hashIdUtilities.EncryptLong(c.IdGrandChildren, Enums.Services.GrandChildren)))
+                        .ForMember(x => x.HashIdCultural, opt => opt.MapFrom(c => _hashIdUtilities.EncryptLong(c.IdCultural, Enums.Services.Cultural)))
+                        .ForMember(x => x.NameCultural, opt => opt.MapFrom(c => c.IdCulturalNavigation.Name));
+
+                    map.CreateMap<GiftGrandChildrenDTO, GiftGrandChildrens>()
+                        .ForMember(x => x.Id, opt => opt.MapFrom(c => _hashIdUtilities.DecryptLong(c.HashId, Enums.Services.GiftGrandChildren)))
+                        .ForMember(x => x.IdGrandChildren, opt => opt.MapFrom(c => _hashIdUtilities.DecryptLong(c.HashIdGrandChildren, Enums.Services.GrandChildren)))
+                        .ReverseMap()
+                        .ForMember(x => x.HashId, opt => opt.MapFrom(c => _hashIdUtilities.EncryptLong(c.Id, Enums.Services.GiftGrandChildren)))
+                        .ForMember(x => x.HashIdGrandChildren, opt => opt.MapFrom(c => _hashIdUtilities.EncryptLong(c.IdGrandChildren, Enums.Services.GrandChildren)));
+
                     #endregion
 
                     #region Mapping for PDF service

@@ -1,47 +1,55 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using TradeUnionCommittee.BLL.DTO.Children;
+using System.ComponentModel.DataAnnotations;
+using System.Threading.Tasks;
+using TradeUnionCommittee.BLL.DTO.GrandChildren;
 using TradeUnionCommittee.BLL.Enums;
 using TradeUnionCommittee.BLL.Interfaces.Helpers;
-using TradeUnionCommittee.BLL.Interfaces.Lists.Children;
+using TradeUnionCommittee.BLL.Interfaces.Lists.GrandChildren;
 using TradeUnionCommittee.BLL.Interfaces.SystemAudit;
+using TradeUnionCommittee.Mvc.Web.GUI.Controllers.Directory;
 using TradeUnionCommittee.Mvc.Web.GUI.Extensions;
-using TradeUnionCommittee.ViewModels.ViewModels.Children;
+using TradeUnionCommittee.ViewModels.ViewModels.GrandChildren;
 
-namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Lists.Children
+namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Lists.GrandChildren
 {
-    public class GiftChildrenController : Controller
+    //ITourGrandChildrenService
+    //TourGrandChildrenDTO
+    //CreateEventGrandChildrenViewModel
+    //UpdateEventGrandChildrenViewModel
+
+    public class TourGrandChildrenController : Controller
     {
-        private readonly IGiftChildrenService _services;
+        private readonly ITourGrandChildrenService _services;
+        private readonly IDirectories _directories;
         private readonly IMapper _mapper;
         private readonly ISystemAuditService _systemAuditService;
         private readonly IHttpContextAccessor _accessor;
         private readonly IReferenceParent _referenceParent;
 
-        public GiftChildrenController(IGiftChildrenService services, IMapper mapper, ISystemAuditService systemAuditService, IHttpContextAccessor accessor, IReferenceParent referenceParent)
+        public TourGrandChildrenController(ITourGrandChildrenService services, IDirectories directories, IMapper mapper, ISystemAuditService systemAuditService, IHttpContextAccessor accessor, IReferenceParent referenceParent)
         {
             _services = services;
             _mapper = mapper;
             _systemAuditService = systemAuditService;
             _accessor = accessor;
             _referenceParent = referenceParent;
+            _directories = directories;
         }
 
         //------------------------------------------------------------------------------------------------------------------------------------------
 
         [HttpGet]
-        [Authorize(Roles = "Admin,Accountant,Deputy")]
+        [Authorize(Roles = "Admin,Accountant")]
         public async Task<IActionResult> Index([Required] string id)
         {
             var result = await _services.GetAllAsync(id);
             if (result.IsValid)
             {
-                ViewData["HashIdChildren"] = id;
-                ViewData["HashIdEmployee"] = await _referenceParent.GetHashIdEmployeeByChildren(id);
+                ViewData["HashIdGrandChildren"] = id;
+                ViewData["HashIdEmployee"] = await _referenceParent.GetHashIdEmployeeByGrandChildren(id);
                 return View(result.Result);
             }
             TempData["ErrorsList"] = result.ErrorsList;
@@ -51,60 +59,64 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Lists.Children
         //------------------------------------------------------------------------------------------------------------------------------------------
 
         [HttpGet]
-        [Authorize(Roles = "Admin,Accountant,Deputy")]
-        public IActionResult Create([Required] string id)
+        [Authorize(Roles = "Admin,Accountant")]
+        public async Task<IActionResult> Create([Required] string id)
         {
-            return View(new CreateGiftChildrenViewModel { HashIdChildren = id });
+            ViewBag.Event = await _directories.GetTour();
+            return View(new CreateEventGrandChildrenViewModel { HashIdGrandChildren = id });
         }
 
         [HttpPost]
-        [Authorize(Roles = "Admin,Accountant,Deputy")]
+        [Authorize(Roles = "Admin,Accountant")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(CreateGiftChildrenViewModel vm)
+        public async Task<IActionResult> Create(CreateEventGrandChildrenViewModel vm)
         {
             if (ModelState.IsValid)
             {
-                var result = await _services.CreateAsync(_mapper.Map<GiftChildrenDTO>(vm));
+                var result = await _services.CreateAsync(_mapper.Map<TourGrandChildrenDTO>(vm));
                 if (result.IsValid)
                 {
-                    await _systemAuditService.AuditAsync(User.GetEmail(), _accessor.GetIp(), Operations.Insert, Tables.GiftChildrens);
-                    return RedirectToAction("Index", new { id = vm.HashIdChildren });
+                    await _systemAuditService.AuditAsync(User.GetEmail(), _accessor.GetIp(), Operations.Insert, Tables.EventGrandChildrens);
+                    return RedirectToAction("Index", new { id = vm.HashIdGrandChildren });
                 }
                 TempData["ErrorsList"] = result.ErrorsList;
             }
+            ViewBag.Event = await _directories.GetTour();
             return View(vm);
         }
 
         //------------------------------------------------------------------------------------------------------------------------------------------
 
         [HttpGet]
-        [Authorize(Roles = "Admin,Accountant,Deputy")]
+        [Authorize(Roles = "Admin,Accountant")]
         public async Task<IActionResult> Update([Required] string id)
         {
             var result = await _services.GetAsync(id);
             if (result.IsValid)
             {
-                return View(_mapper.Map<UpdateGiftChildrenViewModel>(result.Result));
+                ViewBag.Event = await _directories.GetTour(result.Result.HashIdEvent);
+                return View(_mapper.Map<UpdateEventGrandChildrenViewModel>(result.Result));
             }
             TempData["ErrorsList"] = result.ErrorsList;
             return View();
         }
 
         [HttpPost, ActionName("Update")]
-        [Authorize(Roles = "Admin,Accountant,Deputy")]
+        [Authorize(Roles = "Admin,Accountant")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Update(UpdateGiftChildrenViewModel vm)
+        public async Task<IActionResult> Update(UpdateEventGrandChildrenViewModel vm)
         {
             if (ModelState.IsValid)
             {
-                var result = await _services.UpdateAsync(_mapper.Map<GiftChildrenDTO>(vm));
+                var result = await _services.UpdateAsync(_mapper.Map<TourGrandChildrenDTO>(vm));
                 if (result.IsValid)
                 {
-                    await _systemAuditService.AuditAsync(User.GetEmail(), _accessor.GetIp(), Operations.Update, Tables.GiftChildrens);
-                    return RedirectToAction("Index", new { id = vm.HashIdChildren });
+                    await _systemAuditService.AuditAsync(User.GetEmail(), _accessor.GetIp(), Operations.Update, Tables.EventGrandChildrens);
+                    return RedirectToAction("Index", new { id = vm.HashIdGrandChildren });
                 }
                 TempData["ErrorsListConfirmed"] = result.ErrorsList;
             }
+            ViewBag.Event = await _directories.GetTour(vm.HashIdEvent);
             return View(vm);
         }
 
@@ -126,13 +138,13 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Lists.Children
         [HttpPost, ActionName("Delete")]
         [Authorize(Roles = "Admin")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed([Required] string hashId, [Required] string hashIdChildren)
+        public async Task<IActionResult> DeleteConfirmed([Required] string hashId, [Required] string hashIdGrandChildren)
         {
             var result = await _services.DeleteAsync(hashId);
             if (result.IsValid)
             {
-                await _systemAuditService.AuditAsync(User.GetEmail(), _accessor.GetIp(), Operations.Delete, Tables.GiftChildrens);
-                return RedirectToAction("Index", new { id = hashIdChildren });
+                await _systemAuditService.AuditAsync(User.GetEmail(), _accessor.GetIp(), Operations.Delete, Tables.EventGrandChildrens);
+                return RedirectToAction("Index", new { id = hashIdGrandChildren });
             }
             TempData["ErrorsList"] = result.ErrorsList;
             return View();

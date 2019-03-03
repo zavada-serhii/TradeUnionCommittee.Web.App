@@ -634,7 +634,7 @@ namespace TradeUnionCommittee.DAL.EF
 
             modelBuilder.Entity<GiftGrandChildrens>(entity =>
             {
-                entity.HasIndex(e => new { e.IdGrandChildren, e.NameEvent, e.NameGifts, e.DateGift })
+                entity.HasIndex(e => new { e.IdGrandChildren, e.NameEvent, e.NameGift, e.DateGift })
                     .HasName("GiftGrandChildrens_IdGrandChildren_NameEvent_NameGifts_Date_key")
                     .IsUnique();
 
@@ -646,7 +646,7 @@ namespace TradeUnionCommittee.DAL.EF
                     .IsRequired()
                     .HasColumnType("character varying");
 
-                entity.Property(e => e.NameGifts)
+                entity.Property(e => e.NameGift)
                     .IsRequired()
                     .HasColumnType("character varying");
 

@@ -311,11 +311,11 @@ CREATE TABLE "GiftGrandChildrens"(
 	"Id" 			BIGSERIAL 	NOT NULL 	PRIMARY KEY,
 	"IdGrandChildren"	BIGINT		NOT NULL	REFERENCES "GrandChildren"("Id") ON UPDATE CASCADE ON DELETE CASCADE,
 	"NameEvent" 		VARCHAR 	NOT NULL,
-	"NameGifts" 		VARCHAR 	NOT NULL,
+	"NameGift" 		VARCHAR 	NOT NULL,
 	"Price" 		MONEY 		NOT NULL,
 	"Discount" 		MONEY 		NOT NULL,
 	"DateGift" 		DATE 		NOT NULL,
- 	UNIQUE("IdGrandChildren","NameEvent","NameGifts","DateGift")
+ 	UNIQUE("IdGrandChildren","NameEvent","NameGift","DateGift")
 );
 ALTER TABLE "GiftGrandChildrens"
 OWNER TO postgres;

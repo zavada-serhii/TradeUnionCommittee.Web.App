@@ -15,11 +15,6 @@ using TradeUnionCommittee.ViewModels.ViewModels.Children;
 
 namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Lists.Children
 {
-    //ICulturalChildrenService
-    //CulturalChildrenDTO
-    //CreateCulturalChildrenViewModel
-    //UpdateCulturalChildrenViewModel
-
     public class CulturalChildrenController : Controller
     {
         private readonly ICulturalChildrenService _services;

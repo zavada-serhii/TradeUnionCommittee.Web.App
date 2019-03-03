@@ -1,4 +1,4 @@
-﻿@model IEnumerable<TradeUnionCommittee.BLL.DTO.GrandChildren.GrandChildrenDTO>
+﻿@model IEnumerable<TradeUnionCommittee.BLL.DTO.GrandChildren.GiftGrandChildrenDTO>
 @{
     ViewData["Title"] = "Index";
 }
@@ -7,10 +7,10 @@
     <div class="row justify-content-center">
         <div class="col-md-12 add-user_block">
             <div class="row">
-                <a asp-controller="Employee" asp-action="Index" asp-route-id="@ViewData["HashIdEmployee"]" class="back-link">Повернутися</a>
+                <a asp-controller="GrandChildren" asp-action="Index" asp-route-id="@ViewData["HashIdEmployee"]" class="back-link">Повернутися</a>
                 <hr />
                 <div class="form-group">
-                    <a asp-action="Create" asp-route-id="@ViewData["HashIdEmployee"]" class="btn btn-success">Додати</a>
+                    <a asp-action="Create" asp-route-id="@ViewData["HashIdGrandChildren"]" class="btn btn-success">Додати подарунок</a>
                 </div>
             </div>
             <div class="row main-block">
@@ -18,57 +18,57 @@
                     <thead>
                         <tr>
                             <th>
-                                Прізвище ім'я по батькові
+                                Назва заходу
                             </th>
                             <th>
-                                Дата народження
+                                Назва подарунку
                             </th>
                             <th>
-                                Вік
+                                Ціна
+                            </th>
+                            <th>
+                                Знижка
+                            </th>
+                            <th>
+                                Дата отримання
                             </th>
                             <th></th>
                         </tr>
                     </thead>
                     <tbody>
-
                         @if (TempData["ErrorsList"] == null)
                         {
                             foreach (var item in Model)
                             {
                                 <tr>
                                     <td>
-                                        @item.FullName
+                                        @item.NameEvent
                                     </td>
-
                                     <td>
-                                        @item.BirthDate.ToString("dd.MM.yyyy")
+                                        @item.NameGift
                                     </td>
-
                                     <td>
-                                        @item.Age
+                                        @item.Price.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("uk-UA"))
+                                    </td>
+                                    <td>
+                                        @item.Discount.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("uk-UA"))
+                                    </td>
+                                    <td>
+                                        @item.DateGift.ToString("dd.MM.yyyy")
                                     </td>
 
                                     <td class="text-right">
                                         <div class="btn-group">
                                             <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown"></button>
                                             <div class="dropdown-menu">
+
                                                 <a class="dropdown-item" asp-action="Update" asp-route-id="@item.HashId">Редагувати</a>
 
                                                 @if (User.IsInRole("Admin"))
                                                 {
                                                     <a class="dropdown-item" asp-action="Delete" asp-route-id="@item.HashId">Видалити</a>
                                                 }
-                                                <a class="dropdown-item" asp-controller="TravelGrandChildren" asp-action="Index" asp-route-id="@item.HashId">Поїздки</a>
 
-                                                @if (User.IsInRole("Admin") || User.IsInRole("Accountant"))
-                                                {
-                                                    <a class="dropdown-item" asp-controller="TourGrandChildren" asp-action="Index" asp-route-id="@item.HashId">Путівки</a>
-                                                }
-
-                                                <a class="dropdown-item" asp-controller="ActivityGrandChildren" asp-action="Index" asp-route-id="@item.HashId">Заходи</a>
-                                                <a class="dropdown-item" asp-controller="CulturalGrandChildren" asp-action="Index" asp-route-id="@item.HashId">Культурно-просвітницькі заклади</a>
-                                                <a class="dropdown-item" asp-controller="GiftGrandChildren" asp-action="Index" asp-route-id="@item.HashId">Подарунки</a>
-                                                <a class="dropdown-item" asp-controller="HobbyGrandChildren" asp-action="Index" asp-route-id="@item.HashId">Хобі</a>
                                             </div>
                                         </div>
                                     </td>

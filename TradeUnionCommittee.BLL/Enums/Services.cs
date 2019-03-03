@@ -52,5 +52,10 @@
 
         GrandChildren,
         HobbyGrandChildren,
+        TravelGrandChildren,
+        TourGrandChildren,
+        ActivityGrandChildren,
+        CulturalGrandChildren,
+        GiftGrandChildren,
     }
 }
