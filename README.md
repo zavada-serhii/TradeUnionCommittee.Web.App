@@ -6,7 +6,6 @@ Information system for the primary trade union organization of the Odessa Nation
 
 # Road map
 - [ ] Transfer business logic from stored procedures
-- [ ] System Audit
-- [ ] Logging
 - [ ] Data Analysis API && Data Analysis Service
+- [ ] Logging
 - [ ] Unit Tests
