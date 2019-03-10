@@ -116,18 +116,6 @@ namespace TradeUnionCommittee.DAL.Repositories
             }
         }
 
-        public virtual async Task<ActualResult<IEnumerable<T>>> GetWithIncludeToList(params Expression<Func<T, object>>[] includeProperties)
-        {
-            try
-            {
-                return new ActualResult<IEnumerable<T>> { Result = await Include(includeProperties).ToListAsync() };
-            }
-            catch (Exception e)
-            {
-                return new ActualResult<IEnumerable<T>>(e.Message);
-            }
-        }
-
         public virtual async Task<ActualResult<IEnumerable<T>>> GetWithIncludeToList(Expression<Func<T, bool>> predicate, params Expression<Func<T, object>>[] includeProperties)
         {
             try
