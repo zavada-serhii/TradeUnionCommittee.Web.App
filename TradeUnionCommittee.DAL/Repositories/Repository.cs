@@ -20,11 +20,15 @@ namespace TradeUnionCommittee.DAL.Repositories
             _db = db;
         }
 
-        public virtual async Task<ActualResult<IEnumerable<T>>> GetAll()
+        public virtual async Task<ActualResult<IEnumerable<T>>> GetAll(Expression<Func<T, object>> orderBy = null)
         {
             try
             {
-                return new ActualResult<IEnumerable<T>> { Result = await _db.Set<T>().AsNoTracking().ToListAsync() };
+                if (orderBy == null)
+                {
+                    return new ActualResult<IEnumerable<T>> { Result = await _db.Set<T>().AsNoTracking().ToListAsync() };
+                }
+                return new ActualResult<IEnumerable<T>> { Result = await _db.Set<T>().AsNoTracking().OrderBy(orderBy).ToListAsync() };
             }
             catch (Exception e)
             {

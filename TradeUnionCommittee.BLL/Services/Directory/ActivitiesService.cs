@@ -25,7 +25,7 @@ namespace TradeUnionCommittee.BLL.Services.Directory
         }
 
         public async Task<ActualResult<IEnumerable<DirectoryDTO>>> GetAllAsync() =>
-            _mapperService.Mapper.Map<ActualResult<IEnumerable<DirectoryDTO>>>(await _database.ActivitiesRepository.GetAll());
+            _mapperService.Mapper.Map<ActualResult<IEnumerable<DirectoryDTO>>>(await _database.ActivitiesRepository.GetAll(x => x.Name));
 
         public async Task<ActualResult<DirectoryDTO>> GetAsync(string hashId)
         {
