@@ -188,6 +188,18 @@ namespace TradeUnionCommittee.DAL.Repositories
             }
         }
 
+        public async Task<ActualResult<bool>> Any(Expression<Func<T, bool>> predicate)
+        {
+            try
+            {
+                return new ActualResult<bool> { Result = await _db.Set<T>().AsNoTracking().AnyAsync(predicate) };
+            }
+            catch (Exception e)
+            {
+                return new ActualResult<bool>(e.Message);
+            }
+        }
+
         //-----------------------------------------------------------------------------------------------------------------------------------------------
 
         private IQueryable<T> Include(params Expression<Func<T, object>>[] includeProperties)

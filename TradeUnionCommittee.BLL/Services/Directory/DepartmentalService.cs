@@ -76,11 +76,11 @@ namespace TradeUnionCommittee.BLL.Services.Directory
         private async Task<bool> CheckDuplicateDataAsync(DepartmentalDTO dto)
         {
             var result = await _database.AddressPublicHouseRepository
-                                .Find(p => p.City == dto.City && 
+                                .Any(p => p.City == dto.City && 
                                            p.Street == dto.Street && 
                                            p.NumberHouse == dto.NumberHouse && 
                                            p.Type == TypeHouse.Departmental);
-            return result.Result.Any();
+            return result.Result;
         }
 
         public void Dispose()

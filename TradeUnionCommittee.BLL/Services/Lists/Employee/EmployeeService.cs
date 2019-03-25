@@ -100,14 +100,14 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Employee
 
         public async Task<bool> CheckIdentificationСode(string identificationСode)
         {
-            var result = await _database.EmployeeRepository.Find(p => p.IdentificationСode == identificationСode);
-            return result.Result.Any();
+            var result = await _database.EmployeeRepository.Any(p => p.IdentificationСode == identificationСode);
+            return result.Result;
         }
 
         public async Task<bool> CheckMechnikovCard(string mechnikovCard)
         {
-            var result = await _database.EmployeeRepository.Find(p => p.MechnikovCard == mechnikovCard);
-            return result.Result.Any();
+            var result = await _database.EmployeeRepository.Any(p => p.MechnikovCard == mechnikovCard);
+            return result.Result;
         }
 
         //------------------------------------------------------------------------------------------------------------------------------------------

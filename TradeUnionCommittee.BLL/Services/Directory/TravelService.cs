@@ -64,8 +64,8 @@ namespace TradeUnionCommittee.BLL.Services.Directory
 
         public async Task<bool> CheckNameAsync(string name)
         {
-            var result = await _database.EventRepository.Find(p => p.Name == name && p.Type == TypeEvent.Travel);
-            return result.Result.Any();
+            var result = await _database.EventRepository.Any(p => p.Name == name && p.Type == TypeEvent.Travel);
+            return result.Result;
         }
 
         public void Dispose()

@@ -144,14 +144,14 @@ namespace TradeUnionCommittee.BLL.Services.Directory
 
         public async Task<bool> CheckNameAsync(string name)
         {
-            var result = await _database.SubdivisionsRepository.Find(p => p.Name == name);
-            return result.Result.Any();
+            var result = await _database.SubdivisionsRepository.Any(p => p.Name == name);
+            return result.Result;
         }
 
         public async Task<bool> CheckAbbreviationAsync(string name)
         {
-            var result = await _database.SubdivisionsRepository.Find(p => p.Abbreviation == name);
-            return result.Result.Any();
+            var result = await _database.SubdivisionsRepository.Any(p => p.Abbreviation == name);
+            return result.Result;
         }
 
         //-------------------------------------------------------------------------------------------------------------------
