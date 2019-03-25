@@ -24,8 +24,11 @@ namespace TradeUnionCommittee.BLL.Services.Directory
             _hashIdUtilities = hashIdUtilities;
         }
 
-        public async Task<ActualResult<IEnumerable<SubdivisionDTO>>> GetAllAsync() => 
-            _mapperService.Mapper.Map<ActualResult<IEnumerable<SubdivisionDTO>>>(await _database.SubdivisionsRepository.Find(x => x.IdSubordinate == null));
+        public async Task<ActualResult<IEnumerable<SubdivisionDTO>>> GetAllAsync()
+        {
+            var subdivision = await _database.SubdivisionsRepository.FindWithOrderBy(x => x.IdSubordinate == null, c => c.Name);
+            return _mapperService.Mapper.Map<ActualResult<IEnumerable<SubdivisionDTO>>>(subdivision);
+        }
 
         public async Task<ActualResult<SubdivisionDTO>> GetAsync(string hashId)
         {
@@ -36,7 +39,8 @@ namespace TradeUnionCommittee.BLL.Services.Directory
         public async Task<ActualResult<IEnumerable<SubdivisionDTO>>> GetSubordinateSubdivisions(string hashId)
         {
             var id = _hashIdUtilities.DecryptLong(hashId, Enums.Services.Subdivision);
-            return _mapperService.Mapper.Map<ActualResult<IEnumerable<SubdivisionDTO>>>(await _database.SubdivisionsRepository.Find(x => x.IdSubordinate == id));
+            var subdivision = await _database.SubdivisionsRepository.FindWithOrderBy(x => x.IdSubordinate == id, c => c.Name);
+            return _mapperService.Mapper.Map<ActualResult<IEnumerable<SubdivisionDTO>>>(subdivision);
         }
 
         public async Task<Dictionary<string,string>> GetSubordinateSubdivisionsForMvc(string hashId)
@@ -49,7 +53,10 @@ namespace TradeUnionCommittee.BLL.Services.Directory
 
         public async Task<IEnumerable<TreeSubdivisionsDTO>> GetTreeSubdivisions()
         {
-            var subdivisions = await _database.SubdivisionsRepository.GetWithIncludeToList(x => x.IdSubordinate == null, c => c.InverseIdSubordinateNavigation);
+            var subdivisions = await _database.SubdivisionsRepository
+                                              .GetWithIncludeAndOrderByToList(x => x.IdSubordinate == null, 
+                                                                              y => y.Name, 
+                                                                              c => c.InverseIdSubordinateNavigation);
             return subdivisions.Result.Select(subdivision => new TreeSubdivisionsDTO
             {
                 GroupName = subdivision.Name,
@@ -137,14 +144,14 @@ namespace TradeUnionCommittee.BLL.Services.Directory
 
         public async Task<bool> CheckNameAsync(string name)
         {
-            var result = await _database.SubdivisionsRepository.Find(p => p.Name == name);
-            return result.Result.Any();
+            var result = await _database.SubdivisionsRepository.Any(p => p.Name == name);
+            return result.Result;
         }
 
         public async Task<bool> CheckAbbreviationAsync(string name)
         {
-            var result = await _database.SubdivisionsRepository.Find(p => p.Abbreviation == name);
-            return result.Result.Any();
+            var result = await _database.SubdivisionsRepository.Any(p => p.Abbreviation == name);
+            return result.Result;
         }
 
         //-------------------------------------------------------------------------------------------------------------------

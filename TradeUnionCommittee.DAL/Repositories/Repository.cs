@@ -20,11 +20,15 @@ namespace TradeUnionCommittee.DAL.Repositories
             _db = db;
         }
 
-        public virtual async Task<ActualResult<IEnumerable<T>>> GetAll()
+        public virtual async Task<ActualResult<IEnumerable<T>>> GetAll(Expression<Func<T, object>> orderBy = null)
         {
             try
             {
-                return new ActualResult<IEnumerable<T>> { Result = await _db.Set<T>().AsNoTracking().ToListAsync() };
+                if (orderBy == null)
+                {
+                    return new ActualResult<IEnumerable<T>> { Result = await _db.Set<T>().AsNoTracking().ToListAsync() };
+                }
+                return new ActualResult<IEnumerable<T>> { Result = await _db.Set<T>().AsNoTracking().OrderBy(orderBy).ToListAsync() };
             }
             catch (Exception e)
             {
@@ -62,6 +66,38 @@ namespace TradeUnionCommittee.DAL.Repositories
             try
             {
                 return new ActualResult<IEnumerable<T>> { Result = await _db.Set<T>().AsNoTracking().Where(predicate).ToListAsync() };
+            }
+            catch (Exception e)
+            {
+                return new ActualResult<IEnumerable<T>>(e.Message);
+            }
+        }
+
+        public async Task<ActualResult<IEnumerable<T>>> FindWithOrderBy(Expression<Func<T, bool>> predicate, Expression<Func<T, object>> orderBy = null)
+        {
+            try
+            {
+                if (orderBy == null)
+                {
+                    return new ActualResult<IEnumerable<T>> { Result = await _db.Set<T>().AsNoTracking().Where(predicate).ToListAsync() };
+                }
+                return new ActualResult<IEnumerable<T>> { Result = await _db.Set<T>().AsNoTracking().Where(predicate).OrderBy(orderBy).ToListAsync() };
+            }
+            catch (Exception e)
+            {
+                return new ActualResult<IEnumerable<T>>(e.Message);
+            }
+        }
+
+        public virtual async Task<ActualResult<IEnumerable<T>>> GetWithSelectorAndDistinct(Expression<Func<T, T>> selector, Expression<Func<T, object>> orderBy = null)
+        {
+            try
+            {
+                if (orderBy == null)
+                {
+                    return new ActualResult<IEnumerable<T>> { Result = await _db.Set<T>().AsNoTracking().Select(selector).Distinct().ToListAsync() };
+                }
+                return new ActualResult<IEnumerable<T>> { Result = await _db.Set<T>().AsNoTracking().Select(selector).Distinct().OrderBy(orderBy).ToListAsync() };
             }
             catch (Exception e)
             {
@@ -112,18 +148,6 @@ namespace TradeUnionCommittee.DAL.Repositories
             }
         }
 
-        public virtual async Task<ActualResult<IEnumerable<T>>> GetWithIncludeToList(params Expression<Func<T, object>>[] includeProperties)
-        {
-            try
-            {
-                return new ActualResult<IEnumerable<T>> { Result = await Include(includeProperties).ToListAsync() };
-            }
-            catch (Exception e)
-            {
-                return new ActualResult<IEnumerable<T>>(e.Message);
-            }
-        }
-
         public virtual async Task<ActualResult<IEnumerable<T>>> GetWithIncludeToList(Expression<Func<T, bool>> predicate, params Expression<Func<T, object>>[] includeProperties)
         {
             try
@@ -145,6 +169,34 @@ namespace TradeUnionCommittee.DAL.Repositories
             catch (Exception e)
             {
                 return new ActualResult<T>(e.Message);
+            }
+        }
+
+        public async Task<ActualResult<IEnumerable<T>>> GetWithIncludeAndOrderByToList(Expression<Func<T, bool>> predicate, Expression<Func<T, object>> orderBy, params Expression<Func<T, object>>[] includeProperties)
+        {
+            try
+            {
+                if (orderBy == null)
+                {
+                    return new ActualResult<IEnumerable<T>> { Result = await Include(includeProperties).Where(predicate).ToListAsync() };
+                }
+                return new ActualResult<IEnumerable<T>> { Result = await Include(includeProperties).Where(predicate).OrderBy(orderBy).ToListAsync() };
+            }
+            catch (Exception e)
+            {
+                return new ActualResult<IEnumerable<T>>(e.Message);
+            }
+        }
+
+        public async Task<ActualResult<bool>> Any(Expression<Func<T, bool>> predicate)
+        {
+            try
+            {
+                return new ActualResult<bool> { Result = await _db.Set<T>().AsNoTracking().AnyAsync(predicate) };
+            }
+            catch (Exception e)
+            {
+                return new ActualResult<bool>(e.Message);
             }
         }
 

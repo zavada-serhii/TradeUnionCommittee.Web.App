@@ -24,14 +24,19 @@ namespace TradeUnionCommittee.BLL.Services.Directory
             _hashIdUtilities = hashIdUtilities;
         }
 
-        public async Task<ActualResult<IEnumerable<DormitoryDTO>>> GetAllAsync() =>
-            _mapperService.Mapper.Map<ActualResult<IEnumerable<DormitoryDTO>>>(await _database.AddressPublicHouseRepository.Find(x => x.Type == TypeHouse.Dormitory));
+        public async Task<ActualResult<IEnumerable<DormitoryDTO>>> GetAllAsync()
+        {
+            var dormitory = await _database.AddressPublicHouseRepository
+                                           .FindWithOrderBy(x => x.Type == TypeHouse.Dormitory, c => c.NumberDormitory);
+            return _mapperService.Mapper.Map<ActualResult<IEnumerable<DormitoryDTO>>>(dormitory);
+        }
+
 
         public async Task<ActualResult<DormitoryDTO>> GetAsync(string hashId)
         {
             var id = _hashIdUtilities.DecryptLong(hashId, Enums.Services.AddressPublicHouse);
-            var result = await _database.AddressPublicHouseRepository.Find(x => x.Id == id && x.Type == TypeHouse.Dormitory);
-            return _mapperService.Mapper.Map<ActualResult<DormitoryDTO>>(new ActualResult<AddressPublicHouse>{ Result = result.Result.FirstOrDefault()});
+            var result = await _database.AddressPublicHouseRepository.GetByProperty(x => x.Id == id && x.Type == TypeHouse.Dormitory);
+            return _mapperService.Mapper.Map<ActualResult<DormitoryDTO>>(result);
         }
 
         public async Task<ActualResult> CreateAsync(DormitoryDTO dto)
@@ -63,12 +68,12 @@ namespace TradeUnionCommittee.BLL.Services.Directory
         private async Task<bool> CheckDuplicateDataAsync(DormitoryDTO dto)
         {
             var result = await _database.AddressPublicHouseRepository
-                                        .Find(p => p.City == dto.City &&
+                                        .Any(p => p.City == dto.City &&
                                                    p.Street == dto.Street &&
                                                    p.NumberHouse == dto.NumberHouse &&
                                                    p.NumberDormitory == dto.NumberDormitory &&
                                                    p.Type == TypeHouse.Dormitory);
-            return result.Result.Any();
+            return result.Result;
         }
 
         public void Dispose()

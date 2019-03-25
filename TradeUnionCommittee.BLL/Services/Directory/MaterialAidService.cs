@@ -25,7 +25,7 @@ namespace TradeUnionCommittee.BLL.Services.Directory
         }
 
         public async Task<ActualResult<IEnumerable<DirectoryDTO>>> GetAllAsync() =>
-            _mapperService.Mapper.Map<ActualResult<IEnumerable<DirectoryDTO>>>(await _database.MaterialAidRepository.GetAll());
+            _mapperService.Mapper.Map<ActualResult<IEnumerable<DirectoryDTO>>>(await _database.MaterialAidRepository.GetAll(x => x.Name));
 
         public async Task<ActualResult<DirectoryDTO>> GetAsync(string hashId)
         {
@@ -61,8 +61,8 @@ namespace TradeUnionCommittee.BLL.Services.Directory
 
         public async Task<bool> CheckNameAsync(string name)
         {
-            var result = await _database.MaterialAidRepository.Find(p => p.Name == name);
-            return result.Result.Any();
+            var result = await _database.MaterialAidRepository.Any(p => p.Name == name);
+            return result.Result;
         }
 
         public void Dispose()

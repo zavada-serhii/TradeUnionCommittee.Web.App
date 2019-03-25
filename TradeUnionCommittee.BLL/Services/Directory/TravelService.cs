@@ -24,8 +24,11 @@ namespace TradeUnionCommittee.BLL.Services.Directory
             _hashIdUtilities = hashIdUtilities;
         }
 
-        public async Task<ActualResult<IEnumerable<TravelDTO>>> GetAllAsync() =>
-            _mapperService.Mapper.Map<ActualResult<IEnumerable<TravelDTO>>>(await _database.EventRepository.Find(x => x.Type == TypeEvent.Travel));
+        public async Task<ActualResult<IEnumerable<TravelDTO>>> GetAllAsync()
+        {
+            var travel = await _database.EventRepository.FindWithOrderBy(x => x.Type == TypeEvent.Travel, c => c.Name);
+            return _mapperService.Mapper.Map<ActualResult<IEnumerable<TravelDTO>>>(travel);
+        }
 
         public async Task<ActualResult<TravelDTO>> GetAsync(string hashId)
         {
@@ -61,8 +64,8 @@ namespace TradeUnionCommittee.BLL.Services.Directory
 
         public async Task<bool> CheckNameAsync(string name)
         {
-            var result = await _database.EventRepository.Find(p => p.Name == name && p.Type == TypeEvent.Travel);
-            return result.Result.Any();
+            var result = await _database.EventRepository.Any(p => p.Name == name && p.Type == TypeEvent.Travel);
+            return result.Result;
         }
 
         public void Dispose()
