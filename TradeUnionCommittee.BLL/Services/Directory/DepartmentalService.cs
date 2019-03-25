@@ -24,12 +24,18 @@ namespace TradeUnionCommittee.BLL.Services.Directory
             _hashIdUtilities = hashIdUtilities;
         }
 
-        public async Task<ActualResult<IEnumerable<DepartmentalDTO>>> GetAllAsync() =>
-            _mapperService.Mapper.Map<ActualResult<IEnumerable<DepartmentalDTO>>>(await _database.AddressPublicHouseRepository.Find(x => x.Type == TypeHouse.Departmental));
+        public async Task<ActualResult<IEnumerable<DepartmentalDTO>>> GetAllAsync()
+        {
+            var departmental = await _database.AddressPublicHouseRepository
+                                              .FindWithOrderBy(x => x.Type == TypeHouse.Departmental, c => c.Street);
+            return _mapperService.Mapper.Map<ActualResult<IEnumerable<DepartmentalDTO>>>(departmental);
+        }
+
 
         public async Task<ActualResult<Dictionary<string, string>>> GetAllShortcut()
         {
-            var departmental = await _database.AddressPublicHouseRepository.Find(x => x.Type == TypeHouse.Departmental);
+            var departmental = await _database.AddressPublicHouseRepository
+                                              .FindWithOrderBy(x => x.Type == TypeHouse.Departmental, c => c.Street);
             var dictionary = departmental.Result.ToDictionary(result => _hashIdUtilities.EncryptLong(result.Id, Enums.Services.AddressPublicHouse), result => $"{result.City}, {result.Street}, {result.NumberHouse}");
             return new ActualResult<Dictionary<string, string>> { Result = dictionary };
         }
@@ -37,8 +43,8 @@ namespace TradeUnionCommittee.BLL.Services.Directory
         public async Task<ActualResult<DepartmentalDTO>> GetAsync(string hashId)
         {
             var id = _hashIdUtilities.DecryptLong(hashId, Enums.Services.AddressPublicHouse);
-            var result = await _database.AddressPublicHouseRepository.Find(x => x.Id == id && x.Type == TypeHouse.Departmental);
-            return _mapperService.Mapper.Map<ActualResult<DepartmentalDTO>>(new ActualResult<AddressPublicHouse> { Result = result.Result.FirstOrDefault() });
+            var result = await _database.AddressPublicHouseRepository.GetByProperty(x => x.Id == id && x.Type == TypeHouse.Departmental);
+            return _mapperService.Mapper.Map<ActualResult<DepartmentalDTO>>(result);
         }
 
         public async Task<ActualResult> CreateAsync(DepartmentalDTO dto)

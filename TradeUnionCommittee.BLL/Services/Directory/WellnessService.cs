@@ -24,8 +24,11 @@ namespace TradeUnionCommittee.BLL.Services.Directory
             _hashIdUtilities = hashIdUtilities;
         }
 
-        public async Task<ActualResult<IEnumerable<WellnessDTO>>> GetAllAsync() =>
-            _mapperService.Mapper.Map<ActualResult<IEnumerable<WellnessDTO>>>(await _database.EventRepository.Find(x => x.Type == TypeEvent.Wellness));
+        public async Task<ActualResult<IEnumerable<WellnessDTO>>> GetAllAsync()
+        {
+            var wellness = await _database.EventRepository.FindWithOrderBy(x => x.Type == TypeEvent.Wellness, c => c.Name);
+            return _mapperService.Mapper.Map<ActualResult<IEnumerable<WellnessDTO>>>(wellness);
+        }
 
         public async Task<ActualResult<WellnessDTO>> GetAsync(string hashId)
         {
