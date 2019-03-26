@@ -8,8 +8,6 @@ namespace TradeUnionCommittee.DAL.Interfaces
 {
     public interface IRepository<T> where T: class
     {
-        Task<ActualResult<IEnumerable<T>>> FindWithOrderBy(Expression<Func<T, bool>> predicate, Expression<Func<T, object>> orderBy = null);
-        Task<ActualResult<IEnumerable<T>>> GetWithIncludeAndOrderByToList(Expression<Func<T, bool>> predicate, Expression<Func<T, object>> orderBy, params Expression<Func<T, object>>[] includeProperties);
         Task<ActualResult<bool>> Any(Expression<Func<T, bool>> predicate);
 
 
