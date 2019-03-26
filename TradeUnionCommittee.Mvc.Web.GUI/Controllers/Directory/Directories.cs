@@ -11,7 +11,7 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Directory
     public class Directories : IDirectories
     {
         private readonly IAccountService _accountService;
-        private readonly IEducationService _educationService;
+        
         private readonly ISubdivisionsService _subdivisionsService;
         private readonly IPositionService _positionService;
         private readonly IDormitoryService _dormitoryService;
@@ -30,7 +30,6 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Directory
 
 
         public Directories(IAccountService accountService,
-                           IEducationService educationService,
                            ISubdivisionsService subdivisionsService,
                            IPositionService positionService,
                            IDormitoryService dormitoryService,
@@ -48,7 +47,6 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Directory
                            IMaterialAidService materialAidService)
         {
             _accountService = accountService;
-            _educationService = educationService;
             _subdivisionsService = subdivisionsService;
             _positionService = positionService;
             _dormitoryService = dormitoryService;
@@ -80,13 +78,13 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Directory
 
         public async Task<SelectList> GetLevelEducation()
         {
-            var levelEducation = await _educationService.GetAllLevelEducationAsync();
+            var levelEducation = await _scientificService.GetAllLevelEducationAsync();
             return levelEducation.IsValid ? new SelectList(levelEducation.Result) : null;
         }
 
         public async Task<SelectList> GetStudy()
         {
-            var nameInstitution = await _educationService.GetAllNameInstitutionAsync();
+            var nameInstitution = await _scientificService.GetAllNameInstitutionAsync();
             return nameInstitution.IsValid ? new SelectList(nameInstitution.Result) : null;
         }
 

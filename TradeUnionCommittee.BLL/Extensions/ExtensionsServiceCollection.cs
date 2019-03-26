@@ -46,7 +46,6 @@ namespace TradeUnionCommittee.BLL.Extensions
             services.AddTransient<ISystemAuditService, SystemAuditService>();
             services.AddTransient<IPdfService, PdfService>();
 
-            services.AddTransient<IEducationService, EducationService>();
             services.AddTransient<IQualificationService, QualificationService>();
             services.AddTransient<IPositionService, PositionService>();
             services.AddTransient<ISocialActivityService, SocialActivityService>();

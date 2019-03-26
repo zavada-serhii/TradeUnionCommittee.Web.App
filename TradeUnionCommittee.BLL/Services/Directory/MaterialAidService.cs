@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.Configurations;
@@ -6,68 +8,120 @@ using TradeUnionCommittee.BLL.DTO;
 using TradeUnionCommittee.BLL.Interfaces.Directory;
 using TradeUnionCommittee.Common.ActualResults;
 using TradeUnionCommittee.Common.Enums;
+using TradeUnionCommittee.DAL.EF;
 using TradeUnionCommittee.DAL.Entities;
-using TradeUnionCommittee.DAL.Interfaces;
 
 namespace TradeUnionCommittee.BLL.Services.Directory
 {
     public class MaterialAidService : IMaterialAidService
     {
-        private readonly IUnitOfWork _database;
+        private readonly TradeUnionCommitteeContext _context;
         private readonly IAutoMapperConfiguration _mapperService;
         private readonly IHashIdConfiguration _hashIdUtilities;
 
-        public MaterialAidService(IUnitOfWork database, IAutoMapperConfiguration mapperService, IHashIdConfiguration hashIdUtilities)
+        public MaterialAidService(TradeUnionCommitteeContext context, IAutoMapperConfiguration mapperService, IHashIdConfiguration hashIdUtilities)
         {
-            _database = database;
+            _context = context;
             _mapperService = mapperService;
             _hashIdUtilities = hashIdUtilities;
         }
 
-        public async Task<ActualResult<IEnumerable<DirectoryDTO>>> GetAllAsync() =>
-            _mapperService.Mapper.Map<ActualResult<IEnumerable<DirectoryDTO>>>(await _database.MaterialAidRepository.GetAll(x => x.Name));
+        public async Task<ActualResult<IEnumerable<DirectoryDTO>>> GetAllAsync()
+        {
+            try
+            {
+                var materialAid = await _context.MaterialAid.OrderBy(x => x.Name).ToListAsync();
+                var result = _mapperService.Mapper.Map<IEnumerable<DirectoryDTO>>(materialAid);
+                return new ActualResult<IEnumerable<DirectoryDTO>> { Result = result };
+            }
+            catch (Exception)
+            {
+                return new ActualResult<IEnumerable<DirectoryDTO>>(Errors.DataBaseError);
+            }
+        }
 
         public async Task<ActualResult<DirectoryDTO>> GetAsync(string hashId)
         {
-            var id = _hashIdUtilities.DecryptLong(hashId, Enums.Services.MaterialAid);
-            return _mapperService.Mapper.Map<ActualResult<DirectoryDTO>>(await _database.MaterialAidRepository.GetById(id));
+            try
+            {
+                var id = _hashIdUtilities.DecryptLong(hashId, Enums.Services.MaterialAid);
+                var materialAid = await _context.MaterialAid.FindAsync(id);
+                var result = _mapperService.Mapper.Map<DirectoryDTO>(materialAid);
+                return new ActualResult<DirectoryDTO> { Result = result };
+            }
+            catch (Exception)
+            {
+                return new ActualResult<DirectoryDTO>(Errors.DataBaseError);
+            }
         }
 
         public async Task<ActualResult> CreateAsync(DirectoryDTO dto)
         {
-            if (!await CheckNameAsync(dto.Name))
+            try
             {
-                await _database.MaterialAidRepository.Create(_mapperService.Mapper.Map<MaterialAid>(dto));
-                return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
+                if (!await CheckNameAsync(dto.Name))
+                {
+                    await _context.MaterialAid.AddAsync(_mapperService.Mapper.Map<MaterialAid>(dto));
+                    await _context.SaveChangesAsync();
+                    return new ActualResult();
+                }
+                return new ActualResult(Errors.DuplicateData);
             }
-            return new ActualResult(Errors.DuplicateData);
+            catch (Exception)
+            {
+                return new ActualResult(Errors.DataBaseError);
+            }
         }
 
         public async Task<ActualResult> UpdateAsync(DirectoryDTO dto)
         {
-            if (!await CheckNameAsync(dto.Name))
+            try
             {
-                await _database.MaterialAidRepository.Update(_mapperService.Mapper.Map<MaterialAid>(dto));
-                return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
+                if (!await CheckNameAsync(dto.Name))
+                {
+                    _context.Entry(_mapperService.Mapper.Map<MaterialAid>(dto)).State = EntityState.Modified;
+                    await _context.SaveChangesAsync();
+                    return new ActualResult();
+                }
+                return new ActualResult(Errors.DuplicateData);
             }
-            return new ActualResult(Errors.DuplicateData);
+            catch (DbUpdateConcurrencyException)
+            {
+                return new ActualResult(Errors.TupleDeletedOrUpdated);
+            }
+            catch (Exception)
+            {
+                return new ActualResult(Errors.DataBaseError);
+            }
         }
 
         public async Task<ActualResult> DeleteAsync(string hashId)
         {
-            await _database.MaterialAidRepository.Delete(_hashIdUtilities.DecryptLong(hashId, Enums.Services.MaterialAid));
-            return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
+            try
+            {
+                var id = _hashIdUtilities.DecryptLong(hashId, Enums.Services.MaterialAid);
+                var result = await _context.MaterialAid.FindAsync(id);
+                if (result != null)
+                {
+                    _context.MaterialAid.Remove(result);
+                    await _context.SaveChangesAsync();
+                }
+                return new ActualResult();
+            }
+            catch (Exception)
+            {
+                return new ActualResult(Errors.DataBaseError);
+            }
         }
 
         public async Task<bool> CheckNameAsync(string name)
         {
-            var result = await _database.MaterialAidRepository.Any(p => p.Name == name);
-            return result.Result;
+            return await _context.MaterialAid.AnyAsync(p => p.Name == name);
         }
 
         public void Dispose()
         {
-            _database.Dispose();
+            _context.Dispose();
         }
     }
 }
