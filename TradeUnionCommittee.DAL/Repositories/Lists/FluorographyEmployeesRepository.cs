@@ -5,7 +5,7 @@ namespace TradeUnionCommittee.DAL.Repositories.Lists
 {
     public class FluorographyEmployeesRepository : Repository<FluorographyEmployees>
     {
-        public FluorographyEmployeesRepository(TradeUnionCommitteeEmployeesCoreContext db) : base(db)
+        public FluorographyEmployeesRepository(TradeUnionCommitteeContext db) : base(db)
         {
         }
     }

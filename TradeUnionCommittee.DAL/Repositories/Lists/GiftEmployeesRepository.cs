@@ -5,7 +5,7 @@ namespace TradeUnionCommittee.DAL.Repositories.Lists
 {
     public class GiftEmployeesRepository : Repository<GiftEmployees>
     {
-        public GiftEmployeesRepository(TradeUnionCommitteeEmployeesCoreContext db) : base(db)
+        public GiftEmployeesRepository(TradeUnionCommitteeContext db) : base(db)
         {
         }
     }

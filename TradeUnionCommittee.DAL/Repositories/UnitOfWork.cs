@@ -20,12 +20,12 @@ namespace TradeUnionCommittee.DAL.Repositories
 {
     public class UnitOfWork : IUnitOfWork
     {
-        private readonly TradeUnionCommitteeEmployeesCoreContext _context;
+        private readonly TradeUnionCommitteeContext _context;
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
         private readonly RoleManager<IdentityRole> _roleManager;
 
-        public UnitOfWork(TradeUnionCommitteeEmployeesCoreContext context, UserManager<User> userManager,
+        public UnitOfWork(TradeUnionCommitteeContext context, UserManager<User> userManager,
             SignInManager<User> signInManager, RoleManager<IdentityRole> roleManager)
         {
             _context = context;

@@ -6,7 +6,7 @@ namespace TradeUnionCommittee.DAL.Extensions
 {
     public static class ExtensionsDataBaseContext
     {
-        public static void UndoChanges(this TradeUnionCommitteeEmployeesCoreContext dbContext)
+        public static void UndoChanges(this TradeUnionCommitteeContext dbContext)
         {
             foreach (var entry in dbContext.ChangeTracker.Entries().Where(x => x.State != EntityState.Unchanged).ToList())
             {

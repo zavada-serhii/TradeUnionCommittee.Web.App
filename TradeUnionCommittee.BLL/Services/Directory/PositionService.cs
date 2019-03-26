@@ -15,11 +15,11 @@ namespace TradeUnionCommittee.BLL.Services.Directory
 {
     public class PositionService : IPositionService
     {
-        private readonly TradeUnionCommitteeEmployeesCoreContext _context;
+        private readonly TradeUnionCommitteeContext _context;
         private readonly IAutoMapperConfiguration _mapperService;
         private readonly IHashIdConfiguration _hashIdUtilities;
 
-        public PositionService(TradeUnionCommitteeEmployeesCoreContext context, IAutoMapperConfiguration mapperService, IHashIdConfiguration hashIdUtilities)
+        public PositionService(TradeUnionCommitteeContext context, IAutoMapperConfiguration mapperService, IHashIdConfiguration hashIdUtilities)
         {
             _context = context;
             _mapperService = mapperService;

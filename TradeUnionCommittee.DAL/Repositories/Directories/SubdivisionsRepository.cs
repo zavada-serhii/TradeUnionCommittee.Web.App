@@ -10,9 +10,9 @@ namespace TradeUnionCommittee.DAL.Repositories.Directories
 {
     public class SubdivisionsRepository : Repository<Subdivisions>
     {
-        private readonly TradeUnionCommitteeEmployeesCoreContext _dbContext;
+        private readonly TradeUnionCommitteeContext _dbContext;
 
-        public SubdivisionsRepository(TradeUnionCommitteeEmployeesCoreContext db) : base(db)
+        public SubdivisionsRepository(TradeUnionCommitteeContext db) : base(db)
         {
             _dbContext = db;
         }

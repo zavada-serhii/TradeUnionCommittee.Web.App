@@ -5,7 +5,7 @@ namespace TradeUnionCommittee.DAL.Repositories.Directories
 {
     public class AddressPublicHouseRepository : Repository<AddressPublicHouse>
     {
-        public AddressPublicHouseRepository(TradeUnionCommitteeEmployeesCoreContext db) : base(db)
+        public AddressPublicHouseRepository(TradeUnionCommitteeContext db) : base(db)
         {
         }
     }

@@ -13,9 +13,9 @@ namespace TradeUnionCommittee.DAL.Repositories
 {
     public abstract class Repository<T> : IRepository<T> where T : class, new()
     {
-        private readonly TradeUnionCommitteeEmployeesCoreContext _db;
+        private readonly TradeUnionCommitteeContext _db;
 
-        protected Repository(TradeUnionCommitteeEmployeesCoreContext db)
+        protected Repository(TradeUnionCommitteeContext db)
         {
             _db = db;
         }

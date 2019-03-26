@@ -14,9 +14,9 @@ namespace TradeUnionCommittee.DAL.Repositories.SystemAudit
 {
     public class SystemAuditRepository : ISystemAuditRepository
     {
-        private readonly TradeUnionCommitteeEmployeesCoreContext _dbContext;
+        private readonly TradeUnionCommitteeContext _dbContext;
 
-        public SystemAuditRepository(TradeUnionCommitteeEmployeesCoreContext db)
+        public SystemAuditRepository(TradeUnionCommitteeContext db)
         {
             _dbContext = db;
         }

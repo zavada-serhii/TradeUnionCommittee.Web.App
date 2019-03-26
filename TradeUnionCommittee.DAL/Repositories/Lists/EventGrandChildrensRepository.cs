@@ -5,7 +5,7 @@ namespace TradeUnionCommittee.DAL.Repositories.Lists
 {
     public class EventGrandChildrensRepository : Repository<EventGrandChildrens>
     {
-        public EventGrandChildrensRepository(TradeUnionCommitteeEmployeesCoreContext db) : base(db)
+        public EventGrandChildrensRepository(TradeUnionCommitteeContext db) : base(db)
         {
         }
     }

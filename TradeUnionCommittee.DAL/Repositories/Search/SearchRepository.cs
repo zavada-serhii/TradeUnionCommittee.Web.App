@@ -14,9 +14,9 @@ namespace TradeUnionCommittee.DAL.Repositories.Search
 {
     public class SearchRepository : ISearchRepository
     {
-        private readonly TradeUnionCommitteeEmployeesCoreContext _dbContext;
+        private readonly TradeUnionCommitteeContext _dbContext;
 
-        public SearchRepository(TradeUnionCommitteeEmployeesCoreContext db)
+        public SearchRepository(TradeUnionCommitteeContext db)
         {
             _dbContext = db;
         }

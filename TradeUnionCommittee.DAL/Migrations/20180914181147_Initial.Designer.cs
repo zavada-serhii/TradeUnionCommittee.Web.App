@@ -8,7 +8,7 @@ using TradeUnionCommittee.DAL.EF;
 
 namespace TradeUnionCommittee.DAL.Migrations
 {
-    [DbContext(typeof(TradeUnionCommitteeEmployeesCoreContext))]
+    [DbContext(typeof(TradeUnionCommitteeContext))]
     [Migration("20180914181147_Initial")]
     partial class Initial
     {

@@ -5,7 +5,7 @@ namespace TradeUnionCommittee.DAL.Repositories.Lists
 {
     public class ActivityEmployeesRepository : Repository<ActivityEmployees>
     {
-        public ActivityEmployeesRepository(TradeUnionCommitteeEmployeesCoreContext db) : base(db)
+        public ActivityEmployeesRepository(TradeUnionCommitteeContext db) : base(db)
         {
         }
     }
