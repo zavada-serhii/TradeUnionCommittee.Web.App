@@ -9,7 +9,6 @@ using TradeUnionCommittee.DAL.EF;
 using TradeUnionCommittee.DAL.Entities;
 using TradeUnionCommittee.DAL.Extensions;
 using TradeUnionCommittee.DAL.Interfaces;
-using TradeUnionCommittee.DAL.Repositories.Account;
 using TradeUnionCommittee.DAL.Repositories.Directories;
 using TradeUnionCommittee.DAL.Repositories.General;
 using TradeUnionCommittee.DAL.Repositories.Lists;
@@ -36,7 +35,6 @@ namespace TradeUnionCommittee.DAL.Repositories
 
         //------------------------------------------------------------------------------------------------------------------------------------------
         
-        private AccountRepository _accountRepository;
         private SearchRepository _searchRepository;
         private SystemAuditRepository _systemAuditRepository;
 
@@ -92,8 +90,7 @@ namespace TradeUnionCommittee.DAL.Repositories
         private ActivityFamilyRepository _activityFamilyRepository;
 
         //------------------------------------------------------------------------------------------------------------------------------------------
-
-        public IAccountRepository AccountRepository => _accountRepository ?? (_accountRepository = new AccountRepository(_userManager, _signInManager, _roleManager));
+        
         public ISearchRepository SearchRepository => _searchRepository ?? (_searchRepository = new SearchRepository(_context));
         public ISystemAuditRepository SystemAuditRepository => _systemAuditRepository ?? (_systemAuditRepository = new SystemAuditRepository(_context));
 

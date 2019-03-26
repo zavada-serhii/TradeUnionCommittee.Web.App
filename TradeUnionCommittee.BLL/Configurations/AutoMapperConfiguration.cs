@@ -133,19 +133,16 @@ namespace TradeUnionCommittee.BLL.Configurations
                     map.CreateMap<UpdateSubdivisionNameDTO, Subdivisions>()
                         .ForMember(d => d.Id, c => c.MapFrom(x => _hashIdUtilities.DecryptLong(x.HashIdMain, Enums.Services.Subdivision)))
                         .ForMember(d => d.Name, c => c.MapFrom(x => x.Name))
-                        .ForMember(d => d.RowVersion, c => c.MapFrom(x => x.RowVersion))
-                        .ForMember(d => d.SubdivisionUpdate, c => c.MapFrom(x => Subdivision.UpdateName));
+                        .ForMember(d => d.RowVersion, c => c.MapFrom(x => x.RowVersion));
 
                     map.CreateMap<UpdateSubdivisionAbbreviationDTO, Subdivisions>()
                         .ForMember(d => d.Id, c => c.MapFrom(x => _hashIdUtilities.DecryptLong(x.HashIdMain, Enums.Services.Subdivision)))
                         .ForMember(d => d.Abbreviation, c => c.MapFrom(x => x.Abbreviation))
-                        .ForMember(d => d.RowVersion, c => c.MapFrom(x => x.RowVersion))
-                        .ForMember(d => d.SubdivisionUpdate, c => c.MapFrom(x => Subdivision.UpdateAbbreviation));
+                        .ForMember(d => d.RowVersion, c => c.MapFrom(x => x.RowVersion));
 
                     map.CreateMap<RestructuringSubdivisionDTO, Subdivisions>()
                         .ForMember(d => d.Id, c => c.MapFrom(x => _hashIdUtilities.DecryptLong(x.HashIdSubordinate, Enums.Services.Subdivision)))
-                        .ForMember(d => d.IdSubordinate, c => c.MapFrom(x => _hashIdUtilities.DecryptLong(x.HashIdMain, Enums.Services.Subdivision)))
-                        .ForMember(d => d.SubdivisionUpdate, c => c.MapFrom(x => Subdivision.RestructuringUnits));
+                        .ForMember(d => d.IdSubordinate, c => c.MapFrom(x => _hashIdUtilities.DecryptLong(x.HashIdMain, Enums.Services.Subdivision)));
 
                     //----------------------------------------------------------------------------------------------------------------------------------
 
