@@ -17,8 +17,8 @@ namespace TradeUnionCommittee.Common.Helpers
                 case Errors.TupleUpdated:
                     return "Запис вже був оновлений іншим користувачем!";
 
-                case Errors.InvalidId:
-                    return "Недійсний ідентифікатор!";
+                case Errors.TupleDeletedOrUpdated:
+                    return "Запис змінено або видалено іншим користувачем!";
 
                 case Errors.DuplicateData:
                     return "Такий запис вже існує!";
@@ -31,8 +31,10 @@ namespace TradeUnionCommittee.Common.Helpers
 
                 case Errors.NotFound:
                     return "За вашим запитом нічого не знайдено!";
+
                 case Errors.FileNotFound:
                     return "Файл не знайдено!";
+
                 default:
                     throw new ArgumentOutOfRangeException(nameof(error), error, "Ви зламали систему. Вітаю:)");
             }
