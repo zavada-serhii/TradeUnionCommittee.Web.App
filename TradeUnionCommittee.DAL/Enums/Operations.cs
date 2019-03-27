@@ -1,4 +1,4 @@
-﻿namespace TradeUnionCommittee.DAL.Entities
+﻿namespace TradeUnionCommittee.DAL.Enums
 {
     public enum Operations
     {

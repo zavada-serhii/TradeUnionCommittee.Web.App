@@ -10,6 +10,7 @@ using TradeUnionCommittee.Common.ActualResults;
 using TradeUnionCommittee.Common.Enums;
 using TradeUnionCommittee.DAL.EF;
 using TradeUnionCommittee.DAL.Entities;
+using TradeUnionCommittee.DAL.Enums;
 
 namespace TradeUnionCommittee.BLL.Services.Directory
 {

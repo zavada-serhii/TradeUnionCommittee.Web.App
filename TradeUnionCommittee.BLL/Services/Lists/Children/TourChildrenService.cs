@@ -5,6 +5,7 @@ using TradeUnionCommittee.BLL.DTO.Children;
 using TradeUnionCommittee.BLL.Interfaces.Lists.Children;
 using TradeUnionCommittee.Common.ActualResults;
 using TradeUnionCommittee.DAL.Entities;
+using TradeUnionCommittee.DAL.Enums;
 using TradeUnionCommittee.DAL.Interfaces;
 
 namespace TradeUnionCommittee.BLL.Services.Lists.Children

@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Npgsql;
 using Npgsql.NameTranslation;
 using TradeUnionCommittee.DAL.Entities;
+using TradeUnionCommittee.DAL.Enums;
 
 namespace TradeUnionCommittee.DAL.EF
 {

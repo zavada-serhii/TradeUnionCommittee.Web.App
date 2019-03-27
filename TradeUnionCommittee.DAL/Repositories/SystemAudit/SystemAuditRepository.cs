@@ -7,6 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using TradeUnionCommittee.DAL.EF;
 using TradeUnionCommittee.DAL.Entities;
+using TradeUnionCommittee.DAL.Enums;
 using TradeUnionCommittee.DAL.Extensions;
 using TradeUnionCommittee.DAL.Interfaces;
 

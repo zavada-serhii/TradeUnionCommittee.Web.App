@@ -7,6 +7,7 @@ using TradeUnionCommittee.BLL.Extensions;
 using TradeUnionCommittee.BLL.Interfaces.SystemAudit;
 using TradeUnionCommittee.Common.ActualResults;
 using TradeUnionCommittee.DAL.Entities;
+using TradeUnionCommittee.DAL.Enums;
 using TradeUnionCommittee.DAL.Interfaces;
 
 namespace TradeUnionCommittee.BLL.Services.SystemAudit

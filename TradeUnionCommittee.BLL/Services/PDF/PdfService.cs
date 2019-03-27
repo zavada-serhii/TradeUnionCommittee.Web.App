@@ -12,7 +12,7 @@ using TradeUnionCommittee.BLL.Interfaces.PDF;
 using TradeUnionCommittee.Common.ActualResults;
 using TradeUnionCommittee.Common.Enums;
 using TradeUnionCommittee.DAL.EF;
-using TradeUnionCommittee.DAL.Entities;
+using TradeUnionCommittee.DAL.Enums;
 using TradeUnionCommittee.PDF.Service;
 using TradeUnionCommittee.PDF.Service.Entities;
 using TradeUnionCommittee.PDF.Service.Models;

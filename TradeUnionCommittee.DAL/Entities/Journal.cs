@@ -1,4 +1,5 @@
 ﻿using System;
+using TradeUnionCommittee.DAL.Enums;
 
 namespace TradeUnionCommittee.DAL.Entities
 {
