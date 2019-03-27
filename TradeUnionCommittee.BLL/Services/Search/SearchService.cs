@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -9,6 +10,7 @@ using TradeUnionCommittee.BLL.Extensions;
 using TradeUnionCommittee.BLL.Interfaces.Search;
 using TradeUnionCommittee.Common.ActualResults;
 using TradeUnionCommittee.Common.Enums;
+using TradeUnionCommittee.DAL.EF;
 using TradeUnionCommittee.DAL.Enums;
 using TradeUnionCommittee.DAL.Interfaces;
 
@@ -16,45 +18,54 @@ namespace TradeUnionCommittee.BLL.Services.Search
 {
     public class SearchService : ISearchService
     {
-        private readonly IUnitOfWork _database;
+        private readonly TradeUnionCommitteeContext _context;
+        private readonly ISearchRepository _searchRepository;
         private readonly IHashIdConfiguration _hashIdUtilities;
         private readonly IAutoMapperConfiguration _mapperService;
 
-        public SearchService(IUnitOfWork database, IHashIdConfiguration hashIdUtilities, IAutoMapperConfiguration mapperService)
+        public SearchService(TradeUnionCommitteeContext context, IHashIdConfiguration hashIdUtilities, IAutoMapperConfiguration mapperService, ISearchRepository searchRepository)
         {
-            _database = database;
+            _context = context;
             _hashIdUtilities = hashIdUtilities;
             _mapperService = mapperService;
+            _searchRepository = searchRepository;
         }
 
         //------------------------------------------------------------------------------------------------------------------------------------------
 
         public async Task<IEnumerable<ResultSearchDTO>> SearchFullName(string fullName) => 
-            _mapperService.Mapper.Map<IEnumerable<ResultSearchDTO>>(await _database.SearchRepository.SearchByFullName(fullName, TrigramSearch.Gist));
+            _mapperService.Mapper.Map<IEnumerable<ResultSearchDTO>>(await _searchRepository.SearchByFullName(fullName, TrigramSearch.Gist));
 
         //------------------------------------------------------------------------------------------------------------------------------------------
 
         public async Task<ActualResult<IEnumerable<ResultSearchDTO>>> SearchGender(string gender, string subdivision)
         {
-            if (subdivision != null)
+            try
             {
-                var idSubdivision = _hashIdUtilities.DecryptLong(subdivision, Enums.Services.Subdivision);
-
-                var searchByGenderAndSubdivision = await _database
-                    .EmployeeRepository
-                    .GetWithIncludeToList(x => x.Sex == gender &&
+                if (subdivision != null)
+                {
+                    var idSubdivision = _hashIdUtilities.DecryptLong(subdivision, Enums.Services.Subdivision);
+                    var searchByGenderAndSubdivision = await _context.Employee
+                        .Include(x => x.PositionEmployees.IdSubdivisionNavigation.InverseIdSubordinateNavigation)
+                        .Where(x => x.Sex == gender &&
                                     (x.PositionEmployees.IdSubdivisionNavigation.Id == idSubdivision ||
-                                    x.PositionEmployees.IdSubdivisionNavigation.IdSubordinate == idSubdivision), 
-                                    p => p.PositionEmployees.IdSubdivisionNavigation.InverseIdSubordinateNavigation);
+                                     x.PositionEmployees.IdSubdivisionNavigation.IdSubordinate == idSubdivision))
+                        .ToListAsync();
 
-                return new ActualResult<IEnumerable<ResultSearchDTO>> { Result = ResultFormation(searchByGenderAndSubdivision.Result) };
+                    return new ActualResult<IEnumerable<ResultSearchDTO>> { Result = ResultFormation(searchByGenderAndSubdivision) };
+                }
+
+                var searchByGender = await _context.Employee
+                    .Include(x => x.PositionEmployees.IdSubdivisionNavigation.InverseIdSubordinateNavigation)
+                    .Where(x => x.Sex == gender)
+                    .ToListAsync();
+
+                return new ActualResult<IEnumerable<ResultSearchDTO>> { Result = ResultFormation(searchByGender) };
             }
-
-            var searchByGender = await _database
-                .EmployeeRepository
-                .GetWithIncludeToList(x => x.Sex == gender, p => p.PositionEmployees.IdSubdivisionNavigation.InverseIdSubordinateNavigation);
-
-            return new ActualResult<IEnumerable<ResultSearchDTO>> {Result = ResultFormation(searchByGender.Result)};
+            catch (Exception)
+            {
+                return new ActualResult<IEnumerable<ResultSearchDTO>>(Errors.DataBaseError);
+            }
         }
 
         //------------------------------------------------------------------------------------------------------------------------------------------
@@ -62,27 +73,23 @@ namespace TradeUnionCommittee.BLL.Services.Search
         public async Task<ActualResult<IEnumerable<ResultSearchDTO>>> SearchPosition(string position, string subdivision)
         {
             var idPosition =_hashIdUtilities.DecryptLong(position, Enums.Services.Position);
-
             if (subdivision != null)
             {
                 var idSubdivision = _hashIdUtilities.DecryptLong(subdivision, Enums.Services.Subdivision);
-
-                var searchByGenderAndSubdivision = await _database
-                    .EmployeeRepository
-                    .GetWithIncludeToList(x => x.PositionEmployees.IdPosition == idPosition &&
-                                         (x.PositionEmployees.IdSubdivisionNavigation.Id == idSubdivision ||
-                                         x.PositionEmployees.IdSubdivisionNavigation.IdSubordinate == idSubdivision),
-                                    p => p.PositionEmployees.IdSubdivisionNavigation.InverseIdSubordinateNavigation);
-
-                return new ActualResult<IEnumerable<ResultSearchDTO>> { Result = ResultFormation(searchByGenderAndSubdivision.Result) };
+                var searchByGenderAndSubdivision = await _context.Employee
+                    .Include(x => x.PositionEmployees.IdSubdivisionNavigation.InverseIdSubordinateNavigation)
+                    .Where(x => x.PositionEmployees.IdPosition == idPosition &&
+                                (x.PositionEmployees.IdSubdivisionNavigation.Id == idSubdivision ||
+                                 x.PositionEmployees.IdSubdivisionNavigation.IdSubordinate == idSubdivision))
+                    .ToListAsync();
+                return new ActualResult<IEnumerable<ResultSearchDTO>> { Result = ResultFormation(searchByGenderAndSubdivision) };
             }
 
-            var searchByGender = await _database
-                .EmployeeRepository
-                .GetWithIncludeToList(x => x.PositionEmployees.IdPosition == idPosition, 
-                                p => p.PositionEmployees.IdSubdivisionNavigation.InverseIdSubordinateNavigation);
-
-            return new ActualResult<IEnumerable<ResultSearchDTO>> { Result = ResultFormation(searchByGender.Result) };
+            var searchByGender = await _context.Employee
+                .Include(x => x.PositionEmployees.IdSubdivisionNavigation.InverseIdSubordinateNavigation)
+                .Where(x => x.PositionEmployees.IdPosition == idPosition)
+                .ToListAsync();
+            return new ActualResult<IEnumerable<ResultSearchDTO>> { Result = ResultFormation(searchByGender) };
         }
 
         //------------------------------------------------------------------------------------------------------------------------------------------
@@ -90,33 +97,28 @@ namespace TradeUnionCommittee.BLL.Services.Search
         public async Task<ActualResult<IEnumerable<ResultSearchDTO>>> SearchPrivilege(string privilege, string subdivision)
         {
             var idPrivilege = _hashIdUtilities.DecryptLong(privilege, Enums.Services.Privileges);
-
             if (subdivision != null)
             {
                 var idSubdivision = _hashIdUtilities.DecryptLong(subdivision, Enums.Services.Subdivision);
-
-                var searchByGenderAndSubdivision = await _database
-                    .EmployeeRepository
-                    .GetWithIncludeToList(x => x.PrivilegeEmployees.IdPrivileges == idPrivilege &&
-                                         (x.PositionEmployees.IdSubdivisionNavigation.Id == idSubdivision ||
-                                         x.PositionEmployees.IdSubdivisionNavigation.IdSubordinate == idSubdivision),
-                                    p => p.PositionEmployees.IdSubdivisionNavigation.InverseIdSubordinateNavigation,
-                                    p => p.PrivilegeEmployees);
-
-                return new ActualResult<IEnumerable<ResultSearchDTO>> { Result = ResultFormation(searchByGenderAndSubdivision.Result) };
+                var searchByGenderAndSubdivision = await _context.Employee
+                    .Include(p => p.PositionEmployees.IdSubdivisionNavigation.InverseIdSubordinateNavigation)
+                    .Include(p => p.PrivilegeEmployees)
+                    .Where(x => x.PrivilegeEmployees.IdPrivileges == idPrivilege &&
+                                (x.PositionEmployees.IdSubdivisionNavigation.Id == idSubdivision ||
+                                 x.PositionEmployees.IdSubdivisionNavigation.IdSubordinate == idSubdivision))
+                    .ToListAsync();
+                return new ActualResult<IEnumerable<ResultSearchDTO>> { Result = ResultFormation(searchByGenderAndSubdivision) };
             }
 
-            var searchByGender = await _database
-                .EmployeeRepository
-                .GetWithIncludeToList(x => x.PrivilegeEmployees.IdPrivileges == idPrivilege,
-                                p => p.PositionEmployees.IdSubdivisionNavigation.InverseIdSubordinateNavigation,
-                                p => p.PrivilegeEmployees);
-
-            return new ActualResult<IEnumerable<ResultSearchDTO>> { Result = ResultFormation(searchByGender.Result) };
+            var searchByGender = await _context.Employee
+                .Include(x => x.PositionEmployees.IdSubdivisionNavigation.InverseIdSubordinateNavigation)
+                .Include(x => x.PrivilegeEmployees)
+                .Where(x => x.PrivilegeEmployees.IdPrivileges == idPrivilege)
+                .ToListAsync();
+            return new ActualResult<IEnumerable<ResultSearchDTO>> { Result = ResultFormation(searchByGender) };
         }
 
         //------------------------------------------------------------------------------------------------------------------------------------------
-
         
         public async Task<ActualResult<IEnumerable<ResultSearchDTO>>> SearchAccommodation(AccommodationType type, string hashId)
         {
@@ -125,19 +127,19 @@ namespace TradeUnionCommittee.BLL.Services.Search
             {
                 case AccommodationType.Dormitory:
                 case AccommodationType.Departmental:
-                    var searchByPublicHouse = await _database
-                        .EmployeeRepository
-                        .GetWithIncludeToList(x => x.PublicHouseEmployees.Any(t => t.IdAddressPublicHouse == id),
-                                        p => p.PositionEmployees.IdSubdivisionNavigation.InverseIdSubordinateNavigation,
-                                        p => p.PublicHouseEmployees);
-                    return new ActualResult<IEnumerable<ResultSearchDTO>> { Result = ResultFormation(searchByPublicHouse.Result) };
+                    var searchByPublicHouse = await _context.Employee
+                        .Include(x => x.PositionEmployees.IdSubdivisionNavigation.InverseIdSubordinateNavigation)
+                        .Include(x => x.PublicHouseEmployees)
+                        .Where(x => x.PublicHouseEmployees.Any(t => t.IdAddressPublicHouse == id))
+                        .ToListAsync();
+                    return new ActualResult<IEnumerable<ResultSearchDTO>> { Result = ResultFormation(searchByPublicHouse) };
                 case AccommodationType.FromUniversity:
-                    var searchByFromUniversity = await _database
-                        .EmployeeRepository
-                        .GetWithIncludeToList(x => x.PrivateHouseEmployees.Any(t => t.DateReceiving != null),
-                                        p => p.PositionEmployees.IdSubdivisionNavigation.InverseIdSubordinateNavigation,
-                                        p => p.PrivateHouseEmployees);
-                    return new ActualResult<IEnumerable<ResultSearchDTO>> { Result = ResultFormation(searchByFromUniversity.Result) };
+                    var searchByFromUniversity = await _context.Employee
+                        .Include(x => x.PositionEmployees.IdSubdivisionNavigation.InverseIdSubordinateNavigation)
+                        .Include(x => x.PrivateHouseEmployees)
+                        .Where(x => x.PrivateHouseEmployees.Any(t => t.DateReceiving != null))
+                        .ToListAsync();
+                    return new ActualResult<IEnumerable<ResultSearchDTO>> { Result = ResultFormation(searchByFromUniversity) };
                 default:
                     return new ActualResult<IEnumerable<ResultSearchDTO>>();
             }
@@ -150,25 +152,25 @@ namespace TradeUnionCommittee.BLL.Services.Search
             switch (type)
             {
                 case CoverageType.Employee:
-                    var searchByEmployeeBirthDate = await _database
-                        .EmployeeRepository
-                        .GetWithIncludeToList(x => x.BirthDate >= startDate && x.BirthDate <= endDate,
-                                        p => p.PositionEmployees.IdSubdivisionNavigation.InverseIdSubordinateNavigation);
-                    return new ActualResult<IEnumerable<ResultSearchDTO>> { Result = ResultFormation(searchByEmployeeBirthDate.Result) };
+                    var searchByEmployeeBirthDate = await _context.Employee
+                        .Include(p => p.PositionEmployees.IdSubdivisionNavigation.InverseIdSubordinateNavigation)
+                        .Where(x => x.BirthDate >= startDate && x.BirthDate <= endDate)
+                        .ToListAsync();
+                    return new ActualResult<IEnumerable<ResultSearchDTO>> { Result = ResultFormation(searchByEmployeeBirthDate) };
                 case CoverageType.Children:
-                    var searchByChildrenBirthDate = await _database
-                        .EmployeeRepository
-                        .GetWithIncludeToList(x => x.Children.Any(t => t.BirthDate >= startDate && t.BirthDate <= endDate),
-                                        p => p.PositionEmployees.IdSubdivisionNavigation.InverseIdSubordinateNavigation,
-                                        p => p.Children);
-                    return new ActualResult<IEnumerable<ResultSearchDTO>> { Result = ResultFormation(searchByChildrenBirthDate.Result) };
+                    var searchByChildrenBirthDate = await _context.Employee
+                        .Include(p => p.PositionEmployees.IdSubdivisionNavigation.InverseIdSubordinateNavigation)
+                        .Include(p => p.Children)
+                        .Where(x => x.Children.Any(t => t.BirthDate >= startDate && t.BirthDate <= endDate))
+                        .ToListAsync();
+                    return new ActualResult<IEnumerable<ResultSearchDTO>> { Result = ResultFormation(searchByChildrenBirthDate) };
                 case CoverageType.GrandChildren:
-                    var searchByGrandChildrenBirthDate = await _database
-                        .EmployeeRepository
-                        .GetWithIncludeToList(x => x.GrandChildren.Any(t => t.BirthDate >= startDate && t.BirthDate <= endDate),
-                                        p => p.PositionEmployees.IdSubdivisionNavigation.InverseIdSubordinateNavigation,
-                                        p => p.GrandChildren);
-                    return new ActualResult<IEnumerable<ResultSearchDTO>> { Result = ResultFormation(searchByGrandChildrenBirthDate.Result) };
+                    var searchByGrandChildrenBirthDate = await _context.Employee
+                        .Include(p => p.PositionEmployees.IdSubdivisionNavigation.InverseIdSubordinateNavigation)
+                        .Include(p => p.GrandChildren)
+                        .Where(x => x.GrandChildren.Any(t => t.BirthDate >= startDate && t.BirthDate <= endDate))
+                        .ToListAsync();
+                    return new ActualResult<IEnumerable<ResultSearchDTO>> { Result = ResultFormation(searchByGrandChildrenBirthDate) };
                 default:
                     return new ActualResult<IEnumerable<ResultSearchDTO>>();
             }
@@ -179,31 +181,31 @@ namespace TradeUnionCommittee.BLL.Services.Search
         public async Task<ActualResult<IEnumerable<ResultSearchDTO>>> SearchHobby(CoverageType type, string hobby)
         {
             var idHobby = _hashIdUtilities.DecryptLong(hobby, Enums.Services.Hobby);
-
             switch (type)
             {
                 case CoverageType.Employee:
-                    var searchByEmployeeHobby = await _database
-                        .EmployeeRepository
-                        .GetWithIncludeToList(x => x.HobbyEmployees.Any(t => t.IdHobby == idHobby),
-                                        p => p.PositionEmployees.IdSubdivisionNavigation.InverseIdSubordinateNavigation,
-                                        p => p.HobbyEmployees);
-                    return new ActualResult<IEnumerable<ResultSearchDTO>> { Result = ResultFormation(searchByEmployeeHobby.Result) };
+                    var searchByEmployeeHobby = await _context.Employee
+                        .Include(p => p.PositionEmployees.IdSubdivisionNavigation.InverseIdSubordinateNavigation)
+                        .Include(p => p.HobbyEmployees)
+                        .Where(x => x.HobbyEmployees.Any(t => t.IdHobby == idHobby))
+                        .ToListAsync();
+                    return new ActualResult<IEnumerable<ResultSearchDTO>> { Result = ResultFormation(searchByEmployeeHobby) };
                 case CoverageType.Children:
-                    var searchByChildrenHobby = await _database
-                        .ChildrenRepository
-                        .GetWithIncludeToList(x => x.HobbyChildrens.Any(t => t.IdHobby == idHobby),
-                                        p => p.HobbyChildrens,
-                                        p => p.IdEmployeeNavigation.PositionEmployees.IdSubdivisionNavigation.InverseIdSubordinateNavigation);
-                    return new ActualResult<IEnumerable<ResultSearchDTO>> { Result = ResultFormation(searchByChildrenHobby.Result.Select(x => x.IdEmployeeNavigation)) };
-
+                    var searchByChildrenHobby = await _context.Children
+                        .Include(p => p.HobbyChildrens)
+                        .Include(p => p.IdEmployeeNavigation.PositionEmployees.IdSubdivisionNavigation.InverseIdSubordinateNavigation)
+                        .Where(x => x.HobbyChildrens.Any(t => t.IdHobby == idHobby))
+                        .Select(x => x.IdEmployeeNavigation)
+                        .ToListAsync();
+                    return new ActualResult<IEnumerable<ResultSearchDTO>> { Result = ResultFormation(searchByChildrenHobby) };
                 case CoverageType.GrandChildren:
-                    var searchByGrandChildrenHobby = await _database
-                        .GrandChildrenRepository
-                        .GetWithIncludeToList(x => x.HobbyGrandChildrens.Any(t => t.IdHobby == idHobby),
-                                        p => p.HobbyGrandChildrens,
-                                        p => p.IdEmployeeNavigation.PositionEmployees.IdSubdivisionNavigation.InverseIdSubordinateNavigation);
-                    return new ActualResult<IEnumerable<ResultSearchDTO>> { Result = ResultFormation(searchByGrandChildrenHobby.Result.Select(x => x.IdEmployeeNavigation)) };
+                    var searchByGrandChildrenHobby = await _context.GrandChildren
+                        .Include(p => p.HobbyGrandChildrens)
+                        .Include(p => p.IdEmployeeNavigation.PositionEmployees.IdSubdivisionNavigation.InverseIdSubordinateNavigation)
+                        .Where(x => x.HobbyGrandChildrens.Any(t => t.IdHobby == idHobby))
+                        .Select(x => x.IdEmployeeNavigation)
+                        .ToListAsync();
+                    return new ActualResult<IEnumerable<ResultSearchDTO>> { Result = ResultFormation(searchByGrandChildrenHobby) };
                 default:
                     return new ActualResult<IEnumerable<ResultSearchDTO>>();
             }
@@ -216,37 +218,33 @@ namespace TradeUnionCommittee.BLL.Services.Search
             switch (type)
             {
                 case EmployeeType.MobilePhone:
-                    var searchByMobilePhone = await _database.EmployeeRepository.GetByProperty(x => x.MobilePhone == value);
-                    if (searchByMobilePhone.Result != null)
+                    var searchByMobilePhone = await _context.Employee.FirstOrDefaultAsync(x => x.MobilePhone == value);
+                    if (searchByMobilePhone != null)
                     {
-                        return new ActualResult<string> { Result = _hashIdUtilities.EncryptLong(searchByMobilePhone.Result.Id, Enums.Services.Employee) };
+                        return new ActualResult<string> { Result = _hashIdUtilities.EncryptLong(searchByMobilePhone.Id, Enums.Services.Employee) };
                     }
                     return new ActualResult<string>(Errors.NotFound);
-
                 case EmployeeType.CityPhone:
-                    var searchByCityPhone = await _database.EmployeeRepository.GetByProperty(x => x.CityPhone == value.AddMaskForCityPhone());
-                    if (searchByCityPhone.Result != null)
+                    var searchByCityPhone = await _context.Employee.FirstOrDefaultAsync(x => x.CityPhone == value.AddMaskForCityPhone());
+                    if (searchByCityPhone != null)
                     {
-                        return new ActualResult<string> { Result = _hashIdUtilities.EncryptLong(searchByCityPhone.Result.Id, Enums.Services.Employee) };
+                        return new ActualResult<string> { Result = _hashIdUtilities.EncryptLong(searchByCityPhone.Id, Enums.Services.Employee) };
                     }
                     return new ActualResult<string>(Errors.NotFound);
-
                 case EmployeeType.IdentificationСode:
-                    var searchByIdentificationСode = await _database.EmployeeRepository.GetByProperty(x => x.IdentificationСode == value);
-                    if (searchByIdentificationСode.Result != null)
+                    var searchByIdentificationСode = await _context.Employee.FirstOrDefaultAsync(x => x.IdentificationСode == value);
+                    if (searchByIdentificationСode != null)
                     {
-                        return new ActualResult<string> { Result = _hashIdUtilities.EncryptLong(searchByIdentificationСode.Result.Id, Enums.Services.Employee) };
+                        return new ActualResult<string> { Result = _hashIdUtilities.EncryptLong(searchByIdentificationСode.Id, Enums.Services.Employee) };
                     }
                     return new ActualResult<string>(Errors.NotFound);
-
                 case EmployeeType.MechnikovCard:
-                    var searchByMechnikovCard = await _database.EmployeeRepository.GetByProperty(x => x.MechnikovCard == value);
-                    if (searchByMechnikovCard.Result != null)
+                    var searchByMechnikovCard = await _context.Employee.FirstOrDefaultAsync(x => x.MechnikovCard == value);
+                    if (searchByMechnikovCard != null)
                     {
-                        return new ActualResult<string> { Result = _hashIdUtilities.EncryptLong(searchByMechnikovCard.Result.Id, Enums.Services.Employee) };
+                        return new ActualResult<string> { Result = _hashIdUtilities.EncryptLong(searchByMechnikovCard.Id, Enums.Services.Employee) };
                     }
                     return new ActualResult<string>(Errors.NotFound);
-
                 default:
                     return new ActualResult<string>(Errors.NotFound);
             }
@@ -277,9 +275,9 @@ namespace TradeUnionCommittee.BLL.Services.Search
                 {
                     if (employee.PositionEmployees.IdSubdivisionNavigation.IdSubordinate != null)
                     {
-                        var subdivision = Task.Run(async() => await _database.SubdivisionsRepository.GetById(employee.PositionEmployees.IdSubdivisionNavigation.IdSubordinate.Value));
-                        mainSubdivision = subdivision.Result.Result.Name;
-                        mainSubdivisionAbbreviation = subdivision.Result.Result.Abbreviation;
+                        var subdivision = Task.Run(async() => await _context.Subdivisions.FindAsync(employee.PositionEmployees.IdSubdivisionNavigation.IdSubordinate.Value));
+                        mainSubdivision = subdivision.Result.Name;
+                        mainSubdivisionAbbreviation = subdivision.Result.Abbreviation;
                         subordinateSubdivision = employee.PositionEmployees.IdSubdivisionNavigation.Name;
                         subordinateSubdivisionAbbreviation = employee.PositionEmployees.IdSubdivisionNavigation.Abbreviation;
                     }
@@ -317,7 +315,7 @@ namespace TradeUnionCommittee.BLL.Services.Search
 
         public void Dispose()
         {
-            _database.Dispose();
+            _context.Dispose();
         }
     }
 }

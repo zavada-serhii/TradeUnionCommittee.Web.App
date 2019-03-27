@@ -5,6 +5,7 @@ using TradeUnionCommittee.DAL.EF;
 using TradeUnionCommittee.DAL.Entities;
 using TradeUnionCommittee.DAL.Interfaces;
 using TradeUnionCommittee.DAL.Repositories;
+using TradeUnionCommittee.DAL.Repositories.Search;
 
 namespace TradeUnionCommittee.DAL.Extensions
 {
@@ -15,6 +16,7 @@ namespace TradeUnionCommittee.DAL.Extensions
             services.AddDbContext<TradeUnionCommitteeContext>(options => options.UseNpgsql(connectionString));
             services.AddIdentity<User, IdentityRole>().AddEntityFrameworkStores<TradeUnionCommitteeContext>();
             services.AddTransient<IUnitOfWork, UnitOfWork>();
+            services.AddTransient<ISearchRepository, SearchRepository>();
             return services;
         }
     }
