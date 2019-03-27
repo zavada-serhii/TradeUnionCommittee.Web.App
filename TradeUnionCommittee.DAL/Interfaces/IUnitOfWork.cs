@@ -14,20 +14,6 @@ namespace TradeUnionCommittee.DAL.Interfaces
 
         //------------------------------------------------------------------------------------------------------------------------------------------
 
-        IRepository<Award> AwardRepository { get; }
-        IRepository<MaterialAid> MaterialAidRepository { get; }
-        IRepository<Hobby> HobbyRepository { get; }
-        IRepository<Event> EventRepository { get; }
-        IRepository<Cultural> CulturalRepository { get; }
-        IRepository<Activities> ActivitiesRepository { get; }
-        IRepository<Privileges> PrivilegesRepository { get; }
-        IRepository<SocialActivity> SocialActivityRepository { get; }
-        IRepository<Position> PositionRepository { get; }
-        IRepository<Subdivisions> SubdivisionsRepository { get; }
-        IRepository<AddressPublicHouse> AddressPublicHouseRepository { get; }
-
-        //------------------------------------------------------------------------------------------------------------------------------------------
-
         IRepository<AwardEmployees> AwardEmployeesRepository { get; }
         IRepository<MaterialAidEmployees> MaterialAidEmployeesRepository { get; }
         IRepository<HobbyEmployees> HobbyEmployeesRepository { get; }
@@ -55,11 +41,6 @@ namespace TradeUnionCommittee.DAL.Interfaces
         IRepository<EventFamily> EventFamilyRepository { get; }
         IRepository<CulturalFamily> CulturalFamilyRepository { get; }
         IRepository<ActivityFamily> ActivityFamilyRepository { get; }
-
-        //------------------------------------------------------------------------------------------------------------------------------------------
-        
-        ISearchRepository SearchRepository { get; }
-        ISystemAuditRepository SystemAuditRepository { get; }
 
         //------------------------------------------------------------------------------------------------------------------------------------------
 

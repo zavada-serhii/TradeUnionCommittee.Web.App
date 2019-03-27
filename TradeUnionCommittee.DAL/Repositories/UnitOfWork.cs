@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -9,34 +8,19 @@ using TradeUnionCommittee.DAL.EF;
 using TradeUnionCommittee.DAL.Entities;
 using TradeUnionCommittee.DAL.Extensions;
 using TradeUnionCommittee.DAL.Interfaces;
-using TradeUnionCommittee.DAL.Repositories.Directories;
 using TradeUnionCommittee.DAL.Repositories.General;
 using TradeUnionCommittee.DAL.Repositories.Lists;
-using TradeUnionCommittee.DAL.Repositories.Search;
-using TradeUnionCommittee.DAL.Repositories.SystemAudit;
 
 namespace TradeUnionCommittee.DAL.Repositories
 {
     public class UnitOfWork : IUnitOfWork
     {
         private readonly TradeUnionCommitteeContext _context;
-        private readonly UserManager<User> _userManager;
-        private readonly SignInManager<User> _signInManager;
-        private readonly RoleManager<IdentityRole> _roleManager;
 
-        public UnitOfWork(TradeUnionCommitteeContext context, UserManager<User> userManager,
-            SignInManager<User> signInManager, RoleManager<IdentityRole> roleManager)
+        public UnitOfWork(TradeUnionCommitteeContext context)
         {
             _context = context;
-            _userManager = userManager;
-            _signInManager = signInManager;
-            _roleManager = roleManager;
         }
-
-        //------------------------------------------------------------------------------------------------------------------------------------------
-        
-        private SearchRepository _searchRepository;
-        private SystemAuditRepository _systemAuditRepository;
 
         //------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -44,20 +28,6 @@ namespace TradeUnionCommittee.DAL.Repositories
         private ChildrenRepository _childrenRepository;
         private GrandChildrenRepository _grandChildrenRepository;
         private FamilyRepository _familyRepository;
-
-        //------------------------------------------------------------------------------------------------------------------------------------------
-
-        private AwardRepository _awardRepository;
-        private MaterialAidRepository _materialAidRepository;
-        private HobbyRepository _hobbyRepository;
-        private EventRepository _eventRepository;
-        private CulturalRepository _culturalRepository;
-        private ActivitiesRepository _activitiesRepository;
-        private PrivilegesRepository _privilegesRepository;
-        private SocialActivityRepository _socialActivityRepository;
-        private PositionRepository _positionRepository;
-        private SubdivisionsRepository _subdivisionsRepository;
-        private AddressPublicHouseRepository _addressPublicHouseRepository;
 
         //------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -90,11 +60,6 @@ namespace TradeUnionCommittee.DAL.Repositories
         private ActivityFamilyRepository _activityFamilyRepository;
 
         //------------------------------------------------------------------------------------------------------------------------------------------
-        
-        public ISearchRepository SearchRepository => _searchRepository ?? (_searchRepository = new SearchRepository(_context));
-        public ISystemAuditRepository SystemAuditRepository => _systemAuditRepository ?? (_systemAuditRepository = new SystemAuditRepository(_context));
-
-        //------------------------------------------------------------------------------------------------------------------------------------------
 
         public IRepository<Employee> EmployeeRepository => _employeeRepository ?? (_employeeRepository = new EmployeeRepository(_context));
         public IRepository<Children> ChildrenRepository => _childrenRepository ?? (_childrenRepository = new ChildrenRepository(_context));
@@ -102,21 +67,7 @@ namespace TradeUnionCommittee.DAL.Repositories
         public IRepository<Family> FamilyRepository => _familyRepository ?? (_familyRepository = new FamilyRepository(_context));
 
         //------------------------------------------------------------------------------------------------------------------------------------------
-
-        public IRepository<Award> AwardRepository => _awardRepository ?? (_awardRepository = new AwardRepository(_context));
-        public IRepository<MaterialAid> MaterialAidRepository => _materialAidRepository ?? (_materialAidRepository = new MaterialAidRepository(_context));
-        public IRepository<Hobby> HobbyRepository => _hobbyRepository ?? (_hobbyRepository = new HobbyRepository(_context));
-        public IRepository<Event> EventRepository => _eventRepository ?? (_eventRepository = new EventRepository(_context));
-        public IRepository<Cultural> CulturalRepository => _culturalRepository ?? (_culturalRepository = new CulturalRepository(_context));
-        public IRepository<Activities> ActivitiesRepository => _activitiesRepository ?? (_activitiesRepository = new ActivitiesRepository(_context));
-        public IRepository<Privileges> PrivilegesRepository => _privilegesRepository ?? (_privilegesRepository = new PrivilegesRepository(_context));
-        public IRepository<SocialActivity> SocialActivityRepository => _socialActivityRepository ?? (_socialActivityRepository = new SocialActivityRepository(_context));
-        public IRepository<Position> PositionRepository => _positionRepository ?? (_positionRepository = new PositionRepository(_context));
-        public IRepository<Subdivisions> SubdivisionsRepository => _subdivisionsRepository ?? (_subdivisionsRepository = new SubdivisionsRepository(_context));
-        public IRepository<AddressPublicHouse> AddressPublicHouseRepository => _addressPublicHouseRepository ?? (_addressPublicHouseRepository = new AddressPublicHouseRepository(_context));
-
-        //------------------------------------------------------------------------------------------------------------------------------------------
-        
+       
         public IRepository<AwardEmployees> AwardEmployeesRepository => _awardEmployeesRepository ?? (_awardEmployeesRepository = new AwardEmployeesRepository(_context));
         public IRepository<MaterialAidEmployees> MaterialAidEmployeesRepository => _materialAidEmployeesRepository ?? (_materialAidEmployeesRepository = new MaterialAidEmployeesRepository(_context));
         public IRepository<HobbyEmployees> HobbyEmployeesRepository => _hobbyEmployeesRepository ?? (_hobbyEmployeesRepository = new HobbyEmployeesRepository(_context));
