@@ -6,6 +6,7 @@ using TradeUnionCommittee.DAL.Entities;
 using TradeUnionCommittee.DAL.Interfaces;
 using TradeUnionCommittee.DAL.Repositories;
 using TradeUnionCommittee.DAL.Repositories.Search;
+using TradeUnionCommittee.DAL.Repositories.SystemAudit;
 
 namespace TradeUnionCommittee.DAL.Extensions
 {
@@ -17,6 +18,7 @@ namespace TradeUnionCommittee.DAL.Extensions
             services.AddIdentity<User, IdentityRole>().AddEntityFrameworkStores<TradeUnionCommitteeContext>();
             services.AddTransient<IUnitOfWork, UnitOfWork>();
             services.AddTransient<ISearchRepository, SearchRepository>();
+            services.AddTransient<ISystemAuditRepository, SystemAuditRepository>();
             return services;
         }
     }

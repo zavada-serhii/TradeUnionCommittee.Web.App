@@ -4,18 +4,18 @@ using System.Linq;
 using TradeUnionCommittee.BLL.Configurations;
 using TradeUnionCommittee.BLL.DTO;
 using TradeUnionCommittee.BLL.Interfaces.Dashboard;
-using TradeUnionCommittee.DAL.Interfaces;
+using TradeUnionCommittee.DAL.EF;
 
 namespace TradeUnionCommittee.BLL.Services.Dashboard
 {
     public class DashboardService : IDashboardService
     {
-        private readonly IUnitOfWork _database;
+        private readonly TradeUnionCommitteeContext _context;
         private readonly IAutoMapperConfiguration _mapperService;
 
-        public DashboardService(IUnitOfWork database, IAutoMapperConfiguration mapperService)
+        public DashboardService(TradeUnionCommitteeContext context, IAutoMapperConfiguration mapperService)
         {
-            _database = database;
+            _context = context;
             _mapperService = mapperService;
         }
 
@@ -125,7 +125,7 @@ namespace TradeUnionCommittee.BLL.Services.Dashboard
 
         public void Dispose()
         {
-            _database.Dispose();
+            _context.Dispose();
         }
     }
 }
