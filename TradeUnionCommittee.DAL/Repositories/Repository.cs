@@ -20,26 +20,11 @@ namespace TradeUnionCommittee.DAL.Repositories
             _db = db;
         }
 
-        public async Task<ActualResult<bool>> Any(Expression<Func<T, bool>> predicate)
+        public virtual async Task<ActualResult<T>> GetByProperty(Expression<Func<T, bool>> predicate)
         {
             try
             {
-                return new ActualResult<bool> { Result = await _db.Set<T>().AsNoTracking().AnyAsync(predicate) };
-            }
-            catch (Exception e)
-            {
-                return new ActualResult<bool>(e.Message);
-            }
-        }
-
-
-
-        public virtual async Task<ActualResult<T>> GetById(long id)
-        {
-            try
-            {
-                var result = await _db.Set<T>().FindAsync(id);
-                return result != null ? new ActualResult<T> { Result = result } : new ActualResult<T>(Errors.TupleDeleted);
+                return new ActualResult<T> { Result = await _db.Set<T>().AsNoTracking().FirstOrDefaultAsync(predicate) };
             }
             catch (Exception e)
             {
@@ -47,11 +32,12 @@ namespace TradeUnionCommittee.DAL.Repositories
             }
         }
 
-        public virtual async Task<ActualResult<T>> GetByProperty(Expression<Func<T, bool>> predicate)
+        public virtual async Task<ActualResult<T>> GetById(long id)
         {
             try
             {
-                return new ActualResult<T> { Result = await _db.Set<T>().AsNoTracking().FirstOrDefaultAsync(predicate) };
+                var result = await _db.Set<T>().FindAsync(id);
+                return result != null ? new ActualResult<T> { Result = result } : new ActualResult<T>(Errors.TupleDeleted);
             }
             catch (Exception e)
             {
@@ -71,6 +57,39 @@ namespace TradeUnionCommittee.DAL.Repositories
             }
         }
 
+
+
+        public virtual async Task<ActualResult<IEnumerable<T>>> GetWithIncludeToList(Expression<Func<T, bool>> predicate, params Expression<Func<T, object>>[] includeProperties)
+        {
+            try
+            {
+                return new ActualResult<IEnumerable<T>> { Result = await Include(includeProperties).Where(predicate).ToListAsync() };
+            }
+            catch (Exception e)
+            {
+                return new ActualResult<IEnumerable<T>>(e.Message);
+            }
+        }
+
+        public virtual async Task<ActualResult<T>> GetWithInclude(Expression<Func<T, bool>> predicate, params Expression<Func<T, object>>[] includeProperties)
+        {
+            try
+            {
+                return new ActualResult<T> { Result = await Include(includeProperties).FirstOrDefaultAsync(predicate) };
+            }
+            catch (Exception e)
+            {
+                return new ActualResult<T>(e.Message);
+            }
+        }
+
+        private IQueryable<T> Include(params Expression<Func<T, object>>[] includeProperties)
+        {
+            return includeProperties.Aggregate(_db.Set<T>().AsNoTracking(), (current, includeProperty) => current.Include(includeProperty));
+        }
+
+
+        
         public virtual async Task<ActualResult> Create(T item)
         {
             try
@@ -112,37 +131,6 @@ namespace TradeUnionCommittee.DAL.Repositories
             {
                 return new ActualResult(e.Message);
             }
-        }
-
-        public virtual async Task<ActualResult<IEnumerable<T>>> GetWithIncludeToList(Expression<Func<T, bool>> predicate, params Expression<Func<T, object>>[] includeProperties)
-        {
-            try
-            {
-                return new ActualResult<IEnumerable<T>> { Result = await Include(includeProperties).Where(predicate).ToListAsync() };
-            }
-            catch (Exception e)
-            {
-                return new ActualResult<IEnumerable<T>>(e.Message);
-            }
-        }
-
-        public virtual async Task<ActualResult<T>> GetWithInclude(Expression<Func<T, bool>> predicate, params Expression<Func<T, object>>[] includeProperties)
-        {
-            try
-            {
-                return new ActualResult<T> { Result = await Include(includeProperties).FirstOrDefaultAsync(predicate) };
-            }
-            catch (Exception e)
-            {
-                return new ActualResult<T>(e.Message);
-            }
-        }
-
-        //-----------------------------------------------------------------------------------------------------------------------------------------------
-
-        private IQueryable<T> Include(params Expression<Func<T, object>>[] includeProperties)
-        {
-            return includeProperties.Aggregate(_db.Set<T>().AsNoTracking(), (current, includeProperty) => current.Include(includeProperty));
         }
     }
 }
