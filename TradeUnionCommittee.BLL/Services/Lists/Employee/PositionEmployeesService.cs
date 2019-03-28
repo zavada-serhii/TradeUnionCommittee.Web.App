@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.Configurations;
@@ -6,61 +7,86 @@ using TradeUnionCommittee.BLL.DTO.Employee;
 using TradeUnionCommittee.BLL.Interfaces.Lists.Employee;
 using TradeUnionCommittee.Common.ActualResults;
 using TradeUnionCommittee.Common.Enums;
+using TradeUnionCommittee.DAL.EF;
 using TradeUnionCommittee.DAL.Entities;
-using TradeUnionCommittee.DAL.Interfaces;
 
 namespace TradeUnionCommittee.BLL.Services.Lists.Employee
 {
     public class PositionEmployeesService : IPositionEmployeesService
     {
-        private readonly IUnitOfWork _database;
+        private readonly TradeUnionCommitteeContext _context;
         private readonly IAutoMapperConfiguration _mapperService;
         private readonly IHashIdConfiguration _hashIdUtilities;
 
-        public PositionEmployeesService(IUnitOfWork database, IAutoMapperConfiguration mapperService, IHashIdConfiguration hashIdUtilities)
+        public PositionEmployeesService(TradeUnionCommitteeContext context, IAutoMapperConfiguration mapperService, IHashIdConfiguration hashIdUtilities)
         {
-            _database = database;
+            _context = context;
             _mapperService = mapperService;
             _hashIdUtilities = hashIdUtilities;
         }
 
         public async Task<ActualResult<PositionEmployeesDTO>> GetAsync(string hashIdEmployee)
         {
-            var id = _hashIdUtilities.DecryptLong(hashIdEmployee, Enums.Services.Employee);
-            return _mapperService.Mapper.Map<ActualResult<PositionEmployeesDTO>>(await _database.PositionEmployeesRepository.GetByProperty(x => x.IdEmployee == id));
+            try
+            {
+                var id = _hashIdUtilities.DecryptLong(hashIdEmployee, Enums.Services.Employee);
+                var position = await _context.PositionEmployees.FindAsync(id);
+                var result = _mapperService.Mapper.Map<PositionEmployeesDTO>(position);
+                return new ActualResult<PositionEmployeesDTO> { Result = result };
+            }
+            catch (Exception)
+            {
+                return new ActualResult<PositionEmployeesDTO>(Errors.DataBaseError);
+            }
         }
 
         public async Task<ActualResult> UpdateAsync(PositionEmployeesDTO dto)
         {
-            var check = await CheckDate(dto);
-            if (check.IsValid)
+            try
             {
-                await _database.PositionEmployeesRepository.Update(_mapperService.Mapper.Map<PositionEmployees>(dto));
-                return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
+                var validation = await CheckDate(dto);
+                if (validation.IsValid)
+                {
+                    await _context.PositionEmployees.AddAsync(_mapperService.Mapper.Map<PositionEmployees>(dto));
+                    await _context.SaveChangesAsync();
+                    return new ActualResult();
+                }
+                return validation;
             }
-            return check;
+            catch (Exception)
+            {
+                return new ActualResult(Errors.DataBaseError);
+            }
         }
 
         public void Dispose()
         {
-            _database.Dispose();
+            _context.Dispose();
         }
 
         //--------------- Business Logic ---------------
 
         private async Task<ActualResult> CheckDate(PositionEmployeesDTO dto)
         {
-            var employee = await _database.EmployeeRepository.GetById(_hashIdUtilities.DecryptLong(dto.HashIdEmployee, Enums.Services.Employee));
-            if (employee.IsValid)
+            try
             {
-                var listErrors = new List<string>();
-                if (dto.StartDate.Year < employee.Result.StartYearWork)
+                var id = _hashIdUtilities.DecryptLong(dto.HashIdEmployee, Enums.Services.Employee);
+                var employee = await _context.Employee.FindAsync(id);
+                if (employee != null)
                 {
-                    listErrors.Add($"Рік дати початку менший року початку роботи в ОНУ - {employee.Result.StartYearWork}!");
+                    var listErrors = new List<string>();
+                    if (dto.StartDate.Year < employee.StartYearWork)
+                    {
+                        listErrors.Add($"Рік дати початку менший року початку роботи в ОНУ - {employee.StartYearWork}!");
+                    }
+                    return listErrors.Any() ? new ActualResult(listErrors) : new ActualResult();
                 }
-                return listErrors.Any() ? new ActualResult(listErrors) : new ActualResult();
+                return new ActualResult(Errors.TupleDeleted);
             }
-            return new ActualResult(Errors.TupleDeleted);
+            catch (Exception)
+            {
+                return new ActualResult(Errors.DataBaseError);
+            }
         }
     }
 }

@@ -23,28 +23,13 @@ namespace TradeUnionCommittee.DAL.Repositories
         }
 
         //------------------------------------------------------------------------------------------------------------------------------------------
-
-        private EmployeeRepository _employeeRepository;
+        
         private ChildrenRepository _childrenRepository;
         private GrandChildrenRepository _grandChildrenRepository;
         private FamilyRepository _familyRepository;
 
         //------------------------------------------------------------------------------------------------------------------------------------------
 
-        private AwardEmployeesRepository _awardEmployeesRepository;
-        private MaterialAidEmployeesRepository _materialAidEmployeesRepository;
-        private HobbyEmployeesRepository _hobbyEmployeesRepository;
-        private FluorographyEmployeesRepository _fluorographyEmployeesRepository;
-        private EventEmployeesRepository _eventEmployeesRepository;
-        private CulturalEmployeesRepository _culturalEmployeesRepository;
-        private ActivityEmployeesRepository _activityEmployeesRepository;
-        private GiftEmployeesRepository _giftEmployeesRepository;
-        private PrivilegeEmployeesRepository _privilegeEmployeesRepository;
-        private SocialActivityEmployeesRepository _socialActivityEmployeesRepository;
-        private PositionEmployeesRepository _positionEmployeesRepository;
-        private PublicHouseEmployeesRepository _publicHouseEmployeesRepository;
-        private PrivateHouseEmployeesRepository _privateHouseEmployeesRepository;
-        private ApartmentAccountingEmployeesRepository _apartmentAccountingEmployeesRepository;
         private EventChildrensRepository _eventChildrensRepository;
         private CulturalChildrensRepository _culturalChildrensRepository;
         private HobbyChildrensRepository _hobbyChildrensRepository;
@@ -61,27 +46,13 @@ namespace TradeUnionCommittee.DAL.Repositories
 
         //------------------------------------------------------------------------------------------------------------------------------------------
 
-        public IRepository<Employee> EmployeeRepository => _employeeRepository ?? (_employeeRepository = new EmployeeRepository(_context));
+       
         public IRepository<Children> ChildrenRepository => _childrenRepository ?? (_childrenRepository = new ChildrenRepository(_context));
         public IRepository<GrandChildren> GrandChildrenRepository => _grandChildrenRepository ?? (_grandChildrenRepository = new GrandChildrenRepository(_context));
         public IRepository<Family> FamilyRepository => _familyRepository ?? (_familyRepository = new FamilyRepository(_context));
 
         //------------------------------------------------------------------------------------------------------------------------------------------
-       
-        public IRepository<AwardEmployees> AwardEmployeesRepository => _awardEmployeesRepository ?? (_awardEmployeesRepository = new AwardEmployeesRepository(_context));
-        public IRepository<MaterialAidEmployees> MaterialAidEmployeesRepository => _materialAidEmployeesRepository ?? (_materialAidEmployeesRepository = new MaterialAidEmployeesRepository(_context));
-        public IRepository<HobbyEmployees> HobbyEmployeesRepository => _hobbyEmployeesRepository ?? (_hobbyEmployeesRepository = new HobbyEmployeesRepository(_context));
-        public IRepository<FluorographyEmployees> FluorographyEmployeesRepository => _fluorographyEmployeesRepository ?? (_fluorographyEmployeesRepository = new FluorographyEmployeesRepository(_context));
-        public IRepository<EventEmployees> EventEmployeesRepository => _eventEmployeesRepository ?? (_eventEmployeesRepository = new EventEmployeesRepository(_context));
-        public IRepository<CulturalEmployees> CulturalEmployeesRepository => _culturalEmployeesRepository ?? (_culturalEmployeesRepository = new CulturalEmployeesRepository(_context));
-        public IRepository<ActivityEmployees> ActivityEmployeesRepository => _activityEmployeesRepository ?? (_activityEmployeesRepository = new ActivityEmployeesRepository(_context));
-        public IRepository<GiftEmployees> GiftEmployeesRepository => _giftEmployeesRepository ?? (_giftEmployeesRepository = new GiftEmployeesRepository(_context));
-        public IRepository<PrivilegeEmployees> PrivilegeEmployeesRepository => _privilegeEmployeesRepository ?? (_privilegeEmployeesRepository = new PrivilegeEmployeesRepository(_context));
-        public IRepository<SocialActivityEmployees> SocialActivityEmployeesRepository => _socialActivityEmployeesRepository ?? (_socialActivityEmployeesRepository = new SocialActivityEmployeesRepository(_context));
-        public IRepository<PositionEmployees> PositionEmployeesRepository => _positionEmployeesRepository ?? (_positionEmployeesRepository = new PositionEmployeesRepository(_context));
-        public IRepository<PublicHouseEmployees> PublicHouseEmployeesRepository => _publicHouseEmployeesRepository ?? (_publicHouseEmployeesRepository = new PublicHouseEmployeesRepository(_context));
-        public IRepository<PrivateHouseEmployees> PrivateHouseEmployeesRepository => _privateHouseEmployeesRepository ?? (_privateHouseEmployeesRepository = new PrivateHouseEmployeesRepository(_context));
-        public IRepository<ApartmentAccountingEmployees> ApartmentAccountingEmployeesRepository => _apartmentAccountingEmployeesRepository ?? (_apartmentAccountingEmployeesRepository = new ApartmentAccountingEmployeesRepository(_context));
+
         public IRepository<EventChildrens> EventChildrensRepository => _eventChildrensRepository ?? (_eventChildrensRepository = new EventChildrensRepository(_context));
         public IRepository<CulturalChildrens> CulturalChildrensRepository => _culturalChildrensRepository ?? (_culturalChildrensRepository = new CulturalChildrensRepository(_context));
         public IRepository<HobbyChildrens> HobbyChildrensRepository => _hobbyChildrensRepository ?? (_hobbyChildrensRepository = new HobbyChildrensRepository(_context));

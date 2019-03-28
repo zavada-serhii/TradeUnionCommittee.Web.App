@@ -20,18 +20,6 @@ namespace TradeUnionCommittee.DAL.Repositories
             _db = db;
         }
 
-        public virtual async Task<ActualResult<T>> GetByProperty(Expression<Func<T, bool>> predicate)
-        {
-            try
-            {
-                return new ActualResult<T> { Result = await _db.Set<T>().AsNoTracking().FirstOrDefaultAsync(predicate) };
-            }
-            catch (Exception e)
-            {
-                return new ActualResult<T>(e.Message);
-            }
-        }
-
         public virtual async Task<ActualResult<T>> GetById(long id)
         {
             try

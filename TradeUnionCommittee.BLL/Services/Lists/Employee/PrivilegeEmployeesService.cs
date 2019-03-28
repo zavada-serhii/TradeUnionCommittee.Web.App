@@ -1,55 +1,101 @@
-﻿using System.Threading.Tasks;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
+using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.Configurations;
 using TradeUnionCommittee.BLL.DTO.Employee;
 using TradeUnionCommittee.BLL.Interfaces.Lists.Employee;
 using TradeUnionCommittee.Common.ActualResults;
+using TradeUnionCommittee.Common.Enums;
+using TradeUnionCommittee.DAL.EF;
 using TradeUnionCommittee.DAL.Entities;
-using TradeUnionCommittee.DAL.Interfaces;
 
 namespace TradeUnionCommittee.BLL.Services.Lists.Employee
 {
     public class PrivilegeEmployeesService : IPrivilegeEmployeesService
     {
-        private readonly IUnitOfWork _database;
+        private readonly TradeUnionCommitteeContext _context;
         private readonly IAutoMapperConfiguration _mapperService;
         private readonly IHashIdConfiguration _hashIdUtilities;
 
-        public PrivilegeEmployeesService(IUnitOfWork database, IAutoMapperConfiguration mapperService, IHashIdConfiguration hashIdUtilities)
+        public PrivilegeEmployeesService(TradeUnionCommitteeContext context, IAutoMapperConfiguration mapperService, IHashIdConfiguration hashIdUtilities)
         {
-            _database = database;
+            _context = context;
             _mapperService = mapperService;
             _hashIdUtilities = hashIdUtilities;
         }
 
         public async Task<ActualResult<PrivilegeEmployeesDTO>> GetAsync(string hashIdEmployee)
         {
-            var id = _hashIdUtilities.DecryptLong(hashIdEmployee, Enums.Services.Employee);
-            var result = await _database.PrivilegeEmployeesRepository.GetWithInclude(x => x.IdEmployee == id, c => c.IdPrivilegesNavigation);
-            return _mapperService.Mapper.Map<ActualResult<PrivilegeEmployeesDTO>>(result);
+            try
+            {
+                var id = _hashIdUtilities.DecryptLong(hashIdEmployee, Enums.Services.Employee);
+                var privilege = await _context.PrivilegeEmployees
+                    .Include(x => x.IdPrivilegesNavigation)
+                    .FirstOrDefaultAsync(x => x.Id == id);
+                var result = _mapperService.Mapper.Map<PrivilegeEmployeesDTO>(privilege);
+                return new ActualResult<PrivilegeEmployeesDTO> { Result = result };
+            }
+            catch (Exception)
+            {
+                return new ActualResult<PrivilegeEmployeesDTO>(Errors.DataBaseError);
+            }
         }
 
         public async Task<ActualResult> CreateAsync(PrivilegeEmployeesDTO dto)
         {
-            dto.CheckPrivileges = true;
-            await _database.PrivilegeEmployeesRepository.Create(_mapperService.Mapper.Map<PrivilegeEmployees>(dto));
-            return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
+            try
+            {
+                dto.CheckPrivileges = true;
+                await _context.PrivilegeEmployees.AddAsync(_mapperService.Mapper.Map<PrivilegeEmployees>(dto));
+                await _context.SaveChangesAsync();
+                return new ActualResult();
+            }
+            catch (Exception)
+            {
+                return new ActualResult(Errors.DataBaseError);
+            }
         }
 
         public async Task<ActualResult> UpdateAsync(PrivilegeEmployeesDTO dto)
         {
-            await _database.PrivilegeEmployeesRepository.Update(_mapperService.Mapper.Map<PrivilegeEmployees>(dto));
-            return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
+            try
+            {
+                _context.Entry(_mapperService.Mapper.Map<PrivilegeEmployees>(dto)).State = EntityState.Modified;
+                await _context.SaveChangesAsync();
+                return new ActualResult();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                return new ActualResult(Errors.TupleDeletedOrUpdated);
+            }
+            catch (Exception)
+            {
+                return new ActualResult(Errors.DataBaseError);
+            }
         }
 
         public async Task<ActualResult> DeleteAsync(string hashId)
         {
-            await _database.PrivilegeEmployeesRepository.Delete(_hashIdUtilities.DecryptLong(hashId, Enums.Services.PrivilegeEmployees));
-            return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
+            try
+            {
+                var id = _hashIdUtilities.DecryptLong(hashId, Enums.Services.PrivilegeEmployees);
+                var result = await _context.PrivilegeEmployees.FindAsync(id);
+                if (result != null)
+                {
+                    _context.PrivilegeEmployees.Remove(result);
+                    await _context.SaveChangesAsync();
+                }
+                return new ActualResult();
+            }
+            catch (Exception)
+            {
+                return new ActualResult(Errors.DataBaseError);
+            }
         }
 
         public void Dispose()
         {
-            _database.Dispose();
+            _context.Dispose();
         }
     }
 }
