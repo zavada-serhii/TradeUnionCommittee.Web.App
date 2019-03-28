@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using TradeUnionCommittee.BLL.Configurations;
 using TradeUnionCommittee.BLL.DTO.Employee;
 using TradeUnionCommittee.BLL.Interfaces.Lists.Employee;
@@ -30,7 +31,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Employee
             try
             {
                 var id = _hashIdUtilities.DecryptLong(hashIdEmployee, Enums.Services.Employee);
-                var position = await _context.PositionEmployees.FindAsync(id);
+                var position = await _context.PositionEmployees.FirstOrDefaultAsync(x => x.IdEmployee == id);
                 var result = _mapperService.Mapper.Map<PositionEmployeesDTO>(position);
                 return new ActualResult<PositionEmployeesDTO> { Result = result };
             }

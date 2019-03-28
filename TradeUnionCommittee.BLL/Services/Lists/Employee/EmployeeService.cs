@@ -80,7 +80,8 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Employee
             {
                 var id = _hashIdUtilities.DecryptLong(hashId, Enums.Services.Employee);
                 var result = await _context.Employee.FindAsync(id);
-                return _mapperService.Mapper.Map<ActualResult<GeneralInfoEmployeeDTO>>(result);
+                var mapping = _mapperService.Mapper.Map<GeneralInfoEmployeeDTO>(result);
+                return new ActualResult<GeneralInfoEmployeeDTO> { Result = mapping };
             }
             catch (Exception)
             {

@@ -31,7 +31,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Employee
                 var id = _hashIdUtilities.DecryptLong(hashIdEmployee, Enums.Services.Employee);
                 var privilege = await _context.PrivilegeEmployees
                     .Include(x => x.IdPrivilegesNavigation)
-                    .FirstOrDefaultAsync(x => x.Id == id);
+                    .FirstOrDefaultAsync(x => x.IdEmployee == id);
                 var result = _mapperService.Mapper.Map<PrivilegeEmployeesDTO>(privilege);
                 return new ActualResult<PrivilegeEmployeesDTO> { Result = result };
             }
