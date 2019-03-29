@@ -30,7 +30,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Employee
         {
             try
             {
-                var id = _hashIdUtilities.DecryptLong(hashIdEmployee, Enums.Services.Employee);
+                var id = _hashIdUtilities.DecryptLong(hashIdEmployee);
                 var position = await _context.PositionEmployees.FirstOrDefaultAsync(x => x.IdEmployee == id);
                 var result = _mapperService.Mapper.Map<PositionEmployeesDTO>(position);
                 return new ActualResult<PositionEmployeesDTO> { Result = result };
@@ -71,7 +71,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Employee
         {
             try
             {
-                var id = _hashIdUtilities.DecryptLong(dto.HashIdEmployee, Enums.Services.Employee);
+                var id = _hashIdUtilities.DecryptLong(dto.HashIdEmployee);
                 var employee = await _context.Employee.FindAsync(id);
                 if (employee != null)
                 {

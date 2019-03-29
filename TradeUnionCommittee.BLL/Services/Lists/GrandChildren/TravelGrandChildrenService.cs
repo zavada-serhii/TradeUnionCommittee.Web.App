@@ -31,7 +31,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists.GrandChildren
         {
             try
             {
-                var id = _hashIdUtilities.DecryptLong(hashIdGrandChildren, Enums.Services.GrandChildren);
+                var id = _hashIdUtilities.DecryptLong(hashIdGrandChildren);
                 var travel = await _context.EventGrandChildrens
                     .Include(x => x.IdEventNavigation)
                     .Where(x => x.IdGrandChildren == id && x.IdEventNavigation.Type == TypeEvent.Travel)
@@ -50,7 +50,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists.GrandChildren
         {
             try
             {
-                var id = _hashIdUtilities.DecryptLong(hashId, Enums.Services.TravelGrandChildren);
+                var id = _hashIdUtilities.DecryptLong(hashId);
                 var travel = await _context.EventGrandChildrens
                     .Include(x => x.IdEventNavigation)
                     .FirstOrDefaultAsync(x => x.Id == id);
@@ -99,7 +99,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists.GrandChildren
         {
             try
             {
-                var id = _hashIdUtilities.DecryptLong(hashId, Enums.Services.TravelGrandChildren);
+                var id = _hashIdUtilities.DecryptLong(hashId);
                 var result = await _context.EventGrandChildrens.FindAsync(id);
                 if (result != null)
                 {

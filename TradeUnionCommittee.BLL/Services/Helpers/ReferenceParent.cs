@@ -18,23 +18,23 @@ namespace TradeUnionCommittee.BLL.Services.Helpers
 
         public async Task<string> GetHashIdEmployeeByFamily(string hashIdFamily)
         {
-            var id = _hashIdUtilities.DecryptLong(hashIdFamily, Enums.Services.Family);
+            var id = _hashIdUtilities.DecryptLong(hashIdFamily);
             var result = await _context.Family.FindAsync(id);
-            return result != null ? _hashIdUtilities.EncryptLong(result.IdEmployee, Enums.Services.Employee) : null;
+            return result != null ? _hashIdUtilities.EncryptLong(result.IdEmployee) : null;
         }
 
         public async Task<string> GetHashIdEmployeeByChildren(string hashIdChildren)
         {
-            var id = _hashIdUtilities.DecryptLong(hashIdChildren, Enums.Services.Children);
+            var id = _hashIdUtilities.DecryptLong(hashIdChildren);
             var result = await _context.Children.FindAsync(id);
-            return result != null ? _hashIdUtilities.EncryptLong(result.IdEmployee, Enums.Services.Employee) : null;
+            return result != null ? _hashIdUtilities.EncryptLong(result.IdEmployee) : null;
         }
 
         public async Task<string> GetHashIdEmployeeByGrandChildren(string hashIdGrandChildren)
         {
-            var id = _hashIdUtilities.DecryptLong(hashIdGrandChildren, Enums.Services.GrandChildren);
+            var id = _hashIdUtilities.DecryptLong(hashIdGrandChildren);
             var result = await _context.GrandChildren.FindAsync(id);
-            return result != null ? _hashIdUtilities.EncryptLong(result.IdEmployee, Enums.Services.Employee) : null;
+            return result != null ? _hashIdUtilities.EncryptLong(result.IdEmployee) : null;
         }
 
         public void Dispose()

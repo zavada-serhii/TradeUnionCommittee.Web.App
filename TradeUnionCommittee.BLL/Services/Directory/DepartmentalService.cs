@@ -52,7 +52,7 @@ namespace TradeUnionCommittee.BLL.Services.Directory
                 var departmental = await _context.AddressPublicHouse
                                                  .Where(x => x.Type == TypeHouse.Departmental)
                                                  .OrderBy(x => x.Street)
-                                                 .ToDictionaryAsync(result => _hashIdUtilities.EncryptLong(result.Id, Enums.Services.AddressPublicHouse),
+                                                 .ToDictionaryAsync(result => _hashIdUtilities.EncryptLong(result.Id),
                                                                     result => $"{result.City}, {result.Street}, {result.NumberHouse}");
                 return new ActualResult<Dictionary<string, string>> { Result = departmental };
             }
@@ -66,7 +66,7 @@ namespace TradeUnionCommittee.BLL.Services.Directory
         {
             try
             {
-                var id = _hashIdUtilities.DecryptLong(hashId, Enums.Services.AddressPublicHouse);
+                var id = _hashIdUtilities.DecryptLong(hashId);
                 var departmental = await _context.AddressPublicHouse.FindAsync(id);
                 var result = _mapperService.Mapper.Map<DepartmentalDTO>(departmental);
                 return new ActualResult<DepartmentalDTO> { Result = result };
@@ -121,7 +121,7 @@ namespace TradeUnionCommittee.BLL.Services.Directory
         {
             try
             {
-                var id = _hashIdUtilities.DecryptLong(hashId, Enums.Services.AddressPublicHouse);
+                var id = _hashIdUtilities.DecryptLong(hashId);
                 var result = await _context.AddressPublicHouse.FindAsync(id);
                 if (result != null)
                 {

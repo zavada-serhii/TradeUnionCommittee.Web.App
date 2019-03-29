@@ -32,7 +32,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Employee
             try
             {
                 IEnumerable<PrivateHouseEmployees> result;
-                var idEmployee = _hashIdUtilities.DecryptLong(hashIdEmployee, Enums.Services.Employee);
+                var idEmployee = _hashIdUtilities.DecryptLong(hashIdEmployee);
                 switch (type)
                 {
                     case PrivateHouse.PrivateHouse:
@@ -57,7 +57,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Employee
         {
             try
             {
-                var id = _hashIdUtilities.DecryptLong(hashId, Enums.Services.PrivateHouseEmployees);
+                var id = _hashIdUtilities.DecryptLong(hashId);
                 var privateHouse = await _context.PrivateHouseEmployees.FindAsync(id);
                 var result = _mapperService.Mapper.Map<PrivateHouseEmployeesDTO>(privateHouse);
                 return new ActualResult<PrivateHouseEmployeesDTO> { Result = result };
@@ -134,7 +134,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Employee
         {
             try
             {
-                var id = _hashIdUtilities.DecryptLong(hashId, Enums.Services.PrivateHouseEmployees);
+                var id = _hashIdUtilities.DecryptLong(hashId);
                 var result = await _context.PrivateHouseEmployees.FindAsync(id);
                 if (result != null)
                 {
@@ -160,7 +160,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Employee
         {
             try
             {
-                var id = _hashIdUtilities.DecryptLong(dto.HashIdEmployee, Enums.Services.Employee);
+                var id = _hashIdUtilities.DecryptLong(dto.HashIdEmployee);
                 var employee = await _context.Employee.FindAsync(id);
                 if (employee != null)
                 {

@@ -103,14 +103,14 @@ namespace TradeUnionCommittee.BLL.Services.PDF
 
         private async Task<string> GetFullNameEmployee(ReportPdfDTO dto)
         {
-            var id = _hashIdUtilities.DecryptLong(dto.HashEmployeeId, Enums.Services.Employee);
+            var id = _hashIdUtilities.DecryptLong(dto.HashEmployeeId);
             var employee = await _context.Employee.FindAsync(id);
             return $"{employee.FirstName} {employee.SecondName} {employee.Patronymic}";
         }
 
         private async Task<IEnumerable<MaterialIncentivesEmployeeEntity>> GetMaterialAid(ReportPdfDTO dto)
         {
-            var id = _hashIdUtilities.DecryptLong(dto.HashEmployeeId, Enums.Services.Employee);
+            var id = _hashIdUtilities.DecryptLong(dto.HashEmployeeId);
             var result = await _context.MaterialAidEmployees
                 .Include(x => x.IdMaterialAidNavigation)
                 .Where(x => x.DateIssue.Between(dto.StartDate, dto.EndDate) && x.IdEmployee == id)
@@ -121,7 +121,7 @@ namespace TradeUnionCommittee.BLL.Services.PDF
 
         private async Task<IEnumerable<MaterialIncentivesEmployeeEntity>> GetAward(ReportPdfDTO dto)
         {
-            var id = _hashIdUtilities.DecryptLong(dto.HashEmployeeId, Enums.Services.Employee);
+            var id = _hashIdUtilities.DecryptLong(dto.HashEmployeeId);
             var result = await _context.AwardEmployees
                 .Include(x => x.IdAwardNavigation)
                 .Where(x => x.DateIssue.Between(dto.StartDate, dto.EndDate) && x.IdEmployee == id)
@@ -132,7 +132,7 @@ namespace TradeUnionCommittee.BLL.Services.PDF
 
         private async Task<IEnumerable<CulturalEmployeeEntity>> GetCultural(ReportPdfDTO dto)
         {
-            var id = _hashIdUtilities.DecryptLong(dto.HashEmployeeId, Enums.Services.Employee);
+            var id = _hashIdUtilities.DecryptLong(dto.HashEmployeeId);
             var result = await _context.CulturalEmployees
                 .Include(x => x.IdCulturalNavigation)
                 .Where(x => x.DateVisit.Between(dto.StartDate, dto.EndDate) && x.IdEmployee == id)
@@ -143,7 +143,7 @@ namespace TradeUnionCommittee.BLL.Services.PDF
 
         private async Task<IEnumerable<EventEmployeeEntity>> GetEvent(ReportPdfDTO dto, TypeEvent typeEvent)
         {
-            var id = _hashIdUtilities.DecryptLong(dto.HashEmployeeId, Enums.Services.Employee);
+            var id = _hashIdUtilities.DecryptLong(dto.HashEmployeeId);
             var result = await _context.EventEmployees
                 .Include(x => x.IdEventNavigation)
                 .Where(x => x.StartDate.Between(dto.StartDate, dto.EndDate) &&
@@ -157,7 +157,7 @@ namespace TradeUnionCommittee.BLL.Services.PDF
 
         private async Task<IEnumerable<GiftEmployeeEntity>> GetGift(ReportPdfDTO dto)
         {
-            var id = _hashIdUtilities.DecryptLong(dto.HashEmployeeId, Enums.Services.Employee);
+            var id = _hashIdUtilities.DecryptLong(dto.HashEmployeeId);
             var result = await _context.GiftEmployees
                 .Where(x => x.DateGift.Between(dto.StartDate, dto.EndDate) && x.IdEmployee == id)
                 .OrderBy(x => x.DateGift)

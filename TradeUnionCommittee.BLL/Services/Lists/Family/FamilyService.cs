@@ -29,7 +29,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Family
         {
             try
             {
-                var id = _hashIdUtilities.DecryptLong(hashIdEmployee, Enums.Services.Employee);
+                var id = _hashIdUtilities.DecryptLong(hashIdEmployee);
                 var family = await _context.Family
                     .Where(x => x.IdEmployee == id)
                     .ToListAsync();
@@ -46,7 +46,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Family
         {
             try
             {
-                var id = _hashIdUtilities.DecryptLong(hashId, Enums.Services.Family);
+                var id = _hashIdUtilities.DecryptLong(hashId);
                 var family = await _context.Family.FindAsync(id);
                 var result = _mapperService.Mapper.Map<FamilyDTO>(family);
                 return new ActualResult<FamilyDTO> { Result = result };
@@ -93,7 +93,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Family
         {
             try
             {
-                var id = _hashIdUtilities.DecryptLong(hashId, Enums.Services.Family);
+                var id = _hashIdUtilities.DecryptLong(hashId);
                 var result = await _context.Family.FindAsync(id);
                 if (result != null)
                 {

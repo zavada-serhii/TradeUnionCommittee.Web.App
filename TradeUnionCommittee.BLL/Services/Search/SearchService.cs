@@ -44,7 +44,7 @@ namespace TradeUnionCommittee.BLL.Services.Search
             {
                 if (subdivision != null)
                 {
-                    var idSubdivision = _hashIdUtilities.DecryptLong(subdivision, Enums.Services.Subdivision);
+                    var idSubdivision = _hashIdUtilities.DecryptLong(subdivision);
                     var searchByGenderAndSubdivision = await _context.Employee
                         .Include(x => x.PositionEmployees.IdSubdivisionNavigation.InverseIdSubordinateNavigation)
                         .Where(x => x.Sex == gender &&
@@ -72,10 +72,10 @@ namespace TradeUnionCommittee.BLL.Services.Search
 
         public async Task<ActualResult<IEnumerable<ResultSearchDTO>>> SearchPosition(string position, string subdivision)
         {
-            var idPosition =_hashIdUtilities.DecryptLong(position, Enums.Services.Position);
+            var idPosition =_hashIdUtilities.DecryptLong(position);
             if (subdivision != null)
             {
-                var idSubdivision = _hashIdUtilities.DecryptLong(subdivision, Enums.Services.Subdivision);
+                var idSubdivision = _hashIdUtilities.DecryptLong(subdivision);
                 var searchByGenderAndSubdivision = await _context.Employee
                     .Include(x => x.PositionEmployees.IdSubdivisionNavigation.InverseIdSubordinateNavigation)
                     .Where(x => x.PositionEmployees.IdPosition == idPosition &&
@@ -96,10 +96,10 @@ namespace TradeUnionCommittee.BLL.Services.Search
 
         public async Task<ActualResult<IEnumerable<ResultSearchDTO>>> SearchPrivilege(string privilege, string subdivision)
         {
-            var idPrivilege = _hashIdUtilities.DecryptLong(privilege, Enums.Services.Privileges);
+            var idPrivilege = _hashIdUtilities.DecryptLong(privilege);
             if (subdivision != null)
             {
-                var idSubdivision = _hashIdUtilities.DecryptLong(subdivision, Enums.Services.Subdivision);
+                var idSubdivision = _hashIdUtilities.DecryptLong(subdivision);
                 var searchByGenderAndSubdivision = await _context.Employee
                     .Include(p => p.PositionEmployees.IdSubdivisionNavigation.InverseIdSubordinateNavigation)
                     .Include(p => p.PrivilegeEmployees)
@@ -122,7 +122,7 @@ namespace TradeUnionCommittee.BLL.Services.Search
         
         public async Task<ActualResult<IEnumerable<ResultSearchDTO>>> SearchAccommodation(AccommodationType type, string hashId)
         {
-            var id = _hashIdUtilities.DecryptLong(hashId, Enums.Services.AddressPublicHouse);
+            var id = _hashIdUtilities.DecryptLong(hashId);
             switch (type)
             {
                 case AccommodationType.Dormitory:
@@ -180,7 +180,7 @@ namespace TradeUnionCommittee.BLL.Services.Search
         
         public async Task<ActualResult<IEnumerable<ResultSearchDTO>>> SearchHobby(CoverageType type, string hobby)
         {
-            var idHobby = _hashIdUtilities.DecryptLong(hobby, Enums.Services.Hobby);
+            var idHobby = _hashIdUtilities.DecryptLong(hobby);
             switch (type)
             {
                 case CoverageType.Employee:
@@ -221,28 +221,28 @@ namespace TradeUnionCommittee.BLL.Services.Search
                     var searchByMobilePhone = await _context.Employee.FirstOrDefaultAsync(x => x.MobilePhone == value);
                     if (searchByMobilePhone != null)
                     {
-                        return new ActualResult<string> { Result = _hashIdUtilities.EncryptLong(searchByMobilePhone.Id, Enums.Services.Employee) };
+                        return new ActualResult<string> { Result = _hashIdUtilities.EncryptLong(searchByMobilePhone.Id) };
                     }
                     return new ActualResult<string>(Errors.NotFound);
                 case EmployeeType.CityPhone:
                     var searchByCityPhone = await _context.Employee.FirstOrDefaultAsync(x => x.CityPhone == value.AddMaskForCityPhone());
                     if (searchByCityPhone != null)
                     {
-                        return new ActualResult<string> { Result = _hashIdUtilities.EncryptLong(searchByCityPhone.Id, Enums.Services.Employee) };
+                        return new ActualResult<string> { Result = _hashIdUtilities.EncryptLong(searchByCityPhone.Id) };
                     }
                     return new ActualResult<string>(Errors.NotFound);
                 case EmployeeType.IdentificationСode:
                     var searchByIdentificationСode = await _context.Employee.FirstOrDefaultAsync(x => x.IdentificationСode == value);
                     if (searchByIdentificationСode != null)
                     {
-                        return new ActualResult<string> { Result = _hashIdUtilities.EncryptLong(searchByIdentificationСode.Id, Enums.Services.Employee) };
+                        return new ActualResult<string> { Result = _hashIdUtilities.EncryptLong(searchByIdentificationСode.Id) };
                     }
                     return new ActualResult<string>(Errors.NotFound);
                 case EmployeeType.MechnikovCard:
                     var searchByMechnikovCard = await _context.Employee.FirstOrDefaultAsync(x => x.MechnikovCard == value);
                     if (searchByMechnikovCard != null)
                     {
-                        return new ActualResult<string> { Result = _hashIdUtilities.EncryptLong(searchByMechnikovCard.Id, Enums.Services.Employee) };
+                        return new ActualResult<string> { Result = _hashIdUtilities.EncryptLong(searchByMechnikovCard.Id) };
                     }
                     return new ActualResult<string>(Errors.NotFound);
                 default:
@@ -296,7 +296,7 @@ namespace TradeUnionCommittee.BLL.Services.Search
 
                 result.Add(new ResultSearchDTO
                 {
-                    HashIdUser = _hashIdUtilities.EncryptLong(employee.Id, Enums.Services.Employee),
+                    HashIdUser = _hashIdUtilities.EncryptLong(employee.Id),
                     FullName = $"{employee.FirstName} {employee.SecondName} {employee.Patronymic}",
                     SurnameAndInitials = $"{employee.FirstName} {employee.SecondName[0]}. {patronymic}",
                     BirthDate = employee.BirthDate,

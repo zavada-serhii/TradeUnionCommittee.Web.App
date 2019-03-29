@@ -44,7 +44,7 @@ namespace TradeUnionCommittee.BLL.Services.Directory
         {
             try
             {
-                var id = _hashIdUtilities.DecryptLong(hashId, Enums.Services.Subdivision);
+                var id = _hashIdUtilities.DecryptLong(hashId);
                 var subdivision = await _context.Subdivisions.FindAsync(id);
                 var result = _mapperService.Mapper.Map<SubdivisionDTO>(subdivision);
                 return new ActualResult<SubdivisionDTO> { Result = result };
@@ -59,7 +59,7 @@ namespace TradeUnionCommittee.BLL.Services.Directory
         {
             try
             {
-                var id = _hashIdUtilities.DecryptLong(hashId, Enums.Services.Subdivision);
+                var id = _hashIdUtilities.DecryptLong(hashId);
                 var subdivision = await _context.Subdivisions.Where(x => x.IdSubordinate == id).OrderBy(x => x.Name).ToListAsync();
                 var result = _mapperService.Mapper.Map<IEnumerable<SubdivisionDTO>>(subdivision);
                 return new ActualResult<IEnumerable<SubdivisionDTO>> { Result = result };
@@ -99,13 +99,13 @@ namespace TradeUnionCommittee.BLL.Services.Directory
             {
                 new SubdivisionDTO
                 {
-                    HashIdMain = _hashIdUtilities.EncryptLong(subdivisions.Id, Enums.Services.Subdivision),
+                    HashIdMain = _hashIdUtilities.EncryptLong(subdivisions.Id),
                     Name = subdivisions.Name
                 }
             };
             list.AddRange(subdivisions.InverseIdSubordinateNavigation.Select(subdivision => new SubdivisionDTO
             {
-                HashIdMain = _hashIdUtilities.EncryptLong(subdivision.Id, Enums.Services.Subdivision),
+                HashIdMain = _hashIdUtilities.EncryptLong(subdivision.Id),
                 Name = subdivision.Name
             }));
             return list;
@@ -228,7 +228,7 @@ namespace TradeUnionCommittee.BLL.Services.Directory
         {
             try
             {
-                var id = _hashIdUtilities.DecryptLong(hashId, Enums.Services.Subdivision);
+                var id = _hashIdUtilities.DecryptLong(hashId);
                 var result = await _context.Subdivisions.FindAsync(id);
                 if (result != null)
                 {

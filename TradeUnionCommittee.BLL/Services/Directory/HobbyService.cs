@@ -44,7 +44,7 @@ namespace TradeUnionCommittee.BLL.Services.Directory
         {
             try
             {
-                var id = _hashIdUtilities.DecryptLong(hashId, Enums.Services.Hobby);
+                var id = _hashIdUtilities.DecryptLong(hashId);
                 var hobby = await _context.Hobby.FindAsync(id);
                 var result = _mapperService.Mapper.Map<DirectoryDTO>(hobby);
                 return new ActualResult<DirectoryDTO> { Result = result };
@@ -99,7 +99,7 @@ namespace TradeUnionCommittee.BLL.Services.Directory
         {
             try
             {
-                var id = _hashIdUtilities.DecryptLong(hashId, Enums.Services.Hobby);
+                var id = _hashIdUtilities.DecryptLong(hashId);
                 var result = await _context.Hobby.FindAsync(id);
                 if (result != null)
                 {

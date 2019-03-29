@@ -30,7 +30,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Employee
         {
             try
             {
-                var id = _hashIdUtilities.DecryptLong(hashIdEmployee, Enums.Services.Employee);
+                var id = _hashIdUtilities.DecryptLong(hashIdEmployee);
                 var fluorography = await _context.FluorographyEmployees
                     .Where(x => x.IdEmployee == id)
                     .OrderByDescending(x => x.DatePassage)
@@ -48,7 +48,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Employee
         {
             try
             {
-                var id = _hashIdUtilities.DecryptLong(hashId, Enums.Services.FluorographyEmployees);
+                var id = _hashIdUtilities.DecryptLong(hashId);
                 var fluorography = await _context.FluorographyEmployees.FindAsync(id);
                 var result = _mapperService.Mapper.Map<FluorographyEmployeesDTO>(fluorography);
                 return new ActualResult<FluorographyEmployeesDTO> { Result = result };
@@ -95,7 +95,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Employee
         {
             try
             {
-                var id = _hashIdUtilities.DecryptLong(hashId, Enums.Services.FluorographyEmployees);
+                var id = _hashIdUtilities.DecryptLong(hashId);
                 var result = await _context.FluorographyEmployees.FindAsync(id);
                 if (result != null)
                 {

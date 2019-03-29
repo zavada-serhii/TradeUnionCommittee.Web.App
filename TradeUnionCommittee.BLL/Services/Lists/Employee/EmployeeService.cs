@@ -78,7 +78,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Employee
         {
             try
             {
-                var id = _hashIdUtilities.DecryptLong(hashId, Enums.Services.Employee);
+                var id = _hashIdUtilities.DecryptLong(hashId);
                 var result = await _context.Employee.FindAsync(id);
                 var mapping = _mapperService.Mapper.Map<GeneralInfoEmployeeDTO>(result);
                 return new ActualResult<GeneralInfoEmployeeDTO> { Result = mapping };
@@ -109,7 +109,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Employee
 
         public async Task<ActualResult> DeleteAsync(string hashId)
         {
-            return _mapperService.Mapper.Map<ActualResult>(await DeleteAsync(_hashIdUtilities.DecryptLong(hashId, Enums.Services.Employee)));
+            return _mapperService.Mapper.Map<ActualResult>(await DeleteAsync(_hashIdUtilities.DecryptLong(hashId)));
         }
 
         private async Task<ActualResult> DeleteAsync(long id)

@@ -30,7 +30,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists.GrandChildren
         {
             try
             {
-                var id = _hashIdUtilities.DecryptLong(hashIdGrandChildren, Enums.Services.GrandChildren);
+                var id = _hashIdUtilities.DecryptLong(hashIdGrandChildren);
                 var gift = await _context.GiftGrandChildrens
                     .Where(x => x.IdGrandChildren == id)
                     .OrderByDescending(x => x.DateGift)
@@ -48,7 +48,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists.GrandChildren
         {
             try
             {
-                var id = _hashIdUtilities.DecryptLong(hashId, Enums.Services.GiftGrandChildren);
+                var id = _hashIdUtilities.DecryptLong(hashId);
                 var gift = await _context.GiftGrandChildrens.FindAsync(id);
                 var result = _mapperService.Mapper.Map<GiftGrandChildrenDTO>(gift);
                 return new ActualResult<GiftGrandChildrenDTO> { Result = result };
@@ -95,7 +95,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists.GrandChildren
         {
             try
             {
-                var id = _hashIdUtilities.DecryptLong(hashId, Enums.Services.GiftGrandChildren);
+                var id = _hashIdUtilities.DecryptLong(hashId);
                 var result = await _context.GiftGrandChildrens.FindAsync(id);
                 if (result != null)
                 {

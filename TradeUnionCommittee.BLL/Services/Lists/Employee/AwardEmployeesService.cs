@@ -30,7 +30,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Employee
         {
             try
             {
-                var id = _hashIdUtilities.DecryptLong(hashIdEmployee, Enums.Services.Employee);
+                var id = _hashIdUtilities.DecryptLong(hashIdEmployee);
                 var award = await _context.AwardEmployees
                     .Include(x => x.IdAwardNavigation)
                     .Where(x => x.IdEmployee == id)
@@ -49,7 +49,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Employee
         {
             try
             {
-                var id = _hashIdUtilities.DecryptLong(hashId, Enums.Services.AwardEmployees);
+                var id = _hashIdUtilities.DecryptLong(hashId);
                 var award = await _context.AwardEmployees
                     .Include(x => x.IdAwardNavigation)
                     .FirstOrDefaultAsync(x => x.Id == id);
@@ -98,7 +98,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Employee
         {
             try
             {
-                var id = _hashIdUtilities.DecryptLong(hashId, Enums.Services.AwardEmployees);
+                var id = _hashIdUtilities.DecryptLong(hashId);
                 var result = await _context.AwardEmployees.FindAsync(id);
                 if (result != null)
                 {

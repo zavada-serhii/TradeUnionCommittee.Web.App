@@ -45,7 +45,7 @@ namespace TradeUnionCommittee.BLL.Services.Directory
         {
             try
             {
-                var id = _hashIdUtilities.DecryptLong(hashId, Enums.Services.Wellness);
+                var id = _hashIdUtilities.DecryptLong(hashId);
                 var wellness = await _context.Event.FindAsync(id);
                 var result = _mapperService.Mapper.Map<WellnessDTO>(wellness);
                 return new ActualResult<WellnessDTO> { Result = result };
@@ -100,7 +100,7 @@ namespace TradeUnionCommittee.BLL.Services.Directory
         {
             try
             {
-                var id = _hashIdUtilities.DecryptLong(hashId, Enums.Services.Wellness);
+                var id = _hashIdUtilities.DecryptLong(hashId);
                 var result = await _context.Event.FindAsync(id);
                 if (result != null)
                 {

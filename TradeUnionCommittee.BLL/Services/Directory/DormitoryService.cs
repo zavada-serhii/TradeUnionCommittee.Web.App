@@ -48,7 +48,7 @@ namespace TradeUnionCommittee.BLL.Services.Directory
         {
             try
             {
-                var id = _hashIdUtilities.DecryptLong(hashId, Enums.Services.AddressPublicHouse);
+                var id = _hashIdUtilities.DecryptLong(hashId);
                 var dormitory = await _context.AddressPublicHouse.FindAsync(id);
                 var result = _mapperService.Mapper.Map<DormitoryDTO>(dormitory);
                 return new ActualResult<DormitoryDTO> { Result = result };
@@ -103,7 +103,7 @@ namespace TradeUnionCommittee.BLL.Services.Directory
         {
             try
             {
-                var id = _hashIdUtilities.DecryptLong(hashId, Enums.Services.AddressPublicHouse);
+                var id = _hashIdUtilities.DecryptLong(hashId);
                 var result = await _context.AddressPublicHouse.FindAsync(id);
                 if (result != null)
                 {

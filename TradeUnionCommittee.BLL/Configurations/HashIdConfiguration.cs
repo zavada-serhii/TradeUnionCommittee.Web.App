@@ -1,5 +1,5 @@
-﻿using System.Linq;
-using HashidsNet;
+﻿using HashidsNet;
+using System.Linq;
 using TradeUnionCommittee.BLL.Exceptions;
 
 namespace TradeUnionCommittee.BLL.Configurations
@@ -15,8 +15,8 @@ namespace TradeUnionCommittee.BLL.Configurations
 
     public interface IHashIdConfiguration
     {
-        long DecryptLong(string cipherText, Enums.Services service);
-        string EncryptLong(long plainLong, Enums.Services service);
+        long DecryptLong(string cipherText);
+        string EncryptLong(long plainLong);
     }
 
     internal sealed class HashIdConfiguration : IHashIdConfiguration
@@ -45,29 +45,29 @@ namespace TradeUnionCommittee.BLL.Configurations
             _useGuidFormat = setting.UseGuidFormat;
         }
 
-        private Hashids ObjectHashids(Enums.Services service)
+        private Hashids ObjectHashids()
         {
-            return new Hashids($"{_salt}-{service}Service|{_salt.Reverse()}", _minHashLenght, _alphabet, _seps);
+            return new Hashids($"{_salt}-Service|{_salt.Reverse()}", _minHashLenght, _alphabet, _seps);
         }
 
-        public string EncryptLong(long plainLong, Enums.Services service)
+        public string EncryptLong(long plainLong)
         {
-            return _useGuidFormat ? GuidFormat(ObjectHashids(service).EncodeLong(plainLong), true) : ObjectHashids(service).EncodeLong(plainLong);
+            return _useGuidFormat ? GuidFormat(ObjectHashids().EncodeLong(plainLong), true) : ObjectHashids().EncodeLong(plainLong);
         }
 
-        public long DecryptLong(string cipherText, Enums.Services service)
+        public long DecryptLong(string cipherText)
         {
             if (string.IsNullOrEmpty(cipherText) || string.IsNullOrWhiteSpace(cipherText))
             {
                 return 0;
             }
-            var result = ObjectHashids(service).DecodeLong(_useGuidFormat ? GuidFormat(cipherText, false) : cipherText);
+            var result = ObjectHashids().DecodeLong(_useGuidFormat ? GuidFormat(cipherText, false) : cipherText);
 
             if (result.Length == 1)
             {
                 return result[0];
             }
-            throw new DecryptHashIdException($"{service}");
+            throw new DecryptHashIdException();
         }
 
         private string GuidFormat(string hash, bool addOrRemoveMinus)
