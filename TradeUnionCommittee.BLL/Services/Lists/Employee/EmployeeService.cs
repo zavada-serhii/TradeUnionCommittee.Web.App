@@ -57,16 +57,17 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Employee
                     {
                         await _context.PrivilegeEmployees.AddAsync(_mapperService.Mapper.Map<PrivilegeEmployees>(dto));
                     }
+
+                    if (await _context.SaveChangesAsync() > 0)
+                    {
+                        return new ActualResult();
+                    }
                 }
 
-                if (await _context.SaveChangesAsync() > 0)
-                {
-                    return new ActualResult();
-                }
                 await DeleteAsync(dto.IdEmployee);
                 return new ActualResult(Errors.DataBaseError);
             }
-            catch (Exception )
+            catch (Exception)
             {
                 return new ActualResult(Errors.DataBaseError);
             }
