@@ -26,7 +26,6 @@ namespace TradeUnionCommittee.DAL.Repositories
         
         private ChildrenRepository _childrenRepository;
         private GrandChildrenRepository _grandChildrenRepository;
-        private FamilyRepository _familyRepository;
 
         //------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -40,16 +39,12 @@ namespace TradeUnionCommittee.DAL.Repositories
         private HobbyGrandChildrensRepository _hobbyGrandChildrensRepository;
         private ActivityGrandChildrensRepository _activityGrandChildrensRepository;
         private GiftGrandChildrensRepository _giftGrandChildrensRepository;
-        private EventFamilyRepository _eventFamilyRepository;
-        private CulturalFamilyRepository _culturalFamilyRepository;
-        private ActivityFamilyRepository _activityFamilyRepository;
 
         //------------------------------------------------------------------------------------------------------------------------------------------
 
        
         public IRepository<Children> ChildrenRepository => _childrenRepository ?? (_childrenRepository = new ChildrenRepository(_context));
         public IRepository<GrandChildren> GrandChildrenRepository => _grandChildrenRepository ?? (_grandChildrenRepository = new GrandChildrenRepository(_context));
-        public IRepository<Family> FamilyRepository => _familyRepository ?? (_familyRepository = new FamilyRepository(_context));
 
         //------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -63,10 +58,7 @@ namespace TradeUnionCommittee.DAL.Repositories
         public IRepository<HobbyGrandChildrens> HobbyGrandChildrensRepository => _hobbyGrandChildrensRepository ?? (_hobbyGrandChildrensRepository = new HobbyGrandChildrensRepository(_context));
         public IRepository<ActivityGrandChildrens> ActivityGrandChildrensRepository => _activityGrandChildrensRepository ?? (_activityGrandChildrensRepository = new ActivityGrandChildrensRepository(_context));
         public IRepository<GiftGrandChildrens> GiftGrandChildrensRepository => _giftGrandChildrensRepository ?? (_giftGrandChildrensRepository = new GiftGrandChildrensRepository(_context));
-        public IRepository<EventFamily> EventFamilyRepository => _eventFamilyRepository ?? (_eventFamilyRepository = new EventFamilyRepository(_context));
-        public IRepository<CulturalFamily> CulturalFamilyRepository => _culturalFamilyRepository ?? (_culturalFamilyRepository = new CulturalFamilyRepository(_context));
-        public IRepository<ActivityFamily> ActivityFamilyRepository => _activityFamilyRepository ?? (_activityFamilyRepository = new ActivityFamilyRepository(_context));
-        
+       
         //------------------------------------------------------------------------------------------------------------------------------------------
 
         public async Task<ActualResult> SaveAsync()

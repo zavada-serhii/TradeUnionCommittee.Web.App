@@ -9,7 +9,6 @@ namespace TradeUnionCommittee.DAL.Interfaces
     {
         IRepository<Children> ChildrenRepository { get; }
         IRepository<GrandChildren> GrandChildrenRepository { get; }
-        IRepository<Family> FamilyRepository { get; }
 
         //------------------------------------------------------------------------------------------------------------------------------------------
         
@@ -24,10 +23,6 @@ namespace TradeUnionCommittee.DAL.Interfaces
         IRepository<HobbyGrandChildrens> HobbyGrandChildrensRepository { get; }
         IRepository<ActivityGrandChildrens> ActivityGrandChildrensRepository { get; }
         IRepository<GiftGrandChildrens> GiftGrandChildrensRepository { get; }
-
-        IRepository<EventFamily> EventFamilyRepository { get; }
-        IRepository<CulturalFamily> CulturalFamilyRepository { get; }
-        IRepository<ActivityFamily> ActivityFamilyRepository { get; }
 
         //------------------------------------------------------------------------------------------------------------------------------------------
 
