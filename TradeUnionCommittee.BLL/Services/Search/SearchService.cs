@@ -12,18 +12,18 @@ using TradeUnionCommittee.Common.ActualResults;
 using TradeUnionCommittee.Common.Enums;
 using TradeUnionCommittee.DAL.EF;
 using TradeUnionCommittee.DAL.Enums;
-using TradeUnionCommittee.DAL.Interfaces;
+using TradeUnionCommittee.DAL.Native;
 
 namespace TradeUnionCommittee.BLL.Services.Search
 {
     public class SearchService : ISearchService
     {
         private readonly TradeUnionCommitteeContext _context;
-        private readonly ISearchRepository _searchRepository;
+        private readonly ISearchNative _searchRepository;
         private readonly IHashIdConfiguration _hashIdUtilities;
         private readonly IAutoMapperConfiguration _mapperService;
 
-        public SearchService(TradeUnionCommitteeContext context, IHashIdConfiguration hashIdUtilities, IAutoMapperConfiguration mapperService, ISearchRepository searchRepository)
+        public SearchService(TradeUnionCommitteeContext context, IHashIdConfiguration hashIdUtilities, IAutoMapperConfiguration mapperService, ISearchNative searchRepository)
         {
             _context = context;
             _hashIdUtilities = hashIdUtilities;

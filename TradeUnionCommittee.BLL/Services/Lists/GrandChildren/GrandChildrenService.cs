@@ -1,61 +1,117 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.Configurations;
 using TradeUnionCommittee.BLL.DTO.GrandChildren;
 using TradeUnionCommittee.BLL.Interfaces.Lists.GrandChildren;
 using TradeUnionCommittee.Common.ActualResults;
-using TradeUnionCommittee.DAL.Interfaces;
+using TradeUnionCommittee.Common.Enums;
+using TradeUnionCommittee.DAL.EF;
 
 namespace TradeUnionCommittee.BLL.Services.Lists.GrandChildren
 {
     public class GrandChildrenService : IGrandChildrenService
     {
-        private readonly IUnitOfWork _database;
+        private readonly TradeUnionCommitteeContext _context;
         private readonly IAutoMapperConfiguration _mapperService;
         private readonly IHashIdConfiguration _hashIdUtilities;
 
-        public GrandChildrenService(IUnitOfWork database, IAutoMapperConfiguration mapperService, IHashIdConfiguration hashIdUtilities)
+        public GrandChildrenService(TradeUnionCommitteeContext context, IAutoMapperConfiguration mapperService, IHashIdConfiguration hashIdUtilities)
         {
-            _database = database;
+            _context = context;
             _mapperService = mapperService;
             _hashIdUtilities = hashIdUtilities;
         }
 
         public async Task<ActualResult<IEnumerable<GrandChildrenDTO>>> GetAllAsync(string hashIdEmployee)
         {
-            var id = _hashIdUtilities.DecryptLong(hashIdEmployee, Enums.Services.Employee);
-            var result = await _database.GrandChildrenRepository.Find(x => x.IdEmployee == id);
-            return _mapperService.Mapper.Map<ActualResult<IEnumerable<GrandChildrenDTO>>>(result);
+            try
+            {
+                var id = _hashIdUtilities.DecryptLong(hashIdEmployee, Enums.Services.Employee);
+                var grandChildren = await _context.GrandChildren
+                    .Where(x => x.IdEmployee == id)
+                    .OrderByDescending(x => x.BirthDate)
+                    .ToListAsync();
+                var result = _mapperService.Mapper.Map<IEnumerable<GrandChildrenDTO>>(grandChildren);
+                return new ActualResult<IEnumerable<GrandChildrenDTO>> { Result = result };
+            }
+            catch (Exception)
+            {
+                return new ActualResult<IEnumerable<GrandChildrenDTO>>(Errors.DataBaseError);
+            }
         }
 
         public async Task<ActualResult<GrandChildrenDTO>> GetAsync(string hashId)
         {
-            var id = _hashIdUtilities.DecryptLong(hashId, Enums.Services.GrandChildren);
-            var result = await _database.GrandChildrenRepository.GetById(id);
-            return _mapperService.Mapper.Map<ActualResult<GrandChildrenDTO>>(result);
+            try
+            {
+                var id = _hashIdUtilities.DecryptLong(hashId, Enums.Services.GrandChildren);
+                var grandChildren = await _context.GrandChildren.FindAsync(id);
+                var result = _mapperService.Mapper.Map<GrandChildrenDTO>(grandChildren);
+                return new ActualResult<GrandChildrenDTO> { Result = result };
+            }
+            catch (Exception)
+            {
+                return new ActualResult<GrandChildrenDTO>(Errors.DataBaseError);
+            }
         }
 
         public async Task<ActualResult> CreateAsync(GrandChildrenDTO item)
         {
-            await _database.GrandChildrenRepository.Create(_mapperService.Mapper.Map<DAL.Entities.GrandChildren>(item));
-            return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
+            try
+            {
+                await _context.GrandChildren.AddAsync(_mapperService.Mapper.Map<DAL.Entities.GrandChildren>(item));
+                await _context.SaveChangesAsync();
+                return new ActualResult();
+            }
+            catch (Exception)
+            {
+                return new ActualResult(Errors.DataBaseError);
+            }
         }
 
         public async Task<ActualResult> UpdateAsync(GrandChildrenDTO item)
         {
-            await _database.GrandChildrenRepository.Update(_mapperService.Mapper.Map<DAL.Entities.GrandChildren>(item));
-            return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
+            try
+            {
+                _context.Entry(_mapperService.Mapper.Map<DAL.Entities.GrandChildren>(item)).State = EntityState.Modified;
+                await _context.SaveChangesAsync();
+                return new ActualResult();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                return new ActualResult(Errors.TupleDeletedOrUpdated);
+            }
+            catch (Exception)
+            {
+                return new ActualResult(Errors.DataBaseError);
+            }
         }
 
         public async Task<ActualResult> DeleteAsync(string hashId)
         {
-            await _database.GrandChildrenRepository.Delete(_hashIdUtilities.DecryptLong(hashId, Enums.Services.GrandChildren));
-            return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
+            try
+            {
+                var id = _hashIdUtilities.DecryptLong(hashId, Enums.Services.GrandChildren);
+                var result = await _context.GrandChildren.FindAsync(id);
+                if (result != null)
+                {
+                    _context.GrandChildren.Remove(result);
+                    await _context.SaveChangesAsync();
+                }
+                return new ActualResult();
+            }
+            catch (Exception)
+            {
+                return new ActualResult(Errors.DataBaseError);
+            }
         }
 
         public void Dispose()
         {
-            _database.Dispose();
+            _context.Dispose();
         }
     }
 }

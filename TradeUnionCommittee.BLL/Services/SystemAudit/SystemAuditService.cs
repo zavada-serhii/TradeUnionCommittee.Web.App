@@ -8,14 +8,14 @@ using TradeUnionCommittee.BLL.Interfaces.SystemAudit;
 using TradeUnionCommittee.Common.ActualResults;
 using TradeUnionCommittee.DAL.Entities;
 using TradeUnionCommittee.DAL.Enums;
-using TradeUnionCommittee.DAL.Interfaces;
+using TradeUnionCommittee.DAL.Native;
 
 namespace TradeUnionCommittee.BLL.Services.SystemAudit
 {
     public class SystemAuditService : ISystemAuditService
     {
-        private readonly ISystemAuditRepository _auditRepository;
-        public SystemAuditService(ISystemAuditRepository auditRepository)
+        private readonly ISystemAuditNative _auditRepository;
+        public SystemAuditService(ISystemAuditNative auditRepository)
         {
             _auditRepository = auditRepository;
         }

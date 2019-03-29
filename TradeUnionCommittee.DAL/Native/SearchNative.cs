@@ -8,15 +8,19 @@ using System.Threading.Tasks;
 using TradeUnionCommittee.DAL.EF;
 using TradeUnionCommittee.DAL.Enums;
 using TradeUnionCommittee.DAL.Extensions;
-using TradeUnionCommittee.DAL.Interfaces;
 
-namespace TradeUnionCommittee.DAL.Repositories.Search
+namespace TradeUnionCommittee.DAL.Native
 {
-    public class SearchRepository : ISearchRepository
+    public interface ISearchNative
+    {
+        Task<IEnumerable<ResultFullNameSearch>> SearchByFullName(string fullName, TrigramSearch type);
+    }
+
+    public class SearchNative : ISearchNative
     {
         private readonly TradeUnionCommitteeContext _dbContext;
 
-        public SearchRepository(TradeUnionCommitteeContext db)
+        public SearchNative(TradeUnionCommitteeContext db)
         {
             _dbContext = db;
         }
