@@ -1,5 +1,6 @@
 ﻿using HashidsNet;
 using System;
+using System.Text;
 using TradeUnionCommittee.BLL.Exceptions;
 
 namespace TradeUnionCommittee.BLL.Configurations
@@ -71,12 +72,13 @@ namespace TradeUnionCommittee.BLL.Configurations
 
         private string GuidFormat(string hash, HashIdOperation hashId)
         {
+            var builder = new StringBuilder(hash);
             switch (hashId)
             {
                 case HashIdOperation.Encrypt:
-                    return hash.Insert(8, "-").Insert(13, "-").Insert(18, "-").Insert(23, "-");
+                    return builder.Insert(8, "-").Insert(13, "-").Insert(18, "-").Insert(23, "-").ToString();
                 case HashIdOperation.Decrypt:
-                    return hash.Replace("-", string.Empty);
+                    return builder.Replace("-", string.Empty).ToString();
                 default:
                     throw new ArgumentOutOfRangeException(nameof(hashId), hashId, null);
             }
