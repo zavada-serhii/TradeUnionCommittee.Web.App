@@ -24,16 +24,10 @@ namespace TradeUnionCommittee.DAL.Repositories
 
         //------------------------------------------------------------------------------------------------------------------------------------------
         
-        private ChildrenRepository _childrenRepository;
         private GrandChildrenRepository _grandChildrenRepository;
 
         //------------------------------------------------------------------------------------------------------------------------------------------
 
-        private EventChildrensRepository _eventChildrensRepository;
-        private CulturalChildrensRepository _culturalChildrensRepository;
-        private HobbyChildrensRepository _hobbyChildrensRepository;
-        private ActivityChildrensRepository _activityChildrensRepository;
-        private GiftChildrensRepository _giftChildrensRepository;
         private EventGrandChildrensRepository _eventGrandChildrensRepository;
         private CulturalGrandChildrensRepository _culturalGrandChildrensRepository;
         private HobbyGrandChildrensRepository _hobbyGrandChildrensRepository;
@@ -41,18 +35,11 @@ namespace TradeUnionCommittee.DAL.Repositories
         private GiftGrandChildrensRepository _giftGrandChildrensRepository;
 
         //------------------------------------------------------------------------------------------------------------------------------------------
-
-       
-        public IRepository<Children> ChildrenRepository => _childrenRepository ?? (_childrenRepository = new ChildrenRepository(_context));
+        
         public IRepository<GrandChildren> GrandChildrenRepository => _grandChildrenRepository ?? (_grandChildrenRepository = new GrandChildrenRepository(_context));
 
         //------------------------------------------------------------------------------------------------------------------------------------------
-
-        public IRepository<EventChildrens> EventChildrensRepository => _eventChildrensRepository ?? (_eventChildrensRepository = new EventChildrensRepository(_context));
-        public IRepository<CulturalChildrens> CulturalChildrensRepository => _culturalChildrensRepository ?? (_culturalChildrensRepository = new CulturalChildrensRepository(_context));
-        public IRepository<HobbyChildrens> HobbyChildrensRepository => _hobbyChildrensRepository ?? (_hobbyChildrensRepository = new HobbyChildrensRepository(_context));
-        public IRepository<ActivityChildrens> ActivityChildrensRepository => _activityChildrensRepository ?? (_activityChildrensRepository = new ActivityChildrensRepository(_context));
-        public IRepository<GiftChildrens> GiftChildrensRepository => _giftChildrensRepository ?? (_giftChildrensRepository = new GiftChildrensRepository(_context));
+        
         public IRepository<EventGrandChildrens> EventGrandChildrensRepository => _eventGrandChildrensRepository ?? (_eventGrandChildrensRepository = new EventGrandChildrensRepository(_context));
         public IRepository<CulturalGrandChildrens> CulturalGrandChildrensRepository => _culturalGrandChildrensRepository ?? (_culturalGrandChildrensRepository = new CulturalGrandChildrensRepository(_context));
         public IRepository<HobbyGrandChildrens> HobbyGrandChildrensRepository => _hobbyGrandChildrensRepository ?? (_hobbyGrandChildrensRepository = new HobbyGrandChildrensRepository(_context));
