@@ -1,5 +1,5 @@
 ﻿using HashidsNet;
-using System.Linq;
+using System;
 using TradeUnionCommittee.BLL.Exceptions;
 
 namespace TradeUnionCommittee.BLL.Configurations
@@ -21,47 +21,37 @@ namespace TradeUnionCommittee.BLL.Configurations
 
     internal sealed class HashIdConfiguration : IHashIdConfiguration
     {
-        private readonly string _salt;
-        private readonly int _minHashLenght;
-        private readonly string _alphabet;
-        private readonly string _seps;
         private readonly bool _useGuidFormat;
+        private readonly Hashids _hashId;
 
         public HashIdConfiguration(HashIdConfigurationSetting setting)
         {
             if (setting.UseGuidFormat)
             {
-                _minHashLenght = 32;
-                _alphabet = setting.Alphabet.Replace("-", string.Empty).ToLower();
+                setting.MinHashLenght = 32;
+                setting.Alphabet = setting.Alphabet.Replace("-", string.Empty).ToLower();
             }
-            else
-            {
-                _minHashLenght = setting.MinHashLenght;
-                _alphabet = setting.Alphabet;
-            }
-
-            _salt = setting.Salt;
-            _seps = setting.Seps;
             _useGuidFormat = setting.UseGuidFormat;
-        }
-
-        private Hashids ObjectHashids()
-        {
-            return new Hashids($"{_salt}-Service|{_salt.Reverse()}", _minHashLenght, _alphabet, _seps);
-        }
-
-        public string EncryptLong(long plainLong)
-        {
-            return _useGuidFormat ? GuidFormat(ObjectHashids().EncodeLong(plainLong), true) : ObjectHashids().EncodeLong(plainLong);
+            _hashId = new Hashids(setting.Salt, setting.MinHashLenght, setting.Alphabet, setting.Seps);
         }
 
         public long DecryptLong(string cipherText)
         {
             if (string.IsNullOrEmpty(cipherText) || string.IsNullOrWhiteSpace(cipherText))
             {
-                return 0;
+                throw new DecryptHashIdException();
             }
-            var result = ObjectHashids().DecodeLong(_useGuidFormat ? GuidFormat(cipherText, false) : cipherText);
+
+            long[] result;
+
+            if (_useGuidFormat)
+            {
+                result = _hashId.DecodeLong(GuidFormat(cipherText, HashIdOperation.Decrypt));
+            }
+            else
+            {
+                result = _hashId.DecodeLong(cipherText);
+            }
 
             if (result.Length == 1)
             {
@@ -70,9 +60,32 @@ namespace TradeUnionCommittee.BLL.Configurations
             throw new DecryptHashIdException();
         }
 
-        private string GuidFormat(string hash, bool addOrRemoveMinus)
+        public string EncryptLong(long plainLong)
         {
-            return addOrRemoveMinus ? hash.Insert(8, "-").Insert(13, "-").Insert(18, "-").Insert(23, "-") : hash.Replace("-", string.Empty);
+            if (_useGuidFormat)
+            {
+                return GuidFormat(_hashId.EncodeLong(plainLong), HashIdOperation.Encrypt);
+            }
+            return _hashId.EncodeLong(plainLong);
+        }
+
+        private string GuidFormat(string hash, HashIdOperation hashId)
+        {
+            switch (hashId)
+            {
+                case HashIdOperation.Encrypt:
+                    return hash.Insert(8, "-").Insert(13, "-").Insert(18, "-").Insert(23, "-");
+                case HashIdOperation.Decrypt:
+                    return hash.Replace("-", string.Empty);
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(hashId), hashId, null);
+            }
+        }
+
+        private enum HashIdOperation
+        {
+            Encrypt,
+            Decrypt
         }
     }
 }
