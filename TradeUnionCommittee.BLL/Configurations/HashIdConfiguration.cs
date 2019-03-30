@@ -33,7 +33,7 @@ namespace TradeUnionCommittee.BLL.Configurations
         {
             if (string.IsNullOrEmpty(cipherText) || string.IsNullOrWhiteSpace(cipherText))
             {
-                throw new DecryptHashIdException();
+                return 0;
             }
 
             var result = _hashId.DecodeLong(_useGuidFormat ? GuidFormat(cipherText, HashIdOperation.Decrypt) : cipherText);
