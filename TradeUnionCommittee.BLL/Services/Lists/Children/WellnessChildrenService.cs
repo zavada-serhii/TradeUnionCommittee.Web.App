@@ -17,10 +17,10 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Children
     internal class WellnessChildrenService : IWellnessChildrenService
     {
         private readonly TradeUnionCommitteeContext _context;
-        private readonly IAutoMapperConfiguration _mapperService;
+        private readonly AutoMapperConfiguration _mapperService;
         private readonly HashIdConfiguration _hashIdUtilities;
 
-        public WellnessChildrenService(TradeUnionCommitteeContext context, IAutoMapperConfiguration mapperService, HashIdConfiguration hashIdUtilities)
+        public WellnessChildrenService(TradeUnionCommitteeContext context, AutoMapperConfiguration mapperService, HashIdConfiguration hashIdUtilities)
         {
             _context = context;
             _mapperService = mapperService;

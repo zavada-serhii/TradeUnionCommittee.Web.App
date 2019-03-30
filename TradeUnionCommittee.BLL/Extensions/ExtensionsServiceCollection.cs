@@ -34,7 +34,7 @@ namespace TradeUnionCommittee.BLL.Extensions
 
             services.AddDbContext(connectionString);
             services.AddSingleton(x => new HashIdConfiguration(setting));
-            services.AddSingleton<IAutoMapperConfiguration, AutoMapperConfiguration>();
+            services.AddSingleton<AutoMapperConfiguration>();
 
             // Injection All Service
             //---------------------------------------------------------------------------------------------

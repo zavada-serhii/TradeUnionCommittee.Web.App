@@ -14,14 +14,7 @@ using TradeUnionCommittee.PDF.Service.Entities;
 
 namespace TradeUnionCommittee.BLL.Configurations
 {
-    public interface IAutoMapperConfiguration
-    {
-        IMapper Mapper { get; }
-    }
-
-    //------------------------------------------------------------------------------
-
-    internal sealed class AutoMapperConfiguration : IAutoMapperConfiguration
+    internal sealed class AutoMapperConfiguration
     {
         private readonly HashIdConfiguration _hashIdUtilities;
         private readonly object _nullValue = null;

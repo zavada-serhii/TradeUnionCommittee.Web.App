@@ -18,10 +18,10 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Employee
     internal class PublicHouseEmployeesService : IPublicHouseEmployeesService
     {
         private readonly TradeUnionCommitteeContext _context;
-        private readonly IAutoMapperConfiguration _mapperService;
+        private readonly AutoMapperConfiguration _mapperService;
         private readonly HashIdConfiguration _hashIdUtilities;
 
-        public PublicHouseEmployeesService(TradeUnionCommitteeContext context, IAutoMapperConfiguration mapperService, HashIdConfiguration hashIdUtilities)
+        public PublicHouseEmployeesService(TradeUnionCommitteeContext context, AutoMapperConfiguration mapperService, HashIdConfiguration hashIdUtilities)
         {
             _context = context;
             _mapperService = mapperService;

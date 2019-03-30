@@ -21,9 +21,9 @@ namespace TradeUnionCommittee.BLL.Services.Search
         private readonly TradeUnionCommitteeContext _context;
         private readonly ISearchNative _searchRepository;
         private readonly HashIdConfiguration _hashIdUtilities;
-        private readonly IAutoMapperConfiguration _mapperService;
+        private readonly AutoMapperConfiguration _mapperService;
 
-        public SearchService(TradeUnionCommitteeContext context, HashIdConfiguration hashIdUtilities, IAutoMapperConfiguration mapperService, ISearchNative searchRepository)
+        public SearchService(TradeUnionCommitteeContext context, HashIdConfiguration hashIdUtilities, AutoMapperConfiguration mapperService, ISearchNative searchRepository)
         {
             _context = context;
             _hashIdUtilities = hashIdUtilities;

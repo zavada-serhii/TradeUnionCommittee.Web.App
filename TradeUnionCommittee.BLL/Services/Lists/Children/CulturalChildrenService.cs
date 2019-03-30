@@ -16,10 +16,10 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Children
     internal class CulturalChildrenService : ICulturalChildrenService
     {
         private readonly TradeUnionCommitteeContext _context;
-        private readonly IAutoMapperConfiguration _mapperService;
+        private readonly AutoMapperConfiguration _mapperService;
         private readonly HashIdConfiguration _hashIdUtilities;
 
-        public CulturalChildrenService(TradeUnionCommitteeContext context, IAutoMapperConfiguration mapperService, HashIdConfiguration hashIdUtilities)
+        public CulturalChildrenService(TradeUnionCommitteeContext context, AutoMapperConfiguration mapperService, HashIdConfiguration hashIdUtilities)
         {
             _context = context;
             _mapperService = mapperService;

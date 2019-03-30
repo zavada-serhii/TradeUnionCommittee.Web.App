@@ -16,10 +16,10 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Employee
     internal class MaterialAidEmployeesService : IMaterialAidEmployeesService
     {
         private readonly TradeUnionCommitteeContext _context;
-        private readonly IAutoMapperConfiguration _mapperService;
+        private readonly AutoMapperConfiguration _mapperService;
         private readonly HashIdConfiguration _hashIdUtilities;
 
-        public MaterialAidEmployeesService(TradeUnionCommitteeContext context, IAutoMapperConfiguration mapperService, HashIdConfiguration hashIdUtilities)
+        public MaterialAidEmployeesService(TradeUnionCommitteeContext context, AutoMapperConfiguration mapperService, HashIdConfiguration hashIdUtilities)
         {
             _context = context;
             _mapperService = mapperService;

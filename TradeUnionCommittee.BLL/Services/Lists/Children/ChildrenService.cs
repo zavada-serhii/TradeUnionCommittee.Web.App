@@ -15,10 +15,10 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Children
     internal class ChildrenService : IChildrenService
     {
         private readonly TradeUnionCommitteeContext _context;
-        private readonly IAutoMapperConfiguration _mapperService;
+        private readonly AutoMapperConfiguration _mapperService;
         private readonly HashIdConfiguration _hashIdUtilities;
 
-        public ChildrenService(TradeUnionCommitteeContext context, IAutoMapperConfiguration mapperService, HashIdConfiguration hashIdUtilities)
+        public ChildrenService(TradeUnionCommitteeContext context, AutoMapperConfiguration mapperService, HashIdConfiguration hashIdUtilities)
         {
             _context = context;
             _mapperService = mapperService;

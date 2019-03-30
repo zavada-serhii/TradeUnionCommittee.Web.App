@@ -8,12 +8,12 @@ using TradeUnionCommittee.DAL.EF;
 
 namespace TradeUnionCommittee.BLL.Services.Dashboard
 {
-    public class DashboardService : IDashboardService
+    internal class DashboardService : IDashboardService
     {
         private readonly TradeUnionCommitteeContext _context;
-        private readonly IAutoMapperConfiguration _mapperService;
+        private readonly AutoMapperConfiguration _mapperService;
 
-        public DashboardService(TradeUnionCommitteeContext context, IAutoMapperConfiguration mapperService)
+        public DashboardService(TradeUnionCommitteeContext context, AutoMapperConfiguration mapperService)
         {
             _context = context;
             _mapperService = mapperService;
