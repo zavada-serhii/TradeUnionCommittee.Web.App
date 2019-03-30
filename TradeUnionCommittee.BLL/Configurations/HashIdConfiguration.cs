@@ -10,7 +10,6 @@ namespace TradeUnionCommittee.BLL.Configurations
         public string Salt { get; set; }
         public int MinHashLenght { get; set; }
         public string Alphabet { get; set; }
-        public string Seps { get; set; }
         public bool UseGuidFormat { get; set; }
     }
 
@@ -27,7 +26,7 @@ namespace TradeUnionCommittee.BLL.Configurations
                 setting.Alphabet = setting.Alphabet.Replace("-", string.Empty).ToLower();
             }
             _useGuidFormat = setting.UseGuidFormat;
-            _hashId = new Hashids(setting.Salt, setting.MinHashLenght, setting.Alphabet, setting.Seps);
+            _hashId = new Hashids(setting.Salt, setting.MinHashLenght, setting.Alphabet);
         }
 
         public long DecryptLong(string cipherText)
