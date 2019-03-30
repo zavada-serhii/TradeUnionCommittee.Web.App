@@ -60,7 +60,7 @@ namespace TradeUnionCommittee.BLL.Configurations
             switch (hashId)
             {
                 case HashIdOperation.Encrypt:
-                    return builder.Insert(8, "-").Insert(13, "-").Insert(18, "-").Insert(23, "-").ToString();
+                    return builder.Insert(8, '-').Insert(13, '-').Insert(18, '-').Insert(23, '-').ToString();
                 case HashIdOperation.Decrypt:
                     return builder.Replace("-", string.Empty).ToString();
                 default:
