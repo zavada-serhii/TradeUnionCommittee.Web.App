@@ -12,13 +12,13 @@ using TradeUnionCommittee.DAL.EF;
 
 namespace TradeUnionCommittee.BLL.Services.Lists.GrandChildren
 {
-    public class GrandChildrenService : IGrandChildrenService
+    internal class GrandChildrenService : IGrandChildrenService
     {
         private readonly TradeUnionCommitteeContext _context;
         private readonly IAutoMapperConfiguration _mapperService;
-        private readonly IHashIdConfiguration _hashIdUtilities;
+        private readonly HashIdConfiguration _hashIdUtilities;
 
-        public GrandChildrenService(TradeUnionCommitteeContext context, IAutoMapperConfiguration mapperService, IHashIdConfiguration hashIdUtilities)
+        public GrandChildrenService(TradeUnionCommitteeContext context, IAutoMapperConfiguration mapperService, HashIdConfiguration hashIdUtilities)
         {
             _context = context;
             _mapperService = mapperService;

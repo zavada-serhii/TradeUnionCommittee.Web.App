@@ -13,13 +13,13 @@ using TradeUnionCommittee.DAL.Entities;
 
 namespace TradeUnionCommittee.BLL.Services.Lists.Children
 {
-    public class HobbyChildrenService : IHobbyChildrenService
+    internal class HobbyChildrenService : IHobbyChildrenService
     {
         private readonly TradeUnionCommitteeContext _context;
         private readonly IAutoMapperConfiguration _mapperService;
-        private readonly IHashIdConfiguration _hashIdUtilities;
+        private readonly HashIdConfiguration _hashIdUtilities;
 
-        public HobbyChildrenService(TradeUnionCommitteeContext context, IAutoMapperConfiguration mapperService, IHashIdConfiguration hashIdUtilities)
+        public HobbyChildrenService(TradeUnionCommitteeContext context, IAutoMapperConfiguration mapperService, HashIdConfiguration hashIdUtilities)
         {
             _context = context;
             _mapperService = mapperService;

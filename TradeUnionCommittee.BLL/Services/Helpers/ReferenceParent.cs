@@ -5,12 +5,12 @@ using TradeUnionCommittee.DAL.EF;
 
 namespace TradeUnionCommittee.BLL.Services.Helpers
 {
-    public class ReferenceParent : IReferenceParent
+    internal class ReferenceParent : IReferenceParent
     {
         private readonly TradeUnionCommitteeContext _context;
-        private readonly IHashIdConfiguration _hashIdUtilities;
+        private readonly HashIdConfiguration _hashIdUtilities;
 
-        public ReferenceParent(TradeUnionCommitteeContext context, IHashIdConfiguration hashIdUtilities)
+        public ReferenceParent(TradeUnionCommitteeContext context, HashIdConfiguration hashIdUtilities)
         {
             _context = context;
             _hashIdUtilities = hashIdUtilities;

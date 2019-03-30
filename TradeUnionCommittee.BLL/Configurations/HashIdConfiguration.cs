@@ -14,13 +14,7 @@ namespace TradeUnionCommittee.BLL.Configurations
         public bool UseGuidFormat { get; set; }
     }
 
-    public interface IHashIdConfiguration
-    {
-        long DecryptLong(string cipherText);
-        string EncryptLong(long plainLong);
-    }
-
-    internal sealed class HashIdConfiguration : IHashIdConfiguration
+    internal sealed class HashIdConfiguration
     {
         private readonly bool _useGuidFormat;
         private readonly Hashids _hashId;

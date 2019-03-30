@@ -15,13 +15,13 @@ using TradeUnionCommittee.DAL.Enums;
 
 namespace TradeUnionCommittee.BLL.Services.Lists.Employee
 {
-    public class PublicHouseEmployeesService : IPublicHouseEmployeesService
+    internal class PublicHouseEmployeesService : IPublicHouseEmployeesService
     {
         private readonly TradeUnionCommitteeContext _context;
         private readonly IAutoMapperConfiguration _mapperService;
-        private readonly IHashIdConfiguration _hashIdUtilities;
+        private readonly HashIdConfiguration _hashIdUtilities;
 
-        public PublicHouseEmployeesService(TradeUnionCommitteeContext context, IAutoMapperConfiguration mapperService, IHashIdConfiguration hashIdUtilities)
+        public PublicHouseEmployeesService(TradeUnionCommitteeContext context, IAutoMapperConfiguration mapperService, HashIdConfiguration hashIdUtilities)
         {
             _context = context;
             _mapperService = mapperService;

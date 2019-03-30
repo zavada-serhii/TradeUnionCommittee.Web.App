@@ -33,7 +33,7 @@ namespace TradeUnionCommittee.BLL.Extensions
             // Injection UnitOfWork, HashIdConfiguration, AutoMapperConfiguration
 
             services.AddDbContext(connectionString);
-            services.AddSingleton<IHashIdConfiguration, HashIdConfiguration>(x => new HashIdConfiguration(setting));
+            services.AddSingleton(x => new HashIdConfiguration(setting));
             services.AddSingleton<IAutoMapperConfiguration, AutoMapperConfiguration>();
 
             // Injection All Service

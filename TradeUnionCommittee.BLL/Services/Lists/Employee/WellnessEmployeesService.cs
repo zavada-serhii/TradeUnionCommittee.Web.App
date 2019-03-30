@@ -14,13 +14,13 @@ using TradeUnionCommittee.DAL.Enums;
 
 namespace TradeUnionCommittee.BLL.Services.Lists.Employee
 {
-    public class WellnessEmployeesService : IWellnessEmployeesService
+    internal class WellnessEmployeesService : IWellnessEmployeesService
     {
         private readonly TradeUnionCommitteeContext _context;
         private readonly IAutoMapperConfiguration _mapperService;
-        private readonly IHashIdConfiguration _hashIdUtilities;
+        private readonly HashIdConfiguration _hashIdUtilities;
 
-        public WellnessEmployeesService(TradeUnionCommitteeContext context, IAutoMapperConfiguration mapperService, IHashIdConfiguration hashIdUtilities)
+        public WellnessEmployeesService(TradeUnionCommitteeContext context, IAutoMapperConfiguration mapperService, HashIdConfiguration hashIdUtilities)
         {
             _context = context;
             _mapperService = mapperService;

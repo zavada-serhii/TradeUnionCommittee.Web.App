@@ -19,13 +19,13 @@ using TradeUnionCommittee.PDF.Service.Models;
 
 namespace TradeUnionCommittee.BLL.Services.PDF
 {
-    public class PdfService : IPdfService
+    internal class PdfService : IPdfService
     {
         private readonly TradeUnionCommitteeContext _context;
         private readonly IAutoMapperConfiguration _mapperService;
-        private readonly IHashIdConfiguration _hashIdUtilities;
+        private readonly HashIdConfiguration _hashIdUtilities;
 
-        public PdfService(TradeUnionCommitteeContext context, IAutoMapperConfiguration mapperService, IHashIdConfiguration hashIdUtilities)
+        public PdfService(TradeUnionCommitteeContext context, IAutoMapperConfiguration mapperService, HashIdConfiguration hashIdUtilities)
         {
             _context = context;
             _mapperService = mapperService;

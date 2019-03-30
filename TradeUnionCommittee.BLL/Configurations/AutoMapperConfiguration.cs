@@ -23,10 +23,10 @@ namespace TradeUnionCommittee.BLL.Configurations
 
     internal sealed class AutoMapperConfiguration : IAutoMapperConfiguration
     {
-        private readonly IHashIdConfiguration _hashIdUtilities;
+        private readonly HashIdConfiguration _hashIdUtilities;
         private readonly object _nullValue = null;
 
-        public AutoMapperConfiguration(IHashIdConfiguration hashIdUtilities)
+        public AutoMapperConfiguration(HashIdConfiguration hashIdUtilities)
         {
             _hashIdUtilities = hashIdUtilities;
         }
