@@ -1,63 +1,118 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.Configurations;
 using TradeUnionCommittee.BLL.DTO.Employee;
 using TradeUnionCommittee.BLL.Interfaces.Lists.Employee;
 using TradeUnionCommittee.Common.ActualResults;
+using TradeUnionCommittee.Common.Enums;
+using TradeUnionCommittee.DAL.EF;
 using TradeUnionCommittee.DAL.Entities;
-using TradeUnionCommittee.DAL.Interfaces;
 
 namespace TradeUnionCommittee.BLL.Services.Lists.Employee
 {
-    public class FluorographyEmployeesService : IFluorographyEmployeesService
+    internal class FluorographyEmployeesService : IFluorographyEmployeesService
     {
-        private readonly IUnitOfWork _database;
-        private readonly IAutoMapperConfiguration _mapperService;
-        private readonly IHashIdConfiguration _hashIdUtilities;
+        private readonly TradeUnionCommitteeContext _context;
+        private readonly AutoMapperConfiguration _mapperService;
+        private readonly HashIdConfiguration _hashIdUtilities;
 
-        public FluorographyEmployeesService(IUnitOfWork database, IAutoMapperConfiguration mapperService, IHashIdConfiguration hashIdUtilities)
+        public FluorographyEmployeesService(TradeUnionCommitteeContext context, AutoMapperConfiguration mapperService, HashIdConfiguration hashIdUtilities)
         {
-            _database = database;
+            _context = context;
             _mapperService = mapperService;
             _hashIdUtilities = hashIdUtilities;
         }
 
         public async Task<ActualResult<IEnumerable<FluorographyEmployeesDTO>>> GetAllAsync(string hashIdEmployee)
         {
-            var id = _hashIdUtilities.DecryptLong(hashIdEmployee, Enums.Services.Employee);
-            var result = await _database.FluorographyEmployeesRepository.Find(x => x.IdEmployee == id);
-            return _mapperService.Mapper.Map<ActualResult<IEnumerable<FluorographyEmployeesDTO>>>(result);
+            try
+            {
+                var id = _hashIdUtilities.DecryptLong(hashIdEmployee);
+                var fluorography = await _context.FluorographyEmployees
+                    .Where(x => x.IdEmployee == id)
+                    .OrderByDescending(x => x.DatePassage)
+                    .ToListAsync();
+                var result = _mapperService.Mapper.Map<IEnumerable<FluorographyEmployeesDTO>>(fluorography);
+                return new ActualResult<IEnumerable<FluorographyEmployeesDTO>> { Result = result };
+            }
+            catch (Exception)
+            {
+                return new ActualResult<IEnumerable<FluorographyEmployeesDTO>>(Errors.DataBaseError);
+            }
         }
 
         public async Task<ActualResult<FluorographyEmployeesDTO>> GetAsync(string hashId)
         {
-            var id = _hashIdUtilities.DecryptLong(hashId, Enums.Services.FluorographyEmployees);
-            var result = await _database.FluorographyEmployeesRepository.GetByProperty(x => x.Id == id);
-            return _mapperService.Mapper.Map<ActualResult<FluorographyEmployeesDTO>>(result);
+            try
+            {
+                var id = _hashIdUtilities.DecryptLong(hashId);
+                var fluorography = await _context.FluorographyEmployees.FindAsync(id);
+                var result = _mapperService.Mapper.Map<FluorographyEmployeesDTO>(fluorography);
+                return new ActualResult<FluorographyEmployeesDTO> { Result = result };
+            }
+            catch (Exception)
+            {
+                return new ActualResult<FluorographyEmployeesDTO>(Errors.DataBaseError);
+            }
         }
 
         public async Task<ActualResult> CreateAsync(FluorographyEmployeesDTO item)
         {
-            await _database.FluorographyEmployeesRepository.Create(_mapperService.Mapper.Map<FluorographyEmployees>(item));
-            return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
+            try
+            {
+                await _context.FluorographyEmployees.AddAsync(_mapperService.Mapper.Map<FluorographyEmployees>(item));
+                await _context.SaveChangesAsync();
+                return new ActualResult();
+            }
+            catch (Exception)
+            {
+                return new ActualResult(Errors.DataBaseError);
+            }
         }
 
         public async Task<ActualResult> UpdateAsync(FluorographyEmployeesDTO item)
         {
-            await _database.FluorographyEmployeesRepository.Update(_mapperService.Mapper.Map<FluorographyEmployees>(item));
-            return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
+            try
+            {
+                _context.Entry(_mapperService.Mapper.Map<FluorographyEmployees>(item)).State = EntityState.Modified;
+                await _context.SaveChangesAsync();
+                return new ActualResult();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                return new ActualResult(Errors.TupleDeletedOrUpdated);
+            }
+            catch (Exception)
+            {
+                return new ActualResult(Errors.DataBaseError);
+            }
         }
 
         public async Task<ActualResult> DeleteAsync(string hashId)
         {
-            var id = _hashIdUtilities.DecryptLong(hashId, Enums.Services.FluorographyEmployees);
-            await _database.FluorographyEmployeesRepository.Delete(id);
-            return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
+            try
+            {
+                var id = _hashIdUtilities.DecryptLong(hashId);
+                var result = await _context.FluorographyEmployees.FindAsync(id);
+                if (result != null)
+                {
+                    _context.FluorographyEmployees.Remove(result);
+                    await _context.SaveChangesAsync();
+                }
+                return new ActualResult();
+            }
+            catch (Exception)
+            {
+                return new ActualResult(Errors.DataBaseError);
+            }
         }
 
         public void Dispose()
         {
-            _database.Dispose();
+            _context.Dispose();
         }
 
         //--------------- Business Logic ---------------

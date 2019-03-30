@@ -1,6 +1,6 @@
 ﻿using NpgsqlTypes;
 
-namespace TradeUnionCommittee.DAL.Entities
+namespace TradeUnionCommittee.DAL.Enums
 {
     public enum TypeHouse
     {

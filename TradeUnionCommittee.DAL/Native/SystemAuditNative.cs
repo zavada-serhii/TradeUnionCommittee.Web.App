@@ -7,16 +7,23 @@ using System.Threading;
 using System.Threading.Tasks;
 using TradeUnionCommittee.DAL.EF;
 using TradeUnionCommittee.DAL.Entities;
+using TradeUnionCommittee.DAL.Enums;
 using TradeUnionCommittee.DAL.Extensions;
-using TradeUnionCommittee.DAL.Interfaces;
 
-namespace TradeUnionCommittee.DAL.Repositories.SystemAudit
+namespace TradeUnionCommittee.DAL.Native
 {
-    public class SystemAuditRepository : ISystemAuditRepository
+    public interface ISystemAuditNative
     {
-        private readonly TradeUnionCommitteeEmployeesCoreContext _dbContext;
+        Task AuditAsync(Journal journal);
+        Task<IEnumerable<string>> GetExistingPartitionInDbAsync();
+        Task<IEnumerable<Journal>> FilterAsync(IEnumerable<string> namesPartitions, string email, DateTime startDate, DateTime endDate);
+    }
 
-        public SystemAuditRepository(TradeUnionCommitteeEmployeesCoreContext db)
+    public class SystemAuditNative : ISystemAuditNative
+    {
+        private readonly TradeUnionCommitteeContext _dbContext;
+
+        public SystemAuditNative(TradeUnionCommitteeContext db)
         {
             _dbContext = db;
         }

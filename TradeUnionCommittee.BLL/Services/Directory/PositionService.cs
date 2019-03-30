@@ -1,77 +1,128 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.Configurations;
 using TradeUnionCommittee.BLL.DTO;
-using TradeUnionCommittee.BLL.Enums;
 using TradeUnionCommittee.BLL.Interfaces.Directory;
-using TradeUnionCommittee.BLL.Interfaces.PDF;
 using TradeUnionCommittee.Common.ActualResults;
 using TradeUnionCommittee.Common.Enums;
+using TradeUnionCommittee.DAL.EF;
 using TradeUnionCommittee.DAL.Entities;
-using TradeUnionCommittee.DAL.Interfaces;
 
 namespace TradeUnionCommittee.BLL.Services.Directory
 {
-    public class PositionService : IPositionService
+    internal class PositionService : IPositionService
     {
-        private readonly IUnitOfWork _database;
-        private readonly IAutoMapperConfiguration _mapperService;
-        private readonly IHashIdConfiguration _hashIdUtilities;
+        private readonly TradeUnionCommitteeContext _context;
+        private readonly AutoMapperConfiguration _mapperService;
+        private readonly HashIdConfiguration _hashIdUtilities;
 
-        public PositionService(IUnitOfWork database, IAutoMapperConfiguration mapperService, IHashIdConfiguration hashIdUtilities)
+        public PositionService(TradeUnionCommitteeContext context, AutoMapperConfiguration mapperService, HashIdConfiguration hashIdUtilities)
         {
-            _database = database;
+            _context = context;
             _mapperService = mapperService;
             _hashIdUtilities = hashIdUtilities;
         }
 
-        public async Task<ActualResult<IEnumerable<DirectoryDTO>>> GetAllAsync() =>
-            _mapperService.Mapper.Map<ActualResult<IEnumerable<DirectoryDTO>>>(await _database.PositionRepository.GetAll(x => x.Name));
+        public async Task<ActualResult<IEnumerable<DirectoryDTO>>> GetAllAsync()
+        {
+            try
+            {
+                var position = await _context.Position.OrderBy(x => x.Name).ToListAsync();
+                var result = _mapperService.Mapper.Map<IEnumerable<DirectoryDTO>>(position);
+                return new ActualResult<IEnumerable<DirectoryDTO>> { Result = result };
+            }
+            catch (Exception)
+            {
+                return new ActualResult<IEnumerable<DirectoryDTO>>(Errors.DataBaseError);
+            }
+        }
+
 
         public async Task<ActualResult<DirectoryDTO>> GetAsync(string hashId)
         {
-            var id = _hashIdUtilities.DecryptLong(hashId, Enums.Services.Position);
-            return _mapperService.Mapper.Map<ActualResult<DirectoryDTO>>(await _database.PositionRepository.GetById(id));
+            try
+            {
+                var id = _hashIdUtilities.DecryptLong(hashId);
+                var position = await _context.Position.FindAsync(id);
+                var result = _mapperService.Mapper.Map<DirectoryDTO>(position);
+                return new ActualResult<DirectoryDTO> { Result = result };
+            }
+            catch (Exception)
+            {
+               return new ActualResult<DirectoryDTO>(Errors.DataBaseError);
+            }
         }
 
         public async Task<ActualResult> CreateAsync(DirectoryDTO dto)
         {
-            if (!await CheckNameAsync(dto.Name))
+            try
             {
-                await _database.PositionRepository.Create(_mapperService.Mapper.Map<Position>(dto));
-                return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
+                if (!await CheckNameAsync(dto.Name))
+                {
+                    await _context.Position.AddAsync(_mapperService.Mapper.Map<Position>(dto));
+                    await _context.SaveChangesAsync();
+                    return new ActualResult();
+                }
+                return new ActualResult(Errors.DuplicateData);
             }
-            return new ActualResult(Errors.DuplicateData);
+            catch (Exception)
+            {
+               return new ActualResult(Errors.DataBaseError);
+            }
         }
 
         public async Task<ActualResult> UpdateAsync(DirectoryDTO dto)
         {
-            if (!await CheckNameAsync(dto.Name))
+            try
             {
-                await _database.PositionRepository.Update(_mapperService.Mapper.Map<Position>(dto));
-                return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
+                if (!await CheckNameAsync(dto.Name))
+                {
+                    _context.Entry(_mapperService.Mapper.Map<Position>(dto)).State = EntityState.Modified;
+                    await _context.SaveChangesAsync();
+                    return new ActualResult();
+                }
+                return new ActualResult(Errors.DuplicateData);
             }
-            return new ActualResult(Errors.DuplicateData);
+            catch (DbUpdateConcurrencyException)
+            {
+                return new ActualResult(Errors.TupleDeletedOrUpdated);
+            }
+            catch (Exception)
+            {
+                return new ActualResult(Errors.DataBaseError);
+            }
         }
 
         public async Task<ActualResult> DeleteAsync(string hashId)
         {
-            await _database.PositionRepository.Delete(_hashIdUtilities.DecryptLong(hashId, Enums.Services.Position));
-            return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
+            try
+            {
+                var id = _hashIdUtilities.DecryptLong(hashId);
+                var result = await _context.Position.FindAsync(id);
+                if (result != null)
+                {
+                    _context.Position.Remove(result);
+                    await _context.SaveChangesAsync();
+                }
+                return new ActualResult();
+            }
+            catch (Exception)
+            {
+                return new ActualResult(Errors.DataBaseError);
+            }
         }
 
         public async Task<bool> CheckNameAsync(string name)
         {
-            var result = await _database.PositionRepository.Any(p => p.Name == name);
-            return result.Result;
+            return await _context.Position.AnyAsync(x => x.Name == name);
         }
-
 
         public void Dispose()
         {
-            _database.Dispose();
+            _context.Dispose();
         }
     }
 }

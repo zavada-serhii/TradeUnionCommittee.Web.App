@@ -1,55 +1,101 @@
-﻿using System.Threading.Tasks;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
+using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.Configurations;
 using TradeUnionCommittee.BLL.DTO.Employee;
 using TradeUnionCommittee.BLL.Interfaces.Lists.Employee;
 using TradeUnionCommittee.Common.ActualResults;
+using TradeUnionCommittee.Common.Enums;
+using TradeUnionCommittee.DAL.EF;
 using TradeUnionCommittee.DAL.Entities;
-using TradeUnionCommittee.DAL.Interfaces;
 
 namespace TradeUnionCommittee.BLL.Services.Lists.Employee
 {
-    public class SocialActivityEmployeesService : ISocialActivityEmployeesService
+    internal class SocialActivityEmployeesService : ISocialActivityEmployeesService
     {
-        private readonly IUnitOfWork _database;
-        private readonly IAutoMapperConfiguration _mapperService;
-        private readonly IHashIdConfiguration _hashIdUtilities;
+        private readonly TradeUnionCommitteeContext _context;
+        private readonly AutoMapperConfiguration _mapperService;
+        private readonly HashIdConfiguration _hashIdUtilities;
 
-        public SocialActivityEmployeesService(IUnitOfWork database, IAutoMapperConfiguration mapperService, IHashIdConfiguration hashIdUtilities)
+        public SocialActivityEmployeesService(TradeUnionCommitteeContext context, AutoMapperConfiguration mapperService, HashIdConfiguration hashIdUtilities)
         {
-            _database = database;
+            _context = context;
             _mapperService = mapperService;
             _hashIdUtilities = hashIdUtilities;
         }
 
         public async Task<ActualResult<SocialActivityEmployeesDTO>> GetAsync(string hashIdEmployee)
         {
-            var id = _hashIdUtilities.DecryptLong(hashIdEmployee, Enums.Services.Employee);
-            var result = await _database.SocialActivityEmployeesRepository.GetWithInclude(x => x.IdEmployee == id, c => c.IdSocialActivityNavigation);
-            return _mapperService.Mapper.Map<ActualResult<SocialActivityEmployeesDTO>>(result);
+            try
+            {
+                var id = _hashIdUtilities.DecryptLong(hashIdEmployee);
+                var socialActivity = await _context.SocialActivityEmployees
+                    .Include(x => x.IdSocialActivityNavigation)
+                    .FirstOrDefaultAsync(x => x.IdEmployee == id);
+                var result = _mapperService.Mapper.Map<SocialActivityEmployeesDTO>(socialActivity);
+                return new ActualResult<SocialActivityEmployeesDTO> { Result = result };
+            }
+            catch (Exception)
+            {
+                return new ActualResult<SocialActivityEmployeesDTO>(Errors.DataBaseError);
+            }
         }
 
         public async Task<ActualResult> CreateAsync(SocialActivityEmployeesDTO dto)
         {
-            dto.CheckSocialActivity = true;
-            await _database.SocialActivityEmployeesRepository.Create(_mapperService.Mapper.Map<SocialActivityEmployees>(dto));
-            return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
+            try
+            {
+                dto.CheckSocialActivity = true;
+                await _context.SocialActivityEmployees.AddAsync(_mapperService.Mapper.Map<SocialActivityEmployees>(dto));
+                await _context.SaveChangesAsync();
+                return new ActualResult();
+            }
+            catch (Exception)
+            {
+                return new ActualResult(Errors.DataBaseError);
+            }
         }
 
         public async Task<ActualResult> UpdateAsync(SocialActivityEmployeesDTO dto)
         {
-            await _database.SocialActivityEmployeesRepository.Update(_mapperService.Mapper.Map<SocialActivityEmployees>(dto));
-            return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
+            try
+            {
+                _context.Entry(_mapperService.Mapper.Map<SocialActivityEmployees>(dto)).State = EntityState.Modified;
+                await _context.SaveChangesAsync();
+                return new ActualResult();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                return new ActualResult(Errors.TupleDeletedOrUpdated);
+            }
+            catch (Exception)
+            {
+                return new ActualResult(Errors.DataBaseError);
+            }
         }
 
         public async Task<ActualResult> DeleteAsync(string hashId)
         {
-            await _database.SocialActivityEmployeesRepository.Delete(_hashIdUtilities.DecryptLong(hashId, Enums.Services.SocialActivityEmployees));
-            return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
+            try
+            {
+                var id = _hashIdUtilities.DecryptLong(hashId);
+                var result = await _context.SocialActivityEmployees.FindAsync(id);
+                if (result != null)
+                {
+                    _context.SocialActivityEmployees.Remove(result);
+                    await _context.SaveChangesAsync();
+                }
+                return new ActualResult();
+            }
+            catch (Exception)
+            {
+                return new ActualResult(Errors.DataBaseError);
+            }
         }
 
         public void Dispose()
         {
-            _database.Dispose();
+            _context.Dispose();
         }
     }
 }

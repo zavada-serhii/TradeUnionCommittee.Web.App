@@ -32,9 +32,9 @@ namespace TradeUnionCommittee.BLL.Extensions
         {
             // Injection UnitOfWork, HashIdConfiguration, AutoMapperConfiguration
 
-            services.AddUnitOfWork(connectionString);
-            services.AddSingleton<IHashIdConfiguration, HashIdConfiguration>(x => new HashIdConfiguration(setting));
-            services.AddSingleton<IAutoMapperConfiguration, AutoMapperConfiguration>();
+            services.AddDbContext(connectionString);
+            services.AddSingleton(x => new HashIdConfiguration(setting));
+            services.AddSingleton<AutoMapperConfiguration>();
 
             // Injection All Service
             //---------------------------------------------------------------------------------------------
@@ -46,7 +46,6 @@ namespace TradeUnionCommittee.BLL.Extensions
             services.AddTransient<ISystemAuditService, SystemAuditService>();
             services.AddTransient<IPdfService, PdfService>();
 
-            services.AddTransient<IEducationService, EducationService>();
             services.AddTransient<IQualificationService, QualificationService>();
             services.AddTransient<IPositionService, PositionService>();
             services.AddTransient<ISocialActivityService, SocialActivityService>();

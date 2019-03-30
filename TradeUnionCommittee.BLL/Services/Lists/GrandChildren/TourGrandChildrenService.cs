@@ -1,65 +1,122 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.Configurations;
 using TradeUnionCommittee.BLL.DTO.GrandChildren;
 using TradeUnionCommittee.BLL.Interfaces.Lists.GrandChildren;
 using TradeUnionCommittee.Common.ActualResults;
+using TradeUnionCommittee.Common.Enums;
+using TradeUnionCommittee.DAL.EF;
 using TradeUnionCommittee.DAL.Entities;
-using TradeUnionCommittee.DAL.Interfaces;
+using TradeUnionCommittee.DAL.Enums;
 
 namespace TradeUnionCommittee.BLL.Services.Lists.GrandChildren
 {
-    public class TourGrandChildrenService : ITourGrandChildrenService
+    internal class TourGrandChildrenService : ITourGrandChildrenService
     {
-        private readonly IUnitOfWork _database;
-        private readonly IAutoMapperConfiguration _mapperService;
-        private readonly IHashIdConfiguration _hashIdUtilities;
+        private readonly TradeUnionCommitteeContext _context;
+        private readonly AutoMapperConfiguration _mapperService;
+        private readonly HashIdConfiguration _hashIdUtilities;
 
-        public TourGrandChildrenService(IUnitOfWork database, IAutoMapperConfiguration mapperService, IHashIdConfiguration hashIdUtilities)
+        public TourGrandChildrenService(TradeUnionCommitteeContext context, AutoMapperConfiguration mapperService, HashIdConfiguration hashIdUtilities)
         {
-            _database = database;
+            _context = context;
             _mapperService = mapperService;
             _hashIdUtilities = hashIdUtilities;
         }
 
         public async Task<ActualResult<IEnumerable<TourGrandChildrenDTO>>> GetAllAsync(string hashIdGrandChildren)
         {
-            var id = _hashIdUtilities.DecryptLong(hashIdGrandChildren, Enums.Services.GrandChildren);
-            var result = await _database.EventGrandChildrensRepository
-                .GetWithIncludeToList(x => x.IdGrandChildren == id &&
-                                           x.IdEventNavigation.Type == TypeEvent.Tour,
-                                      c => c.IdEventNavigation);
-            return _mapperService.Mapper.Map<ActualResult<IEnumerable<TourGrandChildrenDTO>>>(result);
+            try
+            {
+                var id = _hashIdUtilities.DecryptLong(hashIdGrandChildren);
+                var tour = await _context.EventGrandChildrens
+                    .Include(x => x.IdEventNavigation)
+                    .Where(x => x.IdGrandChildren == id && x.IdEventNavigation.Type == TypeEvent.Tour)
+                    .OrderByDescending(x => x.StartDate)
+                    .ToListAsync();
+                var result = _mapperService.Mapper.Map<IEnumerable<TourGrandChildrenDTO>>(tour);
+                return new ActualResult<IEnumerable<TourGrandChildrenDTO>> { Result = result };
+            }
+            catch (Exception)
+            {
+                return new ActualResult<IEnumerable<TourGrandChildrenDTO>>(Errors.DataBaseError);
+            }
         }
 
         public async Task<ActualResult<TourGrandChildrenDTO>> GetAsync(string hashId)
         {
-            var id = _hashIdUtilities.DecryptLong(hashId, Enums.Services.TourGrandChildren);
-            var result = await _database.EventGrandChildrensRepository.GetWithInclude(x => x.Id == id, c => c.IdEventNavigation);
-            return _mapperService.Mapper.Map<ActualResult<TourGrandChildrenDTO>>(result);
+            try
+            {
+                var id = _hashIdUtilities.DecryptLong(hashId);
+                var tour = await _context.EventGrandChildrens
+                    .Include(x => x.IdEventNavigation)
+                    .FirstOrDefaultAsync(x => x.Id == id);
+                var result = _mapperService.Mapper.Map<TourGrandChildrenDTO>(tour);
+                return new ActualResult<TourGrandChildrenDTO> { Result = result };
+            }
+            catch (Exception)
+            {
+                return new ActualResult<TourGrandChildrenDTO>(Errors.DataBaseError);
+            }
         }
 
         public async Task<ActualResult> CreateAsync(TourGrandChildrenDTO item)
         {
-            await _database.EventGrandChildrensRepository.Create(_mapperService.Mapper.Map<EventGrandChildrens>(item));
-            return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
+            try
+            {
+                await _context.EventGrandChildrens.AddAsync(_mapperService.Mapper.Map<EventGrandChildrens>(item));
+                await _context.SaveChangesAsync();
+                return new ActualResult();
+            }
+            catch (Exception)
+            {
+                return new ActualResult(Errors.DataBaseError);
+            }
         }
 
         public async Task<ActualResult> UpdateAsync(TourGrandChildrenDTO item)
         {
-            await _database.EventGrandChildrensRepository.Update(_mapperService.Mapper.Map<EventGrandChildrens>(item));
-            return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
+            try
+            {
+                _context.Entry(_mapperService.Mapper.Map<EventGrandChildrens>(item)).State = EntityState.Modified;
+                await _context.SaveChangesAsync();
+                return new ActualResult();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                return new ActualResult(Errors.TupleDeletedOrUpdated);
+            }
+            catch (Exception)
+            {
+                return new ActualResult(Errors.DataBaseError);
+            }
         }
 
         public async Task<ActualResult> DeleteAsync(string hashId)
         {
-            await _database.EventGrandChildrensRepository.Delete(_hashIdUtilities.DecryptLong(hashId, Enums.Services.TourGrandChildren));
-            return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
+            try
+            {
+                var id = _hashIdUtilities.DecryptLong(hashId);
+                var result = await _context.EventGrandChildrens.FindAsync(id);
+                if (result != null)
+                {
+                    _context.EventGrandChildrens.Remove(result);
+                    await _context.SaveChangesAsync();
+                }
+                return new ActualResult();
+            }
+            catch (Exception)
+            {
+                return new ActualResult(Errors.DataBaseError);
+            }
         }
 
         public void Dispose()
         {
-            _database.Dispose();
+            _context.Dispose();
         }
     }
 }

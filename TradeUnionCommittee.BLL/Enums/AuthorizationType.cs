@@ -1,6 +1,6 @@
 ﻿namespace TradeUnionCommittee.BLL.Enums
 {
-    public enum TypeAuthorization
+    public enum AuthorizationType
     {
         Cookie = 1,
         Token = 2

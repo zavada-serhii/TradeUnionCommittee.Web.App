@@ -7,7 +7,7 @@ using TradeUnionCommittee.DAL.EF;
 
 namespace TradeUnionCommittee.DAL.Migrations
 {
-    [DbContext(typeof(TradeUnionCommitteeEmployeesCoreContext))]
+    [DbContext(typeof(TradeUnionCommitteeContext))]
     class TradeUnionCommitteeEmployeesCoreContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)

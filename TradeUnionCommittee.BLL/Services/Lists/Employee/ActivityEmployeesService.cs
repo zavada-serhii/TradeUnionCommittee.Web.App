@@ -1,62 +1,121 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.Configurations;
 using TradeUnionCommittee.BLL.DTO.Employee;
 using TradeUnionCommittee.BLL.Interfaces.Lists.Employee;
 using TradeUnionCommittee.Common.ActualResults;
+using TradeUnionCommittee.Common.Enums;
+using TradeUnionCommittee.DAL.EF;
 using TradeUnionCommittee.DAL.Entities;
-using TradeUnionCommittee.DAL.Interfaces;
 
 namespace TradeUnionCommittee.BLL.Services.Lists.Employee
 {
-    public class ActivityEmployeesService : IActivityEmployeesService
+    internal class ActivityEmployeesService : IActivityEmployeesService
     {
-        private readonly IUnitOfWork _database;
-        private readonly IAutoMapperConfiguration _mapperService;
-        private readonly IHashIdConfiguration _hashIdUtilities;
+        private readonly TradeUnionCommitteeContext _context;
+        private readonly AutoMapperConfiguration _mapperService;
+        private readonly HashIdConfiguration _hashIdUtilities;
 
-        public ActivityEmployeesService(IUnitOfWork database, IAutoMapperConfiguration mapperService, IHashIdConfiguration hashIdUtilities)
+        public ActivityEmployeesService(TradeUnionCommitteeContext context, AutoMapperConfiguration mapperService, HashIdConfiguration hashIdUtilities)
         {
-            _database = database;
+            _context = context;
             _mapperService = mapperService;
             _hashIdUtilities = hashIdUtilities;
         }
 
         public async Task<ActualResult<IEnumerable<ActivityEmployeesDTO>>> GetAllAsync(string hashIdEmployee)
         {
-            var id = _hashIdUtilities.DecryptLong(hashIdEmployee, Enums.Services.Employee);
-            var result = await _database.ActivityEmployeesRepository.GetWithIncludeToList(x => x.IdEmployee == id, c => c.IdActivitiesNavigation);
-            return _mapperService.Mapper.Map<ActualResult<IEnumerable<ActivityEmployeesDTO>>>(result);
+            try
+            {
+                var id = _hashIdUtilities.DecryptLong(hashIdEmployee);
+                var activity = await _context.ActivityEmployees
+                    .Include(x => x.IdActivitiesNavigation)
+                    .Where(x => x.IdEmployee == id)
+                    .OrderByDescending(x => x.DateEvent)
+                    .ToListAsync();
+                var result = _mapperService.Mapper.Map<IEnumerable<ActivityEmployeesDTO>>(activity);
+                return new ActualResult<IEnumerable<ActivityEmployeesDTO>> { Result = result };
+            }
+            catch (Exception)
+            {
+                return new ActualResult<IEnumerable<ActivityEmployeesDTO>>(Errors.DataBaseError);
+            }
         }
 
         public async Task<ActualResult<ActivityEmployeesDTO>> GetAsync(string hashId)
         {
-            var id = _hashIdUtilities.DecryptLong(hashId, Enums.Services.ActivityEmployees);
-            var result = await _database.ActivityEmployeesRepository.GetWithInclude(x => x.Id == id, c => c.IdActivitiesNavigation);
-            return _mapperService.Mapper.Map<ActualResult<ActivityEmployeesDTO>>(result);
+            try
+            {
+                var id = _hashIdUtilities.DecryptLong(hashId);
+                var activity = await _context.ActivityEmployees
+                    .Include(x => x.IdActivitiesNavigation)
+                    .FirstOrDefaultAsync(x => x.Id == id);
+                var result = _mapperService.Mapper.Map<ActivityEmployeesDTO>(activity);
+                return new ActualResult<ActivityEmployeesDTO> { Result = result };
+            }
+            catch (Exception)
+            {
+                return new ActualResult<ActivityEmployeesDTO>(Errors.DataBaseError);
+            }
         }
 
         public async Task<ActualResult> CreateAsync(ActivityEmployeesDTO item)
         {
-            await _database.ActivityEmployeesRepository.Create(_mapperService.Mapper.Map<ActivityEmployees>(item));
-            return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
+            try
+            {
+                await _context.ActivityEmployees.AddAsync(_mapperService.Mapper.Map<ActivityEmployees>(item));
+                await _context.SaveChangesAsync();
+                return new ActualResult();
+            }
+            catch (Exception)
+            {
+                return new ActualResult(Errors.DataBaseError);
+            }
         }
 
         public async Task<ActualResult> UpdateAsync(ActivityEmployeesDTO item)
         {
-            await _database.ActivityEmployeesRepository.Update(_mapperService.Mapper.Map<ActivityEmployees>(item));
-            return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
+            try
+            {
+                _context.Entry(_mapperService.Mapper.Map<ActivityEmployees>(item)).State = EntityState.Modified;
+                await _context.SaveChangesAsync();
+                return new ActualResult();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                return new ActualResult(Errors.TupleDeletedOrUpdated);
+            }
+            catch (Exception)
+            {
+                return new ActualResult(Errors.DataBaseError);
+            }
         }
 
         public async Task<ActualResult> DeleteAsync(string hashId)
         {
-            await _database.ActivityEmployeesRepository.Delete(_hashIdUtilities.DecryptLong(hashId, Enums.Services.ActivityEmployees));
-            return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
+            try
+            {
+                var id = _hashIdUtilities.DecryptLong(hashId);
+                var result = await _context.ActivityEmployees.FindAsync(id);
+                if (result != null)
+                {
+                    _context.ActivityEmployees.Remove(result);
+                    await _context.SaveChangesAsync();
+                }
+                return new ActualResult();
+            }
+            catch (Exception)
+            {
+                return new ActualResult(Errors.DataBaseError);
+            }
         }
 
         public void Dispose()
         {
-            _database.Dispose();
+            _context.Dispose();
         }
 
         //--------------- Business Logic ---------------

@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.Configurations;
@@ -6,41 +8,66 @@ using TradeUnionCommittee.BLL.DTO;
 using TradeUnionCommittee.BLL.Interfaces.Directory;
 using TradeUnionCommittee.Common.ActualResults;
 using TradeUnionCommittee.Common.Enums;
+using TradeUnionCommittee.DAL.EF;
 using TradeUnionCommittee.DAL.Entities;
-using TradeUnionCommittee.DAL.Interfaces;
 
 namespace TradeUnionCommittee.BLL.Services.Directory
 {
-    public class SubdivisionsService : ISubdivisionsService
+    internal class SubdivisionsService : ISubdivisionsService
     {
-        private readonly IUnitOfWork _database;
-        private readonly IAutoMapperConfiguration _mapperService;
-        private readonly IHashIdConfiguration _hashIdUtilities;
+        private readonly TradeUnionCommitteeContext _context;
+        private readonly AutoMapperConfiguration _mapperService;
+        private readonly HashIdConfiguration _hashIdUtilities;
 
-        public SubdivisionsService(IUnitOfWork database, IAutoMapperConfiguration mapperService, IHashIdConfiguration hashIdUtilities)
+        public SubdivisionsService(TradeUnionCommitteeContext context, AutoMapperConfiguration mapperService, HashIdConfiguration hashIdUtilities)
         {
-            _database = database;
+            _context = context;
             _mapperService = mapperService;
             _hashIdUtilities = hashIdUtilities;
         }
 
         public async Task<ActualResult<IEnumerable<SubdivisionDTO>>> GetAllAsync()
         {
-            var subdivision = await _database.SubdivisionsRepository.FindWithOrderBy(x => x.IdSubordinate == null, c => c.Name);
-            return _mapperService.Mapper.Map<ActualResult<IEnumerable<SubdivisionDTO>>>(subdivision);
+            try
+            {
+                var subdivision = await _context.Subdivisions.Where(x => x.IdSubordinate == null).OrderBy(x => x.Name).ToListAsync();
+                var result = _mapperService.Mapper.Map<IEnumerable<SubdivisionDTO>>(subdivision);
+                return new ActualResult<IEnumerable<SubdivisionDTO>> { Result = result };
+            }
+            catch (Exception)
+            {
+                return new ActualResult<IEnumerable<SubdivisionDTO>>(Errors.DataBaseError);
+            }
         }
 
         public async Task<ActualResult<SubdivisionDTO>> GetAsync(string hashId)
         {
-            var id = _hashIdUtilities.DecryptLong(hashId, Enums.Services.Subdivision);
-            return _mapperService.Mapper.Map<ActualResult<SubdivisionDTO>>(await _database.SubdivisionsRepository.GetById(id));
+            try
+            {
+                var id = _hashIdUtilities.DecryptLong(hashId);
+                var subdivision = await _context.Subdivisions.FindAsync(id);
+                var result = _mapperService.Mapper.Map<SubdivisionDTO>(subdivision);
+                return new ActualResult<SubdivisionDTO> { Result = result };
+            }
+            catch (Exception)
+            {
+                return new ActualResult<SubdivisionDTO>(Errors.DataBaseError);
+            }
         }
 
         public async Task<ActualResult<IEnumerable<SubdivisionDTO>>> GetSubordinateSubdivisions(string hashId)
         {
-            var id = _hashIdUtilities.DecryptLong(hashId, Enums.Services.Subdivision);
-            var subdivision = await _database.SubdivisionsRepository.FindWithOrderBy(x => x.IdSubordinate == id, c => c.Name);
-            return _mapperService.Mapper.Map<ActualResult<IEnumerable<SubdivisionDTO>>>(subdivision);
+            try
+            {
+                var id = _hashIdUtilities.DecryptLong(hashId);
+                var subdivision = await _context.Subdivisions.Where(x => x.IdSubordinate == id).OrderBy(x => x.Name).ToListAsync();
+                var result = _mapperService.Mapper.Map<IEnumerable<SubdivisionDTO>>(subdivision);
+                return new ActualResult<IEnumerable<SubdivisionDTO>> { Result = result };
+            }
+            catch (Exception)
+            {
+                return new ActualResult<IEnumerable<SubdivisionDTO>>(Errors.DataBaseError);
+            }
         }
 
         public async Task<Dictionary<string,string>> GetSubordinateSubdivisionsForMvc(string hashId)
@@ -53,11 +80,13 @@ namespace TradeUnionCommittee.BLL.Services.Directory
 
         public async Task<IEnumerable<TreeSubdivisionsDTO>> GetTreeSubdivisions()
         {
-            var subdivisions = await _database.SubdivisionsRepository
-                                              .GetWithIncludeAndOrderByToList(x => x.IdSubordinate == null, 
-                                                                              y => y.Name, 
-                                                                              c => c.InverseIdSubordinateNavigation);
-            return subdivisions.Result.Select(subdivision => new TreeSubdivisionsDTO
+            var subdivisions = await _context.Subdivisions
+                                             .Where(x => x.IdSubordinate == null)
+                                             .Include(x => x.InverseIdSubordinateNavigation)
+                                             .OrderBy(x => x.Name)
+                                             .ToListAsync();
+
+            return subdivisions.Select(subdivision => new TreeSubdivisionsDTO
             {
                 GroupName = subdivision.Name,
                 Subdivisions = FormationTree(subdivision)
@@ -70,13 +99,13 @@ namespace TradeUnionCommittee.BLL.Services.Directory
             {
                 new SubdivisionDTO
                 {
-                    HashIdMain = _hashIdUtilities.EncryptLong(subdivisions.Id, Enums.Services.Subdivision),
+                    HashIdMain = _hashIdUtilities.EncryptLong(subdivisions.Id),
                     Name = subdivisions.Name
                 }
             };
             list.AddRange(subdivisions.InverseIdSubordinateNavigation.Select(subdivision => new SubdivisionDTO
             {
-                HashIdMain = _hashIdUtilities.EncryptLong(subdivision.Id, Enums.Services.Subdivision),
+                HashIdMain = _hashIdUtilities.EncryptLong(subdivision.Id),
                 Name = subdivision.Name
             }));
             return list;
@@ -86,79 +115,151 @@ namespace TradeUnionCommittee.BLL.Services.Directory
 
         public async Task<ActualResult> CreateMainSubdivisionAsync(CreateSubdivisionDTO dto)
         {
-            if (!await CheckNameAsync(dto.Name) && !await CheckAbbreviationAsync(dto.Abbreviation))
+            try
             {
-                await _database.SubdivisionsRepository.Create(_mapperService.Mapper.Map<Subdivisions>(dto));
-                return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
+                if (!await CheckNameAsync(dto.Name) && !await CheckAbbreviationAsync(dto.Abbreviation))
+                {
+                    await _context.Subdivisions.AddAsync(_mapperService.Mapper.Map<Subdivisions>(dto));
+                    await _context.SaveChangesAsync();
+                    return new ActualResult();
+                }
+                return new ActualResult(Errors.DuplicateData);
             }
-            return new ActualResult(Errors.DuplicateData);
+            catch (Exception)
+            {
+                return new ActualResult(Errors.DataBaseError);
+            }
         }
 
         public async Task<ActualResult> CreateSubordinateSubdivisionAsync(CreateSubordinateSubdivisionDTO dto)
         {
-            if (!await CheckNameAsync(dto.Name) && !await CheckAbbreviationAsync(dto.Abbreviation))
+            try
             {
-                await _database.SubdivisionsRepository.Create(_mapperService.Mapper.Map<Subdivisions>(dto));
-                return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
+                if (!await CheckNameAsync(dto.Name) && !await CheckAbbreviationAsync(dto.Abbreviation))
+                {
+                    await _context.Subdivisions.AddAsync(_mapperService.Mapper.Map<Subdivisions>(dto));
+                    await _context.SaveChangesAsync();
+                    return new ActualResult();
+                }
+                return new ActualResult(Errors.DuplicateData);
             }
-            return new ActualResult(Errors.DuplicateData);
+            catch (Exception)
+            {
+                return new ActualResult(Errors.DataBaseError);
+            }
         }
 
         //-------------------------------------------------------------------------------------------------------------------
 
         public async Task<ActualResult> UpdateNameSubdivisionAsync(UpdateSubdivisionNameDTO dto)
         {
-            if (!await CheckNameAsync(dto.Name))
+            try
             {
-                await _database.SubdivisionsRepository.Update(_mapperService.Mapper.Map<Subdivisions>(dto));
-                return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
+                if (!await CheckNameAsync(dto.Name))
+                {
+                    var mapping = _mapperService.Mapper.Map<Subdivisions>(dto);
+                    _context.Entry(mapping).State = EntityState.Modified;
+                    _context.Entry(mapping).Property(x => x.IdSubordinate).IsModified = false;
+                    _context.Entry(mapping).Property(x => x.Abbreviation).IsModified = false;
+                    await _context.SaveChangesAsync();
+                    return new ActualResult();
+                }
+                return new ActualResult(Errors.DuplicateData);
             }
-            return new ActualResult(Errors.DuplicateData);
+            catch (DbUpdateConcurrencyException)
+            {
+                return new ActualResult(Errors.TupleDeletedOrUpdated);
+            }
+            catch (Exception)
+            {
+                return new ActualResult(Errors.DataBaseError);
+            }
         }
 
         public async Task<ActualResult> UpdateAbbreviationSubdivisionAsync(UpdateSubdivisionAbbreviationDTO dto)
         {
-            if (!await CheckNameAsync(dto.Abbreviation))
+            try
             {
-                await _database.SubdivisionsRepository.Update(_mapperService.Mapper.Map<Subdivisions>(dto));
-                return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
+                if (!await CheckNameAsync(dto.Abbreviation))
+                {
+                    var mapping = _mapperService.Mapper.Map<Subdivisions>(dto);
+                    _context.Entry(mapping).State = EntityState.Modified;
+                    _context.Entry(mapping).Property(x => x.IdSubordinate).IsModified = false;
+                    _context.Entry(mapping).Property(x => x.Name).IsModified = false;
+                    await _context.SaveChangesAsync();
+                    return new ActualResult();
+                }
+                return new ActualResult(Errors.DuplicateData);
             }
-            return new ActualResult(Errors.DuplicateData);
+            catch (DbUpdateConcurrencyException)
+            {
+                return new ActualResult(Errors.TupleDeletedOrUpdated);
+            }
+            catch (Exception)
+            {
+                return new ActualResult(Errors.DataBaseError);
+            }
         }
 
         public async Task<ActualResult> RestructuringUnits(RestructuringSubdivisionDTO dto)
         {
-            await _database.SubdivisionsRepository.Update(_mapperService.Mapper.Map<Subdivisions>(dto));
-            return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
+            try
+            {
+                var mapping = _mapperService.Mapper.Map<Subdivisions>(dto);
+                _context.Entry(mapping).State = EntityState.Modified;
+                _context.Entry(mapping).Property(x => x.Abbreviation).IsModified = false;
+                _context.Entry(mapping).Property(x => x.Name).IsModified = false;
+                await _context.SaveChangesAsync();
+                return new ActualResult();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                return new ActualResult(Errors.TupleDeletedOrUpdated);
+            }
+            catch (Exception)
+            {
+                return new ActualResult(Errors.DataBaseError);
+            }
         }
 
         //-------------------------------------------------------------------------------------------------------------------
 
         public async Task<ActualResult> DeleteAsync(string hashId)
         {
-            await _database.SubdivisionsRepository.Delete(_hashIdUtilities.DecryptLong(hashId, Enums.Services.Subdivision));
-            return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
+            try
+            {
+                var id = _hashIdUtilities.DecryptLong(hashId);
+                var result = await _context.Subdivisions.FindAsync(id);
+                if (result != null)
+                {
+                    _context.Subdivisions.Remove(result);
+                    await _context.SaveChangesAsync();
+                }
+                return new ActualResult();
+            }
+            catch (Exception)
+            {
+                return new ActualResult(Errors.DataBaseError);
+            }
         }
 
         //-------------------------------------------------------------------------------------------------------------------
 
         public async Task<bool> CheckNameAsync(string name)
         {
-            var result = await _database.SubdivisionsRepository.Any(p => p.Name == name);
-            return result.Result;
+            return await _context.Subdivisions.AnyAsync(p => p.Name == name);
         }
 
         public async Task<bool> CheckAbbreviationAsync(string name)
         {
-            var result = await _database.SubdivisionsRepository.Any(p => p.Abbreviation == name);
-            return result.Result;
+            return await _context.Subdivisions.AnyAsync(p => p.Abbreviation == name);
         }
 
         //-------------------------------------------------------------------------------------------------------------------
 
         public void Dispose()
         {
-            _database.Dispose();
+            _context.Dispose();
         }
     }
 }

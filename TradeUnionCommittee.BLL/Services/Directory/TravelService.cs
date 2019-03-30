@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.Configurations;
@@ -6,71 +8,121 @@ using TradeUnionCommittee.BLL.DTO;
 using TradeUnionCommittee.BLL.Interfaces.Directory;
 using TradeUnionCommittee.Common.ActualResults;
 using TradeUnionCommittee.Common.Enums;
+using TradeUnionCommittee.DAL.EF;
 using TradeUnionCommittee.DAL.Entities;
-using TradeUnionCommittee.DAL.Interfaces;
+using TradeUnionCommittee.DAL.Enums;
 
 namespace TradeUnionCommittee.BLL.Services.Directory
 {
-    public class TravelService : ITravelService
+    internal class TravelService : ITravelService
     {
-        private readonly IUnitOfWork _database;
-        private readonly IAutoMapperConfiguration _mapperService;
-        private readonly IHashIdConfiguration _hashIdUtilities;
+        private readonly TradeUnionCommitteeContext _context;
+        private readonly AutoMapperConfiguration _mapperService;
+        private readonly HashIdConfiguration _hashIdUtilities;
 
-        public TravelService(IUnitOfWork database, IAutoMapperConfiguration mapperService, IHashIdConfiguration hashIdUtilities)
+        public TravelService(TradeUnionCommitteeContext context, AutoMapperConfiguration mapperService, HashIdConfiguration hashIdUtilities)
         {
-            _database = database;
+            _context = context;
             _mapperService = mapperService;
             _hashIdUtilities = hashIdUtilities;
         }
 
         public async Task<ActualResult<IEnumerable<TravelDTO>>> GetAllAsync()
         {
-            var travel = await _database.EventRepository.FindWithOrderBy(x => x.Type == TypeEvent.Travel, c => c.Name);
-            return _mapperService.Mapper.Map<ActualResult<IEnumerable<TravelDTO>>>(travel);
+            try
+            {
+                var travel = await _context.Event.Where(x => x.Type == TypeEvent.Travel).OrderBy(x => x.Name).ToListAsync();
+                var result = _mapperService.Mapper.Map<IEnumerable<TravelDTO>>(travel);
+                return new ActualResult<IEnumerable<TravelDTO>> { Result = result };
+            }
+            catch (Exception)
+            {
+                return new ActualResult<IEnumerable<TravelDTO>>(Errors.DataBaseError);
+            }
         }
 
         public async Task<ActualResult<TravelDTO>> GetAsync(string hashId)
         {
-            var id = _hashIdUtilities.DecryptLong(hashId, Enums.Services.Travel);
-            return _mapperService.Mapper.Map<ActualResult<TravelDTO>>(await _database.EventRepository.GetById(id));
+            try
+            {
+                var id = _hashIdUtilities.DecryptLong(hashId);
+                var travel = await _context.Event.FindAsync(id);
+                var result = _mapperService.Mapper.Map<TravelDTO>(travel);
+                return new ActualResult<TravelDTO> { Result = result };
+            }
+            catch (Exception)
+            {
+                return new ActualResult<TravelDTO>(Errors.DataBaseError);
+            }
         }
 
         public async Task<ActualResult> CreateAsync(TravelDTO dto)
         {
-            if (!await CheckNameAsync(dto.Name))
+            try
             {
-                await _database.EventRepository.Create(_mapperService.Mapper.Map<Event>(dto));
-                return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
+                if (!await CheckNameAsync(dto.Name))
+                {
+                    await _context.Event.AddAsync(_mapperService.Mapper.Map<Event>(dto));
+                    await _context.SaveChangesAsync();
+                    return new ActualResult();
+                }
+                return new ActualResult(Errors.DuplicateData);
             }
-            return new ActualResult(Errors.DuplicateData);
+            catch (Exception)
+            {
+                return new ActualResult(Errors.DataBaseError);
+            }
         }
 
         public async Task<ActualResult> UpdateAsync(TravelDTO dto)
         {
-            if (!await CheckNameAsync(dto.Name))
+            try
             {
-                await _database.EventRepository.Update(_mapperService.Mapper.Map<Event>(dto));
-                return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
+                if (!await CheckNameAsync(dto.Name))
+                {
+                    _context.Entry(_mapperService.Mapper.Map<Event>(dto)).State = EntityState.Modified;
+                    await _context.SaveChangesAsync();
+                    return new ActualResult();
+                }
+                return new ActualResult(Errors.DuplicateData);
             }
-            return new ActualResult(Errors.DuplicateData);
+            catch (DbUpdateConcurrencyException)
+            {
+                return new ActualResult(Errors.TupleDeletedOrUpdated);
+            }
+            catch (Exception)
+            {
+                return new ActualResult(Errors.DataBaseError);
+            }
         }
 
         public async Task<ActualResult> DeleteAsync(string hashId)
         {
-            await _database.EventRepository.Delete(_hashIdUtilities.DecryptLong(hashId, Enums.Services.Travel));
-            return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
+            try
+            {
+                var id = _hashIdUtilities.DecryptLong(hashId);
+                var result = await _context.Event.FindAsync(id);
+                if (result != null)
+                {
+                    _context.Event.Remove(result);
+                    await _context.SaveChangesAsync();
+                }
+                return new ActualResult();
+            }
+            catch (Exception)
+            {
+                return new ActualResult(Errors.DataBaseError);
+            }
         }
 
         public async Task<bool> CheckNameAsync(string name)
         {
-            var result = await _database.EventRepository.Any(p => p.Name == name && p.Type == TypeEvent.Travel);
-            return result.Result;
+            return await _context.Event.AnyAsync(p => p.Name == name && p.Type == TypeEvent.Travel);
         }
 
         public void Dispose()
         {
-            _database.Dispose();
+            _context.Dispose();
         }
     }
 }

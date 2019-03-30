@@ -3,14 +3,15 @@ using Microsoft.EntityFrameworkCore;
 using Npgsql;
 using Npgsql.NameTranslation;
 using TradeUnionCommittee.DAL.Entities;
+using TradeUnionCommittee.DAL.Enums;
 
 namespace TradeUnionCommittee.DAL.EF
 {
-    public sealed class TradeUnionCommitteeEmployeesCoreContext : IdentityDbContext<User>
+    public sealed class TradeUnionCommitteeContext : IdentityDbContext<User>
     {
-        public TradeUnionCommitteeEmployeesCoreContext(DbContextOptions options) : base(options) { Database.EnsureCreated(); }
+        public TradeUnionCommitteeContext(DbContextOptions options) : base(options) { Database.EnsureCreated(); }
 
-        static TradeUnionCommitteeEmployeesCoreContext()
+        static TradeUnionCommitteeContext()
         {
             NpgsqlConnection.GlobalTypeMapper.MapEnum<TypeEvent>("TypeEvent", new NpgsqlNullNameTranslator());
             NpgsqlConnection.GlobalTypeMapper.MapEnum<TypeHouse>("TypeHouse", new NpgsqlNullNameTranslator());

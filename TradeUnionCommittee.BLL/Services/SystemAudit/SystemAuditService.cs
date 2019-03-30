@@ -7,21 +7,22 @@ using TradeUnionCommittee.BLL.Extensions;
 using TradeUnionCommittee.BLL.Interfaces.SystemAudit;
 using TradeUnionCommittee.Common.ActualResults;
 using TradeUnionCommittee.DAL.Entities;
-using TradeUnionCommittee.DAL.Interfaces;
+using TradeUnionCommittee.DAL.Enums;
+using TradeUnionCommittee.DAL.Native;
 
 namespace TradeUnionCommittee.BLL.Services.SystemAudit
 {
     public class SystemAuditService : ISystemAuditService
     {
-        private readonly IUnitOfWork _database;
-        public SystemAuditService(IUnitOfWork database)
+        private readonly ISystemAuditNative _auditRepository;
+        public SystemAuditService(ISystemAuditNative auditRepository)
         {
-            _database = database;
+            _auditRepository = auditRepository;
         }
 
         public async Task AuditAsync(string email, string ipUser, Enums.Operations operation, Enums.Tables table)
         {
-            await _database.SystemAuditRepository.AuditAsync(new Journal { EmailUser = email, IpUser = ipUser, Operation = (Operations)operation, Table = (Tables)table });
+            await _auditRepository.AuditAsync(new Journal { EmailUser = email, IpUser = ipUser, Operation = (Operations)operation, Table = (Tables)table });
         }
 
         public async Task AuditAsync(string email, string ipUser, Enums.Operations operation, Enums.Tables[] tables)
@@ -34,13 +35,13 @@ namespace TradeUnionCommittee.BLL.Services.SystemAudit
 
         public async Task<ActualResult<IEnumerable<JournalDTO>>> FilterAsync(string email, DateTime startDate, DateTime endDate)
         {
-            var existingPartitionInDb = await _database.SystemAuditRepository.GetExistingPartitionInDbAsync();
+            var existingPartitionInDb = await _auditRepository.GetExistingPartitionInDbAsync();
             var sequenceDate = startDate.Date.GetListPartitionings(endDate.Date);
             var resultPartition = sequenceDate.Intersect(existingPartitionInDb).ToList();
 
             if (resultPartition.Any())
             {
-                var result = await _database.SystemAuditRepository.FilterAsync(resultPartition, email, startDate, endDate);
+                var result = await _auditRepository.FilterAsync(resultPartition, email, startDate, endDate);
                 return new ActualResult<IEnumerable<JournalDTO>>
                 {
                     Result = result.Select(journal => new JournalDTO
@@ -54,8 +55,6 @@ namespace TradeUnionCommittee.BLL.Services.SystemAudit
             }
             return new ActualResult<IEnumerable<JournalDTO>>();
         }
-
-        
 
         private static Dictionary<Operations, string> dictionatyOperations = new Dictionary<Operations, string>
         {

@@ -1,62 +1,121 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.Configurations;
 using TradeUnionCommittee.BLL.DTO.Family;
 using TradeUnionCommittee.BLL.Interfaces.Lists.Family;
 using TradeUnionCommittee.Common.ActualResults;
+using TradeUnionCommittee.Common.Enums;
+using TradeUnionCommittee.DAL.EF;
 using TradeUnionCommittee.DAL.Entities;
-using TradeUnionCommittee.DAL.Interfaces;
 
 namespace TradeUnionCommittee.BLL.Services.Lists.Family
 {
-    public class CulturalFamilyService : ICulturalFamilyService
+    internal class CulturalFamilyService : ICulturalFamilyService
     {
-        private readonly IUnitOfWork _database;
-        private readonly IAutoMapperConfiguration _mapperService;
-        private readonly IHashIdConfiguration _hashIdUtilities;
+        private readonly TradeUnionCommitteeContext _context;
+        private readonly AutoMapperConfiguration _mapperService;
+        private readonly HashIdConfiguration _hashIdUtilities;
 
-        public CulturalFamilyService(IUnitOfWork database, IAutoMapperConfiguration mapperService, IHashIdConfiguration hashIdUtilities)
+        public CulturalFamilyService(TradeUnionCommitteeContext context, AutoMapperConfiguration mapperService, HashIdConfiguration hashIdUtilities)
         {
-            _database = database;
+            _context = context;
             _mapperService = mapperService;
             _hashIdUtilities = hashIdUtilities;
         }
 
         public async Task<ActualResult<IEnumerable<CulturalFamilyDTO>>> GetAllAsync(string hashIdFamily)
         {
-            var id = _hashIdUtilities.DecryptLong(hashIdFamily, Enums.Services.Family);
-            var result = await _database.CulturalFamilyRepository.GetWithIncludeToList(x => x.IdFamily == id, c => c.IdCulturalNavigation);
-            return _mapperService.Mapper.Map<ActualResult<IEnumerable<CulturalFamilyDTO>>>(result);
+            try
+            {
+                var id = _hashIdUtilities.DecryptLong(hashIdFamily);
+                var cultural = await _context.CulturalFamily
+                    .Include(x => x.IdCulturalNavigation)
+                    .Where(x => x.IdFamily == id)
+                    .OrderByDescending(x => x.DateVisit)
+                    .ToListAsync();
+                var result = _mapperService.Mapper.Map<IEnumerable<CulturalFamilyDTO>>(cultural);
+                return new ActualResult<IEnumerable<CulturalFamilyDTO>> { Result = result };
+            }
+            catch (Exception)
+            {
+                return new ActualResult<IEnumerable<CulturalFamilyDTO>>(Errors.DataBaseError);
+            }
         }
 
         public async Task<ActualResult<CulturalFamilyDTO>> GetAsync(string hashId)
         {
-            var id = _hashIdUtilities.DecryptLong(hashId, Enums.Services.CulturalFamily);
-            var result = await _database.CulturalFamilyRepository.GetWithInclude(x => x.Id == id, c => c.IdCulturalNavigation);
-            return _mapperService.Mapper.Map<ActualResult<CulturalFamilyDTO>>(result);
+            try
+            {
+                var id = _hashIdUtilities.DecryptLong(hashId);
+                var cultural = await _context.CulturalFamily
+                    .Include(x => x.IdCulturalNavigation)
+                    .FirstOrDefaultAsync(x => x.Id == id);
+                var result = _mapperService.Mapper.Map<CulturalFamilyDTO>(cultural);
+                return new ActualResult<CulturalFamilyDTO> { Result = result };
+            }
+            catch (Exception)
+            {
+                return new ActualResult<CulturalFamilyDTO>(Errors.DataBaseError);
+            }
         }
 
         public async Task<ActualResult> CreateAsync(CulturalFamilyDTO item)
         {
-            await _database.CulturalFamilyRepository.Create(_mapperService.Mapper.Map<CulturalFamily>(item));
-            return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
+            try
+            {
+                await _context.CulturalFamily.AddAsync(_mapperService.Mapper.Map<CulturalFamily>(item));
+                await _context.SaveChangesAsync();
+                return new ActualResult();
+            }
+            catch (Exception)
+            {
+                return new ActualResult(Errors.DataBaseError);
+            }
         }
 
         public async Task<ActualResult> UpdateAsync(CulturalFamilyDTO item)
         {
-            await _database.CulturalFamilyRepository.Update(_mapperService.Mapper.Map<CulturalFamily>(item));
-            return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
+            try
+            {
+                _context.Entry(_mapperService.Mapper.Map<CulturalFamily>(item)).State = EntityState.Modified;
+                await _context.SaveChangesAsync();
+                return new ActualResult();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                return new ActualResult(Errors.TupleDeletedOrUpdated);
+            }
+            catch (Exception)
+            {
+                return new ActualResult(Errors.DataBaseError);
+            }
         }
 
         public async Task<ActualResult> DeleteAsync(string hashId)
         {
-            await _database.CulturalFamilyRepository.Delete(_hashIdUtilities.DecryptLong(hashId, Enums.Services.CulturalFamily));
-            return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
+            try
+            {
+                var id = _hashIdUtilities.DecryptLong(hashId);
+                var result = await _context.CulturalFamily.FindAsync(id);
+                if (result != null)
+                {
+                    _context.CulturalFamily.Remove(result);
+                    await _context.SaveChangesAsync();
+                }
+                return new ActualResult();
+            }
+            catch (Exception)
+            {
+                return new ActualResult(Errors.DataBaseError);
+            }
         }
 
         public void Dispose()
         {
-            _database.Dispose();
+            _context.Dispose();
         }
 
         //--------------- Business Logic ---------------

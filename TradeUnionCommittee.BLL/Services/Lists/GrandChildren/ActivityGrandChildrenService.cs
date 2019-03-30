@@ -1,62 +1,121 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.Configurations;
 using TradeUnionCommittee.BLL.DTO.GrandChildren;
 using TradeUnionCommittee.BLL.Interfaces.Lists.GrandChildren;
 using TradeUnionCommittee.Common.ActualResults;
+using TradeUnionCommittee.Common.Enums;
+using TradeUnionCommittee.DAL.EF;
 using TradeUnionCommittee.DAL.Entities;
-using TradeUnionCommittee.DAL.Interfaces;
 
 namespace TradeUnionCommittee.BLL.Services.Lists.GrandChildren
 {
-    public class ActivityGrandChildrenService : IActivityGrandChildrenService
+    internal class ActivityGrandChildrenService : IActivityGrandChildrenService
     {
-        private readonly IUnitOfWork _database;
-        private readonly IAutoMapperConfiguration _mapperService;
-        private readonly IHashIdConfiguration _hashIdUtilities;
+        private readonly TradeUnionCommitteeContext _context;
+        private readonly AutoMapperConfiguration _mapperService;
+        private readonly HashIdConfiguration _hashIdUtilities;
 
-        public ActivityGrandChildrenService(IUnitOfWork database, IAutoMapperConfiguration mapperService, IHashIdConfiguration hashIdUtilities)
+        public ActivityGrandChildrenService(TradeUnionCommitteeContext context, AutoMapperConfiguration mapperService, HashIdConfiguration hashIdUtilities)
         {
-            _database = database;
+            _context = context;
             _mapperService = mapperService;
             _hashIdUtilities = hashIdUtilities;
         }
 
         public async Task<ActualResult<IEnumerable<ActivityGrandChildrenDTO>>> GetAllAsync(string hashIdGrandChildren)
         {
-            var id = _hashIdUtilities.DecryptLong(hashIdGrandChildren, Enums.Services.GrandChildren);
-            var result = await _database.ActivityGrandChildrensRepository.GetWithIncludeToList(x => x.IdGrandChildren == id, c => c.IdActivitiesNavigation);
-            return _mapperService.Mapper.Map<ActualResult<IEnumerable<ActivityGrandChildrenDTO>>>(result);
+            try
+            {
+                var id = _hashIdUtilities.DecryptLong(hashIdGrandChildren);
+                var activity = await _context.ActivityGrandChildrens
+                    .Include(x => x.IdActivitiesNavigation)
+                    .Where(x => x.IdGrandChildren == id)
+                    .OrderByDescending(x => x.DateEvent)
+                    .ToListAsync();
+                var result = _mapperService.Mapper.Map<IEnumerable<ActivityGrandChildrenDTO>>(activity);
+                return new ActualResult<IEnumerable<ActivityGrandChildrenDTO>> { Result = result };
+            }
+            catch (Exception)
+            {
+                return new ActualResult<IEnumerable<ActivityGrandChildrenDTO>>(Errors.DataBaseError);
+            }
         }
 
         public async Task<ActualResult<ActivityGrandChildrenDTO>> GetAsync(string hashId)
         {
-            var id = _hashIdUtilities.DecryptLong(hashId, Enums.Services.ActivityGrandChildren);
-            var result = await _database.ActivityGrandChildrensRepository.GetWithInclude(x => x.Id == id, c => c.IdActivitiesNavigation);
-            return _mapperService.Mapper.Map<ActualResult<ActivityGrandChildrenDTO>>(result);
+            try
+            {
+                var id = _hashIdUtilities.DecryptLong(hashId);
+                var activity = await _context.ActivityGrandChildrens
+                    .Include(x => x.IdActivitiesNavigation)
+                    .FirstOrDefaultAsync(x => x.Id == id);
+                var result = _mapperService.Mapper.Map<ActivityGrandChildrenDTO>(activity);
+                return new ActualResult<ActivityGrandChildrenDTO> { Result = result };
+            }
+            catch (Exception)
+            {
+                return new ActualResult<ActivityGrandChildrenDTO>(Errors.DataBaseError);
+            }
         }
 
         public async Task<ActualResult> CreateAsync(ActivityGrandChildrenDTO item)
         {
-            await _database.ActivityGrandChildrensRepository.Create(_mapperService.Mapper.Map<ActivityGrandChildrens>(item));
-            return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
+            try
+            {
+                await _context.ActivityGrandChildrens.AddAsync(_mapperService.Mapper.Map<ActivityGrandChildrens>(item));
+                await _context.SaveChangesAsync();
+                return new ActualResult();
+            }
+            catch (Exception)
+            {
+                return new ActualResult(Errors.DataBaseError);
+            }
         }
 
         public async Task<ActualResult> UpdateAsync(ActivityGrandChildrenDTO item)
         {
-            await _database.ActivityGrandChildrensRepository.Update(_mapperService.Mapper.Map<ActivityGrandChildrens>(item));
-            return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
+            try
+            {
+                _context.Entry(_mapperService.Mapper.Map<ActivityGrandChildrens>(item)).State = EntityState.Modified;
+                await _context.SaveChangesAsync();
+                return new ActualResult();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                return new ActualResult(Errors.TupleDeletedOrUpdated);
+            }
+            catch (Exception)
+            {
+                return new ActualResult(Errors.DataBaseError);
+            }
         }
 
         public async Task<ActualResult> DeleteAsync(string hashId)
         {
-            await _database.ActivityGrandChildrensRepository.Delete(_hashIdUtilities.DecryptLong(hashId, Enums.Services.ActivityGrandChildren));
-            return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
+            try
+            {
+                var id = _hashIdUtilities.DecryptLong(hashId);
+                var result = await _context.ActivityGrandChildrens.FindAsync(id);
+                if (result != null)
+                {
+                    _context.ActivityGrandChildrens.Remove(result);
+                    await _context.SaveChangesAsync();
+                }
+                return new ActualResult();
+            }
+            catch (Exception)
+            {
+                return new ActualResult(Errors.DataBaseError);
+            }
         }
 
         public void Dispose()
         {
-            _database.Dispose();
+            _context.Dispose();
         }
     }
 }

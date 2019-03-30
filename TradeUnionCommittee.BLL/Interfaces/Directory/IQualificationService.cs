@@ -9,5 +9,7 @@ namespace TradeUnionCommittee.BLL.Interfaces.Directory
     {
         Task<ActualResult<IEnumerable<string>>> GetAllScientificDegreeAsync();
         Task<ActualResult<IEnumerable<string>>> GetAllScientificTitleAsync();
+        Task<ActualResult<IEnumerable<string>>> GetAllLevelEducationAsync();
+        Task<ActualResult<IEnumerable<string>>> GetAllNameInstitutionAsync();
     }
 }

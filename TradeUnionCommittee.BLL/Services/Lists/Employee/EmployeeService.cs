@@ -1,120 +1,153 @@
-﻿using System.Linq;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.Configurations;
 using TradeUnionCommittee.BLL.DTO.Employee;
 using TradeUnionCommittee.BLL.Enums;
 using TradeUnionCommittee.BLL.Interfaces.Lists.Employee;
 using TradeUnionCommittee.Common.ActualResults;
+using TradeUnionCommittee.Common.Enums;
+using TradeUnionCommittee.DAL.EF;
 using TradeUnionCommittee.DAL.Entities;
-using TradeUnionCommittee.DAL.Interfaces;
 
 namespace TradeUnionCommittee.BLL.Services.Lists.Employee
 {
-    public class EmployeeService : IEmployeeService
+    internal class EmployeeService : IEmployeeService
     {
-        private readonly IUnitOfWork _database;
-        private readonly IAutoMapperConfiguration _mapperService;
-        private readonly IHashIdConfiguration _hashIdUtilities;
+        private readonly TradeUnionCommitteeContext _context;
+        private readonly AutoMapperConfiguration _mapperService;
+        private readonly HashIdConfiguration _hashIdUtilities;
 
-        public EmployeeService(IUnitOfWork database, IAutoMapperConfiguration mapperService, IHashIdConfiguration hashIdUtilities)
+        public EmployeeService(TradeUnionCommitteeContext context, AutoMapperConfiguration mapperService, HashIdConfiguration hashIdUtilities)
         {
-            _database = database;
+            _context = context;
             _mapperService = mapperService;
             _hashIdUtilities = hashIdUtilities;
         }
 
         public async Task<ActualResult> AddEmployeeAsync(CreateEmployeeDTO dto)
         {
-            var employee = _mapperService.Mapper.Map<DAL.Entities.Employee>(dto);
-            await _database.EmployeeRepository.Create(employee);
-            var createEmployee = await _database.SaveAsync();
-
-            if (createEmployee.IsValid)
+            try
             {
-                dto.IdEmployee = employee.Id;
+                var employee = _mapperService.Mapper.Map<DAL.Entities.Employee>(dto);
+                await _context.Employee.AddAsync(employee);
 
-                await _database.PositionEmployeesRepository.Create(_mapperService.Mapper.Map<PositionEmployees>(dto));
-
-                if (dto.TypeAccommodation == AccommodationType.PrivateHouse || dto.TypeAccommodation == AccommodationType.FromUniversity)
+                if (await _context.SaveChangesAsync() > 0)
                 {
-                    await _database.PrivateHouseEmployeesRepository.Create(_mapperService.Mapper.Map<PrivateHouseEmployees>(dto));
+                    dto.IdEmployee = employee.Id;
+
+                    await _context.PositionEmployees.AddAsync(_mapperService.Mapper.Map<PositionEmployees>(dto));
+
+                    if (dto.TypeAccommodation == AccommodationType.PrivateHouse || dto.TypeAccommodation == AccommodationType.FromUniversity)
+                    {
+                        await _context.PrivateHouseEmployees.AddAsync(_mapperService.Mapper.Map<PrivateHouseEmployees>(dto));
+                    }
+
+                    if (dto.TypeAccommodation == AccommodationType.Dormitory || dto.TypeAccommodation == AccommodationType.Departmental)
+                    {
+                        await _context.PublicHouseEmployees.AddAsync(_mapperService.Mapper.Map<PublicHouseEmployees>(dto));
+                    }
+
+                    if (dto.SocialActivity)
+                    {
+                        await _context.SocialActivityEmployees.AddAsync(_mapperService.Mapper.Map<SocialActivityEmployees>(dto));
+                    }
+
+                    if (dto.Privileges)
+                    {
+                        await _context.PrivilegeEmployees.AddAsync(_mapperService.Mapper.Map<PrivilegeEmployees>(dto));
+                    }
+
+                    if (await _context.SaveChangesAsync() > 0)
+                    {
+                        return new ActualResult();
+                    }
                 }
 
-                if (dto.TypeAccommodation == AccommodationType.Dormitory || dto.TypeAccommodation == AccommodationType.Departmental)
-                {
-                    await _database.PublicHouseEmployeesRepository.Create(_mapperService.Mapper.Map<PublicHouseEmployees>(dto));
-                }
-
-                if (dto.SocialActivity)
-                {
-                    await _database.SocialActivityEmployeesRepository.Create(_mapperService.Mapper.Map<SocialActivityEmployees>(dto));
-                }
-
-                if (dto.Privileges)
-                {
-                    await _database.PrivilegeEmployeesRepository.Create(_mapperService.Mapper.Map<PrivilegeEmployees>(dto));
-                }
+                await DeleteAsync(dto.IdEmployee);
+                return new ActualResult(Errors.DataBaseError);
             }
-
-            var result = await _database.SaveAsync();
-            if (result.IsValid)
+            catch (Exception)
             {
-                return new ActualResult();
+                return new ActualResult(Errors.DataBaseError);
             }
-            await DeleteAsync(dto.IdEmployee);
-            return new ActualResult(result.ErrorsList);
         }
 
         //------------------------------------------------------------------------------------------------------------------------------------------
 
         public async Task<ActualResult<GeneralInfoEmployeeDTO>> GetMainInfoEmployeeAsync(string hashId)
         {
-            var resultSearchByHashId = await _database
-                .EmployeeRepository
-                .GetById(_hashIdUtilities.DecryptLong(hashId, Enums.Services.Employee));
-            return _mapperService.Mapper.Map<ActualResult<GeneralInfoEmployeeDTO>>(resultSearchByHashId);
+            try
+            {
+                var id = _hashIdUtilities.DecryptLong(hashId);
+                var result = await _context.Employee.FindAsync(id);
+                var mapping = _mapperService.Mapper.Map<GeneralInfoEmployeeDTO>(result);
+                return new ActualResult<GeneralInfoEmployeeDTO> { Result = mapping };
+            }
+            catch (Exception)
+            {
+                return new ActualResult<GeneralInfoEmployeeDTO>(Errors.DataBaseError);
+            }
         }
 
         //------------------------------------------------------------------------------------------------------------------------------------------
 
         public async Task<ActualResult> UpdateMainInfoEmployeeAsync(GeneralInfoEmployeeDTO dto)
         {
-            await _database.EmployeeRepository.Update(_mapperService.Mapper.Map<DAL.Entities.Employee>(dto));
-            return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
+            try
+            {
+                _context.Entry(_mapperService.Mapper.Map<DAL.Entities.Employee>(dto)).State = EntityState.Modified;
+                await _context.SaveChangesAsync();
+                return new ActualResult();
+            }
+            catch (Exception)
+            {
+                return new ActualResult(Errors.DataBaseError);
+            }
         }
 
         //------------------------------------------------------------------------------------------------------------------------------------------
 
         public async Task<ActualResult> DeleteAsync(string hashId)
         {
-            return _mapperService.Mapper.Map<ActualResult>(await DeleteAsync(_hashIdUtilities.DecryptLong(hashId, Enums.Services.Employee)));
+            return _mapperService.Mapper.Map<ActualResult>(await DeleteAsync(_hashIdUtilities.DecryptLong(hashId)));
         }
 
         private async Task<ActualResult> DeleteAsync(long id)
         {
-            await _database.EmployeeRepository.Delete(id);
-            return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
+            try
+            {
+                var result = await _context.Employee.FindAsync(id);
+                if (result != null)
+                {
+                    _context.Employee.Remove(result);
+                    await _context.SaveChangesAsync();
+                }
+                return new ActualResult();
+            }
+            catch (Exception)
+            {
+               return new ActualResult(Errors.DataBaseError);
+            }
         }
 
         //------------------------------------------------------------------------------------------------------------------------------------------
 
         public async Task<bool> CheckIdentificationСode(string identificationСode)
         {
-            var result = await _database.EmployeeRepository.Any(p => p.IdentificationСode == identificationСode);
-            return result.Result;
+            return await _context.Employee.AnyAsync(p => p.IdentificationСode == identificationСode);
         }
 
         public async Task<bool> CheckMechnikovCard(string mechnikovCard)
         {
-            var result = await _database.EmployeeRepository.Any(p => p.MechnikovCard == mechnikovCard);
-            return result.Result;
+            return await _context.Employee.AnyAsync(p => p.MechnikovCard == mechnikovCard);
         }
 
         //------------------------------------------------------------------------------------------------------------------------------------------
 
         public void Dispose()
         {
-            _database.Dispose();
+            _context.Dispose();
         }
     }
 }

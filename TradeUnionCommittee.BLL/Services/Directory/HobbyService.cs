@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.Configurations;
@@ -6,68 +8,120 @@ using TradeUnionCommittee.BLL.DTO;
 using TradeUnionCommittee.BLL.Interfaces.Directory;
 using TradeUnionCommittee.Common.ActualResults;
 using TradeUnionCommittee.Common.Enums;
+using TradeUnionCommittee.DAL.EF;
 using TradeUnionCommittee.DAL.Entities;
-using TradeUnionCommittee.DAL.Interfaces;
 
 namespace TradeUnionCommittee.BLL.Services.Directory
 {
-    public class HobbyService : IHobbyService
+    internal class HobbyService : IHobbyService
     {
-        private readonly IUnitOfWork _database;
-        private readonly IAutoMapperConfiguration _mapperService;
-        private readonly IHashIdConfiguration _hashIdUtilities;
+        private readonly TradeUnionCommitteeContext _context;
+        private readonly AutoMapperConfiguration _mapperService;
+        private readonly HashIdConfiguration _hashIdUtilities;
 
-        public HobbyService(IUnitOfWork database, IAutoMapperConfiguration mapperService, IHashIdConfiguration hashIdUtilities)
+        public HobbyService(TradeUnionCommitteeContext context, AutoMapperConfiguration mapperService, HashIdConfiguration hashIdUtilities)
         {
-            _database = database;
+            _context = context;
             _mapperService = mapperService;
             _hashIdUtilities = hashIdUtilities;
         }
 
-        public async Task<ActualResult<IEnumerable<DirectoryDTO>>> GetAllAsync() =>
-            _mapperService.Mapper.Map<ActualResult<IEnumerable<DirectoryDTO>>>(await _database.HobbyRepository.GetAll(x => x.Name));
+        public async Task<ActualResult<IEnumerable<DirectoryDTO>>> GetAllAsync()
+        {
+            try
+            {
+                var hobby = await _context.Hobby.OrderBy(x => x.Name).ToListAsync();
+                var result = _mapperService.Mapper.Map<IEnumerable<DirectoryDTO>>(hobby);
+                return new ActualResult<IEnumerable<DirectoryDTO>> { Result = result };
+            }
+            catch (Exception)
+            {
+                return new ActualResult<IEnumerable<DirectoryDTO>>(Errors.DataBaseError);
+            }
+        }
 
         public async Task<ActualResult<DirectoryDTO>> GetAsync(string hashId)
         {
-            var id = _hashIdUtilities.DecryptLong(hashId, Enums.Services.Hobby);
-            return _mapperService.Mapper.Map<ActualResult<DirectoryDTO>>(await _database.HobbyRepository.GetById(id));
+            try
+            {
+                var id = _hashIdUtilities.DecryptLong(hashId);
+                var hobby = await _context.Hobby.FindAsync(id);
+                var result = _mapperService.Mapper.Map<DirectoryDTO>(hobby);
+                return new ActualResult<DirectoryDTO> { Result = result };
+            }
+            catch (Exception)
+            {
+                return new ActualResult<DirectoryDTO>(Errors.DataBaseError);
+            }
         }
 
         public async Task<ActualResult> CreateAsync(DirectoryDTO dto)
         {
-            if (!await CheckNameAsync(dto.Name))
+            try
             {
-                await _database.HobbyRepository.Create(_mapperService.Mapper.Map<Hobby>(dto));
-                return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
+                if (!await CheckNameAsync(dto.Name))
+                {
+                    await _context.Hobby.AddAsync(_mapperService.Mapper.Map<Hobby>(dto));
+                    await _context.SaveChangesAsync();
+                    return new ActualResult();
+                }
+                return new ActualResult(Errors.DuplicateData);
             }
-            return new ActualResult(Errors.DuplicateData);
+            catch (Exception)
+            {
+                return new ActualResult(Errors.DataBaseError);
+            }
         }
 
         public async Task<ActualResult> UpdateAsync(DirectoryDTO dto)
         {
-            if (!await CheckNameAsync(dto.Name))
+            try
             {
-                await _database.HobbyRepository.Update(_mapperService.Mapper.Map<Hobby>(dto));
-                return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
+                if (!await CheckNameAsync(dto.Name))
+                {
+                    _context.Entry(_mapperService.Mapper.Map<Hobby>(dto)).State = EntityState.Modified;
+                    await _context.SaveChangesAsync();
+                    return new ActualResult();
+                }
+                return new ActualResult(Errors.DuplicateData);
             }
-            return new ActualResult(Errors.DuplicateData);
+            catch (DbUpdateConcurrencyException)
+            {
+                return new ActualResult(Errors.TupleDeletedOrUpdated);
+            }
+            catch (Exception)
+            {
+                return new ActualResult(Errors.DataBaseError);
+            }
         }
 
         public async Task<ActualResult> DeleteAsync(string hashId)
         {
-            await _database.HobbyRepository.Delete(_hashIdUtilities.DecryptLong(hashId, Enums.Services.Hobby));
-            return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
+            try
+            {
+                var id = _hashIdUtilities.DecryptLong(hashId);
+                var result = await _context.Hobby.FindAsync(id);
+                if (result != null)
+                {
+                    _context.Hobby.Remove(result);
+                    await _context.SaveChangesAsync();
+                }
+                return new ActualResult();
+            }
+            catch (Exception)
+            {
+                return new ActualResult(Errors.DataBaseError);
+            }
         }
 
         public async Task<bool> CheckNameAsync(string name)
         {
-            var result = await _database.HobbyRepository.Any(p => p.Name == name);
-            return result.Result;
+            return await _context.Hobby.AnyAsync(p => p.Name == name);
         }
 
         public void Dispose()
         {
-            _database.Dispose();
+            _context.Dispose();
         }
     }
 }

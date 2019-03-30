@@ -1,63 +1,120 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.Configurations;
 using TradeUnionCommittee.BLL.DTO.Employee;
 using TradeUnionCommittee.BLL.Interfaces.Lists.Employee;
 using TradeUnionCommittee.Common.ActualResults;
+using TradeUnionCommittee.Common.Enums;
+using TradeUnionCommittee.DAL.EF;
 using TradeUnionCommittee.DAL.Entities;
-using TradeUnionCommittee.DAL.Interfaces;
 
 namespace TradeUnionCommittee.BLL.Services.Lists.Employee
 {
-    public class ApartmentAccountingEmployeesService : IApartmentAccountingEmployeesService
+    internal class ApartmentAccountingEmployeesService : IApartmentAccountingEmployeesService
     {
-        private readonly IUnitOfWork _database;
-        private readonly IAutoMapperConfiguration _mapperService;
-        private readonly IHashIdConfiguration _hashIdUtilities;
+        private readonly TradeUnionCommitteeContext _context;
+        private readonly AutoMapperConfiguration _mapperService;
+        private readonly HashIdConfiguration _hashIdUtilities;
 
-        public ApartmentAccountingEmployeesService(IUnitOfWork database, IAutoMapperConfiguration mapperService, IHashIdConfiguration hashIdUtilities)
+        public ApartmentAccountingEmployeesService(TradeUnionCommitteeContext context, AutoMapperConfiguration mapperService, HashIdConfiguration hashIdUtilities)
         {
-            _database = database;
+            _context = context;
             _mapperService = mapperService;
             _hashIdUtilities = hashIdUtilities;
         }
 
         public async Task<ActualResult<IEnumerable<ApartmentAccountingEmployeesDTO>>> GetAllAsync(string hashIdEmployee)
         {
-            var id = _hashIdUtilities.DecryptLong(hashIdEmployee, Enums.Services.Employee);
-            var result = await _database.ApartmentAccountingEmployeesRepository.Find(x => x.IdEmployee == id);
-            return _mapperService.Mapper.Map<ActualResult<IEnumerable<ApartmentAccountingEmployeesDTO>>>(result);
+            try
+            {
+                var id = _hashIdUtilities.DecryptLong(hashIdEmployee);
+                var apartmentAccounting = await _context.ApartmentAccountingEmployees
+                    .Where(x => x.IdEmployee == id)
+                    .OrderByDescending(x => x.DateAdoption)
+                    .ToListAsync();
+                var result = _mapperService.Mapper.Map<IEnumerable<ApartmentAccountingEmployeesDTO>>(apartmentAccounting);
+                return new ActualResult<IEnumerable<ApartmentAccountingEmployeesDTO>> { Result = result };
+            }
+            catch (Exception)
+            {
+                return new ActualResult<IEnumerable<ApartmentAccountingEmployeesDTO>>(Errors.DataBaseError);
+            }
         }
 
         public async Task<ActualResult<ApartmentAccountingEmployeesDTO>> GetAsync(string hashId)
         {
-            var id = _hashIdUtilities.DecryptLong(hashId, Enums.Services.ApartmentAccountingEmployees);
-            var result = await _database.ApartmentAccountingEmployeesRepository.GetByProperty(x => x.Id == id);
-            return _mapperService.Mapper.Map<ActualResult<ApartmentAccountingEmployeesDTO>>(result);
+            try
+            {
+                var id = _hashIdUtilities.DecryptLong(hashId);
+                var apartmentAccounting = await _context.ApartmentAccountingEmployees.FindAsync(id);
+                var result = _mapperService.Mapper.Map<ApartmentAccountingEmployeesDTO>(apartmentAccounting);
+                return new ActualResult<ApartmentAccountingEmployeesDTO> { Result = result };
+            }
+            catch (Exception)
+            {
+                return new ActualResult<ApartmentAccountingEmployeesDTO>(Errors.DataBaseError);
+            }
         }
 
         public async Task<ActualResult> CreateAsync(ApartmentAccountingEmployeesDTO item)
         {
-            await _database.ApartmentAccountingEmployeesRepository.Create(_mapperService.Mapper.Map<ApartmentAccountingEmployees>(item));
-            return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
+            try
+            {
+                var mapping = _mapperService.Mapper.Map<ApartmentAccountingEmployees>(item);
+                await _context.ApartmentAccountingEmployees.AddAsync(mapping);
+                await _context.SaveChangesAsync();
+                return new ActualResult();
+            }
+            catch (Exception)
+            {
+                return new ActualResult(Errors.DataBaseError);
+            }
         }
 
         public async Task<ActualResult> UpdateAsync(ApartmentAccountingEmployeesDTO item)
         {
-            await _database.ApartmentAccountingEmployeesRepository.Update(_mapperService.Mapper.Map<ApartmentAccountingEmployees>(item));
-            return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
+            try
+            {
+                var mapping = _mapperService.Mapper.Map<ApartmentAccountingEmployees>(item);
+                _context.Entry(mapping).State = EntityState.Modified;
+                await _context.SaveChangesAsync();
+                return new ActualResult();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                return new ActualResult(Errors.TupleDeletedOrUpdated);
+            }
+            catch (Exception)
+            {
+                return new ActualResult(Errors.DataBaseError);
+            }
         }
 
         public async Task<ActualResult> DeleteAsync(string hashId)
         {
-            var id = _hashIdUtilities.DecryptLong(hashId, Enums.Services.ApartmentAccountingEmployees);
-            await _database.ApartmentAccountingEmployeesRepository.Delete(id);
-            return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
+            try
+            {
+                var id = _hashIdUtilities.DecryptLong(hashId);
+                var result = await _context.ApartmentAccountingEmployees.FindAsync(id);
+                if (result != null)
+                {
+                    _context.ApartmentAccountingEmployees.Remove(result);
+                    await _context.SaveChangesAsync();
+                }
+                return new ActualResult();
+            }
+            catch (Exception)
+            {
+                return new ActualResult(Errors.DataBaseError);
+            }
         }
 
         public void Dispose()
         {
-            _database.Dispose();
+            _context.Dispose();
         }
 
         //--------------- Business Logic ---------------

@@ -21,8 +21,6 @@ namespace TradeUnionCommittee.DAL.Entities
         [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         [Column("xmin", TypeName = "xid")]
         public uint RowVersion { get; set; }
-        [NotMapped]
-        public Subdivision SubdivisionUpdate { get; set; }
 
         public Subdivisions IdSubordinateNavigation { get; set; }
         public ICollection<Subdivisions> InverseIdSubordinateNavigation { get; set; }

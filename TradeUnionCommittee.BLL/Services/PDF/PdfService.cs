@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -10,23 +11,23 @@ using TradeUnionCommittee.BLL.Extensions;
 using TradeUnionCommittee.BLL.Interfaces.PDF;
 using TradeUnionCommittee.Common.ActualResults;
 using TradeUnionCommittee.Common.Enums;
-using TradeUnionCommittee.DAL.Entities;
-using TradeUnionCommittee.DAL.Interfaces;
+using TradeUnionCommittee.DAL.EF;
+using TradeUnionCommittee.DAL.Enums;
 using TradeUnionCommittee.PDF.Service;
 using TradeUnionCommittee.PDF.Service.Entities;
 using TradeUnionCommittee.PDF.Service.Models;
 
 namespace TradeUnionCommittee.BLL.Services.PDF
 {
-    public class PdfService : IPdfService
+    internal class PdfService : IPdfService
     {
-        private readonly IUnitOfWork _database;
-        private readonly IAutoMapperConfiguration _mapperService;
-        private readonly IHashIdConfiguration _hashIdUtilities;
+        private readonly TradeUnionCommitteeContext _context;
+        private readonly AutoMapperConfiguration _mapperService;
+        private readonly HashIdConfiguration _hashIdUtilities;
 
-        public PdfService(IUnitOfWork database, IAutoMapperConfiguration mapperService, IHashIdConfiguration hashIdUtilities)
+        public PdfService(TradeUnionCommitteeContext context, AutoMapperConfiguration mapperService, HashIdConfiguration hashIdUtilities)
         {
-            _database = database;
+            _context = context;
             _mapperService = mapperService;
             _hashIdUtilities = hashIdUtilities;
         }
@@ -102,64 +103,66 @@ namespace TradeUnionCommittee.BLL.Services.PDF
 
         private async Task<string> GetFullNameEmployee(ReportPdfDTO dto)
         {
-            var employee = await _database.EmployeeRepository.GetById(_hashIdUtilities.DecryptLong(dto.HashEmployeeId, Enums.Services.Employee));
-            var result = employee.Result;
-            return $"{result.FirstName} {result.SecondName} {result.Patronymic}";
+            var id = _hashIdUtilities.DecryptLong(dto.HashEmployeeId);
+            var employee = await _context.Employee.FindAsync(id);
+            return $"{employee.FirstName} {employee.SecondName} {employee.Patronymic}";
         }
 
         private async Task<IEnumerable<MaterialIncentivesEmployeeEntity>> GetMaterialAid(ReportPdfDTO dto)
         {
-            var id = _hashIdUtilities.DecryptLong(dto.HashEmployeeId, Enums.Services.Employee);
-            var result = await _database
-                .MaterialAidEmployeesRepository
-                .GetWithIncludeToList(x => x.DateIssue.Between(dto.StartDate, dto.EndDate) &&
-                                     x.IdEmployee == id,
-                                p => p.IdMaterialAidNavigation);
-            return _mapperService.Mapper.Map<IEnumerable<MaterialIncentivesEmployeeEntity>>(result.Result.OrderBy(x => x.DateIssue));
+            var id = _hashIdUtilities.DecryptLong(dto.HashEmployeeId);
+            var result = await _context.MaterialAidEmployees
+                .Include(x => x.IdMaterialAidNavigation)
+                .Where(x => x.DateIssue.Between(dto.StartDate, dto.EndDate) && x.IdEmployee == id)
+                .OrderBy(x => x.DateIssue)
+                .ToListAsync();
+            return _mapperService.Mapper.Map<IEnumerable<MaterialIncentivesEmployeeEntity>>(result);
         }
 
         private async Task<IEnumerable<MaterialIncentivesEmployeeEntity>> GetAward(ReportPdfDTO dto)
         {
-            var id = _hashIdUtilities.DecryptLong(dto.HashEmployeeId, Enums.Services.Employee);
-            var result = await _database
-                .AwardEmployeesRepository
-                .GetWithIncludeToList(x => x.DateIssue.Between(dto.StartDate, dto.EndDate) &&
-                                     x.IdEmployee == id,
-                                p => p.IdAwardNavigation);
-            return _mapperService.Mapper.Map<IEnumerable<MaterialIncentivesEmployeeEntity>>(result.Result.OrderBy(x => x.DateIssue));
+            var id = _hashIdUtilities.DecryptLong(dto.HashEmployeeId);
+            var result = await _context.AwardEmployees
+                .Include(x => x.IdAwardNavigation)
+                .Where(x => x.DateIssue.Between(dto.StartDate, dto.EndDate) && x.IdEmployee == id)
+                .OrderBy(x => x.DateIssue)
+                .ToListAsync();
+            return _mapperService.Mapper.Map<IEnumerable<MaterialIncentivesEmployeeEntity>>(result);
         }
 
         private async Task<IEnumerable<CulturalEmployeeEntity>> GetCultural(ReportPdfDTO dto)
         {
-            var id = _hashIdUtilities.DecryptLong(dto.HashEmployeeId, Enums.Services.Employee);
-            var result = await _database
-                .CulturalEmployeesRepository
-                .GetWithIncludeToList(x => x.DateVisit.Between(dto.StartDate, dto.EndDate) &&
-                                     x.IdEmployee == id,
-                                p => p.IdCulturalNavigation);
-            return _mapperService.Mapper.Map<IEnumerable<CulturalEmployeeEntity>>(result.Result.OrderBy(x => x.DateVisit));
+            var id = _hashIdUtilities.DecryptLong(dto.HashEmployeeId);
+            var result = await _context.CulturalEmployees
+                .Include(x => x.IdCulturalNavigation)
+                .Where(x => x.DateVisit.Between(dto.StartDate, dto.EndDate) && x.IdEmployee == id)
+                .OrderBy(x => x.DateVisit)
+                .ToListAsync();
+            return _mapperService.Mapper.Map<IEnumerable<CulturalEmployeeEntity>>(result);
         }
 
         private async Task<IEnumerable<EventEmployeeEntity>> GetEvent(ReportPdfDTO dto, TypeEvent typeEvent)
         {
-            var id = _hashIdUtilities.DecryptLong(dto.HashEmployeeId, Enums.Services.Employee);
-            var result = await _database
-                .EventEmployeesRepository
-                .GetWithIncludeToList(x => x.StartDate.Between(dto.StartDate, dto.EndDate) &&
-                                     x.EndDate.Between(dto.StartDate, dto.EndDate) &&
-                                     x.IdEventNavigation.Type == typeEvent &&
-                                     x.IdEmployee == id,
-                                p => p.IdEventNavigation);
-            return _mapperService.Mapper.Map<IEnumerable<EventEmployeeEntity>>(result.Result.OrderBy(x => x.StartDate));
+            var id = _hashIdUtilities.DecryptLong(dto.HashEmployeeId);
+            var result = await _context.EventEmployees
+                .Include(x => x.IdEventNavigation)
+                .Where(x => x.StartDate.Between(dto.StartDate, dto.EndDate) &&
+                            x.EndDate.Between(dto.StartDate, dto.EndDate) &&
+                            x.IdEventNavigation.Type == typeEvent &&
+                            x.IdEmployee == id)
+                .OrderBy(x => x.StartDate)
+                .ToListAsync();
+            return _mapperService.Mapper.Map<IEnumerable<EventEmployeeEntity>>(result);
         }
 
         private async Task<IEnumerable<GiftEmployeeEntity>> GetGift(ReportPdfDTO dto)
         {
-            var id = _hashIdUtilities.DecryptLong(dto.HashEmployeeId, Enums.Services.Employee);
-            var result = await _database
-                .GiftEmployeesRepository
-                .GetWithIncludeToList(x => x.DateGift.Between(dto.StartDate, dto.EndDate) && x.IdEmployee == id);
-            return _mapperService.Mapper.Map<IEnumerable<GiftEmployeeEntity>>(result.Result.OrderBy(x => x.DateGift));
+            var id = _hashIdUtilities.DecryptLong(dto.HashEmployeeId);
+            var result = await _context.GiftEmployees
+                .Where(x => x.DateGift.Between(dto.StartDate, dto.EndDate) && x.IdEmployee == id)
+                .OrderBy(x => x.DateGift)
+                .ToListAsync();
+            return _mapperService.Mapper.Map<IEnumerable<GiftEmployeeEntity>>(result);
         }
 
         private async Task<IEnumerable<EventEmployeeEntity>> AddAllEvent(ReportPdfDTO dto)
@@ -173,7 +176,7 @@ namespace TradeUnionCommittee.BLL.Services.PDF
 
         public void Dispose()
         {
-            _database.Dispose();
+            _context.Dispose();
         }
     }
 }

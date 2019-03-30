@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.Configurations;
@@ -6,79 +8,129 @@ using TradeUnionCommittee.BLL.DTO;
 using TradeUnionCommittee.BLL.Interfaces.Directory;
 using TradeUnionCommittee.Common.ActualResults;
 using TradeUnionCommittee.Common.Enums;
+using TradeUnionCommittee.DAL.EF;
 using TradeUnionCommittee.DAL.Entities;
-using TradeUnionCommittee.DAL.Interfaces;
+using TradeUnionCommittee.DAL.Enums;
 
 namespace TradeUnionCommittee.BLL.Services.Directory
 {
-    public class DormitoryService : IDormitoryService
+    internal class DormitoryService : IDormitoryService
     {
-        private readonly IUnitOfWork _database;
-        private readonly IAutoMapperConfiguration _mapperService;
-        private readonly IHashIdConfiguration _hashIdUtilities;
+        private readonly TradeUnionCommitteeContext _context;
+        private readonly AutoMapperConfiguration _mapperService;
+        private readonly HashIdConfiguration _hashIdUtilities;
 
-        public DormitoryService(IUnitOfWork database, IAutoMapperConfiguration mapperService, IHashIdConfiguration hashIdUtilities)
+        public DormitoryService(TradeUnionCommitteeContext context, AutoMapperConfiguration mapperService, HashIdConfiguration hashIdUtilities)
         {
-            _database = database;
+            _context = context;
             _mapperService = mapperService;
             _hashIdUtilities = hashIdUtilities;
         }
 
         public async Task<ActualResult<IEnumerable<DormitoryDTO>>> GetAllAsync()
         {
-            var dormitory = await _database.AddressPublicHouseRepository
-                                           .FindWithOrderBy(x => x.Type == TypeHouse.Dormitory, c => c.NumberDormitory);
-            return _mapperService.Mapper.Map<ActualResult<IEnumerable<DormitoryDTO>>>(dormitory);
+            try
+            {
+                var dormitory = await _context.AddressPublicHouse
+                                              .Where(x => x.Type == TypeHouse.Dormitory)
+                                              .OrderBy(x => x.NumberDormitory)
+                                              .ToListAsync();
+                var result = _mapperService.Mapper.Map<IEnumerable<DormitoryDTO>>(dormitory);
+                return new ActualResult<IEnumerable<DormitoryDTO>> { Result = result };
+            }
+            catch (Exception)
+            {
+                return new ActualResult<IEnumerable<DormitoryDTO>>(Errors.DataBaseError);
+            }
         }
-
 
         public async Task<ActualResult<DormitoryDTO>> GetAsync(string hashId)
         {
-            var id = _hashIdUtilities.DecryptLong(hashId, Enums.Services.AddressPublicHouse);
-            var result = await _database.AddressPublicHouseRepository.GetByProperty(x => x.Id == id && x.Type == TypeHouse.Dormitory);
-            return _mapperService.Mapper.Map<ActualResult<DormitoryDTO>>(result);
+            try
+            {
+                var id = _hashIdUtilities.DecryptLong(hashId);
+                var dormitory = await _context.AddressPublicHouse.FindAsync(id);
+                var result = _mapperService.Mapper.Map<DormitoryDTO>(dormitory);
+                return new ActualResult<DormitoryDTO> { Result = result };
+            }
+            catch (Exception)
+            {
+                return new ActualResult<DormitoryDTO>(Errors.DataBaseError);
+            }
         }
 
         public async Task<ActualResult> CreateAsync(DormitoryDTO dto)
         {
-            if (!await CheckDuplicateDataAsync(dto))
+            try
             {
-                await _database.AddressPublicHouseRepository.Create(_mapperService.Mapper.Map<AddressPublicHouse>(dto));
-                return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
+                if (!await CheckDuplicateDataAsync(dto))
+                {
+                    await _context.AddressPublicHouse.AddAsync(_mapperService.Mapper.Map<AddressPublicHouse>(dto));
+                    await _context.SaveChangesAsync();
+                    return new ActualResult();
+                }
+                return new ActualResult(Errors.DuplicateData);
             }
-            return new ActualResult(Errors.DuplicateData);
+            catch (Exception)
+            {
+                return new ActualResult(Errors.DataBaseError);
+            }
         }
 
         public async Task<ActualResult> UpdateAsync(DormitoryDTO dto)
         {
-            if (!await CheckDuplicateDataAsync(dto))
+            try
             {
-                await _database.AddressPublicHouseRepository.Update(_mapperService.Mapper.Map<AddressPublicHouse>(dto));
-                return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
+                if (!await CheckDuplicateDataAsync(dto))
+                {
+                    _context.Entry(_mapperService.Mapper.Map<AddressPublicHouse>(dto)).State = EntityState.Modified;
+                    await _context.SaveChangesAsync();
+                    return new ActualResult();
+                }
+                return new ActualResult(Errors.DuplicateData);
             }
-            return new ActualResult(Errors.DuplicateData);
+            catch (DbUpdateConcurrencyException)
+            {
+                return new ActualResult(Errors.TupleDeletedOrUpdated);
+            }
+            catch (Exception)
+            {
+                return new ActualResult(Errors.DataBaseError);
+            }
         }
 
         public async Task<ActualResult> DeleteAsync(string hashId)
         {
-            await _database.AddressPublicHouseRepository.Delete(_hashIdUtilities.DecryptLong(hashId, Enums.Services.AddressPublicHouse));
-            return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
+            try
+            {
+                var id = _hashIdUtilities.DecryptLong(hashId);
+                var result = await _context.AddressPublicHouse.FindAsync(id);
+                if (result != null)
+                {
+                    _context.AddressPublicHouse.Remove(result);
+                    await _context.SaveChangesAsync();
+                }
+                return new ActualResult();
+            }
+            catch (Exception)
+            {
+                return new ActualResult(Errors.DataBaseError);
+            }
         }
 
         private async Task<bool> CheckDuplicateDataAsync(DormitoryDTO dto)
         {
-            var result = await _database.AddressPublicHouseRepository
-                                        .Any(p => p.City == dto.City &&
+            return await _context.AddressPublicHouse
+                                        .AnyAsync(p => p.City == dto.City &&
                                                    p.Street == dto.Street &&
                                                    p.NumberHouse == dto.NumberHouse &&
                                                    p.NumberDormitory == dto.NumberDormitory &&
                                                    p.Type == TypeHouse.Dormitory);
-            return result.Result;
         }
 
         public void Dispose()
         {
-            _database.Dispose();
+            _context.Dispose();
         }
     }
 }

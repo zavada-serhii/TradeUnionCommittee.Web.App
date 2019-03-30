@@ -1,65 +1,122 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.Configurations;
 using TradeUnionCommittee.BLL.DTO.Employee;
 using TradeUnionCommittee.BLL.Interfaces.Lists.Employee;
 using TradeUnionCommittee.Common.ActualResults;
+using TradeUnionCommittee.Common.Enums;
+using TradeUnionCommittee.DAL.EF;
 using TradeUnionCommittee.DAL.Entities;
-using TradeUnionCommittee.DAL.Interfaces;
+using TradeUnionCommittee.DAL.Enums;
 
 namespace TradeUnionCommittee.BLL.Services.Lists.Employee
 {
-    public class WellnessEmployeesService : IWellnessEmployeesService
+    internal class WellnessEmployeesService : IWellnessEmployeesService
     {
-        private readonly IUnitOfWork _database;
-        private readonly IAutoMapperConfiguration _mapperService;
-        private readonly IHashIdConfiguration _hashIdUtilities;
+        private readonly TradeUnionCommitteeContext _context;
+        private readonly AutoMapperConfiguration _mapperService;
+        private readonly HashIdConfiguration _hashIdUtilities;
 
-        public WellnessEmployeesService(IUnitOfWork database, IAutoMapperConfiguration mapperService, IHashIdConfiguration hashIdUtilities)
+        public WellnessEmployeesService(TradeUnionCommitteeContext context, AutoMapperConfiguration mapperService, HashIdConfiguration hashIdUtilities)
         {
-            _database = database;
+            _context = context;
             _mapperService = mapperService;
             _hashIdUtilities = hashIdUtilities;
         }
 
         public async Task<ActualResult<IEnumerable<WellnessEmployeesDTO>>> GetAllAsync(string hashIdEmployee)
         {
-            var id = _hashIdUtilities.DecryptLong(hashIdEmployee, Enums.Services.Employee);
-            var result = await _database.EventEmployeesRepository
-                .GetWithIncludeToList(x => x.IdEmployee == id &&
-                                           x.IdEventNavigation.Type == TypeEvent.Wellness,
-                                      c => c.IdEventNavigation);
-            return _mapperService.Mapper.Map<ActualResult<IEnumerable<WellnessEmployeesDTO>>>(result);
+            try
+            {
+                var id = _hashIdUtilities.DecryptLong(hashIdEmployee);
+                var wellness = await _context.EventEmployees
+                    .Include(x => x.IdEventNavigation)
+                    .Where(x => x.IdEmployee == id && x.IdEventNavigation.Type == TypeEvent.Wellness)
+                    .OrderByDescending(x => x.StartDate)
+                    .ToListAsync();
+                var result = _mapperService.Mapper.Map<IEnumerable<WellnessEmployeesDTO>>(wellness);
+                return new ActualResult<IEnumerable<WellnessEmployeesDTO>> { Result = result };
+            }
+            catch (Exception)
+            {
+                return new ActualResult<IEnumerable<WellnessEmployeesDTO>>(Errors.DataBaseError);
+            }
         }
 
         public async Task<ActualResult<WellnessEmployeesDTO>> GetAsync(string hashId)
         {
-            var id = _hashIdUtilities.DecryptLong(hashId, Enums.Services.WellnessEmployees);
-            var result = await _database.EventEmployeesRepository.GetWithInclude(x => x.Id == id, c => c.IdEventNavigation);
-            return _mapperService.Mapper.Map<ActualResult<WellnessEmployeesDTO>>(result);
+            try
+            {
+                var id = _hashIdUtilities.DecryptLong(hashId);
+                var wellness = await _context.EventEmployees
+                    .Include(x => x.IdEventNavigation)
+                    .FirstOrDefaultAsync(x => x.Id == id);
+                var result = _mapperService.Mapper.Map<WellnessEmployeesDTO>(wellness);
+                return new ActualResult<WellnessEmployeesDTO> { Result = result };
+            }
+            catch (Exception)
+            {
+                return new ActualResult<WellnessEmployeesDTO>(Errors.DataBaseError);
+            }
         }
 
         public async Task<ActualResult> CreateAsync(WellnessEmployeesDTO item)
         {
-            await _database.EventEmployeesRepository.Create(_mapperService.Mapper.Map<EventEmployees>(item));
-            return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
+            try
+            {
+                await _context.EventEmployees.AddAsync(_mapperService.Mapper.Map<EventEmployees>(item));
+                await _context.SaveChangesAsync();
+                return new ActualResult();
+            }
+            catch (Exception)
+            {
+                return new ActualResult(Errors.DataBaseError);
+            }
         }
 
         public async Task<ActualResult> UpdateAsync(WellnessEmployeesDTO item)
         {
-            await _database.EventEmployeesRepository.Update(_mapperService.Mapper.Map<EventEmployees>(item));
-            return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
+            try
+            {
+                _context.Entry(_mapperService.Mapper.Map<EventEmployees>(item)).State = EntityState.Modified;
+                await _context.SaveChangesAsync();
+                return new ActualResult();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                return new ActualResult(Errors.TupleDeletedOrUpdated);
+            }
+            catch (Exception)
+            {
+                return new ActualResult(Errors.DataBaseError);
+            }
         }
 
         public async Task<ActualResult> DeleteAsync(string hashId)
         {
-            await _database.EventEmployeesRepository.Delete(_hashIdUtilities.DecryptLong(hashId, Enums.Services.WellnessEmployees));
-            return _mapperService.Mapper.Map<ActualResult>(await _database.SaveAsync());
+            try
+            {
+                var id = _hashIdUtilities.DecryptLong(hashId);
+                var result = await _context.EventEmployees.FindAsync(id);
+                if (result != null)
+                {
+                    _context.EventEmployees.Remove(result);
+                    await _context.SaveChangesAsync();
+                }
+                return new ActualResult();
+            }
+            catch (Exception)
+            {
+                return new ActualResult(Errors.DataBaseError);
+            }
         }
 
         public void Dispose()
         {
-            _database.Dispose();
+            _context.Dispose();
         }
 
         //--------------- Business Logic ---------------
