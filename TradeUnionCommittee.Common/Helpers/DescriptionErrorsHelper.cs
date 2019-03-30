@@ -14,9 +14,6 @@ namespace TradeUnionCommittee.Common.Helpers
                 case Errors.TupleDeleted:
                     return "Запис вже видалено іншим користувачем!";
 
-                case Errors.TupleUpdated:
-                    return "Запис вже був оновлений іншим користувачем!";
-
                 case Errors.TupleDeletedOrUpdated:
                     return "Запис змінено або видалено іншим користувачем!";
 
