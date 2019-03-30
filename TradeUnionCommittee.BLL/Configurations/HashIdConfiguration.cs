@@ -43,16 +43,7 @@ namespace TradeUnionCommittee.BLL.Configurations
                 throw new DecryptHashIdException();
             }
 
-            long[] result;
-
-            if (_useGuidFormat)
-            {
-                result = _hashId.DecodeLong(GuidFormat(cipherText, HashIdOperation.Decrypt));
-            }
-            else
-            {
-                result = _hashId.DecodeLong(cipherText);
-            }
+            var result = _hashId.DecodeLong(_useGuidFormat ? GuidFormat(cipherText, HashIdOperation.Decrypt) : cipherText);
 
             if (result.Length == 1)
             {
