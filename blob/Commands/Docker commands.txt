@@ -16,18 +16,11 @@ docker rmi -f [d03e2a8f3ed4]
 --Delete network
 docker network rm [bc1722b45964]
 
-
 --Delete all container 
-
 docker rm --force $(docker ps -a -q)
 
-
-
 --Delete all images
-
 docker rmi -f $(docker images -q)
 
-
 -- Docker Compose
-
 docker-compose -f docker-compose.yml up --build
