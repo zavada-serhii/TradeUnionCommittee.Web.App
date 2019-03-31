@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.DTO;
@@ -20,13 +21,15 @@ namespace TradeUnionCommittee.Web.Api.Controllers.Directory
         private readonly ISystemAuditService _systemAuditService;
         private readonly IMapper _mapper;
         private readonly IHttpContextAccessor _accessor;
+        private readonly ILogger<PositionController> _logger;
 
-        public PositionController(IPositionService services, ISystemAuditService systemAuditService, IMapper mapper, IHttpContextAccessor accessor)
+        public PositionController(IPositionService services, ISystemAuditService systemAuditService, IMapper mapper, IHttpContextAccessor accessor, ILogger<PositionController> logger)
         {
             _services = services;
             _systemAuditService = systemAuditService;
             _mapper = mapper;
             _accessor = accessor;
+            _logger = logger;
         }
 
         [HttpGet]
@@ -34,6 +37,7 @@ namespace TradeUnionCommittee.Web.Api.Controllers.Directory
         [Authorize(Roles = "Admin,Accountant,Deputy", AuthenticationSchemes = "Bearer")]
         public async Task<IActionResult> GetAll()
         {
+            //_logger.LogInformation($"Test Position API Controller: {JsonConvert.SerializeObject(await _services.GetAllAsync())}");
             return Ok(await _services.GetAllAsync());
         }
 
