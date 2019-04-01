@@ -119,13 +119,13 @@ namespace TradeUnionCommittee.BLL.Services.Search
                     var searchByPublicHouse = _context.Employee
                         .Include(x => x.PositionEmployees.IdSubdivisionNavigation.InverseIdSubordinateNavigation)
                         .Include(x => x.PublicHouseEmployees)
-                        .Where(x => x.PublicHouseEmployees.Any(t => t.IdAddressPublicHouse == id));
+                        .Where(x => x.PublicHouseEmployees.AsQueryable().Any(t => t.IdAddressPublicHouse == id));
                     return new ActualResult<IEnumerable<ResultSearchDTO>> { Result = ResultFormation(searchByPublicHouse) };
                 case AccommodationType.FromUniversity:
                     var searchByFromUniversity = _context.Employee
                         .Include(x => x.PositionEmployees.IdSubdivisionNavigation.InverseIdSubordinateNavigation)
                         .Include(x => x.PrivateHouseEmployees)
-                        .Where(x => x.PrivateHouseEmployees.Any(t => t.DateReceiving != null));
+                        .Where(x => x.PrivateHouseEmployees.AsQueryable().Any(t => t.DateReceiving != null));
                     return new ActualResult<IEnumerable<ResultSearchDTO>> { Result = ResultFormation(searchByFromUniversity) };
                 default:
                     return new ActualResult<IEnumerable<ResultSearchDTO>>();
@@ -147,13 +147,13 @@ namespace TradeUnionCommittee.BLL.Services.Search
                     var searchByChildrenBirthDate = _context.Employee
                         .Include(p => p.PositionEmployees.IdSubdivisionNavigation.InverseIdSubordinateNavigation)
                         .Include(p => p.Children)
-                        .Where(x => x.Children.Any(t => t.BirthDate >= startDate && t.BirthDate <= endDate));
+                        .Where(x => x.Children.AsQueryable().Any(t => t.BirthDate >= startDate && t.BirthDate <= endDate));
                     return new ActualResult<IEnumerable<ResultSearchDTO>> { Result = ResultFormation(searchByChildrenBirthDate) };
                 case CoverageType.GrandChildren:
                     var searchByGrandChildrenBirthDate = _context.Employee
                         .Include(p => p.PositionEmployees.IdSubdivisionNavigation.InverseIdSubordinateNavigation)
                         .Include(p => p.GrandChildren)
-                        .Where(x => x.GrandChildren.Any(t => t.BirthDate >= startDate && t.BirthDate <= endDate));
+                        .Where(x => x.GrandChildren.AsQueryable().Any(t => t.BirthDate >= startDate && t.BirthDate <= endDate));
                     return new ActualResult<IEnumerable<ResultSearchDTO>> { Result = ResultFormation(searchByGrandChildrenBirthDate) };
                 default:
                     return new ActualResult<IEnumerable<ResultSearchDTO>>();
@@ -171,20 +171,20 @@ namespace TradeUnionCommittee.BLL.Services.Search
                     var searchByEmployeeHobby = _context.Employee
                         .Include(p => p.PositionEmployees.IdSubdivisionNavigation.InverseIdSubordinateNavigation)
                         .Include(p => p.HobbyEmployees)
-                        .Where(x => x.HobbyEmployees.Any(t => t.IdHobby == idHobby));
+                        .Where(x => x.HobbyEmployees.AsQueryable().Any(t => t.IdHobby == idHobby));
                     return new ActualResult<IEnumerable<ResultSearchDTO>> { Result = ResultFormation(searchByEmployeeHobby) };
                 case CoverageType.Children:
                     var searchByChildrenHobby = _context.Children
                         .Include(p => p.HobbyChildrens)
                         .Include(p => p.IdEmployeeNavigation.PositionEmployees.IdSubdivisionNavigation.InverseIdSubordinateNavigation)
-                        .Where(x => x.HobbyChildrens.Any(t => t.IdHobby == idHobby))
+                        .Where(x => x.HobbyChildrens.AsQueryable().Any(t => t.IdHobby == idHobby))
                         .Select(x => x.IdEmployeeNavigation);
                     return new ActualResult<IEnumerable<ResultSearchDTO>> { Result = ResultFormation(searchByChildrenHobby) };
                 case CoverageType.GrandChildren:
                     var searchByGrandChildrenHobby = _context.GrandChildren
                         .Include(p => p.HobbyGrandChildrens)
                         .Include(p => p.IdEmployeeNavigation.PositionEmployees.IdSubdivisionNavigation.InverseIdSubordinateNavigation)
-                        .Where(x => x.HobbyGrandChildrens.Any(t => t.IdHobby == idHobby))
+                        .Where(x => x.HobbyGrandChildrens.AsQueryable().Any(t => t.IdHobby == idHobby))
                         .Select(x => x.IdEmployeeNavigation);
                     return new ActualResult<IEnumerable<ResultSearchDTO>> { Result = ResultFormation(searchByGrandChildrenHobby) };
                 default:
