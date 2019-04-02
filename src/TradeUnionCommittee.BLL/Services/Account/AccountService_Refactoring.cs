@@ -14,14 +14,15 @@ namespace TradeUnionCommittee.BLL.Services.Account
         /// </summary>
         /// <param name="email"></param>
         /// <param name="password"></param>
-        Task<string> Login(string email, string password);
+        Task<string> SignIn(string email, string password);
         /// <summary>
         /// The method for the authorization MVC, if the authorization was successful, returns true else false
         /// </summary>
         /// <param name="email"></param>
         /// <param name="password"></param>
         /// <param name="rememberMe"></param>
-        Task<bool> Login(string email, string password, bool rememberMe);
+        Task<bool> SignIn(string email, string password, bool rememberMe);
+        Task SignOut();
     }
 
     internal class AccountService_Refactoring : IAccountService_Refactoring
@@ -44,7 +45,7 @@ namespace TradeUnionCommittee.BLL.Services.Account
 
         //------------------------------------------------------------------------------------------------------------------------------------------
 
-        public async Task<string> Login(string email, string password)
+        public async Task<string> SignIn(string email, string password)
         {
             try
             {
@@ -63,7 +64,7 @@ namespace TradeUnionCommittee.BLL.Services.Account
             }
         }
 
-        public async Task<bool> Login(string email, string password, bool rememberMe)
+        public async Task<bool> SignIn(string email, string password, bool rememberMe)
         {
             try
             {
@@ -76,7 +77,7 @@ namespace TradeUnionCommittee.BLL.Services.Account
             }
         }
 
-        public async Task LogOff()
+        public async Task SignOut()
         {
             await _signInManager.SignOutAsync();
         }
