@@ -7,7 +7,24 @@ using TradeUnionCommittee.DAL.Entities;
 
 namespace TradeUnionCommittee.BLL.Services.Account
 {
-    internal class AccountService_Refactoring
+    public interface IAccountService_Refactoring
+    {
+        /// <summary>
+        /// The method for the authorization API, if the authorization was successful, returns the role otherwise null
+        /// </summary>
+        /// <param name="email"></param>
+        /// <param name="password"></param>
+        Task<string> Login(string email, string password);
+        /// <summary>
+        /// The method for the authorization MVC, if the authorization was successful, returns true else false
+        /// </summary>
+        /// <param name="email"></param>
+        /// <param name="password"></param>
+        /// <param name="rememberMe"></param>
+        Task<bool> Login(string email, string password, bool rememberMe);
+    }
+
+    internal class AccountService_Refactoring : IAccountService_Refactoring
     {
         private readonly UserManager<User> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
@@ -27,11 +44,6 @@ namespace TradeUnionCommittee.BLL.Services.Account
 
         //------------------------------------------------------------------------------------------------------------------------------------------
 
-        /// <summary>
-        /// The method for the authorization API, if the authorization was successful, returns the role otherwise null
-        /// </summary>
-        /// <param name="email"></param>
-        /// <param name="password"></param>
         public async Task<string> Login(string email, string password)
         {
             try
@@ -51,13 +63,6 @@ namespace TradeUnionCommittee.BLL.Services.Account
             }
         }
 
-        /// <summary>
-        /// The method for the authorization MVC, if the authorization was successful, returns true else false
-        /// </summary>
-        /// <param name="email"></param>
-        /// <param name="password"></param>
-        /// <param name="rememberMe"></param>
-        /// <returns></returns>
         public async Task<bool> Login(string email, string password, bool rememberMe)
         {
             try
