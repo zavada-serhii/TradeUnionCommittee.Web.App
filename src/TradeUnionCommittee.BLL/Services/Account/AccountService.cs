@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.Configurations;
 using TradeUnionCommittee.BLL.DTO;
+using TradeUnionCommittee.BLL.Helpers;
 using TradeUnionCommittee.BLL.Interfaces.Account;
 using TradeUnionCommittee.Common.ActualResults;
 using TradeUnionCommittee.Common.Enums;
@@ -112,7 +113,7 @@ namespace TradeUnionCommittee.BLL.Services.Account
                 if (user != null)
                 {
                     var roles = await _userManager.GetRolesAsync(user);
-                    var result = new AccountRoleDTO { HashId = hashId, Role = ConvertToUkrainianLang(roles.FirstOrDefault()) };
+                    var result = new AccountRoleDTO { HashId = hashId, Role = TranslatorHelper.ConvertToUkrainianLang(roles.FirstOrDefault()) };
                     return new ActualResult<AccountRoleDTO> { Result = result };
                 }
                 return new ActualResult<AccountRoleDTO>(Errors.UserNotFound);
@@ -156,7 +157,7 @@ namespace TradeUnionCommittee.BLL.Services.Account
                     var result = await _userManager.CreateAsync(user, dto.Password);
                     if (result.Succeeded)
                     {
-                        return await UpdateUserRoleAsync(user, ConvertToEnglishLang(dto.Role));
+                        return await UpdateUserRoleAsync(user, TranslatorHelper.ConvertToEnglishLang(dto.Role));
                     }
                     return new ActualResult(Errors.DataBaseError);
                 }
@@ -238,7 +239,7 @@ namespace TradeUnionCommittee.BLL.Services.Account
                 var user = await _userManager.FindByIdAsync(dto.HashId);
                 if (user != null)
                 {
-                    return await UpdateUserRoleAsync(user, ConvertToEnglishLang(dto.Role));
+                    return await UpdateUserRoleAsync(user, TranslatorHelper.ConvertToEnglishLang(dto.Role));
                 }
                 return new ActualResult(Errors.UserNotFound);
             }
@@ -297,36 +298,6 @@ namespace TradeUnionCommittee.BLL.Services.Account
         }
 
         //------------------------------------------------------------------------------------------------------------------------------------------
-
-        private string ConvertToEnglishLang(string param)
-        {
-            switch (param)
-            {
-                case "Адміністратор":
-                    return "Admin";
-                case "Бухгалтер":
-                    return "Accountant";
-                case "Заступник":
-                    return "Deputy";
-                default:
-                    return string.Empty;
-            }
-        }
-
-        private string ConvertToUkrainianLang(string param)
-        {
-            switch (param)
-            {
-                case "Admin":
-                    return "Адміністратор";
-                case "Accountant":
-                    return "Бухгалтер";
-                case "Deputy":
-                    return "Заступник";
-                default:
-                    return string.Empty;
-            }
-        }
 
         public void Dispose()
         {

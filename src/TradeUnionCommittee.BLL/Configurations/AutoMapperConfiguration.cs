@@ -8,6 +8,7 @@ using TradeUnionCommittee.BLL.DTO.Family;
 using TradeUnionCommittee.BLL.DTO.GrandChildren;
 using TradeUnionCommittee.BLL.Enums;
 using TradeUnionCommittee.BLL.Extensions;
+using TradeUnionCommittee.BLL.Helpers;
 using TradeUnionCommittee.DAL.Entities;
 using TradeUnionCommittee.DAL.Enums;
 using TradeUnionCommittee.DAL.Native;
@@ -40,7 +41,7 @@ namespace TradeUnionCommittee.BLL.Configurations
 
                 map.CreateMap<IdentityRole, RolesDTO>()
                     .ForMember(d => d.HashId, c => c.MapFrom(x => x.Id))
-                    .ForMember(d => d.Name, c => c.MapFrom(x => ConvertToUkrainianLang(x.Name)))
+                    .ForMember(d => d.Name, c => c.MapFrom(x => TranslatorHelper.ConvertToUkrainianLang(x.Name)))
                     .ReverseMap();
 
                 #endregion
@@ -199,7 +200,7 @@ namespace TradeUnionCommittee.BLL.Configurations
                 map.CreateMap<Employee, GeneralInfoEmployeeDTO>()
                     .ForMember(x => x.HashIdEmployee, opt => opt.MapFrom(c => _hashIdUtilities.EncryptLong(c.Id)))
                     .ForMember(x => x.CountYear, opt => opt.MapFrom(c => c.BirthDate.CalculateAge()))
-                    .ForMember(x => x.Sex, opt => opt.MapFrom(c => ConvertToUkraineGender(c.Sex)))
+                    .ForMember(x => x.Sex, opt => opt.MapFrom(c => TranslatorHelper.ConvertToUkraineGender(c.Sex)))
                     .ReverseMap()
                     .ForMember(d => d.Id, c => c.MapFrom(x => _hashIdUtilities.DecryptLong(x.HashIdEmployee)))
                     .ForMember(d => d.CityPhone, c => c.MapFrom(x => x.CityPhone.AddMaskForCityPhone()))
@@ -638,34 +639,6 @@ namespace TradeUnionCommittee.BLL.Configurations
                 #endregion
 
             }).CreateMapper();
-        }
-
-        private string ConvertToUkrainianLang(string param)
-        {
-            switch (param)
-            {
-                case "Admin":
-                    return "Адміністратор";
-                case "Accountant":
-                    return "Бухгалтер";
-                case "Deputy":
-                    return "Заступник";
-                default:
-                    return string.Empty;
-            }
-        }
-
-        private string ConvertToUkraineGender(string sex)
-        {
-            switch (sex)
-            {
-                case "Male":
-                    return new string("Чоловіча");
-                case "Female":
-                    return new string("Жіноча");
-                default:
-                    return sex;
-            }
         }
 
         private long DecryptIdAddressPublicHouse(AccommodationType type, string hashIdDormitory, string hashIdDepartmental)
