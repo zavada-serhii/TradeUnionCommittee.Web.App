@@ -32,6 +32,14 @@ namespace TradeUnionCommittee.Common.Helpers
                 case Errors.FileNotFound:
                     return "Файл не знайдено!";
 
+
+
+                case Errors.UserNotFound:
+                    return "Користувача не знайдено, можливо він був видалений!";
+
+                case Errors.DuplicateEmail:
+                    return "Цей Email уже використовується!";
+
                 default:
                     throw new ArgumentOutOfRangeException(nameof(error), error, "Ви зламали систему. Вітаю:)");
             }

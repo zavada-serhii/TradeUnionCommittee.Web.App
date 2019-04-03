@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Identity;
 using System;
 using TradeUnionCommittee.BLL.DTO;
 using TradeUnionCommittee.BLL.DTO.Children;
@@ -32,6 +33,15 @@ namespace TradeUnionCommittee.BLL.Configurations
             {
 
                 #region Mapping for User, Role and Journal
+
+                map.CreateMap<User, Services.Account.AccountDTO_Refactoring>()
+                    .ForMember(d => d.HashId, c => c.MapFrom(x => x.Id))
+                    .ReverseMap();
+
+                map.CreateMap<IdentityRole, RolesDTO>()
+                    .ForMember(d => d.HashId, c => c.MapFrom(x => x.Id))
+                    .ForMember(d => d.Name, c => c.MapFrom(x => ConvertToUkrainianLang(x.Name)))
+                    .ReverseMap();
 
                 map.CreateMap<User, AccountDTO>()
                     .ForMember(d => d.HashIdUser, c => c.MapFrom(x => x.Id))
