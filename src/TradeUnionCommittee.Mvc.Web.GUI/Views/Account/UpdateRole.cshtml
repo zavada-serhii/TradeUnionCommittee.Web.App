@@ -18,9 +18,9 @@
                     <div class="row">
 
                         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                        <input type="hidden" asp-for="HashIdUser" />
+                        <input type="hidden" asp-for="HashId" />
 
-                        <div class="form-group col-lg-4 col-xl-3">
+                        <div class="form-group col-lg-4 col-xl-12">
                             <label asp-for="Role" class="info-label">Роль доступу</label>
                             <select asp-for="Role" asp-items="@ViewBag.Role" class="custom-select"></select>
                             <span asp-validation-for="Role" class="text-danger"></span>

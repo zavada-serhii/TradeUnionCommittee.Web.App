@@ -6,7 +6,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.Configurations;
 using TradeUnionCommittee.BLL.DTO;
-using TradeUnionCommittee.BLL.Enums;
 using TradeUnionCommittee.BLL.Interfaces.Account;
 using TradeUnionCommittee.Common.ActualResults;
 using TradeUnionCommittee.Common.Enums;
@@ -17,77 +16,69 @@ namespace TradeUnionCommittee.BLL.Services.Account
     internal class AccountService : IAccountService
     {
         private readonly UserManager<User> _userManager;
-        private readonly SignInManager<User> _signInManager;
         private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly SignInManager<User> _signInManager;
         private readonly AutoMapperConfiguration _mapperService;
 
-        public AccountService(UserManager<User> userManager, SignInManager<User> signInManager, RoleManager<IdentityRole> roleManager, AutoMapperConfiguration mapperService)
+        public AccountService(UserManager<User> userManager, 
+                              RoleManager<IdentityRole> roleManager, 
+                              SignInManager<User> signInManager, 
+                              AutoMapperConfiguration mapperService)
         {
             _userManager = userManager;
-            _signInManager = signInManager;
             _roleManager = roleManager;
+            _signInManager = signInManager;
             _mapperService = mapperService;
         }
 
-        public async Task<ActualResult> Login(string email, string password, bool rememberMe, AuthorizationType type)
+        //------------------------------------------------------------------------------------------------------------------------------------------
+
+        public async Task<string> SignIn(string email, string password)
         {
             try
             {
-                switch (type)
+                var user = await _userManager.FindByEmailAsync(email);
+                var checkPassword = await _userManager.CheckPasswordAsync(user, password);
+                if (checkPassword)
                 {
-                    case AuthorizationType.Cookie:
-                        var resultCookie = await _signInManager.PasswordSignInAsync(email, password, rememberMe, false);
-                        return resultCookie.Succeeded ? new ActualResult() : new ActualResult(Errors.InvalidLoginOrPassword);
-                    case AuthorizationType.Token:
-                        var user = await _userManager.FindByNameAsync(email);
-                        var resultToken = await _userManager.CheckPasswordAsync(user, password);
-                        return resultToken ? new ActualResult() : new ActualResult(Errors.InvalidLoginOrPassword);
-                    default:
-                        throw new ArgumentOutOfRangeException(nameof(type), type, null);
+                    var roles = await _userManager.GetRolesAsync(user);
+                    return roles.FirstOrDefault();
                 }
+                return null;
             }
             catch (Exception)
             {
-                return new ActualResult(Errors.DataBaseError);
+                return null;
             }
         }
 
-        public async Task<ActualResult> LogOff()
+        public async Task<bool> SignIn(string email, string password, bool rememberMe)
         {
             try
             {
-                await _signInManager.SignOutAsync();
-                return new ActualResult();
+                var result = await _signInManager.PasswordSignInAsync(email, password, rememberMe, false);
+                return result.Succeeded;
             }
             catch (Exception)
             {
-                return new ActualResult(Errors.DataBaseError);
+                return false;
             }
         }
 
-        public async Task<ActualResult<IEnumerable<AccountDTO>>> GetAllUsersAsync()
+        public async Task SignOut()
+        {
+            await _signInManager.SignOutAsync();
+        }
+
+        //------------------------------------------------------------------------------------------------------------------------------------------
+
+        public async Task<ActualResult<IEnumerable<AccountDTO>>> GetAllAccountsAsync()
         {
             try
             {
                 var users = await _userManager.Users.ToListAsync();
-                if (users.Any())
-                {
-                    var result = new List<User>();
-                    foreach (var user in users)
-                    {
-                        var userRole = await _userManager.GetRolesAsync(user);
-                        var model = new User
-                        {
-                            Id = user.Id,
-                            Email = user.Email,
-                            UserRole = userRole.FirstOrDefault()
-                        };
-                        result.Add(model);
-                    }
-                    var mapping = _mapperService.Mapper.Map<IEnumerable<AccountDTO>>(result);
-                    return new ActualResult<IEnumerable<AccountDTO>> { Result = mapping };
-                }
-                return new ActualResult<IEnumerable<AccountDTO>>(Errors.TupleDeleted);
+                var mapping = _mapperService.Mapper.Map<IEnumerable<AccountDTO>>(users);
+                return new ActualResult<IEnumerable<AccountDTO>> { Result = mapping };
             }
             catch (Exception)
             {
@@ -95,19 +86,17 @@ namespace TradeUnionCommittee.BLL.Services.Account
             }
         }
 
-        public async Task<ActualResult<AccountDTO>> GetUserAsync(string hashId)
+        public async Task<ActualResult<AccountDTO>> GetAccountAsync(string hashId)
         {
             try
             {
                 var user = await _userManager.FindByIdAsync(hashId);
                 if (user != null)
                 {
-                    var userRole = await _userManager.GetRolesAsync(user);
-                    user.UserRole = userRole.FirstOrDefault();
                     var mapping = _mapperService.Mapper.Map<AccountDTO>(user);
                     return new ActualResult<AccountDTO> { Result = mapping };
                 }
-                return new ActualResult<AccountDTO>(Errors.TupleDeleted);
+                return new ActualResult<AccountDTO>(Errors.UserNotFound);
             }
             catch (Exception)
             {
@@ -115,25 +104,42 @@ namespace TradeUnionCommittee.BLL.Services.Account
             }
         }
 
-        public async Task<ActualResult<string>> GetRoleByEmailAsync(string email)
+        public async Task<ActualResult<AccountRoleDTO>> GetAccountRoleAsync(string hashId)
         {
             try
             {
-                var user = await _userManager.FindByEmailAsync(email);
+                var user = await _userManager.FindByIdAsync(hashId);
                 if (user != null)
                 {
-                    var userRole = await _userManager.GetRolesAsync(user);
-                    return new ActualResult<string> { Result = userRole.FirstOrDefault() };
+                    var roles = await _userManager.GetRolesAsync(user);
+                    var result = new AccountRoleDTO { HashId = hashId, Role = ConvertToUkrainianLang(roles.FirstOrDefault()) };
+                    return new ActualResult<AccountRoleDTO> { Result = result };
                 }
-                return new ActualResult<string>(Errors.TupleDeleted);
+                return new ActualResult<AccountRoleDTO>(Errors.UserNotFound);
             }
             catch (Exception)
             {
-                return new ActualResult<string>(Errors.DataBaseError);
+                return new ActualResult<AccountRoleDTO>(Errors.DataBaseError);
             }
         }
 
-        public async Task<ActualResult> CreateUserAsync(AccountDTO dto)
+        public async Task<ActualResult<IEnumerable<RolesDTO>>> GetRoles()
+        {
+            try
+            {
+                var roles = await _roleManager.Roles.ToListAsync();
+                var result = _mapperService.Mapper.Map<IEnumerable<RolesDTO>>(roles);
+                return new ActualResult<IEnumerable<RolesDTO>> { Result = result };
+            }
+            catch (Exception)
+            {
+                return new ActualResult<IEnumerable<RolesDTO>>(Errors.DataBaseError);
+            }
+        }
+
+        //------------------------------------------------------------------------------------------------------------------------------------------
+
+        public async Task<ActualResult> CreateAsync(CreateAccountDTO dto)
         {
             try
             {
@@ -143,19 +149,18 @@ namespace TradeUnionCommittee.BLL.Services.Account
                     {
                         Email = dto.Email,
                         UserName = dto.Email,
-                        Password = dto.Password,
-                        UserRole = ConvertToEnglishLang(dto.Role)
+                        FirstName = dto.FirstName,
+                        LastName = dto.LastName,
+                        Patronymic = dto.Patronymic
                     };
-
-                    var result = await _userManager.CreateAsync(user, user.Password);
+                    var result = await _userManager.CreateAsync(user, dto.Password);
                     if (result.Succeeded)
                     {
-                        await UpdateUserRoleAsync(user.Id, user.UserRole);
-                        return new ActualResult();
+                        return await UpdateUserRoleAsync(user, ConvertToEnglishLang(dto.Role));
                     }
                     return new ActualResult(Errors.DataBaseError);
                 }
-                return new ActualResult(Errors.DuplicateData);
+                return new ActualResult(Errors.DuplicateEmail);
             }
             catch (Exception)
             {
@@ -163,24 +168,44 @@ namespace TradeUnionCommittee.BLL.Services.Account
             }
         }
 
-        public async Task<ActualResult> UpdateUserEmailAsync(AccountDTO dto)
+        public async Task<ActualResult> UpdatePersonalDataAsync(AccountDTO dto)
+        {
+            try
+            {
+                var user = await _userManager.FindByIdAsync(dto.HashId);
+                if (user != null)
+                {
+                    user.FirstName = dto.FirstName;
+                    user.LastName = dto.LastName;
+                    user.Patronymic = dto.Patronymic;
+                    var result = await _userManager.UpdateAsync(user);
+                    return result.Succeeded ? new ActualResult() : new ActualResult(Errors.DataBaseError);
+                }
+                return new ActualResult(Errors.UserNotFound);
+            }
+            catch (Exception)
+            {
+                return new ActualResult(Errors.DataBaseError);
+            }
+        }
+
+        public async Task<ActualResult> UpdateEmailAsync(AccountDTO dto)
         {
             try
             {
                 if (!await CheckEmailAsync(dto.Email))
                 {
-                    var mapping = _mapperService.Mapper.Map<User>(dto);
-                    var user = await _userManager.FindByIdAsync(mapping.Id);
+                    var user = await _userManager.FindByIdAsync(dto.HashId);
                     if (user != null)
                     {
-                        user.Email = mapping.Email;
-                        user.UserName = mapping.Email;
+                        user.Email = dto.Email;
+                        user.UserName = dto.Email;
                         var result = await _userManager.UpdateAsync(user);
-                        return result.Succeeded ? new ActualResult() : new ActualResult(result.Errors.Select(identityError => identityError.Description).ToList());
+                        return result.Succeeded ? new ActualResult() : new ActualResult(Errors.DataBaseError);
                     }
-                    return new ActualResult(Errors.TupleDeleted);
+                    return new ActualResult(Errors.UserNotFound);
                 }
-                return new ActualResult(Errors.DuplicateData);
+                return new ActualResult(Errors.DuplicateEmail);
             }
             catch (Exception)
             {
@@ -188,18 +213,17 @@ namespace TradeUnionCommittee.BLL.Services.Account
             }
         }
 
-        public async Task<ActualResult> UpdateUserPasswordAsync(AccountDTO dto)
+        public async Task<ActualResult> UpdatePasswordAsync(UpdateAccountPasswordDTO dto)
         {
             try
             {
-                var mapping = _mapperService.Mapper.Map<User>(dto);
-                var user = await _userManager.FindByIdAsync(mapping.Id);
+                var user = await _userManager.FindByIdAsync(dto.HashId);
                 if (user != null)
                 {
-                    var result = await _userManager.ChangePasswordAsync(user, mapping.OldPassword, mapping.Password);
-                    return result.Succeeded ? new ActualResult() : new ActualResult(result.Errors.Select(identityError => identityError.Description).ToList());
+                    var result = await _userManager.ChangePasswordAsync(user, dto.OldPassword, dto.Password);
+                    return result.Succeeded ? new ActualResult() : new ActualResult(Errors.DataBaseError);
                 }
-                return new ActualResult(Errors.TupleDeleted);
+                return new ActualResult(Errors.UserNotFound);
             }
             catch (Exception)
             {
@@ -207,27 +231,38 @@ namespace TradeUnionCommittee.BLL.Services.Account
             }
         }
 
-        public async Task<ActualResult> UpdateUserRoleAsync(AccountDTO dto)
-        {
-            return await UpdateUserRoleAsync(dto.HashIdUser, ConvertToEnglishLang(dto.Role));
-        }
-
-        private async Task<ActualResult> UpdateUserRoleAsync(string idUser, string role)
+        public async Task<ActualResult> UpdateRoleAsync(AccountRoleDTO dto)
         {
             try
             {
-                var user = await _userManager.FindByIdAsync(idUser);
+                var user = await _userManager.FindByIdAsync(dto.HashId);
                 if (user != null)
                 {
-                    var roles = new List<string> { role };
-                    var userRoles = await _userManager.GetRolesAsync(user);
-                    var addedRoles = roles.Except(userRoles);
-                    var removedRoles = userRoles.Except(roles);
-                    await _userManager.AddToRolesAsync(user, addedRoles);
-                    await _userManager.RemoveFromRolesAsync(user, removedRoles);
+                    return await UpdateUserRoleAsync(user, ConvertToEnglishLang(dto.Role));
+                }
+                return new ActualResult(Errors.UserNotFound);
+            }
+            catch (Exception)
+            {
+                return new ActualResult(Errors.DataBaseError);
+            }
+        }
+
+        private async Task<ActualResult> UpdateUserRoleAsync(User user, string role)
+        {
+            try
+            {
+                var roles = new List<string> { role };
+                var userRoles = await _userManager.GetRolesAsync(user);
+                var addedRoles = roles.Except(userRoles);
+                var removedRoles = userRoles.Except(roles);
+                var addToRole = await _userManager.AddToRolesAsync(user, addedRoles);
+                var removeFromRole = await _userManager.RemoveFromRolesAsync(user, removedRoles);
+                if (addToRole.Succeeded && removeFromRole.Succeeded)
+                {
                     return new ActualResult();
                 }
-                return new ActualResult(Errors.TupleDeleted);
+                return new ActualResult(Errors.DataBaseError);
             }
             catch (Exception)
             {
@@ -235,7 +270,7 @@ namespace TradeUnionCommittee.BLL.Services.Account
             }
         }
 
-        public async Task<ActualResult> DeleteUserAsync(string hashId)
+        public async Task<ActualResult> DeleteAsync(string hashId)
         {
             try
             {
@@ -243,9 +278,9 @@ namespace TradeUnionCommittee.BLL.Services.Account
                 if (user != null)
                 {
                     var result = await _userManager.DeleteAsync(user);
-                    return result.Succeeded ? new ActualResult() : new ActualResult(result.Errors.Select(identityError => identityError.Description).ToList());
+                    return result.Succeeded ? new ActualResult() : new ActualResult(Errors.DataBaseError);
                 }
-                return new ActualResult(Errors.TupleDeleted);
+                return new ActualResult(Errors.UserNotFound);
             }
             catch (Exception)
             {
@@ -253,24 +288,12 @@ namespace TradeUnionCommittee.BLL.Services.Account
             }
         }
 
+        //------------------------------------------------------------------------------------------------------------------------------------------
+
         public async Task<bool> CheckEmailAsync(string email)
         {
             var user = await _userManager.FindByEmailAsync(email);
             return user != null;
-        }
-
-        public async Task<ActualResult<IEnumerable<RolesDTO>>> GetRoles()
-        {
-            try
-            {
-                var roles = await _roleManager.Roles.Select(identityRole => new Role { HashId = identityRole.Id, Name = identityRole.Name }).ToListAsync();
-                var result = _mapperService.Mapper.Map<IEnumerable<RolesDTO>>(roles);
-                return new ActualResult<IEnumerable<RolesDTO>> { Result = result };
-            }
-            catch (Exception)
-            {
-                return new ActualResult<IEnumerable<RolesDTO>>(Errors.DataBaseError);
-            }
         }
 
         //------------------------------------------------------------------------------------------------------------------------------------------
@@ -285,6 +308,21 @@ namespace TradeUnionCommittee.BLL.Services.Account
                     return "Accountant";
                 case "Заступник":
                     return "Deputy";
+                default:
+                    return string.Empty;
+            }
+        }
+
+        private string ConvertToUkrainianLang(string param)
+        {
+            switch (param)
+            {
+                case "Admin":
+                    return "Адміністратор";
+                case "Accountant":
+                    return "Бухгалтер";
+                case "Deputy":
+                    return "Заступник";
                 default:
                     return string.Empty;
             }

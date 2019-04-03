@@ -7,7 +7,6 @@ using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using TradeUnionCommittee.BLL.Enums;
 using TradeUnionCommittee.BLL.Interfaces.Account;
 using TradeUnionCommittee.ViewModels.ViewModels;
 
@@ -58,14 +57,13 @@ namespace TradeUnionCommittee.Web.Api.Controllers.Account
 
         private async Task<ClaimsIdentity> GetIdentity(string username, string password)
         {
-            var account = await _accountService.Login(username, password, false, AuthorizationType.Token);
-            if (account.IsValid)
+            var role = await _accountService.SignIn(username, password);
+            if (role != null)
             {
-                var role = await _accountService.GetRoleByEmailAsync(username);
                 var claims = new List<Claim>
                 {
                     new Claim(ClaimsIdentity.DefaultNameClaimType, username),
-                    new Claim(ClaimsIdentity.DefaultRoleClaimType, role.Result)
+                    new Claim(ClaimsIdentity.DefaultRoleClaimType, role)
                 };
                 return new ClaimsIdentity(claims, "Token", ClaimsIdentity.DefaultNameClaimType, ClaimsIdentity.DefaultRoleClaimType);
             }

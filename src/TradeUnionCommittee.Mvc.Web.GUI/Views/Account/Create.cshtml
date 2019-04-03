@@ -13,15 +13,37 @@
             </div>
             <hr>
             <form asp-action="Create">
+                
                 <div class="row">
 
-                    <div class="form-group col-lg-4 col-xl-3">
+                    <div class="form-group col-lg-4 col-xl-4">
+                        <label asp-for="FirstName" class="info-label">Прізвище</label>
+                        <input asp-for="FirstName" class="form-control" />
+                        <span asp-validation-for="FirstName" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group col-lg-4 col-xl-4">
+                        <label asp-for="LastName" class="info-label">Ім'я</label>
+                        <input asp-for="LastName" class="form-control" />
+                        <span asp-validation-for="LastName" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group col-lg-4 col-xl-4">
+                        <label asp-for="Patronymic" class="info-label">По батькові</label>
+                        <input asp-for="Patronymic" class="form-control" />
+                    </div>
+
+                </div>
+
+                <div class="row">
+
+                    <div class="form-group col-lg-4 col-xl-6">
                         <label asp-for="Email" class="info-label">Email</label>
                         <input asp-for="Email" class="form-control" />
                         <span asp-validation-for="Email" class="text-danger"></span>
                     </div>
 
-                    <div class="form-group col-lg-4 col-xl-3">
+                    <div class="form-group col-lg-4 col-xl-6">
                         <label asp-for="Role" class="info-label">Роль доступу</label>
                         <select asp-for="Role" asp-items="@ViewBag.Role" class="custom-select"></select>
                         <span asp-validation-for="Role" class="text-danger"></span>
@@ -31,13 +53,13 @@
 
                 <div class="row">
 
-                    <div class="form-group col-md-3">
+                    <div class="form-group col-md-6">
                         <label asp-for="Password" class="info-label">Пароль</label>
                         <input asp-for="Password" class="form-control" />
                         <span asp-validation-for="Password" class="text-danger"></span>
                     </div>
 
-                    <div class="form-group col-md-3">
+                    <div class="form-group col-md-6">
                         <label asp-for="ConfirmPassword" class="info-label">Підтвердження паролю</label>
                         <input asp-for="ConfirmPassword" class="form-control" />
                         <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
@@ -53,7 +75,7 @@
                     </div>
 
                     <div class="col-md-6 text-right">
-                        <input type="submit" value="Додати" class="btn btn-success btn-default" />
+                        <input type="submit" value="Додати" class="btn btn-success btn-default"/>
                     </div>
                 </div>
             </form>

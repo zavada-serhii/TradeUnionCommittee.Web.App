@@ -34,7 +34,7 @@ namespace TradeUnionCommittee.BLL.Configurations
 
                 #region Mapping for User, Role and Journal
 
-                map.CreateMap<User, Services.Account.AccountDTO_Refactoring>()
+                map.CreateMap<User, AccountDTO>()
                     .ForMember(d => d.HashId, c => c.MapFrom(x => x.Id))
                     .ReverseMap();
 
@@ -42,17 +42,6 @@ namespace TradeUnionCommittee.BLL.Configurations
                     .ForMember(d => d.HashId, c => c.MapFrom(x => x.Id))
                     .ForMember(d => d.Name, c => c.MapFrom(x => ConvertToUkrainianLang(x.Name)))
                     .ReverseMap();
-
-                map.CreateMap<User, AccountDTO>()
-                    .ForMember(d => d.HashIdUser, c => c.MapFrom(x => x.Id))
-                    .ForMember(d => d.Role, c => c.MapFrom(x => ConvertToUkrainianLang(x.UserRole)))
-                    .ReverseMap();
-
-                map.CreateMap<Role, RolesDTO>()
-                    .ForMember(d => d.Name, c => c.MapFrom(x => ConvertToUkrainianLang(x.Name)))
-                    .ReverseMap();
-
-                //map.CreateMap<Journal, JournalDTO>().ReverseMap();
 
                 #endregion
 

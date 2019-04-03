@@ -18,7 +18,37 @@
             {
                 <form asp-action="Delete">
 
-                    <input type="hidden" asp-for="HashIdUser" />
+                    <input type="hidden" asp-for="HashId" />
+                    
+                    <dl class="row">
+                        <dt class="col-md-3">
+                            <h6>Прізвище</h6>
+                        </dt>
+                        <dd class="col-md-5">
+                            <p class="lead" style="font-size: 15px;">@Model.FirstName</p>
+                        </dd>
+                    </dl>
+
+                    <dl class="row">
+                        <dt class="col-md-3">
+                            <h6>Ім'я</h6>
+                        </dt>
+                        <dd class="col-md-5">
+                            <p class="lead" style="font-size: 15px;">@Model.LastName</p>
+                        </dd>
+                    </dl>
+
+                    @if (!string.IsNullOrEmpty(Model.Patronymic) && !string.IsNullOrWhiteSpace(Model.Patronymic))
+                    {
+                        <dl class="row">
+                            <dt class="col-md-3">
+                                <h6>По батькові</h6>
+                            </dt>
+                            <dd class="col-md-5">
+                                <p class="lead" style="font-size: 15px;">@Model.Patronymic</p>
+                            </dd>
+                        </dl>
+                    }
 
                     <dl class="row">
                         <dt class="col-md-3">
