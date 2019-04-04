@@ -132,6 +132,7 @@ namespace TradeUnionCommittee.Web.Api
         {
             services.AddSingleton(cm => AutoMapperConfiguration.ConfigureAutoMapper());
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddTransient<IJwtBearerConfiguration, JwtBearerConfiguration>();
         }
     }
 
@@ -152,7 +153,7 @@ namespace TradeUnionCommittee.Web.Api
                 {
                     Name = "Authorization",
                     In = "header",
-                    Description = "Access token",
+                    Description = "Bearer access token",
                     Required = true,
                     Type = "string"
                 });

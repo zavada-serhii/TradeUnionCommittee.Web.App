@@ -18,10 +18,10 @@
                     <thead>
                         <tr>
                             <th>
-                                Email
+                                ПІБ
                             </th>
                             <th>
-                                Роль доступу
+                                Email
                             </th>
 
                             <th></th>
@@ -35,21 +35,22 @@
                             {
                                 <tr>
                                     <td>
-                                        @item.Email
+                                        @($"{item.FirstName} {item.LastName} {item.Patronymic}")
                                     </td>
 
                                     <td>
-                                        @item.Role
+                                        @item.Email
                                     </td>
 
                                     <td class="text-right">
                                         <div class="btn-group">
                                             <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown"></button>
                                             <div class="dropdown-menu">
-                                                <a class="dropdown-item" asp-action="UpdateEmail" asp-route-id="@item.HashIdUser">Редагувати Email</a>
-                                                <a class="dropdown-item" asp-action="UpdatePassword" asp-route-id="@item.HashIdUser">Редагувати пароль</a>
-                                                <a class="dropdown-item" asp-action="UpdateRole" asp-route-id="@item.HashIdUser">Редагувати роль</a>
-                                                <a class="dropdown-item" asp-action="Delete" asp-route-id="@item.HashIdUser">Видалити</a>
+                                                <a class="dropdown-item" asp-action="UpdatePersonalData" asp-route-id="@item.HashId">Редагувати персональні дані</a>
+                                                <a class="dropdown-item" asp-action="UpdateEmail" asp-route-id="@item.HashId">Редагувати Email</a>
+                                                <a class="dropdown-item" asp-action="UpdatePassword" asp-route-id="@item.HashId">Редагувати пароль</a>
+                                                <a class="dropdown-item" asp-action="UpdateRole" asp-route-id="@item.HashId">Редагувати роль</a>
+                                                <a class="dropdown-item" asp-action="Delete" asp-route-id="@item.HashId">Видалити</a>
                                             </div>
                                         </div>
                                     </td>

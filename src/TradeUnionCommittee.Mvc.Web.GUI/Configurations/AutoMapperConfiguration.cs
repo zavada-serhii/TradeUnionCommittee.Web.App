@@ -26,10 +26,11 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Configurations
             {
                 #region Mapping for Account
 
-                map.CreateMap<AccountDTO, CreateAccountViewModel>().ReverseMap();
-                map.CreateMap<AccountDTO, UpdateEmailAccountViewModel>().ReverseMap();
-                map.CreateMap<AccountDTO, UpdateRoleAccountViewModel>().ReverseMap();
-                map.CreateMap<AccountDTO, UpdatePasswordAccountViewModel>().ReverseMap();
+                map.CreateMap<CreateAccountViewModel, CreateAccountDTO>();
+                map.CreateMap<UpdatePersonalDataAccountViewModel, AccountDTO>().ReverseMap();
+                map.CreateMap<UpdateEmailAccountViewModel, AccountDTO>().ReverseMap();
+                map.CreateMap<UpdatePasswordAccountViewModel, UpdateAccountPasswordDTO>();
+                map.CreateMap<UpdateRoleAccountViewModel, AccountRoleDTO>().ReverseMap();
 
                 #endregion
 

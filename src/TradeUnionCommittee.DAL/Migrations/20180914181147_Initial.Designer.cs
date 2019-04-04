@@ -58,6 +58,14 @@ namespace TradeUnionCommittee.DAL.Migrations
                 b.Property<string>("UserName")
                     .HasMaxLength(256);
 
+                b.Property<string>("FirstName")
+                    .IsRequired();
+
+                b.Property<string>("LastName")
+                    .IsRequired();
+
+                b.Property<string>("Patronymic");
+
                 b.HasKey("Id");
 
                 b.HasIndex("NormalizedEmail")
