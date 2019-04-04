@@ -1,14 +1,10 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
+using System.Linq;
 using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.Interfaces.Account;
 using TradeUnionCommittee.ViewModels.ViewModels;
+using TradeUnionCommittee.Web.Api.Configurations;
 
 namespace TradeUnionCommittee.Web.Api.Controllers.Account
 {
@@ -16,10 +12,12 @@ namespace TradeUnionCommittee.Web.Api.Controllers.Account
     [ApiController]
     public class AccountController : ControllerBase
     {
+        private readonly IJwtBearerConfiguration _jwtBearer;
         private readonly IAccountService _accountService;
 
-        public AccountController(IAccountService accountService)
+        public AccountController(IAccountService accountService, IJwtBearerConfiguration jwtBearer)
         {
+            _jwtBearer = jwtBearer;
             _accountService = accountService;
         }
 
@@ -27,47 +25,15 @@ namespace TradeUnionCommittee.Web.Api.Controllers.Account
         [Route("Token")]
         public async Task Token([FromBody] BaseLoginViewModel viewModel)
         {
-            var identity = await GetIdentity(viewModel.Email, viewModel.Password);
-            if (identity == null)
+            var identity = await _jwtBearer.GetToken(viewModel.Email, viewModel.Password);
+            if (identity.IsValid)
             {
-                Response.StatusCode = 400;
-                await Response.WriteAsync("Invalid username or password.");
+                Response.ContentType = "application/json";
+                await Response.WriteAsync(identity.Result);
                 return;
             }
-
-            var now = DateTime.UtcNow;
-            var jwt = new JwtSecurityToken(
-                AuthOptions.Issuer,
-                AuthOptions.Audience,
-                notBefore: now,
-                claims: identity.Claims,
-                expires: now.Add(TimeSpan.FromMinutes(AuthOptions.LifeTime)),
-                signingCredentials: new SigningCredentials(AuthOptions.GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha256));
-            var encodedJwt = new JwtSecurityTokenHandler().WriteToken(jwt);
-
-            var response = new
-            {
-                access_token = encodedJwt,
-                username = identity.Name
-            };
-
-            Response.ContentType = "application/json";
-            await Response.WriteAsync(JsonConvert.SerializeObject(response, new JsonSerializerSettings { Formatting = Formatting.Indented }));
-        }
-
-        private async Task<ClaimsIdentity> GetIdentity(string username, string password)
-        {
-            var role = await _accountService.SignIn(username, password);
-            if (role != null)
-            {
-                var claims = new List<Claim>
-                {
-                    new Claim(ClaimsIdentity.DefaultNameClaimType, username),
-                    new Claim(ClaimsIdentity.DefaultRoleClaimType, role)
-                };
-                return new ClaimsIdentity(claims, "Token", ClaimsIdentity.DefaultNameClaimType, ClaimsIdentity.DefaultRoleClaimType);
-            }
-            return null;
+            Response.StatusCode = 400;
+            await Response.WriteAsync(identity.ErrorsList.FirstOrDefault());
         }
     }
 }
