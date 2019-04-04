@@ -26,22 +26,36 @@ namespace TradeUnionCommittee.ViewModels.ViewModels
         [EmailAddress(ErrorMessage = "Некоректний Email")]
         [Remote("CheckEmail", "Account", ErrorMessage = "Цей email вже використовується!")]
         public string Email { get; set; }
-
+        [Required]
         public string Role { get; set; }
-
         [DataType(DataType.Password)]
         [Required(ErrorMessage = "Пароль не може бути порожнім")]
         public string Password { get; set; }
-
         [Compare("Password", ErrorMessage = "Паролі не співпадають")]
         [DataType(DataType.Password)]
         public string ConfirmPassword { get; set; }
+        [Required(ErrorMessage = "Прізвище не може бути порожнім")]
+        public string FirstName { get; set; }
+        [Required(ErrorMessage = "Ім'я не може бути порожнім")]
+        public string LastName { get; set; }
+        public string Patronymic { get; set; }
+    }
+
+    public class UpdatePersonalDataAccountViewModel
+    {
+        [Required]
+        public string HashId { get; set; }
+        [Required(ErrorMessage = "Прізвище не може бути порожнім")]
+        public string FirstName { get; set; }
+        [Required(ErrorMessage = "Ім'я не може бути порожнім")]
+        public string LastName { get; set; }
+        public string Patronymic { get; set; }
     }
 
     public class UpdateEmailAccountViewModel
     {
-        public string HashIdUser { get; set; }
-
+        [Required]
+        public string HashId { get; set; }
         [Required(ErrorMessage = "Email не може бути порожнім")]
         [EmailAddress(ErrorMessage = "Некоректний Email")]
         [Remote("CheckEmail", "Account", ErrorMessage = "Цей email вже використовується!")]
@@ -50,16 +64,14 @@ namespace TradeUnionCommittee.ViewModels.ViewModels
 
     public class UpdatePasswordAccountViewModel
     {
-        public string HashIdUser { get; set; }
-
+        [Required]
+        public string HashId { get; set; }
         [DataType(DataType.Password)]
         [Required(ErrorMessage = "Старий пароль не може бути порожнім")]
         public string OldPassword { get; set; }
-
         [DataType(DataType.Password)]
         [Required(ErrorMessage = "Новий пароль не може бути порожнім")]
         public string Password { get; set; }
-
         [Compare("Password", ErrorMessage = "Паролі не співпадають")]
         [DataType(DataType.Password)]
         public string ConfirmPassword { get; set; }
@@ -67,8 +79,9 @@ namespace TradeUnionCommittee.ViewModels.ViewModels
 
     public class UpdateRoleAccountViewModel
     {
-        public string HashIdUser { get; set; }
-
+        [Required]
+        public string HashId { get; set; }
+        [Required]
         public string Role { get; set; }
     }
 }

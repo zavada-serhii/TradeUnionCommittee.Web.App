@@ -38,7 +38,7 @@ namespace TradeUnionCommittee.BLL.Extensions
 
             // Injection All Service
             //---------------------------------------------------------------------------------------------
-            
+
             services.AddTransient<IAccountService, AccountService>();
             services.AddTransient<IDashboardService, DashboardService>();
 

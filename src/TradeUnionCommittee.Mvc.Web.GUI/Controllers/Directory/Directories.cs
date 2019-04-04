@@ -11,7 +11,6 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Directory
     public class Directories : IDirectories
     {
         private readonly IAccountService _accountService;
-        
         private readonly ISubdivisionsService _subdivisionsService;
         private readonly IPositionService _positionService;
         private readonly IDormitoryService _dormitoryService;
@@ -66,7 +65,7 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Directory
 
         public async Task<SelectList> GetEmails()
         {
-            var users = await _accountService.GetAllUsersAsync();
+            var users = await _accountService.GetAllAccountsAsync();
             return users.IsValid ? new SelectList(users.Result.Select(account => account.Email)) : null;
         }
 

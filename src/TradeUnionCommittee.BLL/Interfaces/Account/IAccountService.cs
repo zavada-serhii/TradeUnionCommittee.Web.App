@@ -8,17 +8,33 @@ namespace TradeUnionCommittee.BLL.Interfaces.Account
 {
     public interface IAccountService : IDisposable
     {
-        Task<ActualResult> Login(string email, string password, bool rememberMe, Enums.AuthorizationType type);
-        Task<ActualResult> LogOff();
-        Task<ActualResult<IEnumerable<AccountDTO>>> GetAllUsersAsync();
-        Task<ActualResult<AccountDTO>> GetUserAsync(string hashId);
-        Task<ActualResult<string>> GetRoleByEmailAsync(string email);
-        Task<ActualResult> CreateUserAsync(AccountDTO dto);
-        Task<ActualResult> UpdateUserEmailAsync(AccountDTO dto);
-        Task<ActualResult> UpdateUserPasswordAsync(AccountDTO dto);
-        Task<ActualResult> UpdateUserRoleAsync(AccountDTO dto);
-        Task<ActualResult> DeleteUserAsync(string hashId);
-        Task<bool> CheckEmailAsync(string email);
+        /// <summary>
+        /// The method for the authorization API, if the authorization was successful, returns the role otherwise null
+        /// </summary>
+        /// <param name="email"></param>
+        /// <param name="password"></param>
+        Task<string> SignIn(string email, string password);
+        /// <summary>
+        /// The method for the authorization MVC, if the authorization was successful, returns true else false
+        /// </summary>
+        /// <param name="email"></param>
+        /// <param name="password"></param>
+        /// <param name="rememberMe"></param>
+        Task<bool> SignIn(string email, string password, bool rememberMe);
+        Task SignOut();
+
+        Task<ActualResult<IEnumerable<AccountDTO>>> GetAllAccountsAsync();
+        Task<ActualResult<AccountDTO>> GetAccountAsync(string hashId);
+        Task<ActualResult<AccountRoleDTO>> GetAccountRoleAsync(string hashId);
         Task<ActualResult<IEnumerable<RolesDTO>>> GetRoles();
+
+        Task<ActualResult> CreateAsync(CreateAccountDTO dto);
+        Task<ActualResult> UpdatePersonalDataAsync(AccountDTO dto);
+        Task<ActualResult> UpdateEmailAsync(AccountDTO dto);
+        Task<ActualResult> UpdatePasswordAsync(UpdateAccountPasswordDTO dto);
+        Task<ActualResult> UpdateRoleAsync(AccountRoleDTO dto);
+        Task<ActualResult> DeleteAsync(string hashId);
+
+        Task<bool> CheckEmailAsync(string email);
     }
 }

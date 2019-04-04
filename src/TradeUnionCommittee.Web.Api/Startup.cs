@@ -1,22 +1,22 @@
-﻿using System;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Authorization;
+using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
+using Serilog;
 using Swashbuckle.AspNetCore.Swagger;
 using Swashbuckle.AspNetCore.SwaggerGen;
+using Swashbuckle.AspNetCore.SwaggerUI;
+using System;
 using System.Collections.Generic;
 using System.IO.Compression;
 using System.Linq;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.ResponseCompression;
-using Microsoft.Extensions.Logging;
-using Serilog;
-using Swashbuckle.AspNetCore.SwaggerUI;
 using TradeUnionCommittee.BLL.Configurations;
 using TradeUnionCommittee.BLL.Extensions;
 using TradeUnionCommittee.ViewModels.Extensions;
@@ -116,6 +116,7 @@ namespace TradeUnionCommittee.Web.Api
         {
             services.AddSingleton(cm => AutoMapperConfiguration.ConfigureAutoMapper());
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddTransient<IJwtBearerConfiguration, JwtBearerConfiguration>();
         }
     }
 
@@ -136,7 +137,7 @@ namespace TradeUnionCommittee.Web.Api
                 {
                     Name = "Authorization",
                     In = "header",
-                    Description = "Access token",
+                    Description = "Bearer access token",
                     Required = true,
                     Type = "string"
                 });

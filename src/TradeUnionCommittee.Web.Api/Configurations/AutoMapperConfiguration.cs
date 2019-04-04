@@ -19,11 +19,6 @@ namespace TradeUnionCommittee.Web.Api.Configurations
             {
                 //-- Controller Mapper ---------------------------------------------------------------------------------------------------------
 
-                map.CreateMap<AccountDTO, CreateAccountViewModel>().ReverseMap();
-                map.CreateMap<AccountDTO, UpdateEmailAccountViewModel>().ReverseMap();
-                map.CreateMap<AccountDTO, UpdateRoleAccountViewModel>().ReverseMap();
-                map.CreateMap<AccountDTO, UpdatePasswordAccountViewModel>().ReverseMap();
-
                 map.CreateMap<CreateEmployeeViewModel, CreateEmployeeDTO>()
                     .ForMember(d => d.HashIdSubdivision, opt => opt.MapFrom(c => c.HashIdSubordinateSubdivision ?? c.HashIdMainSubdivision))
                     .ForMember(d => d.TypeAccommodation, opt => opt.MapFrom(x => ConverterAccommodation(x.TypeAccommodation)));
