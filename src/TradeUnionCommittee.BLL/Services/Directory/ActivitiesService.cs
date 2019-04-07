@@ -107,11 +107,6 @@ namespace TradeUnionCommittee.BLL.Services.Directory
             }
         }
 
-        public async Task<bool> CheckNameAsync(string name)
-        {
-            return await _context.Activities.AnyAsync(p => p.Name == name);
-        }
-
         public void Dispose()
         {
             _context.Dispose();

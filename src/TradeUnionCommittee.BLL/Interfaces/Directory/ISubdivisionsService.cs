@@ -6,7 +6,7 @@ using TradeUnionCommittee.Common.ActualResults;
 
 namespace TradeUnionCommittee.BLL.Interfaces.Directory
 {
-    public interface ISubdivisionsService : IDisposable, IDirectory<SubdivisionDTO>, ICheckName
+    public interface ISubdivisionsService : IDisposable, IDirectory<SubdivisionDTO>
     {
         Task<ActualResult<SubdivisionDTO>> GetAsync(string hashId);
         Task<ActualResult<IEnumerable<SubdivisionDTO>>> GetSubordinateSubdivisions(string hashId);
@@ -21,6 +21,5 @@ namespace TradeUnionCommittee.BLL.Interfaces.Directory
         Task<ActualResult> RestructuringUnits(RestructuringSubdivisionDTO dto);
 
         Task<ActualResult> DeleteAsync(string hashId);
-        Task<bool> CheckAbbreviationAsync(string name);
     }
 }

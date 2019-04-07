@@ -39,6 +39,14 @@ namespace TradeUnionCommittee.BLL.Helpers
                 return Errors.TupleDeletedOrUpdated;
             }
 
+            if (exception is SocketException socket)
+            {
+                if (socket.SocketErrorCode == SocketError.ConnectionRefused)
+                {
+                    return Errors.ConnectionLost;
+                }
+            }
+
             return Errors.DataBaseError;
         }
     }

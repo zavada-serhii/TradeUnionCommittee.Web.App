@@ -9,7 +9,7 @@ namespace TradeUnionCommittee.DAL.EF
 {
     public sealed class TradeUnionCommitteeContext : IdentityDbContext<User>
     {
-        public TradeUnionCommitteeContext(DbContextOptions options) : base(options) { Database.EnsureCreated(); }
+        public TradeUnionCommitteeContext(DbContextOptions options) : base(options) { }
 
         static TradeUnionCommitteeContext()
         {

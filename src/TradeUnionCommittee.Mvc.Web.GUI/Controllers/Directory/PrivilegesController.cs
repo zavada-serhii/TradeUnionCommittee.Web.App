@@ -134,15 +134,6 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Directory
 
         //------------------------------------------------------------------------------------------------------------------------------------------
 
-        [AcceptVerbs("Get", "Post")]
-        [Authorize(Roles = "Admin,Accountant")]
-        public async Task<IActionResult> CheckName([Required] string name)
-        {
-            return Json(!await _services.CheckNameAsync(name));
-        }
-
-        //------------------------------------------------------------------------------------------------------------------------------------------
-
         protected override void Dispose(bool disposing)
         {
             _services.Dispose();

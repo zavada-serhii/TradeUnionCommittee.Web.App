@@ -22,9 +22,4 @@ namespace TradeUnionCommittee.BLL.Interfaces
     {
         Task<ActualResult<IEnumerable<T>>> GetAllAsync(string hashIdEmployee);
     }
-
-    public interface ICheckName
-    {
-        Task<bool> CheckNameAsync(string name);
-    }
 }
