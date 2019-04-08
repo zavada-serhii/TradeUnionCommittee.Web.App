@@ -14,6 +14,9 @@ namespace TradeUnionCommittee.Common.Helpers
                 case Errors.ConnectionLost:
                     return "Втрачено з'єднання з базою даних!";
 
+                case Errors.ApplicationError:
+                    return "Oops! Трапилась невідома помилка!";
+
                 case Errors.DataBaseError:
                     return "Сталась помилка в базі даних!";
 
@@ -42,7 +45,7 @@ namespace TradeUnionCommittee.Common.Helpers
                     return "Файл не знайдено!";
 
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(error), error, "Ви зламали систему. Вітаю:)");
+                    return "Oops! Трапилась невідома помилка!";
             }
         }
 

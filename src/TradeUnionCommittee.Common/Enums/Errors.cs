@@ -3,6 +3,7 @@
     public enum Errors
     {
         ConnectionLost,
+        ApplicationError,
         DataBaseError,
         UserNotFound,
         DuplicateEmail,

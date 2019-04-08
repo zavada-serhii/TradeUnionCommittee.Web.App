@@ -81,9 +81,9 @@ namespace TradeUnionCommittee.BLL.Services.Account
                 var mapping = _mapperService.Mapper.Map<IEnumerable<AccountDTO>>(users);
                 return new ActualResult<IEnumerable<AccountDTO>> { Result = mapping };
             }
-            catch (Exception)
+            catch (Exception exception)
             {
-                return new ActualResult<IEnumerable<AccountDTO>>(Errors.DataBaseError);
+                return new ActualResult<IEnumerable<AccountDTO>>(DescriptionExceptionHelper.GetDescriptionError(exception));
             }
         }
 
@@ -99,9 +99,9 @@ namespace TradeUnionCommittee.BLL.Services.Account
                 }
                 return new ActualResult<AccountDTO>(Errors.UserNotFound);
             }
-            catch (Exception)
+            catch (Exception exception)
             {
-                return new ActualResult<AccountDTO>(Errors.DataBaseError);
+                return new ActualResult<AccountDTO>(DescriptionExceptionHelper.GetDescriptionError(exception));
             }
         }
 
@@ -118,9 +118,9 @@ namespace TradeUnionCommittee.BLL.Services.Account
                 }
                 return new ActualResult<AccountRoleDTO>(Errors.UserNotFound);
             }
-            catch (Exception)
+            catch (Exception exception)
             {
-                return new ActualResult<AccountRoleDTO>(Errors.DataBaseError);
+                return new ActualResult<AccountRoleDTO>(DescriptionExceptionHelper.GetDescriptionError(exception));
             }
         }
 
@@ -132,9 +132,9 @@ namespace TradeUnionCommittee.BLL.Services.Account
                 var result = _mapperService.Mapper.Map<IEnumerable<RolesDTO>>(roles);
                 return new ActualResult<IEnumerable<RolesDTO>> { Result = result };
             }
-            catch (Exception)
+            catch (Exception exception)
             {
-                return new ActualResult<IEnumerable<RolesDTO>>(Errors.DataBaseError);
+                return new ActualResult<IEnumerable<RolesDTO>>(DescriptionExceptionHelper.GetDescriptionError(exception));
             }
         }
 
@@ -163,9 +163,9 @@ namespace TradeUnionCommittee.BLL.Services.Account
                 }
                 return new ActualResult(Errors.DuplicateEmail);
             }
-            catch (Exception)
+            catch (Exception exception)
             {
-                return new ActualResult(Errors.DataBaseError);
+                return new ActualResult(DescriptionExceptionHelper.GetDescriptionError(exception));
             }
         }
 
@@ -184,9 +184,9 @@ namespace TradeUnionCommittee.BLL.Services.Account
                 }
                 return new ActualResult(Errors.UserNotFound);
             }
-            catch (Exception)
+            catch (Exception exception)
             {
-                return new ActualResult(Errors.DataBaseError);
+                return new ActualResult(DescriptionExceptionHelper.GetDescriptionError(exception));
             }
         }
 
@@ -208,9 +208,9 @@ namespace TradeUnionCommittee.BLL.Services.Account
                 }
                 return new ActualResult(Errors.DuplicateEmail);
             }
-            catch (Exception)
+            catch (Exception exception)
             {
-                return new ActualResult(Errors.DataBaseError);
+                return new ActualResult(DescriptionExceptionHelper.GetDescriptionError(exception));
             }
         }
 
@@ -226,9 +226,9 @@ namespace TradeUnionCommittee.BLL.Services.Account
                 }
                 return new ActualResult(Errors.UserNotFound);
             }
-            catch (Exception)
+            catch (Exception exception)
             {
-                return new ActualResult(Errors.DataBaseError);
+                return new ActualResult(DescriptionExceptionHelper.GetDescriptionError(exception));
             }
         }
 
@@ -243,9 +243,9 @@ namespace TradeUnionCommittee.BLL.Services.Account
                 }
                 return new ActualResult(Errors.UserNotFound);
             }
-            catch (Exception)
+            catch (Exception exception)
             {
-                return new ActualResult(Errors.DataBaseError);
+                return new ActualResult(DescriptionExceptionHelper.GetDescriptionError(exception));
             }
         }
 
@@ -265,9 +265,9 @@ namespace TradeUnionCommittee.BLL.Services.Account
                 }
                 return new ActualResult(Errors.DataBaseError);
             }
-            catch (Exception)
+            catch (Exception exception)
             {
-                return new ActualResult(Errors.DataBaseError);
+                return new ActualResult(DescriptionExceptionHelper.GetDescriptionError(exception));
             }
         }
 
@@ -283,9 +283,9 @@ namespace TradeUnionCommittee.BLL.Services.Account
                 }
                 return new ActualResult(Errors.UserNotFound);
             }
-            catch (Exception)
+            catch (Exception exception)
             {
-                return new ActualResult(Errors.DataBaseError);
+                return new ActualResult(DescriptionExceptionHelper.GetDescriptionError(exception));
             }
         }
 

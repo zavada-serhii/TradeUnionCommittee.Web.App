@@ -8,6 +8,7 @@ using TradeUnionCommittee.BLL.Configurations;
 using TradeUnionCommittee.BLL.DTO;
 using TradeUnionCommittee.BLL.Enums;
 using TradeUnionCommittee.BLL.Extensions;
+using TradeUnionCommittee.BLL.Helpers;
 using TradeUnionCommittee.BLL.Interfaces.PDF;
 using TradeUnionCommittee.Common.ActualResults;
 using TradeUnionCommittee.Common.Enums;
@@ -36,18 +37,25 @@ namespace TradeUnionCommittee.BLL.Services.PDF
 
         public async Task<ActualResult<byte[]>> CreateReport(ReportPdfDTO dto)
         {
-            var pathToFile = new ReportGenerator().Generate(await FillModelReport(dto));
-            if (!string.IsNullOrEmpty(pathToFile))
+            try
             {
-                byte[] data;
-                using (var fstream = File.OpenRead(pathToFile))
+                var pathToFile = new ReportGenerator().Generate(await FillModelReport(dto));
+                if (!string.IsNullOrEmpty(pathToFile))
                 {
-                    data = new byte[fstream.Length];
-                    await fstream.ReadAsync(data, 0, data.Length);
+                    byte[] data;
+                    using (var fstream = File.OpenRead(pathToFile))
+                    {
+                        data = new byte[fstream.Length];
+                        await fstream.ReadAsync(data, 0, data.Length);
+                    }
+                    return new ActualResult<byte[]> { Result = data };
                 }
-                return new ActualResult<byte[]> {Result = data};
+                return new ActualResult<byte[]>(Errors.FileNotFound);
             }
-            return new ActualResult<byte[]>(Errors.FileNotFound);
+            catch (Exception exception)
+            {
+                return new ActualResult<byte[]>(DescriptionExceptionHelper.GetDescriptionError(exception));
+            }
         }
 
         //------------------------------------------------------------------------------------------

@@ -138,9 +138,9 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Employee
 
         //------------------------------------------------------------------------------------------------------------------------------------------
 
-        public async Task<bool> CheckIdentificationСode(string identificationСode)
+        public async Task<bool> CheckIdentificationCode(string identificationCode)
         {
-            return await _context.Employee.AnyAsync(p => p.IdentificationСode == identificationСode);
+            return await _context.Employee.AnyAsync(p => p.IdentificationСode == identificationCode);
         }
 
         public async Task<bool> CheckMechnikovCard(string mechnikovCard)
