@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.Configurations;
 using TradeUnionCommittee.BLL.DTO.Employee;
 using TradeUnionCommittee.BLL.Enums;
+using TradeUnionCommittee.BLL.Helpers;
 using TradeUnionCommittee.BLL.Interfaces.Lists.Employee;
 using TradeUnionCommittee.Common.ActualResults;
 using TradeUnionCommittee.Common.Enums;
@@ -67,9 +68,9 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Employee
                 await DeleteAsync(dto.IdEmployee);
                 return new ActualResult(Errors.DataBaseError);
             }
-            catch (Exception)
+            catch (Exception exception)
             {
-                return new ActualResult(Errors.DataBaseError);
+                return new ActualResult(DescriptionExceptionHelper.GetDescriptionError(exception));
             }
         }
 
@@ -80,13 +81,17 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Employee
             try
             {
                 var id = _hashIdUtilities.DecryptLong(hashId);
-                var result = await _context.Employee.FindAsync(id);
-                var mapping = _mapperService.Mapper.Map<GeneralInfoEmployeeDTO>(result);
+                var employee = await _context.Employee.FindAsync(id);
+                if (employee == null)
+                {
+                    return new ActualResult<GeneralInfoEmployeeDTO>(Errors.TupleDeleted);
+                }
+                var mapping = _mapperService.Mapper.Map<GeneralInfoEmployeeDTO>(employee);
                 return new ActualResult<GeneralInfoEmployeeDTO> { Result = mapping };
             }
-            catch (Exception)
+            catch (Exception exception)
             {
-                return new ActualResult<GeneralInfoEmployeeDTO>(Errors.DataBaseError);
+                return new ActualResult<GeneralInfoEmployeeDTO>(DescriptionExceptionHelper.GetDescriptionError(exception));
             }
         }
 
@@ -100,9 +105,9 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Employee
                 await _context.SaveChangesAsync();
                 return new ActualResult();
             }
-            catch (Exception)
+            catch (Exception exception)
             {
-                return new ActualResult(Errors.DataBaseError);
+                return new ActualResult(DescriptionExceptionHelper.GetDescriptionError(exception));
             }
         }
 
@@ -125,9 +130,9 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Employee
                 }
                 return new ActualResult();
             }
-            catch (Exception)
+            catch (Exception exception)
             {
-               return new ActualResult(Errors.DataBaseError);
+                return new ActualResult(DescriptionExceptionHelper.GetDescriptionError(exception));
             }
         }
 
