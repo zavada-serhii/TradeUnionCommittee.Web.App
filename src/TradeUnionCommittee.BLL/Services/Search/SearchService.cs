@@ -7,6 +7,7 @@ using TradeUnionCommittee.BLL.Configurations;
 using TradeUnionCommittee.BLL.DTO;
 using TradeUnionCommittee.BLL.Enums;
 using TradeUnionCommittee.BLL.Extensions;
+using TradeUnionCommittee.BLL.Helpers;
 using TradeUnionCommittee.BLL.Interfaces.Search;
 using TradeUnionCommittee.Common.ActualResults;
 using TradeUnionCommittee.Common.Enums;
@@ -60,9 +61,9 @@ namespace TradeUnionCommittee.BLL.Services.Search
                     return new ActualResult<IEnumerable<ResultSearchDTO>> { Result = ResultFormation(searchByGender) };
                 });
             }
-            catch (Exception)
+            catch (Exception exception)
             {
-                return new ActualResult<IEnumerable<ResultSearchDTO>>(Errors.DataBaseError);
+                return new ActualResult<IEnumerable<ResultSearchDTO>>(DescriptionExceptionHelper.GetDescriptionError(exception));
             }
         }
 
@@ -91,9 +92,9 @@ namespace TradeUnionCommittee.BLL.Services.Search
                     return new ActualResult<IEnumerable<ResultSearchDTO>> { Result = ResultFormation(searchByGender) };
                 });
             }
-            catch (Exception)
+            catch (Exception exception)
             {
-                return new ActualResult<IEnumerable<ResultSearchDTO>>(Errors.DataBaseError);
+                return new ActualResult<IEnumerable<ResultSearchDTO>>(DescriptionExceptionHelper.GetDescriptionError(exception));
             }
         }
 
@@ -124,9 +125,9 @@ namespace TradeUnionCommittee.BLL.Services.Search
                     return new ActualResult<IEnumerable<ResultSearchDTO>> { Result = ResultFormation(searchByGender) };
                 });
             }
-            catch (Exception)
+            catch (Exception exception)
             {
-                return new ActualResult<IEnumerable<ResultSearchDTO>>(Errors.DataBaseError);
+                return new ActualResult<IEnumerable<ResultSearchDTO>>(DescriptionExceptionHelper.GetDescriptionError(exception));
             }
         }
 
@@ -159,9 +160,9 @@ namespace TradeUnionCommittee.BLL.Services.Search
                     }
                 });
             }
-            catch (Exception)
+            catch (Exception exception)
             {
-                return new ActualResult<IEnumerable<ResultSearchDTO>>(Errors.DataBaseError);
+                return new ActualResult<IEnumerable<ResultSearchDTO>>(DescriptionExceptionHelper.GetDescriptionError(exception));
             }
         }
 
@@ -197,9 +198,9 @@ namespace TradeUnionCommittee.BLL.Services.Search
                     }
                 });
             }
-            catch (Exception)
+            catch (Exception exception)
             {
-                return new ActualResult<IEnumerable<ResultSearchDTO>>(Errors.DataBaseError);
+                return new ActualResult<IEnumerable<ResultSearchDTO>>(DescriptionExceptionHelper.GetDescriptionError(exception));
             }
         }
 
@@ -239,9 +240,9 @@ namespace TradeUnionCommittee.BLL.Services.Search
                     }
                 });
             }
-            catch (Exception)
+            catch (Exception exception)
             {
-                return new ActualResult<IEnumerable<ResultSearchDTO>>(Errors.DataBaseError);
+                return new ActualResult<IEnumerable<ResultSearchDTO>>(DescriptionExceptionHelper.GetDescriptionError(exception));
             }
         }
 
@@ -249,38 +250,45 @@ namespace TradeUnionCommittee.BLL.Services.Search
 
         public async Task<ActualResult<string>> SearchEmployee(EmployeeType type, string value)
         {
-            switch (type)
+            try
             {
-                case EmployeeType.MobilePhone:
-                    var searchByMobilePhone = await _context.Employee.FirstOrDefaultAsync(x => x.MobilePhone == value);
-                    if (searchByMobilePhone != null)
-                    {
-                        return new ActualResult<string> { Result = _hashIdUtilities.EncryptLong(searchByMobilePhone.Id) };
-                    }
-                    return new ActualResult<string>(Errors.NotFound);
-                case EmployeeType.CityPhone:
-                    var searchByCityPhone = await _context.Employee.FirstOrDefaultAsync(x => x.CityPhone == value.AddMaskForCityPhone());
-                    if (searchByCityPhone != null)
-                    {
-                        return new ActualResult<string> { Result = _hashIdUtilities.EncryptLong(searchByCityPhone.Id) };
-                    }
-                    return new ActualResult<string>(Errors.NotFound);
-                case EmployeeType.IdentificationСode:
-                    var searchByIdentificationСode = await _context.Employee.FirstOrDefaultAsync(x => x.IdentificationСode == value);
-                    if (searchByIdentificationСode != null)
-                    {
-                        return new ActualResult<string> { Result = _hashIdUtilities.EncryptLong(searchByIdentificationСode.Id) };
-                    }
-                    return new ActualResult<string>(Errors.NotFound);
-                case EmployeeType.MechnikovCard:
-                    var searchByMechnikovCard = await _context.Employee.FirstOrDefaultAsync(x => x.MechnikovCard == value);
-                    if (searchByMechnikovCard != null)
-                    {
-                        return new ActualResult<string> { Result = _hashIdUtilities.EncryptLong(searchByMechnikovCard.Id) };
-                    }
-                    return new ActualResult<string>(Errors.NotFound);
-                default:
-                    return new ActualResult<string>(Errors.NotFound);
+                switch (type)
+                {
+                    case EmployeeType.MobilePhone:
+                        var searchByMobilePhone = await _context.Employee.FirstOrDefaultAsync(x => x.MobilePhone == value);
+                        if (searchByMobilePhone != null)
+                        {
+                            return new ActualResult<string> { Result = _hashIdUtilities.EncryptLong(searchByMobilePhone.Id) };
+                        }
+                        return new ActualResult<string>(Errors.NotFound);
+                    case EmployeeType.CityPhone:
+                        var searchByCityPhone = await _context.Employee.FirstOrDefaultAsync(x => x.CityPhone == value.AddMaskForCityPhone());
+                        if (searchByCityPhone != null)
+                        {
+                            return new ActualResult<string> { Result = _hashIdUtilities.EncryptLong(searchByCityPhone.Id) };
+                        }
+                        return new ActualResult<string>(Errors.NotFound);
+                    case EmployeeType.IdentificationСode:
+                        var searchByIdentificationСode = await _context.Employee.FirstOrDefaultAsync(x => x.IdentificationСode == value);
+                        if (searchByIdentificationСode != null)
+                        {
+                            return new ActualResult<string> { Result = _hashIdUtilities.EncryptLong(searchByIdentificationСode.Id) };
+                        }
+                        return new ActualResult<string>(Errors.NotFound);
+                    case EmployeeType.MechnikovCard:
+                        var searchByMechnikovCard = await _context.Employee.FirstOrDefaultAsync(x => x.MechnikovCard == value);
+                        if (searchByMechnikovCard != null)
+                        {
+                            return new ActualResult<string> { Result = _hashIdUtilities.EncryptLong(searchByMechnikovCard.Id) };
+                        }
+                        return new ActualResult<string>(Errors.NotFound);
+                    default:
+                        return new ActualResult<string>(Errors.NotFound);
+                }
+            }
+            catch (Exception exception)
+            {
+                return new ActualResult<string>(DescriptionExceptionHelper.GetDescriptionError(exception));
             }
         }
 
