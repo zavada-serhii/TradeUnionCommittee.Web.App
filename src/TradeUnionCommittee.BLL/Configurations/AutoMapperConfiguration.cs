@@ -11,7 +11,7 @@ using TradeUnionCommittee.BLL.Extensions;
 using TradeUnionCommittee.BLL.Helpers;
 using TradeUnionCommittee.DAL.Entities;
 using TradeUnionCommittee.DAL.Enums;
-using TradeUnionCommittee.DAL.Native;
+using TradeUnionCommittee.DAL.Repository;
 using TradeUnionCommittee.PDF.Service.Entities;
 
 namespace TradeUnionCommittee.BLL.Configurations

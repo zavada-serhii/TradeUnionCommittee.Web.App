@@ -13,18 +13,18 @@ using TradeUnionCommittee.Common.ActualResults;
 using TradeUnionCommittee.Common.Enums;
 using TradeUnionCommittee.DAL.EF;
 using TradeUnionCommittee.DAL.Enums;
-using TradeUnionCommittee.DAL.Native;
+using TradeUnionCommittee.DAL.Repository;
 
 namespace TradeUnionCommittee.BLL.Services.Search
 {
     internal class SearchService : ISearchService
     {
         private readonly TradeUnionCommitteeContext _context;
-        private readonly ISearchNative _searchRepository;
+        private readonly ITrigramSearchRepository _searchRepository;
         private readonly HashIdConfiguration _hashIdUtilities;
         private readonly AutoMapperConfiguration _mapperService;
 
-        public SearchService(TradeUnionCommitteeContext context, HashIdConfiguration hashIdUtilities, AutoMapperConfiguration mapperService, ISearchNative searchRepository)
+        public SearchService(TradeUnionCommitteeContext context, HashIdConfiguration hashIdUtilities, AutoMapperConfiguration mapperService, ITrigramSearchRepository searchRepository)
         {
             _context = context;
             _hashIdUtilities = hashIdUtilities;
@@ -35,7 +35,7 @@ namespace TradeUnionCommittee.BLL.Services.Search
         //------------------------------------------------------------------------------------------------------------------------------------------
 
         public async Task<IEnumerable<ResultSearchDTO>> SearchFullName(string fullName) => 
-            _mapperService.Mapper.Map<IEnumerable<ResultSearchDTO>>(await _searchRepository.SearchByFullName(fullName, TrigramSearch.Gist));
+            _mapperService.Mapper.Map<IEnumerable<ResultSearchDTO>>(await _searchRepository.SearchByFullName(fullName, TypeTrigram.Gist));
 
         //------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -326,6 +326,7 @@ namespace TradeUnionCommittee.BLL.Services.Search
         public void Dispose()
         {
             _context.Dispose();
+            _searchRepository.Dispose();
         }
     }
 }

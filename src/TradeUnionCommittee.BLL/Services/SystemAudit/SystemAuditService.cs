@@ -8,14 +8,14 @@ using TradeUnionCommittee.BLL.Interfaces.SystemAudit;
 using TradeUnionCommittee.Common.ActualResults;
 using TradeUnionCommittee.DAL.Entities;
 using TradeUnionCommittee.DAL.Enums;
-using TradeUnionCommittee.DAL.Native;
+using TradeUnionCommittee.DAL.Repository;
 
 namespace TradeUnionCommittee.BLL.Services.SystemAudit
 {
     public class SystemAuditService : ISystemAuditService
     {
-        private readonly ISystemAuditNative _auditRepository;
-        public SystemAuditService(ISystemAuditNative auditRepository)
+        private readonly ISystemAuditRepository _auditRepository;
+        public SystemAuditService(ISystemAuditRepository auditRepository)
         {
             _auditRepository = auditRepository;
         }
@@ -54,6 +54,11 @@ namespace TradeUnionCommittee.BLL.Services.SystemAudit
                 };
             }
             return new ActualResult<IEnumerable<JournalDTO>>();
+        }
+
+        public void Dispose()
+        {
+            _auditRepository.Dispose();
         }
 
         private static Dictionary<Operations, string> dictionatyOperations = new Dictionary<Operations, string>

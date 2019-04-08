@@ -41,7 +41,7 @@ namespace TradeUnionCommittee.BLL.Services.PDF
             {
                 var model = await FillModelReport(dto);
                 var validationModel = ValidatePdfModel(model);
-                if (validationModel.IsValid)
+                if (validationModel)
                 {
                     var pathToFile = new ReportGenerator().Generate(model);
                     if (!string.IsNullOrEmpty(pathToFile))
@@ -56,7 +56,7 @@ namespace TradeUnionCommittee.BLL.Services.PDF
                     }
                     return new ActualResult<byte[]>(Errors.ApplicationError);
                 }
-                return new ActualResult<byte[]>(validationModel.ErrorsList);
+                return new ActualResult<byte[]>(Errors.NotFound);
             }
             catch (Exception exception)
             {
@@ -187,13 +187,13 @@ namespace TradeUnionCommittee.BLL.Services.PDF
             return result;
         }
 
-        private ActualResult ValidatePdfModel(ReportModel model)
+        private bool ValidatePdfModel(ReportModel model)
         {
             var result = new List<bool>();
             switch (model.Type)
             {
                 case TradeUnionCommittee.PDF.Service.Enums.TypeReport.All:
-                    result.Add(model.MaterialAidEmployees.Any());
+                    result.Add(model.MaterialAidEmployees.Any()); 
                     result.Add(model.AwardEmployees.Any());
                     result.Add(model.EventEmployees.Any());
                     result.Add(model.CulturalEmployees.Any());
@@ -224,7 +224,7 @@ namespace TradeUnionCommittee.BLL.Services.PDF
                     throw new ArgumentOutOfRangeException();
             }
 
-            return result.Any(x => x == false) ? new ActualResult(Errors.NotFound) : new ActualResult();
+            return result.Any(x => x);
         }
 
         public void Dispose()
