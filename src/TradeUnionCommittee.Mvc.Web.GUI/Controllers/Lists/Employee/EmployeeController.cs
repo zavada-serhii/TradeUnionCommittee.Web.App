@@ -108,7 +108,7 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Lists.Employee
         [Authorize(Roles = "Admin,Accountant")]
         public async Task<IActionResult> CheckIdentificationСode([Required] string identificationСode)
         {
-            return Json(!await _employeeService.CheckIdentificationСode(identificationСode));
+            return Json(!await _employeeService.CheckIdentificationCode(identificationСode));
         }
 
         [AcceptVerbs("Get", "Post")]
