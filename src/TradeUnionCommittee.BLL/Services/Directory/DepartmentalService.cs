@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.Configurations;
 using TradeUnionCommittee.BLL.DTO;
+using TradeUnionCommittee.BLL.Helpers;
 using TradeUnionCommittee.BLL.Interfaces.Directory;
 using TradeUnionCommittee.Common.ActualResults;
 using TradeUnionCommittee.Common.Enums;
@@ -38,9 +39,9 @@ namespace TradeUnionCommittee.BLL.Services.Directory
                 var result = _mapperService.Mapper.Map<IEnumerable<DepartmentalDTO>>(departmental);
                 return new ActualResult<IEnumerable<DepartmentalDTO>> { Result = result };
             }
-            catch (Exception)
+            catch (Exception exception)
             {
-                return new ActualResult<IEnumerable<DepartmentalDTO>>(Errors.DataBaseError);
+                return new ActualResult<IEnumerable<DepartmentalDTO>>(DescriptionExceptionHelper.GetDescriptionError(exception));
             }
         }
 
@@ -56,9 +57,9 @@ namespace TradeUnionCommittee.BLL.Services.Directory
                                                                     result => $"{result.City}, {result.Street}, {result.NumberHouse}");
                 return new ActualResult<Dictionary<string, string>> { Result = departmental };
             }
-            catch (Exception )
+            catch (Exception exception)
             {
-                return new ActualResult<Dictionary<string, string>>(Errors.DataBaseError);
+                return new ActualResult<Dictionary<string, string>>(DescriptionExceptionHelper.GetDescriptionError(exception));
             }
         }
 
@@ -68,12 +69,16 @@ namespace TradeUnionCommittee.BLL.Services.Directory
             {
                 var id = _hashIdUtilities.DecryptLong(hashId);
                 var departmental = await _context.AddressPublicHouse.FindAsync(id);
+                if (departmental == null)
+                {
+                    return new ActualResult<DepartmentalDTO>(Errors.TupleDeleted);
+                }
                 var result = _mapperService.Mapper.Map<DepartmentalDTO>(departmental);
                 return new ActualResult<DepartmentalDTO> { Result = result };
             }
-            catch (Exception)
+            catch (Exception exception)
             {
-                return new ActualResult<DepartmentalDTO>(Errors.DataBaseError);
+                return new ActualResult<DepartmentalDTO>(DescriptionExceptionHelper.GetDescriptionError(exception));
             }
         }
 
@@ -81,17 +86,13 @@ namespace TradeUnionCommittee.BLL.Services.Directory
         {
             try
             {
-                if (!await CheckDuplicateDataAsync(dto))
-                {
-                    await _context.AddressPublicHouse.AddAsync(_mapperService.Mapper.Map<AddressPublicHouse>(dto));
-                    await _context.SaveChangesAsync();
-                    return new ActualResult();
-                }
-                return new ActualResult(Errors.DuplicateData);
+                await _context.AddressPublicHouse.AddAsync(_mapperService.Mapper.Map<AddressPublicHouse>(dto));
+                await _context.SaveChangesAsync();
+                return new ActualResult();
             }
-            catch (Exception)
+            catch (Exception exception)
             {
-                return new ActualResult(Errors.DataBaseError);
+                return new ActualResult(DescriptionExceptionHelper.GetDescriptionError(exception));
             }
         }
 
@@ -99,21 +100,13 @@ namespace TradeUnionCommittee.BLL.Services.Directory
         {
             try
             {
-                if (!await CheckDuplicateDataAsync(dto))
-                {
-                    _context.Entry(_mapperService.Mapper.Map<AddressPublicHouse>(dto)).State = EntityState.Modified;
-                    await _context.SaveChangesAsync();
-                    return new ActualResult();
-                }
-                return new ActualResult(Errors.DuplicateData);
+                _context.Entry(_mapperService.Mapper.Map<AddressPublicHouse>(dto)).State = EntityState.Modified;
+                await _context.SaveChangesAsync();
+                return new ActualResult();
             }
-            catch (DbUpdateConcurrencyException)
+            catch (Exception exception)
             {
-                return new ActualResult(Errors.TupleDeletedOrUpdated);
-            }
-            catch (Exception)
-            {
-                return new ActualResult(Errors.DataBaseError);
+                return new ActualResult(DescriptionExceptionHelper.GetDescriptionError(exception));
             }
         }
 
@@ -130,19 +123,10 @@ namespace TradeUnionCommittee.BLL.Services.Directory
                 }
                 return new ActualResult();
             }
-            catch (Exception)
+            catch (Exception exception)
             {
-                return new ActualResult(Errors.DataBaseError);
+                return new ActualResult(DescriptionExceptionHelper.GetDescriptionError(exception));
             }
-        }
-
-        private async Task<bool> CheckDuplicateDataAsync(DepartmentalDTO dto)
-        {
-            return await _context.AddressPublicHouse
-                                .AnyAsync(p => p.City == dto.City && 
-                                          p.Street == dto.Street && 
-                                          p.NumberHouse == dto.NumberHouse && 
-                                          p.Type == TypeHouse.Departmental);
         }
 
         public void Dispose()

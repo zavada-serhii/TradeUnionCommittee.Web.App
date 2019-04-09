@@ -1,12 +1,11 @@
 ﻿using System;
-using System.Threading.Tasks;
+using TradeUnionCommittee.BLL.Enums;
+using TradeUnionCommittee.Common.ActualResults;
 
 namespace TradeUnionCommittee.BLL.Interfaces.Helpers
 {
     public interface IReferenceParent : IDisposable
     {
-        Task<string> GetHashIdEmployeeByFamily(string hashIdFamily);
-        Task<string> GetHashIdEmployeeByChildren(string hashIdChildren);
-        Task<string> GetHashIdEmployeeByGrandChildren(string hashIdGrandChildren);
+        ActualResult<string> GetHashIdEmployee(string hashId, ReferenceParentType type);
     }
 }

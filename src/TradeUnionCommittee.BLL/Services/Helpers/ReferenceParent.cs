@@ -1,6 +1,11 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Linq;
 using TradeUnionCommittee.BLL.Configurations;
+using TradeUnionCommittee.BLL.Enums;
+using TradeUnionCommittee.BLL.Helpers;
 using TradeUnionCommittee.BLL.Interfaces.Helpers;
+using TradeUnionCommittee.Common.ActualResults;
+using TradeUnionCommittee.Common.Enums;
 using TradeUnionCommittee.DAL.EF;
 
 namespace TradeUnionCommittee.BLL.Services.Helpers
@@ -16,25 +21,38 @@ namespace TradeUnionCommittee.BLL.Services.Helpers
             _hashIdUtilities = hashIdUtilities;
         }
 
-        public async Task<string> GetHashIdEmployeeByFamily(string hashIdFamily)
+        public ActualResult<string> GetHashIdEmployee(string hashId, ReferenceParentType type)
         {
-            var id = _hashIdUtilities.DecryptLong(hashIdFamily);
-            var result = await _context.Family.FindAsync(id);
-            return result != null ? _hashIdUtilities.EncryptLong(result.IdEmployee) : null;
-        }
+            try
+            {
+                long? result;
+                var id = _hashIdUtilities.DecryptLong(hashId);
+                switch (type)
+                {
+                    case ReferenceParentType.Family:
+                        result = _context.Family.FirstOrDefault(x => x.Id == id)?.IdEmployee;
+                        break;
+                    case ReferenceParentType.Children:
+                        result = _context.Children.FirstOrDefault(x => x.Id == id)?.IdEmployee;
+                        break;
+                    case ReferenceParentType.GrandChildren:
+                        result = _context.GrandChildren.FirstOrDefault(x => x.Id == id)?.IdEmployee;
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException(nameof(type), type, null);
+                }
 
-        public async Task<string> GetHashIdEmployeeByChildren(string hashIdChildren)
-        {
-            var id = _hashIdUtilities.DecryptLong(hashIdChildren);
-            var result = await _context.Children.FindAsync(id);
-            return result != null ? _hashIdUtilities.EncryptLong(result.IdEmployee) : null;
-        }
-
-        public async Task<string> GetHashIdEmployeeByGrandChildren(string hashIdGrandChildren)
-        {
-            var id = _hashIdUtilities.DecryptLong(hashIdGrandChildren);
-            var result = await _context.GrandChildren.FindAsync(id);
-            return result != null ? _hashIdUtilities.EncryptLong(result.IdEmployee) : null;
+                if (result != null)
+                {
+                    var idEmployee = _hashIdUtilities.EncryptLong(result.Value);
+                    return new ActualResult<string> { Result = idEmployee };
+                }
+                return new ActualResult<string>(Errors.EmployeeDeleted);
+            }
+            catch (Exception exception)
+            {
+                return new ActualResult<string>(DescriptionExceptionHelper.GetDescriptionError(exception));
+            }
         }
 
         public void Dispose()

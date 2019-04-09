@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.Configurations;
 using TradeUnionCommittee.BLL.DTO.Children;
+using TradeUnionCommittee.BLL.Helpers;
 using TradeUnionCommittee.BLL.Interfaces.Lists.Children;
 using TradeUnionCommittee.Common.ActualResults;
 using TradeUnionCommittee.Common.Enums;
@@ -38,9 +39,9 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Children
                 var result = _mapperService.Mapper.Map<IEnumerable<GiftChildrenDTO>>(gift);
                 return new ActualResult<IEnumerable<GiftChildrenDTO>> { Result = result };
             }
-            catch (Exception)
+            catch (Exception exception)
             {
-                return new ActualResult<IEnumerable<GiftChildrenDTO>>(Errors.DataBaseError);
+                return new ActualResult<IEnumerable<GiftChildrenDTO>>(DescriptionExceptionHelper.GetDescriptionError(exception));
             }
         }
 
@@ -50,12 +51,16 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Children
             {
                 var id = _hashIdUtilities.DecryptLong(hashId);
                 var gift = await _context.GiftChildrens.FindAsync(id);
+                if (gift == null)
+                {
+                    return new ActualResult<GiftChildrenDTO>(Errors.TupleDeleted);
+                }
                 var result = _mapperService.Mapper.Map<GiftChildrenDTO>(gift);
                 return new ActualResult<GiftChildrenDTO> { Result = result };
             }
-            catch (Exception)
+            catch (Exception exception)
             {
-                return new ActualResult<GiftChildrenDTO>(Errors.DataBaseError);
+                return new ActualResult<GiftChildrenDTO>(DescriptionExceptionHelper.GetDescriptionError(exception));
             }
         }
 
@@ -67,9 +72,9 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Children
                 await _context.SaveChangesAsync();
                 return new ActualResult();
             }
-            catch (Exception)
+            catch (Exception exception)
             {
-                return new ActualResult(Errors.DataBaseError);
+                return new ActualResult(DescriptionExceptionHelper.GetDescriptionError(exception));
             }
         }
 
@@ -81,13 +86,9 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Children
                 await _context.SaveChangesAsync();
                 return new ActualResult();
             }
-            catch (DbUpdateConcurrencyException)
+            catch (Exception exception)
             {
-                return new ActualResult(Errors.TupleDeletedOrUpdated);
-            }
-            catch (Exception)
-            {
-                return new ActualResult(Errors.DataBaseError);
+                return new ActualResult(DescriptionExceptionHelper.GetDescriptionError(exception));
             }
         }
 
@@ -104,9 +105,9 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Children
                 }
                 return new ActualResult();
             }
-            catch (Exception)
+            catch (Exception exception)
             {
-                return new ActualResult(Errors.DataBaseError);
+                return new ActualResult(DescriptionExceptionHelper.GetDescriptionError(exception));
             }
         }
 

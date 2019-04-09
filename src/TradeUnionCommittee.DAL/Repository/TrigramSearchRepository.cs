@@ -9,29 +9,29 @@ using TradeUnionCommittee.DAL.EF;
 using TradeUnionCommittee.DAL.Enums;
 using TradeUnionCommittee.DAL.Extensions;
 
-namespace TradeUnionCommittee.DAL.Native
+namespace TradeUnionCommittee.DAL.Repository
 {
-    public interface ISearchNative
+    public interface ITrigramSearchRepository : IDisposable
     {
-        Task<IEnumerable<ResultFullNameSearch>> SearchByFullName(string fullName, TrigramSearch type);
+        Task<IEnumerable<ResultFullNameSearch>> SearchByFullName(string fullName, TypeTrigram type);
     }
 
-    public class SearchNative : ISearchNative
+    public class TrigramSearchRepository : ITrigramSearchRepository
     {
         private readonly TradeUnionCommitteeContext _dbContext;
 
-        public SearchNative(TradeUnionCommitteeContext db)
+        public TrigramSearchRepository(TradeUnionCommitteeContext db)
         {
             _dbContext = db;
         }
 
-        public async Task<IEnumerable<ResultFullNameSearch>> SearchByFullName(string fullName, TrigramSearch type)
+        public async Task<IEnumerable<ResultFullNameSearch>> SearchByFullName(string fullName, TypeTrigram type)
         {
             string sqlQuery;
 
             switch (type)
             {
-                case TrigramSearch.Gist:
+                case TypeTrigram.Gist:
                     sqlQuery = @"SELECT e.""Id"", public.""TrigramFullName""(e) <-> @fullName AS ""Gist"",
                                         e.""FirstName"" || ' ' || e.""SecondName"" || ' ' || e.""Patronymic"" AS ""FullName"",
 	                                    e.""FirstName"" || ' ' || LEFT(e.""SecondName"",1) || '.' || CASE WHEN e.""Patronymic"" IS NULL THEN '' ELSE LEFT(e.""Patronymic"",1) || '.' END AS ""SurnameAndInitials"",
@@ -46,7 +46,7 @@ namespace TradeUnionCommittee.DAL.Native
                                  LEFT JOIN ""Subdivisions"" AS ss ON ss.""Id"" = s.""IdSubordinate""
                                  ORDER BY ""Gist"" ASC LIMIT 10;";
                     break;
-                case TrigramSearch.Gin:
+                case TypeTrigram.Gin:
                     sqlQuery = @"SELECT e.""Id"", SIMILARITY(public.""TrigramFullName""(e), @fullName ) AS ""Gin"",
                                         e.""FirstName"" || ' ' || e.""SecondName"" || ' ' || e.""Patronymic"" AS ""FullName"",
 	                                    e.""FirstName"" || ' ' || LEFT(e.""SecondName"",1) || '.' || CASE WHEN e.""Patronymic"" IS NULL THEN '' ELSE LEFT(e.""Patronymic"",1) || '.' END AS ""SurnameAndInitials"",
@@ -86,6 +86,11 @@ namespace TradeUnionCommittee.DAL.Native
                 });
             }
             return result;
+        }
+
+        public void Dispose()
+        {
+            _dbContext.Dispose();
         }
     }
 

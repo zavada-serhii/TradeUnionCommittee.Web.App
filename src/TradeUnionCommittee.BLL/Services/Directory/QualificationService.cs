@@ -3,9 +3,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TradeUnionCommittee.BLL.Helpers;
 using TradeUnionCommittee.BLL.Interfaces.Directory;
 using TradeUnionCommittee.Common.ActualResults;
-using TradeUnionCommittee.Common.Enums;
 using TradeUnionCommittee.DAL.EF;
 
 namespace TradeUnionCommittee.BLL.Services.Directory
@@ -26,9 +26,9 @@ namespace TradeUnionCommittee.BLL.Services.Directory
                 var result = await _context.Employee.Select(x => x.ScientificDegree).Distinct().OrderBy(x => x).ToListAsync();
                 return new ActualResult<IEnumerable<string>> { Result = result };
             }
-            catch (Exception)
+            catch (Exception exception)
             {
-                return new ActualResult<IEnumerable<string>>(Errors.DataBaseError);
+                return new ActualResult<IEnumerable<string>>(DescriptionExceptionHelper.GetDescriptionError(exception));
             }
         }
 
@@ -39,9 +39,9 @@ namespace TradeUnionCommittee.BLL.Services.Directory
                 var result = await _context.Employee.Select(x => x.ScientificTitle).Distinct().OrderBy(x => x).ToListAsync();
                 return new ActualResult<IEnumerable<string>> { Result = result };
             }
-            catch (Exception)
+            catch (Exception exception)
             {
-                return new ActualResult<IEnumerable<string>>(Errors.DataBaseError);
+                return new ActualResult<IEnumerable<string>>(DescriptionExceptionHelper.GetDescriptionError(exception));
             }
         }
 
@@ -52,9 +52,9 @@ namespace TradeUnionCommittee.BLL.Services.Directory
                 var result = await _context.Employee.Select(x => x.LevelEducation).Distinct().OrderBy(x => x).ToListAsync();
                 return new ActualResult<IEnumerable<string>> { Result = result };
             }
-            catch (Exception)
+            catch (Exception exception)
             {
-                return new ActualResult<IEnumerable<string>>(Errors.DataBaseError);
+                return new ActualResult<IEnumerable<string>>(DescriptionExceptionHelper.GetDescriptionError(exception));
             }
         }
 
@@ -65,9 +65,9 @@ namespace TradeUnionCommittee.BLL.Services.Directory
                 var result = await _context.Employee.Select(x => x.NameInstitution).Distinct().OrderBy(x => x).ToListAsync();
                 return new ActualResult<IEnumerable<string>> { Result = result };
             }
-            catch (Exception)
+            catch (Exception exception)
             {
-                return new ActualResult<IEnumerable<string>>(Errors.DataBaseError);
+                return new ActualResult<IEnumerable<string>>(DescriptionExceptionHelper.GetDescriptionError(exception));
             }
         }
 

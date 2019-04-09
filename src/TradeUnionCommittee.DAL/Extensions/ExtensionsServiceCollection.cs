@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using TradeUnionCommittee.DAL.EF;
 using TradeUnionCommittee.DAL.Entities;
-using TradeUnionCommittee.DAL.Native;
+using TradeUnionCommittee.DAL.Repository;
 
 namespace TradeUnionCommittee.DAL.Extensions
 {
@@ -13,8 +13,8 @@ namespace TradeUnionCommittee.DAL.Extensions
         {
             services.AddDbContext<TradeUnionCommitteeContext>(options => options.UseNpgsql(connectionString));
             services.AddIdentity<User, IdentityRole>().AddEntityFrameworkStores<TradeUnionCommitteeContext>();
-            services.AddTransient<ISearchNative, SearchNative>();
-            services.AddTransient<ISystemAuditNative, SystemAuditNative>();
+            services.AddTransient<ITrigramSearchRepository, TrigramSearchRepository>();
+            services.AddTransient<ISystemAuditRepository, SystemAuditRepository>();
             return services;
         }
     }

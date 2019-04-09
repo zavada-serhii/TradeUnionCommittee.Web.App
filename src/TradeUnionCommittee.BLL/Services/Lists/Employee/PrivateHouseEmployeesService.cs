@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.Configurations;
 using TradeUnionCommittee.BLL.DTO.Employee;
 using TradeUnionCommittee.BLL.Enums;
+using TradeUnionCommittee.BLL.Helpers;
 using TradeUnionCommittee.BLL.Interfaces.Lists.Employee;
 using TradeUnionCommittee.Common.ActualResults;
 using TradeUnionCommittee.Common.Enums;
@@ -47,9 +48,9 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Employee
                 var mapping =_mapperService.Mapper.Map<IEnumerable<PrivateHouseEmployeesDTO>>(result);
                 return new ActualResult<IEnumerable<PrivateHouseEmployeesDTO>> { Result = mapping };
             }
-            catch (Exception)
+            catch (Exception exception)
             {
-                return new ActualResult<IEnumerable<PrivateHouseEmployeesDTO>>(Errors.DataBaseError);
+                return new ActualResult<IEnumerable<PrivateHouseEmployeesDTO>>(DescriptionExceptionHelper.GetDescriptionError(exception));
             }
         }
 
@@ -59,12 +60,16 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Employee
             {
                 var id = _hashIdUtilities.DecryptLong(hashId);
                 var privateHouse = await _context.PrivateHouseEmployees.FindAsync(id);
+                if (privateHouse == null)
+                {
+                    return new ActualResult<PrivateHouseEmployeesDTO>(Errors.TupleDeleted);
+                }
                 var result = _mapperService.Mapper.Map<PrivateHouseEmployeesDTO>(privateHouse);
                 return new ActualResult<PrivateHouseEmployeesDTO> { Result = result };
             }
-            catch (Exception)
+            catch (Exception exception)
             {
-                return new ActualResult<PrivateHouseEmployeesDTO>(Errors.DataBaseError);
+                return new ActualResult<PrivateHouseEmployeesDTO>(DescriptionExceptionHelper.GetDescriptionError(exception));
             }
         }
 
@@ -91,9 +96,9 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Employee
                         throw new ArgumentOutOfRangeException(nameof(type), type, null);
                 }
             }
-            catch (Exception)
+            catch (Exception exception)
             {
-                return new ActualResult(Errors.DataBaseError);
+                return new ActualResult(DescriptionExceptionHelper.GetDescriptionError(exception));
             }
         }
 
@@ -120,13 +125,9 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Employee
                         throw new ArgumentOutOfRangeException(nameof(type), type, null);
                 }
             }
-            catch (DbUpdateConcurrencyException)
+            catch (Exception exception)
             {
-                return new ActualResult(Errors.TupleDeletedOrUpdated);
-            }
-            catch (Exception)
-            {
-                return new ActualResult(Errors.DataBaseError);
+                return new ActualResult(DescriptionExceptionHelper.GetDescriptionError(exception));
             }
         }
 
@@ -143,9 +144,9 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Employee
                 }
                 return new ActualResult();
             }
-            catch (Exception)
+            catch (Exception exception)
             {
-                return new ActualResult(Errors.DataBaseError);
+                return new ActualResult(DescriptionExceptionHelper.GetDescriptionError(exception));
             }
         }
 
@@ -180,9 +181,9 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Employee
                 }
                 return new ActualResult(Errors.TupleDeleted);
             }
-            catch (Exception)
+            catch (Exception exception)
             {
-               return new ActualResult(Errors.DataBaseError);
+                return new ActualResult(DescriptionExceptionHelper.GetDescriptionError(exception));
             }
         }
     }

@@ -8,6 +8,7 @@ using TradeUnionCommittee.BLL.Configurations;
 using TradeUnionCommittee.BLL.DTO;
 using TradeUnionCommittee.BLL.Enums;
 using TradeUnionCommittee.BLL.Extensions;
+using TradeUnionCommittee.BLL.Helpers;
 using TradeUnionCommittee.BLL.Interfaces.PDF;
 using TradeUnionCommittee.Common.ActualResults;
 using TradeUnionCommittee.Common.Enums;
@@ -36,18 +37,31 @@ namespace TradeUnionCommittee.BLL.Services.PDF
 
         public async Task<ActualResult<byte[]>> CreateReport(ReportPdfDTO dto)
         {
-            var pathToFile = new ReportGenerator().Generate(await FillModelReport(dto));
-            if (!string.IsNullOrEmpty(pathToFile))
+            try
             {
-                byte[] data;
-                using (var fstream = File.OpenRead(pathToFile))
+                var model = await FillModelReport(dto);
+                var validationModel = ValidatePdfModel(model);
+                if (validationModel)
                 {
-                    data = new byte[fstream.Length];
-                    await fstream.ReadAsync(data, 0, data.Length);
+                    var pathToFile = new ReportGenerator().Generate(model);
+                    if (!string.IsNullOrEmpty(pathToFile))
+                    {
+                        byte[] data;
+                        using (var fstream = File.OpenRead(pathToFile))
+                        {
+                            data = new byte[fstream.Length];
+                            await fstream.ReadAsync(data, 0, data.Length);
+                        }
+                        return new ActualResult<byte[]> { Result = data };
+                    }
+                    return new ActualResult<byte[]>(Errors.ApplicationError);
                 }
-                return new ActualResult<byte[]> {Result = data};
+                return new ActualResult<byte[]>(Errors.NotFound);
             }
-            return new ActualResult<byte[]>(Errors.FileNotFound);
+            catch (Exception exception)
+            {
+                return new ActualResult<byte[]>(DescriptionExceptionHelper.GetDescriptionError(exception));
+            }
         }
 
         //------------------------------------------------------------------------------------------
@@ -95,7 +109,6 @@ namespace TradeUnionCommittee.BLL.Services.PDF
                 default:
                     throw new ArgumentOutOfRangeException();
             }
-
             return model;
         }
 
@@ -172,6 +185,46 @@ namespace TradeUnionCommittee.BLL.Services.PDF
             result.AddRange(await GetEvent(dto, TypeEvent.Wellness));
             result.AddRange(await GetEvent(dto, TypeEvent.Tour));
             return result;
+        }
+
+        private bool ValidatePdfModel(ReportModel model)
+        {
+            var result = new List<bool>();
+            switch (model.Type)
+            {
+                case TradeUnionCommittee.PDF.Service.Enums.TypeReport.All:
+                    result.Add(model.MaterialAidEmployees.Any()); 
+                    result.Add(model.AwardEmployees.Any());
+                    result.Add(model.EventEmployees.Any());
+                    result.Add(model.CulturalEmployees.Any());
+                    result.Add(model.GiftEmployees.Any());
+                    break;
+                case TradeUnionCommittee.PDF.Service.Enums.TypeReport.MaterialAid:
+                    result.Add(model.MaterialAidEmployees.Any());
+                    break;
+                case TradeUnionCommittee.PDF.Service.Enums.TypeReport.Award:
+                    result.Add(model.AwardEmployees.Any());
+                    break;
+                case TradeUnionCommittee.PDF.Service.Enums.TypeReport.Travel:
+                    result.Add(model.EventEmployees.Any(x => x.TypeEvent == TradeUnionCommittee.PDF.Service.Enums.TypeEvent.Travel));
+                    break;
+                case TradeUnionCommittee.PDF.Service.Enums.TypeReport.Wellness:
+                    result.Add(model.EventEmployees.Any(x => x.TypeEvent == TradeUnionCommittee.PDF.Service.Enums.TypeEvent.Wellness));
+                    break;
+                case TradeUnionCommittee.PDF.Service.Enums.TypeReport.Tour:
+                    result.Add(model.EventEmployees.Any(x => x.TypeEvent == TradeUnionCommittee.PDF.Service.Enums.TypeEvent.Tour));
+                    break;
+                case TradeUnionCommittee.PDF.Service.Enums.TypeReport.Cultural:
+                    result.Add(model.CulturalEmployees.Any());
+                    break;
+                case TradeUnionCommittee.PDF.Service.Enums.TypeReport.Gift:
+                    result.Add(model.GiftEmployees.Any());
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+
+            return result.Any(x => x);
         }
 
         public void Dispose()

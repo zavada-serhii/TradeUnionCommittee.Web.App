@@ -242,22 +242,6 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Directory
 
         //------------------------------------------------------------------------------------------------------------------------------------------
 
-        [AcceptVerbs("Get", "Post")]
-        [Authorize(Roles = "Admin,Accountant,Deputy")]
-        public async Task<IActionResult> CheckName([Required] string name)
-        {
-            return Json(!await _services.CheckNameAsync(name));
-        }
-
-        [AcceptVerbs("Get", "Post")]
-        [Authorize(Roles = "Admin,Accountant,Deputy")]
-        public async Task<IActionResult> CheckAbbreviation([Required] string abbreviation)
-        {
-            return Json(!await _services.CheckAbbreviationAsync(abbreviation));
-        }
-
-        //------------------------------------------------------------------------------------------------------------------------------------------
-
         protected override void Dispose(bool disposing)
         {
             _services.Dispose();

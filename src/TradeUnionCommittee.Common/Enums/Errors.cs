@@ -2,15 +2,17 @@
 {
     public enum Errors
     {
-        TupleDeleted = 1,
-        TupleDeletedOrUpdated = 3,
-        DuplicateData = 4,
-        InvalidLoginOrPassword = 5,
-        DataBaseError = 6,
-        NotFound = 7,
-        FileNotFound = 8,
-
-        UserNotFound = 9,
-        DuplicateEmail = 10
+        ConnectionLost,
+        ApplicationError,
+        DataBaseError,
+        UserNotFound,
+        DuplicateEmail,
+        DuplicateData,
+        TupleDeletedOrUpdated,
+        TupleDeleted,
+        EmployeeDeleted,
+        DataUsed,
+        NotFound,
+        FileNotFound
     }
 }
