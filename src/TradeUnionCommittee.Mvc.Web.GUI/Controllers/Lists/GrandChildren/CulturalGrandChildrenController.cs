@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System.Collections.Generic;
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -46,13 +47,17 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Lists.GrandChildren
         public async Task<IActionResult> Index([Required] string id)
         {
             var result = await _services.GetAllAsync(id);
-            if (result.IsValid)
+            var referenceParent = _referenceParent.GetHashIdEmployee(id, ReferenceParentType.GrandChildren);
+            if (result.IsValid && referenceParent.IsValid)
             {
                 ViewData["HashIdGrandChildren"] = id;
-                ViewData["HashIdEmployee"] = await _referenceParent.GetHashIdEmployeeByGrandChildren(id);
+                ViewData["HashIdEmployee"] = referenceParent.Result;
                 return View(result.Result);
             }
-            TempData["ErrorsList"] = result.ErrorsList;
+            var errorsList = new List<string>();
+            errorsList.AddRange(result.ErrorsList);
+            errorsList.AddRange(referenceParent.ErrorsList);
+            TempData["ErrorsList"] = errorsList;
             return View();
         }
 

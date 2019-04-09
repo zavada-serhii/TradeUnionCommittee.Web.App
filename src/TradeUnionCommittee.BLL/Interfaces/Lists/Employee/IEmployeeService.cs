@@ -11,7 +11,7 @@ namespace TradeUnionCommittee.BLL.Interfaces.Lists.Employee
         Task<ActualResult<GeneralInfoEmployeeDTO>> GetMainInfoEmployeeAsync(string hashId);
         Task<ActualResult> UpdateMainInfoEmployeeAsync(GeneralInfoEmployeeDTO dto);
         Task<ActualResult> DeleteAsync(string hashId);
-        Task<bool> CheckIdentificationCode(string identificationCode);
-        Task<bool> CheckMechnikovCard(string mechnikovCard);
+        Task<ActualResult<bool>> CheckIdentificationCode(string identificationCode);
+        Task<ActualResult<bool>> CheckMechnikovCard(string mechnikovCard);
     }
 }

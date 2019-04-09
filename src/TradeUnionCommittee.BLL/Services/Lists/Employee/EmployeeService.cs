@@ -138,14 +138,28 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Employee
 
         //------------------------------------------------------------------------------------------------------------------------------------------
 
-        public async Task<bool> CheckIdentificationCode(string identificationCode)
+        public async Task<ActualResult<bool>> CheckIdentificationCode(string identificationCode)
         {
-            return await _context.Employee.AnyAsync(p => p.IdentificationСode == identificationCode);
+            try
+            {
+                return new ActualResult<bool> { Result = await _context.Employee.AnyAsync(p => p.IdentificationСode == identificationCode) };
+            }
+            catch (Exception exception)
+            {
+                return new ActualResult<bool>(DescriptionExceptionHelper.GetDescriptionError(exception));
+            }
         }
 
-        public async Task<bool> CheckMechnikovCard(string mechnikovCard)
+        public async Task<ActualResult<bool>> CheckMechnikovCard(string mechnikovCard)
         {
-            return await _context.Employee.AnyAsync(p => p.MechnikovCard == mechnikovCard);
+            try
+            {
+                return new ActualResult<bool> { Result = await _context.Employee.AnyAsync(p => p.MechnikovCard == mechnikovCard) };
+            }
+            catch (Exception exception)
+            {
+                return new ActualResult<bool>(DescriptionExceptionHelper.GetDescriptionError(exception));
+            }
         }
 
         //------------------------------------------------------------------------------------------------------------------------------------------

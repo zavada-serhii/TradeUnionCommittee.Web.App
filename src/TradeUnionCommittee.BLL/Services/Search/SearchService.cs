@@ -34,8 +34,19 @@ namespace TradeUnionCommittee.BLL.Services.Search
 
         //------------------------------------------------------------------------------------------------------------------------------------------
 
-        public async Task<IEnumerable<ResultSearchDTO>> SearchFullName(string fullName) => 
-            _mapperService.Mapper.Map<IEnumerable<ResultSearchDTO>>(await _searchRepository.SearchByFullName(fullName, TypeTrigram.Gist));
+        public async Task<ActualResult<IEnumerable<ResultSearchDTO>>> SearchFullName(string fullName)
+        {
+            try
+            {
+                var result = await _searchRepository.SearchByFullName(fullName, TypeTrigram.Gist);
+                var mapping = _mapperService.Mapper.Map<IEnumerable<ResultSearchDTO>>(result);
+                return new ActualResult<IEnumerable<ResultSearchDTO>> { Result = mapping };
+            }
+            catch (Exception exception)
+            {
+                return new ActualResult<IEnumerable<ResultSearchDTO>>(DescriptionExceptionHelper.GetDescriptionError(exception));
+            }
+        }
 
         //------------------------------------------------------------------------------------------------------------------------------------------
 

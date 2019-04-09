@@ -10,6 +10,7 @@
         DuplicateData,
         TupleDeletedOrUpdated,
         TupleDeleted,
+        EmployeeDeleted,
         DataUsed,
         NotFound,
         FileNotFound

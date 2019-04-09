@@ -35,6 +35,9 @@ namespace TradeUnionCommittee.Common.Helpers
                 case Errors.TupleDeleted:
                     return "Запис був видалений!";
 
+                case Errors.EmployeeDeleted:
+                    return "Співробітник був видалений!";
+
                 case Errors.DataUsed:
                     return "Дані використовуються!";
 
