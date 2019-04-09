@@ -7,7 +7,7 @@ using TradeUnionCommittee.Common.ActualResults;
 
 namespace TradeUnionCommittee.BLL.Interfaces.SystemAudit
 {
-    public interface ISystemAuditService
+    public interface ISystemAuditService : IDisposable
     {
         Task AuditAsync(string email, string ipUser, Operations operation, Tables table);
         Task AuditAsync(string email, string ipUser, Operations operation, Tables[] table);

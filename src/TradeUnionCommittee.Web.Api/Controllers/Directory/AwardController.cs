@@ -99,13 +99,5 @@ namespace TradeUnionCommittee.Web.Api.Controllers.Directory
             }
             return BadRequest(result);
         }
-
-        [HttpGet]
-        [Route("CheckName/{name}")]
-        [Authorize(Roles = "Admin,Accountant", AuthenticationSchemes = "Bearer")]
-        public async Task<IActionResult> CheckName([Required] string name)
-        {
-            return Ok(!await _services.CheckNameAsync(name));
-        }
     }
 }

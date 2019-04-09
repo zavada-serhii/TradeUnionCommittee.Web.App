@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.Configurations;
 using TradeUnionCommittee.BLL.DTO;
+using TradeUnionCommittee.BLL.Helpers;
 using TradeUnionCommittee.BLL.Interfaces.Directory;
 using TradeUnionCommittee.Common.ActualResults;
 using TradeUnionCommittee.Common.Enums;
@@ -38,9 +39,9 @@ namespace TradeUnionCommittee.BLL.Services.Directory
                 var result = _mapperService.Mapper.Map<IEnumerable<DormitoryDTO>>(dormitory);
                 return new ActualResult<IEnumerable<DormitoryDTO>> { Result = result };
             }
-            catch (Exception)
+            catch (Exception exception)
             {
-                return new ActualResult<IEnumerable<DormitoryDTO>>(Errors.DataBaseError);
+                return new ActualResult<IEnumerable<DormitoryDTO>>(DescriptionExceptionHelper.GetDescriptionError(exception));
             }
         }
 
@@ -50,12 +51,16 @@ namespace TradeUnionCommittee.BLL.Services.Directory
             {
                 var id = _hashIdUtilities.DecryptLong(hashId);
                 var dormitory = await _context.AddressPublicHouse.FindAsync(id);
+                if (dormitory == null)
+                {
+                    return new ActualResult<DormitoryDTO>(Errors.TupleDeleted);
+                }
                 var result = _mapperService.Mapper.Map<DormitoryDTO>(dormitory);
                 return new ActualResult<DormitoryDTO> { Result = result };
             }
-            catch (Exception)
+            catch (Exception exception)
             {
-                return new ActualResult<DormitoryDTO>(Errors.DataBaseError);
+                return new ActualResult<DormitoryDTO>(DescriptionExceptionHelper.GetDescriptionError(exception));
             }
         }
 
@@ -63,17 +68,13 @@ namespace TradeUnionCommittee.BLL.Services.Directory
         {
             try
             {
-                if (!await CheckDuplicateDataAsync(dto))
-                {
-                    await _context.AddressPublicHouse.AddAsync(_mapperService.Mapper.Map<AddressPublicHouse>(dto));
-                    await _context.SaveChangesAsync();
-                    return new ActualResult();
-                }
-                return new ActualResult(Errors.DuplicateData);
+                await _context.AddressPublicHouse.AddAsync(_mapperService.Mapper.Map<AddressPublicHouse>(dto));
+                await _context.SaveChangesAsync();
+                return new ActualResult();
             }
-            catch (Exception)
+            catch (Exception exception)
             {
-                return new ActualResult(Errors.DataBaseError);
+                return new ActualResult(DescriptionExceptionHelper.GetDescriptionError(exception));
             }
         }
 
@@ -81,21 +82,13 @@ namespace TradeUnionCommittee.BLL.Services.Directory
         {
             try
             {
-                if (!await CheckDuplicateDataAsync(dto))
-                {
-                    _context.Entry(_mapperService.Mapper.Map<AddressPublicHouse>(dto)).State = EntityState.Modified;
-                    await _context.SaveChangesAsync();
-                    return new ActualResult();
-                }
-                return new ActualResult(Errors.DuplicateData);
+                _context.Entry(_mapperService.Mapper.Map<AddressPublicHouse>(dto)).State = EntityState.Modified;
+                await _context.SaveChangesAsync();
+                return new ActualResult();
             }
-            catch (DbUpdateConcurrencyException)
+            catch (Exception exception)
             {
-                return new ActualResult(Errors.TupleDeletedOrUpdated);
-            }
-            catch (Exception)
-            {
-                return new ActualResult(Errors.DataBaseError);
+                return new ActualResult(DescriptionExceptionHelper.GetDescriptionError(exception));
             }
         }
 
@@ -112,20 +105,10 @@ namespace TradeUnionCommittee.BLL.Services.Directory
                 }
                 return new ActualResult();
             }
-            catch (Exception)
+            catch (Exception exception)
             {
-                return new ActualResult(Errors.DataBaseError);
+                return new ActualResult(DescriptionExceptionHelper.GetDescriptionError(exception));
             }
-        }
-
-        private async Task<bool> CheckDuplicateDataAsync(DormitoryDTO dto)
-        {
-            return await _context.AddressPublicHouse
-                                        .AnyAsync(p => p.City == dto.City &&
-                                                   p.Street == dto.Street &&
-                                                   p.NumberHouse == dto.NumberHouse &&
-                                                   p.NumberDormitory == dto.NumberDormitory &&
-                                                   p.Type == TypeHouse.Dormitory);
         }
 
         public void Dispose()

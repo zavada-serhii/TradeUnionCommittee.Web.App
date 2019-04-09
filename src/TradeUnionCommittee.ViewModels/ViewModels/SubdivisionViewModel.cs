@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using TradeUnionCommittee.ViewModels.Attributes;
 
 namespace TradeUnionCommittee.ViewModels.ViewModels
@@ -7,10 +6,8 @@ namespace TradeUnionCommittee.ViewModels.ViewModels
     public class CreateMainSubdivisionViewModel
     {
         [Required(ErrorMessage = "Назва не може бути порожньою!")]
-        [Remote("CheckName", "Subdivision", ErrorMessage = "Ця назва вже використовується!")]
         public string Name { get; set; }
         [Required(ErrorMessage = "Aбревіатура не може бути порожньою!")]
-        [Remote("CheckAbbreviation", "Subdivision", ErrorMessage = "Ця aбревіатура вже використовується!")]
         public string Abbreviation { get; set; }
     }
 
@@ -19,10 +16,8 @@ namespace TradeUnionCommittee.ViewModels.ViewModels
         [Required]
         public string HashIdMain { get; set; }
         [Required(ErrorMessage = "Назва не може бути порожньою!")]
-        [Remote("CheckName", "Subdivision", ErrorMessage = "Ця назва вже використовується!")]
         public string Name { get; set; }
         [Required(ErrorMessage = "Aбревіатура не може бути порожньою!")]
-        [Remote("CheckAbbreviation", "Subdivision", ErrorMessage = "Ця aбревіатура вже використовується!")]
         public string Abbreviation { get; set; }
     }
 
@@ -31,7 +26,6 @@ namespace TradeUnionCommittee.ViewModels.ViewModels
         [Required]
         public string HashIdMain { get; set; }
         [Required(ErrorMessage = "Назва не може бути порожньою!")]
-        [Remote("CheckName", "Subdivision", ErrorMessage = "Ця назва вже використовується!")]
         public string Name { get; set; }
         [Required]
         public uint RowVersion { get; set; }
@@ -42,7 +36,6 @@ namespace TradeUnionCommittee.ViewModels.ViewModels
         [Required]
         public string HashIdMain { get; set; }
         [Required(ErrorMessage = "Aбревіатура не може бути порожньою!")]
-        [Remote("CheckAbbreviation", "Subdivision", ErrorMessage = "Ця aбревіатура вже використовується!")]
         public string Abbreviation { get; set; }
         [Required]
         public uint RowVersion { get; set; }

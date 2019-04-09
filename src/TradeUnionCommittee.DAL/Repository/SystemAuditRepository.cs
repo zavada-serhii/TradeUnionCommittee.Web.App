@@ -10,20 +10,20 @@ using TradeUnionCommittee.DAL.Entities;
 using TradeUnionCommittee.DAL.Enums;
 using TradeUnionCommittee.DAL.Extensions;
 
-namespace TradeUnionCommittee.DAL.Native
+namespace TradeUnionCommittee.DAL.Repository
 {
-    public interface ISystemAuditNative
+    public interface ISystemAuditRepository : IDisposable
     {
         Task AuditAsync(Journal journal);
         Task<IEnumerable<string>> GetExistingPartitionInDbAsync();
         Task<IEnumerable<Journal>> FilterAsync(IEnumerable<string> namesPartitions, string email, DateTime startDate, DateTime endDate);
     }
 
-    public class SystemAuditNative : ISystemAuditNative
+    public class SystemAuditRepository : ISystemAuditRepository
     {
         private readonly TradeUnionCommitteeContext _dbContext;
 
-        public SystemAuditNative(TradeUnionCommitteeContext db)
+        public SystemAuditRepository(TradeUnionCommitteeContext db)
         {
             _dbContext = db;
         }
@@ -104,6 +104,11 @@ namespace TradeUnionCommittee.DAL.Native
                 return result;
             }
             return $"SELECT * FROM audit.{list[0]} WHERE \"EmailUser\" = @1 AND \"DateTime\" BETWEEN @2 AND @3";
+        }
+
+        public void Dispose()
+        {
+            _dbContext.Dispose();
         }
     }
 }

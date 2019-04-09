@@ -108,14 +108,24 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Lists.Employee
         [Authorize(Roles = "Admin,Accountant")]
         public async Task<IActionResult> CheckIdentificationСode([Required] string identificationСode)
         {
-            return Json(!await _employeeService.CheckIdentificationСode(identificationСode));
+            var result = await _employeeService.CheckIdentificationCode(identificationСode);
+            if (result.IsValid)
+            {
+                return Json(!result.Result);
+            }
+            return BadRequest(result.ErrorsList);
         }
 
         [AcceptVerbs("Get", "Post")]
         [Authorize(Roles = "Admin,Accountant")]
         public async Task<IActionResult> CheckMechnikovCard([Required] string mechnikovCard)
         {
-            return Json(!await _employeeService.CheckMechnikovCard(mechnikovCard));
+            var result = await _employeeService.CheckMechnikovCard(mechnikovCard);
+            if (result.IsValid)
+            {
+                return Json(!result.Result);
+            }
+            return BadRequest(result.ErrorsList);
         }
 
         //------------------------------------------------------------------------------------------------------------------------------------------

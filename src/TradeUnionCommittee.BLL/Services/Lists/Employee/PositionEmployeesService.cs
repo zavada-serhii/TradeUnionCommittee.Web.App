@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using TradeUnionCommittee.BLL.Configurations;
 using TradeUnionCommittee.BLL.DTO.Employee;
+using TradeUnionCommittee.BLL.Helpers;
 using TradeUnionCommittee.BLL.Interfaces.Lists.Employee;
 using TradeUnionCommittee.Common.ActualResults;
 using TradeUnionCommittee.Common.Enums;
@@ -32,12 +33,16 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Employee
             {
                 var id = _hashIdUtilities.DecryptLong(hashIdEmployee);
                 var position = await _context.PositionEmployees.FirstOrDefaultAsync(x => x.IdEmployee == id);
+                if (position == null)
+                {
+                    return new ActualResult<PositionEmployeesDTO>(Errors.TupleDeleted);
+                }
                 var result = _mapperService.Mapper.Map<PositionEmployeesDTO>(position);
                 return new ActualResult<PositionEmployeesDTO> { Result = result };
             }
-            catch (Exception)
+            catch (Exception exception)
             {
-                return new ActualResult<PositionEmployeesDTO>(Errors.DataBaseError);
+                return new ActualResult<PositionEmployeesDTO>(DescriptionExceptionHelper.GetDescriptionError(exception));
             }
         }
 
@@ -54,9 +59,9 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Employee
                 }
                 return validation;
             }
-            catch (Exception)
+            catch (Exception exception)
             {
-                return new ActualResult(Errors.DataBaseError);
+                return new ActualResult(DescriptionExceptionHelper.GetDescriptionError(exception));
             }
         }
 
@@ -84,9 +89,9 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Employee
                 }
                 return new ActualResult(Errors.TupleDeleted);
             }
-            catch (Exception)
+            catch (Exception exception)
             {
-                return new ActualResult(Errors.DataBaseError);
+                return new ActualResult(DescriptionExceptionHelper.GetDescriptionError(exception));
             }
         }
     }

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.Configurations;
 using TradeUnionCommittee.BLL.DTO;
+using TradeUnionCommittee.BLL.Helpers;
 using TradeUnionCommittee.BLL.Interfaces.Directory;
 using TradeUnionCommittee.Common.ActualResults;
 using TradeUnionCommittee.Common.Enums;
@@ -34,9 +35,9 @@ namespace TradeUnionCommittee.BLL.Services.Directory
                 var result = _mapperService.Mapper.Map<IEnumerable<SubdivisionDTO>>(subdivision);
                 return new ActualResult<IEnumerable<SubdivisionDTO>> { Result = result };
             }
-            catch (Exception)
+            catch (Exception exception)
             {
-                return new ActualResult<IEnumerable<SubdivisionDTO>>(Errors.DataBaseError);
+                return new ActualResult<IEnumerable<SubdivisionDTO>>(DescriptionExceptionHelper.GetDescriptionError(exception));
             }
         }
 
@@ -46,12 +47,16 @@ namespace TradeUnionCommittee.BLL.Services.Directory
             {
                 var id = _hashIdUtilities.DecryptLong(hashId);
                 var subdivision = await _context.Subdivisions.FindAsync(id);
+                if (subdivision == null)
+                {
+                    return new ActualResult<SubdivisionDTO>(Errors.TupleDeleted);
+                }
                 var result = _mapperService.Mapper.Map<SubdivisionDTO>(subdivision);
                 return new ActualResult<SubdivisionDTO> { Result = result };
             }
-            catch (Exception)
+            catch (Exception exception)
             {
-                return new ActualResult<SubdivisionDTO>(Errors.DataBaseError);
+                return new ActualResult<SubdivisionDTO>(DescriptionExceptionHelper.GetDescriptionError(exception));
             }
         }
 
@@ -64,9 +69,9 @@ namespace TradeUnionCommittee.BLL.Services.Directory
                 var result = _mapperService.Mapper.Map<IEnumerable<SubdivisionDTO>>(subdivision);
                 return new ActualResult<IEnumerable<SubdivisionDTO>> { Result = result };
             }
-            catch (Exception)
+            catch (Exception exception)
             {
-                return new ActualResult<IEnumerable<SubdivisionDTO>>(Errors.DataBaseError);
+                return new ActualResult<IEnumerable<SubdivisionDTO>>(DescriptionExceptionHelper.GetDescriptionError(exception));
             }
         }
 
@@ -85,7 +90,6 @@ namespace TradeUnionCommittee.BLL.Services.Directory
                                              .Include(x => x.InverseIdSubordinateNavigation)
                                              .OrderBy(x => x.Name)
                                              .ToListAsync();
-
             return subdivisions.Select(subdivision => new TreeSubdivisionsDTO
             {
                 GroupName = subdivision.Name,
@@ -117,17 +121,13 @@ namespace TradeUnionCommittee.BLL.Services.Directory
         {
             try
             {
-                if (!await CheckNameAsync(dto.Name) && !await CheckAbbreviationAsync(dto.Abbreviation))
-                {
-                    await _context.Subdivisions.AddAsync(_mapperService.Mapper.Map<Subdivisions>(dto));
-                    await _context.SaveChangesAsync();
-                    return new ActualResult();
-                }
-                return new ActualResult(Errors.DuplicateData);
+                await _context.Subdivisions.AddAsync(_mapperService.Mapper.Map<Subdivisions>(dto));
+                await _context.SaveChangesAsync();
+                return new ActualResult();
             }
-            catch (Exception)
+            catch (Exception exception)
             {
-                return new ActualResult(Errors.DataBaseError);
+                return new ActualResult(DescriptionExceptionHelper.GetDescriptionError(exception));
             }
         }
 
@@ -135,17 +135,13 @@ namespace TradeUnionCommittee.BLL.Services.Directory
         {
             try
             {
-                if (!await CheckNameAsync(dto.Name) && !await CheckAbbreviationAsync(dto.Abbreviation))
-                {
-                    await _context.Subdivisions.AddAsync(_mapperService.Mapper.Map<Subdivisions>(dto));
-                    await _context.SaveChangesAsync();
-                    return new ActualResult();
-                }
-                return new ActualResult(Errors.DuplicateData);
+                await _context.Subdivisions.AddAsync(_mapperService.Mapper.Map<Subdivisions>(dto));
+                await _context.SaveChangesAsync();
+                return new ActualResult();
             }
-            catch (Exception)
+            catch (Exception exception)
             {
-                return new ActualResult(Errors.DataBaseError);
+                return new ActualResult(DescriptionExceptionHelper.GetDescriptionError(exception));
             }
         }
 
@@ -155,24 +151,16 @@ namespace TradeUnionCommittee.BLL.Services.Directory
         {
             try
             {
-                if (!await CheckNameAsync(dto.Name))
-                {
-                    var mapping = _mapperService.Mapper.Map<Subdivisions>(dto);
-                    _context.Entry(mapping).State = EntityState.Modified;
-                    _context.Entry(mapping).Property(x => x.IdSubordinate).IsModified = false;
-                    _context.Entry(mapping).Property(x => x.Abbreviation).IsModified = false;
-                    await _context.SaveChangesAsync();
-                    return new ActualResult();
-                }
-                return new ActualResult(Errors.DuplicateData);
+                var mapping = _mapperService.Mapper.Map<Subdivisions>(dto);
+                _context.Entry(mapping).State = EntityState.Modified;
+                _context.Entry(mapping).Property(x => x.IdSubordinate).IsModified = false;
+                _context.Entry(mapping).Property(x => x.Abbreviation).IsModified = false;
+                await _context.SaveChangesAsync();
+                return new ActualResult();
             }
-            catch (DbUpdateConcurrencyException)
+            catch (Exception exception)
             {
-                return new ActualResult(Errors.TupleDeletedOrUpdated);
-            }
-            catch (Exception)
-            {
-                return new ActualResult(Errors.DataBaseError);
+                return new ActualResult(DescriptionExceptionHelper.GetDescriptionError(exception));
             }
         }
 
@@ -180,24 +168,16 @@ namespace TradeUnionCommittee.BLL.Services.Directory
         {
             try
             {
-                if (!await CheckNameAsync(dto.Abbreviation))
-                {
-                    var mapping = _mapperService.Mapper.Map<Subdivisions>(dto);
-                    _context.Entry(mapping).State = EntityState.Modified;
-                    _context.Entry(mapping).Property(x => x.IdSubordinate).IsModified = false;
-                    _context.Entry(mapping).Property(x => x.Name).IsModified = false;
-                    await _context.SaveChangesAsync();
-                    return new ActualResult();
-                }
-                return new ActualResult(Errors.DuplicateData);
+                var mapping = _mapperService.Mapper.Map<Subdivisions>(dto);
+                _context.Entry(mapping).State = EntityState.Modified;
+                _context.Entry(mapping).Property(x => x.IdSubordinate).IsModified = false;
+                _context.Entry(mapping).Property(x => x.Name).IsModified = false;
+                await _context.SaveChangesAsync();
+                return new ActualResult();
             }
-            catch (DbUpdateConcurrencyException)
+            catch (Exception exception)
             {
-                return new ActualResult(Errors.TupleDeletedOrUpdated);
-            }
-            catch (Exception)
-            {
-                return new ActualResult(Errors.DataBaseError);
+                return new ActualResult(DescriptionExceptionHelper.GetDescriptionError(exception));
             }
         }
 
@@ -212,13 +192,9 @@ namespace TradeUnionCommittee.BLL.Services.Directory
                 await _context.SaveChangesAsync();
                 return new ActualResult();
             }
-            catch (DbUpdateConcurrencyException)
+            catch (Exception exception)
             {
-                return new ActualResult(Errors.TupleDeletedOrUpdated);
-            }
-            catch (Exception)
-            {
-                return new ActualResult(Errors.DataBaseError);
+                return new ActualResult(DescriptionExceptionHelper.GetDescriptionError(exception));
             }
         }
 
@@ -237,22 +213,10 @@ namespace TradeUnionCommittee.BLL.Services.Directory
                 }
                 return new ActualResult();
             }
-            catch (Exception)
+            catch (Exception exception)
             {
-                return new ActualResult(Errors.DataBaseError);
+                return new ActualResult(DescriptionExceptionHelper.GetDescriptionError(exception));
             }
-        }
-
-        //-------------------------------------------------------------------------------------------------------------------
-
-        public async Task<bool> CheckNameAsync(string name)
-        {
-            return await _context.Subdivisions.AnyAsync(p => p.Name == name);
-        }
-
-        public async Task<bool> CheckAbbreviationAsync(string name)
-        {
-            return await _context.Subdivisions.AnyAsync(p => p.Abbreviation == name);
         }
 
         //-------------------------------------------------------------------------------------------------------------------

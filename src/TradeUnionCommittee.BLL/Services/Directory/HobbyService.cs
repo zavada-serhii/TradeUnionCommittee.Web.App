@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.Configurations;
 using TradeUnionCommittee.BLL.DTO;
+using TradeUnionCommittee.BLL.Helpers;
 using TradeUnionCommittee.BLL.Interfaces.Directory;
 using TradeUnionCommittee.Common.ActualResults;
 using TradeUnionCommittee.Common.Enums;
@@ -34,9 +35,9 @@ namespace TradeUnionCommittee.BLL.Services.Directory
                 var result = _mapperService.Mapper.Map<IEnumerable<DirectoryDTO>>(hobby);
                 return new ActualResult<IEnumerable<DirectoryDTO>> { Result = result };
             }
-            catch (Exception)
+            catch (Exception exception)
             {
-                return new ActualResult<IEnumerable<DirectoryDTO>>(Errors.DataBaseError);
+                return new ActualResult<IEnumerable<DirectoryDTO>>(DescriptionExceptionHelper.GetDescriptionError(exception));
             }
         }
 
@@ -46,12 +47,16 @@ namespace TradeUnionCommittee.BLL.Services.Directory
             {
                 var id = _hashIdUtilities.DecryptLong(hashId);
                 var hobby = await _context.Hobby.FindAsync(id);
+                if (hobby == null)
+                {
+                    return new ActualResult<DirectoryDTO>(Errors.TupleDeleted);
+                }
                 var result = _mapperService.Mapper.Map<DirectoryDTO>(hobby);
                 return new ActualResult<DirectoryDTO> { Result = result };
             }
-            catch (Exception)
+            catch (Exception exception)
             {
-                return new ActualResult<DirectoryDTO>(Errors.DataBaseError);
+                return new ActualResult<DirectoryDTO>(DescriptionExceptionHelper.GetDescriptionError(exception));
             }
         }
 
@@ -59,17 +64,13 @@ namespace TradeUnionCommittee.BLL.Services.Directory
         {
             try
             {
-                if (!await CheckNameAsync(dto.Name))
-                {
-                    await _context.Hobby.AddAsync(_mapperService.Mapper.Map<Hobby>(dto));
-                    await _context.SaveChangesAsync();
-                    return new ActualResult();
-                }
-                return new ActualResult(Errors.DuplicateData);
+                await _context.Hobby.AddAsync(_mapperService.Mapper.Map<Hobby>(dto));
+                await _context.SaveChangesAsync();
+                return new ActualResult();
             }
-            catch (Exception)
+            catch (Exception exception)
             {
-                return new ActualResult(Errors.DataBaseError);
+                return new ActualResult(DescriptionExceptionHelper.GetDescriptionError(exception));
             }
         }
 
@@ -77,21 +78,13 @@ namespace TradeUnionCommittee.BLL.Services.Directory
         {
             try
             {
-                if (!await CheckNameAsync(dto.Name))
-                {
-                    _context.Entry(_mapperService.Mapper.Map<Hobby>(dto)).State = EntityState.Modified;
-                    await _context.SaveChangesAsync();
-                    return new ActualResult();
-                }
-                return new ActualResult(Errors.DuplicateData);
+                _context.Entry(_mapperService.Mapper.Map<Hobby>(dto)).State = EntityState.Modified;
+                await _context.SaveChangesAsync();
+                return new ActualResult();
             }
-            catch (DbUpdateConcurrencyException)
+            catch (Exception exception)
             {
-                return new ActualResult(Errors.TupleDeletedOrUpdated);
-            }
-            catch (Exception)
-            {
-                return new ActualResult(Errors.DataBaseError);
+                return new ActualResult(DescriptionExceptionHelper.GetDescriptionError(exception));
             }
         }
 
@@ -108,15 +101,10 @@ namespace TradeUnionCommittee.BLL.Services.Directory
                 }
                 return new ActualResult();
             }
-            catch (Exception)
+            catch (Exception exception)
             {
-                return new ActualResult(Errors.DataBaseError);
+                return new ActualResult(DescriptionExceptionHelper.GetDescriptionError(exception));
             }
-        }
-
-        public async Task<bool> CheckNameAsync(string name)
-        {
-            return await _context.Hobby.AnyAsync(p => p.Name == name);
         }
 
         public void Dispose()
