@@ -5,7 +5,7 @@ namespace TradeUnionCommittee.DAL.EF
 {
     public sealed class TradeUnionCommitteeContext : DbContext
     {
-        public TradeUnionCommitteeContext(DbContextOptions<TradeUnionCommitteeContext> options) : base(options) { }
+        public TradeUnionCommitteeContext(DbContextOptions<TradeUnionCommitteeContext> options) : base(options) { Database.EnsureCreated(); }
 
         public DbSet<Activities> Activities { get; set; }
         public DbSet<ActivityChildrens> ActivityChildrens { get; set; }
