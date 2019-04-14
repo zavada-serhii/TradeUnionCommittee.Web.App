@@ -25,6 +25,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TradeUnionCommittee.Web.Api
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TradeUnionCommittee.UnitTests", "test\TradeUnionCommittee.UnitTests\TradeUnionCommittee.UnitTests.csproj", "{2B5D5174-B224-48AE-8E5F-D6B76ECFB341}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TradeUnionCommittee.DAL.Identity", "src\TradeUnionCommittee.DAL.Identity\TradeUnionCommittee.DAL.Identity.csproj", "{ABD084B9-A640-408C-9C4A-82CFCC466D79}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -67,6 +69,10 @@ Global
 		{2B5D5174-B224-48AE-8E5F-D6B76ECFB341}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2B5D5174-B224-48AE-8E5F-D6B76ECFB341}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2B5D5174-B224-48AE-8E5F-D6B76ECFB341}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ABD084B9-A640-408C-9C4A-82CFCC466D79}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ABD084B9-A640-408C-9C4A-82CFCC466D79}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ABD084B9-A640-408C-9C4A-82CFCC466D79}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ABD084B9-A640-408C-9C4A-82CFCC466D79}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -81,6 +87,7 @@ Global
 		{5BA33EB6-4503-4B26-B316-D420B24B1AB6} = {03A3EB18-32B0-4C47-874C-8970BC829BCD}
 		{B37BE1CD-9EA4-46A1-8384-82E104A85C7C} = {03A3EB18-32B0-4C47-874C-8970BC829BCD}
 		{2B5D5174-B224-48AE-8E5F-D6B76ECFB341} = {4EC73564-EA43-496E-BBBE-1E7AD4A858FA}
+		{ABD084B9-A640-408C-9C4A-82CFCC466D79} = {03A3EB18-32B0-4C47-874C-8970BC829BCD}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {EC5AC943-9C93-46B6-B905-0EE4F2D6B0DF}

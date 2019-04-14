@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations;
 
-namespace TradeUnionCommittee.DAL.Entities
+namespace TradeUnionCommittee.DAL.Identity.Entities
 {
     public class User : IdentityUser
     {

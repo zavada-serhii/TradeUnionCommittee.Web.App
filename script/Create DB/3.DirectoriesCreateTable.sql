@@ -25,16 +25,14 @@ OWNER TO postgres;
 
 -----------------------------------------------------------------------------------------------------------------------------------------------
 
-CREATE TYPE "TypeEvent" AS ENUM ('Travel', 'Wellness', 'Tour');
-ALTER TYPE "TypeEvent"
-OWNER TO postgres;
-
------------------------------------------------------------------------------------------------------------------------------------------------
+-- 0 - Travel
+-- 1 - Wellness
+-- 2 - Tour
 
 CREATE TABLE "Event" (
 	"Id" 		BIGSERIAL	NOT NULL	PRIMARY KEY,
 	"Name"		VARCHAR		NOT NULL,
-	"Type" 		"TypeEvent" NOT NULL,
+	"Type" 		INT 		NOT NULL,
 	UNIQUE("Name", "Type")
 );
 ALTER TABLE "Event"
@@ -98,10 +96,8 @@ OWNER TO postgres;
 
 -----------------------------------------------------------------------------------------------------------------------------------------------
 
-CREATE TYPE "TypeHouse" AS ENUM ('Dormitory', 'Departmental');
-ALTER TYPE "TypeHouse"
-OWNER TO postgres;
------------------------------------------------------------------------------------------------------------------------------------------------
+-- 0 - Dormitory
+-- 1 - Departmental
 
 CREATE TABLE "AddressPublicHouse"(
 	"Id" 				BIGSERIAL 		NOT NULL 	PRIMARY KEY,
@@ -109,7 +105,7 @@ CREATE TABLE "AddressPublicHouse"(
 	"Street" 			VARCHAR 		NOT NULL,
 	"NumberHouse" 		VARCHAR 		NOT NULL,
 	"NumberDormitory" 	VARCHAR 		NULL,
-	"Type" 				"TypeHouse" 	NOT NULL,
+	"Type" 				INT 			NOT NULL,
 	UNIQUE("City","Street","NumberHouse","Type")
 );
 ALTER TABLE "AddressPublicHouse"

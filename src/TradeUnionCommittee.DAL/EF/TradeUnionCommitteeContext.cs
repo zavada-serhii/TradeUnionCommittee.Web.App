@@ -1,22 +1,17 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore;
-using Npgsql;
-using Npgsql.NameTranslation;
+﻿using Microsoft.EntityFrameworkCore;
 using TradeUnionCommittee.DAL.Entities;
-using TradeUnionCommittee.DAL.Enums;
+using TradeUnionCommittee.DAL.Extensions;
 
 namespace TradeUnionCommittee.DAL.EF
 {
-    public sealed class TradeUnionCommitteeContext : IdentityDbContext<User>
+    public sealed class TradeUnionCommitteeContext : DbContext
     {
-        public TradeUnionCommitteeContext(DbContextOptions options) : base(options) { }
-
-        static TradeUnionCommitteeContext()
+        public TradeUnionCommitteeContext(DbContextOptions<TradeUnionCommitteeContext> options) : base(options)
         {
-            NpgsqlConnection.GlobalTypeMapper.MapEnum<TypeEvent>("TypeEvent", new NpgsqlNullNameTranslator());
-            NpgsqlConnection.GlobalTypeMapper.MapEnum<TypeHouse>("TypeHouse", new NpgsqlNullNameTranslator());
-            NpgsqlConnection.GlobalTypeMapper.MapEnum<Operations>("Operations", new NpgsqlNullNameTranslator());
-            NpgsqlConnection.GlobalTypeMapper.MapEnum<Tables>("Tables", new NpgsqlNullNameTranslator());
+            if (Database.EnsureCreated())
+            {
+                InitializeTrigramIndexAndAudit();
+            }
         }
 
         public DbSet<Activities> Activities { get; set; }
@@ -66,13 +61,6 @@ namespace TradeUnionCommittee.DAL.EF
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder
-                .ForNpgsqlHasEnum("audit", "Operations", new[] { "Select", "Insert", "Update", "Delete" })
-                .ForNpgsqlHasEnum("audit", "Tables", new[] { "Employee", "Children", "GrandChildren", "Family", "Award", "MaterialAid", "Hobby", "Event", "Cultural", "Activities", "Privileges", "SocialActivity", "Position", "Subdivisions", "AddressPublicHouse", "AwardEmployees", "MaterialAidEmployees", "HobbyEmployees", "FluorographyEmployees", "EventEmployees", "CulturalEmployees", "ActivityEmployees", "GiftEmployees", "PrivilegeEmployees", "SocialActivityEmployees", "PositionEmployees", "PublicHouseEmployees", "PrivateHouseEmployees", "ApartmentAccountingEmployees", "EventChildrens", "CulturalChildrens", "HobbyChildrens", "ActivityChildrens", "GiftChildrens", "EventGrandChildrens", "CulturalGrandChildrens", "HobbyGrandChildrens", "ActivityGrandChildrens", "GiftGrandChildrens", "EventFamily", "CulturalFamily", "ActivityFamily" })
-                .ForNpgsqlHasEnum(null, "TypeEvent", new[] { "Travel", "Wellness", "Tour" })
-                .ForNpgsqlHasEnum(null, "TypeHouse", new[] { "Dormitory", "Departmental" })
-                .HasPostgresExtension("pg_trgm");
-
             modelBuilder.Entity<Activities>(entity =>
             {
                 entity.HasIndex(e => e.Name)
@@ -166,6 +154,10 @@ namespace TradeUnionCommittee.DAL.EF
 
             modelBuilder.Entity<AddressPublicHouse>(entity =>
             {
+                entity.HasIndex(e => new { e.City, e.Street, e.NumberHouse, e.Type })
+                    .HasName("AddressPublicHouse_City_Street_NumberHouse_Type_key")
+                    .IsUnique();
+
                 entity.Property(e => e.City)
                     .IsRequired()
                     .HasColumnType("character varying");
@@ -430,6 +422,10 @@ namespace TradeUnionCommittee.DAL.EF
 
             modelBuilder.Entity<Event>(entity =>
             {
+                entity.HasIndex(e => new { e.Name, e.Type })
+                    .HasName("Event_Name_Type_key")
+                    .IsUnique();
+
                 entity.Property(e => e.Name)
                     .IsRequired()
                     .HasColumnType("character varying");
@@ -941,6 +937,17 @@ namespace TradeUnionCommittee.DAL.EF
             });
 
             base.OnModelCreating(modelBuilder);
+        }
+
+        private void InitializeTrigramIndexAndAudit()
+        {
+            const string sql = "CREATE EXTENSION \"pg_trgm\" SCHEMA public VERSION \"1.3\"; CREATE FUNCTION public.\"TrigramFullName\"(p public.\"Employee\") RETURNS TEXT LANGUAGE plpgsql IMMUTABLE AS $$ BEGIN RETURN lower(trim(coalesce(p.\"FirstName\",\'\') || \' \' ||coalesce(p.\"SecondName\",\'\') || \' \' ||coalesce(p.\"Patronymic\",\'\'))); EXCEPTION WHEN others THEN RAISE EXCEPTION \'%\', sqlerrm; END; $$; ALTER FUNCTION public.\"TrigramFullName\"(p public.\"Employee\") OWNER TO postgres; CREATE INDEX info_gist_idx ON public.\"Employee\" USING gist(public.\"TrigramFullName\"(\"Employee\") gist_trgm_ops); CREATE INDEX info_trgm_idx ON public.\"Employee\" USING gin(public.\"TrigramFullName\"(\"Employee\") gin_trgm_ops); " +
+                               "CREATE SCHEMA audit AUTHORIZATION postgres; CREATE TYPE audit.\"Operations\" AS ENUM(\'Select\', \'Insert\', \'Update\', \'Delete\'); ALTER TYPE audit.\"Operations\" OWNER TO postgres; CREATE TYPE audit.\"Tables\" AS ENUM ( \'Employee\', \'Children\', \'GrandChildren\', \'Family\', \'Award\', \'MaterialAid\', \'Hobby\', \'Event\', \'Cultural\', \'Activities\', \'Privileges\', \'SocialActivity\', \'Position\', \'Subdivisions\', \'AddressPublicHouse\', \'AwardEmployees\', \'MaterialAidEmployees\', \'HobbyEmployees\', \'FluorographyEmployees\', \'EventEmployees\', \'CulturalEmployees\', \'ActivityEmployees\', \'GiftEmployees\', \'PrivilegeEmployees\', \'SocialActivityEmployees\', \'PositionEmployees\', \'PublicHouseEmployees\', \'PrivateHouseEmployees\', \'ApartmentAccountingEmployees\', \'EventChildrens\', \'CulturalChildrens\', \'HobbyChildrens\', \'ActivityChildrens\', \'GiftChildrens\', \'EventGrandChildrens\', \'CulturalGrandChildrens\', \'HobbyGrandChildrens\', \'ActivityGrandChildrens\', \'GiftGrandChildrens\', \'EventFamily\', \'CulturalFamily\', \'ActivityFamily\'); ALTER TYPE audit.\"Tables\" OWNER TO postgres; CREATE TABLE audit.\"Journal\" ( \"Guid\" VARCHAR(36) NOT NULL PRIMARY KEY, \"Operation\" audit.\"Operations\" NOT NULL, \"IpUser\" CIDR NOT NULL, \"DateTime\" TimeStamp NOT NULL, \"EmailUser\" VARCHAR(256) NOT NULL, \"Table\" audit.\"Tables\" NOT NULL ); ALTER TABLE audit.\"Journal\" OWNER TO postgres; CREATE OR REPLACE FUNCTION audit.journal_insert_trigger() RETURNS trigger AS $BODY$ DECLARE table_master varchar(255) := \'journal\'; table_part varchar(255) := \'\'; BEGIN table_part := table_master || \'_y\' || date_part( \'year\', NEW.\"DateTime\" )::text || \'_m\' || date_part( \'month\', NEW.\"DateTime\" )::text; PERFORM 1 FROM pg_class WHERE relname = table_part LIMIT 1; IF NOT FOUND THEN EXECUTE \'CREATE TABLE \' || \'audit.\' || table_part || \'() INHERITS ( \' || \'audit.\' || \'\"\' || \'Journal\' || \'\"\' || \' ) WITH ( OIDS=FALSE ); ALTER TABLE \' || \'audit.\' || table_part || \' OWNER TO postgres;\'; EXECUTE \'CREATE INDEX \' || table_part || \'_journal_date_index ON \' || \'audit.\' || table_part || \' USING btree (\"Guid\", \"DateTime\", \"EmailUser\")\'; END IF; EXECUTE \'INSERT INTO \' || \'audit.\' || table_part || \' SELECT ( (\' || quote_literal(NEW) || \')::\' || \'audit.\"Journal\"\' || \' ).*\'; RETURN NULL; END; $BODY$ LANGUAGE plpgsql VOLATILE COST 100; ALTER FUNCTION audit.journal_insert_trigger() OWNER TO postgres; CREATE TRIGGER journal_insert_trigger BEFORE INSERT ON audit.\"Journal\" FOR EACH ROW EXECUTE PROCEDURE audit.journal_insert_trigger();";
+
+            using (var dr = Database.ExecuteSqlQuery(sql))
+            {
+                dr.DbDataReader.Close();
+            }
         }
     }
 }

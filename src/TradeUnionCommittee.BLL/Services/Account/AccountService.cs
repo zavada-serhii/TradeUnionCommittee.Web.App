@@ -10,7 +10,7 @@ using TradeUnionCommittee.BLL.Helpers;
 using TradeUnionCommittee.BLL.Interfaces.Account;
 using TradeUnionCommittee.Common.ActualResults;
 using TradeUnionCommittee.Common.Enums;
-using TradeUnionCommittee.DAL.Entities;
+using TradeUnionCommittee.DAL.Identity.Entities;
 
 namespace TradeUnionCommittee.BLL.Services.Account
 {
