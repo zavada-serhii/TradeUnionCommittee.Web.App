@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Npgsql;
 using Npgsql.NameTranslation;
 using TradeUnionCommittee.DAL.Entities;
@@ -7,16 +6,14 @@ using TradeUnionCommittee.DAL.Enums;
 
 namespace TradeUnionCommittee.DAL.EF
 {
-    public sealed class TradeUnionCommitteeContext : IdentityDbContext<User>
+    public sealed class TradeUnionCommitteeContext : DbContext
     {
-        public TradeUnionCommitteeContext(DbContextOptions options) : base(options) { }
+        public TradeUnionCommitteeContext(DbContextOptions<TradeUnionCommitteeContext> options) : base(options) { }
 
         static TradeUnionCommitteeContext()
         {
             NpgsqlConnection.GlobalTypeMapper.MapEnum<TypeEvent>("TypeEvent", new NpgsqlNullNameTranslator());
             NpgsqlConnection.GlobalTypeMapper.MapEnum<TypeHouse>("TypeHouse", new NpgsqlNullNameTranslator());
-            NpgsqlConnection.GlobalTypeMapper.MapEnum<Operations>("Operations", new NpgsqlNullNameTranslator());
-            NpgsqlConnection.GlobalTypeMapper.MapEnum<Tables>("Tables", new NpgsqlNullNameTranslator());
         }
 
         public DbSet<Activities> Activities { get; set; }
@@ -67,8 +64,6 @@ namespace TradeUnionCommittee.DAL.EF
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder
-                .ForNpgsqlHasEnum("audit", "Operations", new[] { "Select", "Insert", "Update", "Delete" })
-                .ForNpgsqlHasEnum("audit", "Tables", new[] { "Employee", "Children", "GrandChildren", "Family", "Award", "MaterialAid", "Hobby", "Event", "Cultural", "Activities", "Privileges", "SocialActivity", "Position", "Subdivisions", "AddressPublicHouse", "AwardEmployees", "MaterialAidEmployees", "HobbyEmployees", "FluorographyEmployees", "EventEmployees", "CulturalEmployees", "ActivityEmployees", "GiftEmployees", "PrivilegeEmployees", "SocialActivityEmployees", "PositionEmployees", "PublicHouseEmployees", "PrivateHouseEmployees", "ApartmentAccountingEmployees", "EventChildrens", "CulturalChildrens", "HobbyChildrens", "ActivityChildrens", "GiftChildrens", "EventGrandChildrens", "CulturalGrandChildrens", "HobbyGrandChildrens", "ActivityGrandChildrens", "GiftGrandChildrens", "EventFamily", "CulturalFamily", "ActivityFamily" })
                 .ForNpgsqlHasEnum(null, "TypeEvent", new[] { "Travel", "Wellness", "Tour" })
                 .ForNpgsqlHasEnum(null, "TypeHouse", new[] { "Dormitory", "Departmental" })
                 .HasPostgresExtension("pg_trgm");

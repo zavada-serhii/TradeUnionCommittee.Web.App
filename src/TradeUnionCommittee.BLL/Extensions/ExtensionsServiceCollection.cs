@@ -23,6 +23,7 @@ using TradeUnionCommittee.BLL.Services.PDF;
 using TradeUnionCommittee.BLL.Services.Search;
 using TradeUnionCommittee.BLL.Services.SystemAudit;
 using TradeUnionCommittee.DAL.Extensions;
+using TradeUnionCommittee.DAL.Identity.Extensions;
 
 namespace TradeUnionCommittee.BLL.Extensions
 {
@@ -33,6 +34,7 @@ namespace TradeUnionCommittee.BLL.Extensions
             // Injection UnitOfWork, HashIdConfiguration, AutoMapperConfiguration
 
             services.AddDbContext(connectionString);
+            services.AddIdentityContext("Host=localhost;Database=TradeUnionCommitteeIdentity;Port=5432;Username=postgres;Password=postgres;");
             services.AddSingleton(x => new HashIdConfiguration(setting));
             services.AddSingleton<AutoMapperConfiguration>();
 
