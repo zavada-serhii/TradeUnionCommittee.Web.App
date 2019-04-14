@@ -1,20 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Npgsql;
-using Npgsql.NameTranslation;
 using TradeUnionCommittee.DAL.Entities;
-using TradeUnionCommittee.DAL.Enums;
 
 namespace TradeUnionCommittee.DAL.EF
 {
     public sealed class TradeUnionCommitteeContext : DbContext
     {
         public TradeUnionCommitteeContext(DbContextOptions<TradeUnionCommitteeContext> options) : base(options) { }
-
-        static TradeUnionCommitteeContext()
-        {
-            NpgsqlConnection.GlobalTypeMapper.MapEnum<TypeEvent>("TypeEvent", new NpgsqlNullNameTranslator());
-            NpgsqlConnection.GlobalTypeMapper.MapEnum<TypeHouse>("TypeHouse", new NpgsqlNullNameTranslator());
-        }
 
         public DbSet<Activities> Activities { get; set; }
         public DbSet<ActivityChildrens> ActivityChildrens { get; set; }
@@ -63,11 +54,6 @@ namespace TradeUnionCommittee.DAL.EF
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder
-                .ForNpgsqlHasEnum(null, "TypeEvent", new[] { "Travel", "Wellness", "Tour" })
-                .ForNpgsqlHasEnum(null, "TypeHouse", new[] { "Dormitory", "Departmental" })
-                .HasPostgresExtension("pg_trgm");
-
             modelBuilder.Entity<Activities>(entity =>
             {
                 entity.HasIndex(e => e.Name)
