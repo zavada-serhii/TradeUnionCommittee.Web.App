@@ -2,7 +2,7 @@
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using System;
 
-namespace TradeUnionCommittee.DAL.Migrations
+namespace TradeUnionCommittee.DAL.Identity.Migrations
 {
     public partial class Initial : Migration
     {

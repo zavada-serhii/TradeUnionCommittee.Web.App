@@ -23,16 +23,18 @@ using TradeUnionCommittee.BLL.Services.PDF;
 using TradeUnionCommittee.BLL.Services.Search;
 using TradeUnionCommittee.BLL.Services.SystemAudit;
 using TradeUnionCommittee.DAL.Extensions;
+using TradeUnionCommittee.DAL.Identity.Extensions;
 
 namespace TradeUnionCommittee.BLL.Extensions
 {
     public static class ExtensionsServiceCollection
     {
-        public static IServiceCollection AddTradeUnionCommitteeServiceModule(this IServiceCollection services, string connectionString, HashIdConfigurationSetting setting)
+        public static IServiceCollection AddTradeUnionCommitteeServiceModule(this IServiceCollection services, string connectionString, string identityConnectionString, HashIdConfigurationSetting setting)
         {
-            // Injection UnitOfWork, HashIdConfiguration, AutoMapperConfiguration
+            // Injection Context, IdentityContext, HashIdConfiguration, AutoMapperConfiguration
 
             services.AddDbContext(connectionString);
+            services.AddIdentityContext(identityConnectionString);
             services.AddSingleton(x => new HashIdConfiguration(setting));
             services.AddSingleton<AutoMapperConfiguration>();
 
