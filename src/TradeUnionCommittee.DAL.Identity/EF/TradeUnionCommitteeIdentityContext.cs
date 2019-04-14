@@ -6,6 +6,6 @@ namespace TradeUnionCommittee.DAL.Identity.EF
 {
     public sealed class TradeUnionCommitteeIdentityContext : IdentityDbContext<User>
     {
-        public TradeUnionCommitteeIdentityContext(DbContextOptions options) : base(options) { }
+        public TradeUnionCommitteeIdentityContext(DbContextOptions<TradeUnionCommitteeIdentityContext> options) : base(options) { }
     }
 }

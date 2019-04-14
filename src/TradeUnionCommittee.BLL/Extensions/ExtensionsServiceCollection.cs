@@ -29,12 +29,12 @@ namespace TradeUnionCommittee.BLL.Extensions
 {
     public static class ExtensionsServiceCollection
     {
-        public static IServiceCollection AddTradeUnionCommitteeServiceModule(this IServiceCollection services, string connectionString, HashIdConfigurationSetting setting)
+        public static IServiceCollection AddTradeUnionCommitteeServiceModule(this IServiceCollection services, string connectionString, string identityConnectionString, HashIdConfigurationSetting setting)
         {
-            // Injection UnitOfWork, HashIdConfiguration, AutoMapperConfiguration
+            // Injection Context, IdentityContext, HashIdConfiguration, AutoMapperConfiguration
 
             services.AddDbContext(connectionString);
-            services.AddIdentityContext("Host=localhost;Database=TradeUnionCommitteeIdentity;Port=5432;Username=postgres;Password=postgres;");
+            services.AddIdentityContext(identityConnectionString);
             services.AddSingleton(x => new HashIdConfiguration(setting));
             services.AddSingleton<AutoMapperConfiguration>();
 
