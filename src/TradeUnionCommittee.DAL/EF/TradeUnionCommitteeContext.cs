@@ -147,6 +147,10 @@ namespace TradeUnionCommittee.DAL.EF
 
             modelBuilder.Entity<AddressPublicHouse>(entity =>
             {
+                entity.HasIndex(e => new { e.City, e.Street, e.NumberHouse, e.Type })
+                    .HasName("AddressPublicHouse_City_Street_NumberHouse_Type_key")
+                    .IsUnique();
+
                 entity.Property(e => e.City)
                     .IsRequired()
                     .HasColumnType("character varying");
@@ -411,6 +415,10 @@ namespace TradeUnionCommittee.DAL.EF
 
             modelBuilder.Entity<Event>(entity =>
             {
+                entity.HasIndex(e => new { e.Name, e.Type })
+                    .HasName("Event_Name_Type_key")
+                    .IsUnique();
+
                 entity.Property(e => e.Name)
                     .IsRequired()
                     .HasColumnType("character varying");
