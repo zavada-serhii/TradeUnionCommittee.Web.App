@@ -67,18 +67,20 @@ namespace TradeUnionCommittee.DAL.Repository
             var par3 = new NpgsqlParameter("@3", endDate);
 
             var result = new List<Journal>();
-
             using (var dr = await _dbContext.Database.ExecuteSqlQueryAsync(SqlGenerator(namesPartitions.ToList()), default(CancellationToken), par1, par2, par3))
             {
                 var reader = dr.DbDataReader;
-                result.AddRange(from DbDataRecord dbDataRecord in reader select new Journal
+                if (reader.HasRows)
                 {
-                   Guid = (string)dbDataRecord["Guid"],
-                   Operation = (Operations)dbDataRecord["Operation"],
-                   DateTime = (DateTime)dbDataRecord["DateTime"],
-                   EmailUser = (string)dbDataRecord["EmailUser"],
-                   Table = (Tables)dbDataRecord["Table"]
-                });
+                    result.AddRange(from DbDataRecord dbDataRecord in reader select new Journal
+                    {
+                        Guid = dbDataRecord["Guid"].ToString(),
+                        Operation = (Operations)Enum.Parse(typeof(Operations), dbDataRecord["Operation"].ToString()),
+                        DateTime = (DateTime)dbDataRecord["DateTime"],
+                        EmailUser = dbDataRecord["EmailUser"].ToString(),
+                        Table = (Tables)Enum.Parse(typeof(Tables), dbDataRecord["Table"].ToString())
+                    });
+                }
                 dr.DbDataReader.Close();
             }
             return result;
@@ -94,16 +96,16 @@ namespace TradeUnionCommittee.DAL.Repository
                 {
                     if (i != list.Count - 1)
                     {
-                        result += $"SELECT * FROM audit.{list[i]} WHERE \"EmailUser\" = @1 AND \"DateTime\" BETWEEN @2 AND @3 UNION ALL ";
+                        result += $"SELECT \"Guid\",\"Operation\",\"DateTime\",\"EmailUser\",\"Table\" FROM audit.{list[i]} WHERE \"EmailUser\" = @1 AND \"DateTime\" BETWEEN @2 AND @3 UNION ALL ";
                     }
                     else
                     {
-                        result += $"SELECT * FROM audit.{list[i]} WHERE \"EmailUser\" = @1 AND \"DateTime\" BETWEEN @2 AND @3";
+                        result += $"SELECT \"Guid\",\"Operation\",\"DateTime\",\"EmailUser\",\"Table\" FROM audit.{list[i]} WHERE \"EmailUser\" = @1 AND \"DateTime\" BETWEEN @2 AND @3";
                     }
                 }
                 return result;
             }
-            return $"SELECT * FROM audit.{list[0]} WHERE \"EmailUser\" = @1 AND \"DateTime\" BETWEEN @2 AND @3";
+            return $"SELECT \"Guid\",\"Operation\",\"DateTime\",\"EmailUser\",\"Table\" FROM audit.{list[0]} WHERE \"EmailUser\" = @1 AND \"DateTime\" BETWEEN @2 AND @3";
         }
 
         public void Dispose()
