@@ -1,7 +1,7 @@
 ﻿using System;
-using TradeUnionCommittee.DAL.Enums;
+using TradeUnionCommittee.DAL.Audit.Enums;
 
-namespace TradeUnionCommittee.DAL.Entities
+namespace TradeUnionCommittee.DAL.Audit.Entities
 {
     public class Journal
     {
