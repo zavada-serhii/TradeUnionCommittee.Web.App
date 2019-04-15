@@ -1,4 +1,4 @@
-﻿namespace TradeUnionCommittee.DAL.Enums
+﻿namespace TradeUnionCommittee.DAL.Audit.Enums
 {
     public enum Tables
     {

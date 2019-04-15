@@ -22,6 +22,7 @@ using TradeUnionCommittee.BLL.Services.Lists.GrandChildren;
 using TradeUnionCommittee.BLL.Services.PDF;
 using TradeUnionCommittee.BLL.Services.Search;
 using TradeUnionCommittee.BLL.Services.SystemAudit;
+using TradeUnionCommittee.DAL.Audit.Extensions;
 using TradeUnionCommittee.DAL.Extensions;
 using TradeUnionCommittee.DAL.Identity.Extensions;
 
@@ -29,12 +30,13 @@ namespace TradeUnionCommittee.BLL.Extensions
 {
     public static class ExtensionsServiceCollection
     {
-        public static IServiceCollection AddTradeUnionCommitteeServiceModule(this IServiceCollection services, string connectionString, string identityConnectionString, HashIdConfigurationSetting setting)
+        public static IServiceCollection AddTradeUnionCommitteeServiceModule(this IServiceCollection services, string connectionString, string identityConnectionString, string auditConnectionString, HashIdConfigurationSetting setting)
         {
             // Injection Context, IdentityContext, HashIdConfiguration, AutoMapperConfiguration
 
             services.AddDbContext(connectionString);
             services.AddIdentityContext(identityConnectionString);
+            services.AddAuditDbContext(auditConnectionString);
             services.AddSingleton(x => new HashIdConfiguration(setting));
             services.AddSingleton<AutoMapperConfiguration>();
 

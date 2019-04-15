@@ -71,9 +71,14 @@ namespace TradeUnionCommittee.Mvc.Web.GUI
                 ? Configuration.GetConnectionString("IdentityConnectionSSL")
                 : Configuration.GetConnectionString("IdentityConnection");
 
+            var auditConnectionString = Convert.ToBoolean(Configuration.GetConnectionString("UseSSL"))
+                ? Configuration.GetConnectionString("AuditConnectionSSL")
+                : Configuration.GetConnectionString("AuditConnection");
+
             services
                 .AddTradeUnionCommitteeServiceModule(connectionString,
                     identityConnectionString,
+                    auditConnectionString,
                     Configuration.GetSection("HashIdConfigurationSetting").Get<HashIdConfigurationSetting>())
                 .AddTradeUnionCommitteeViewModelsModule()
                 .AddResponseCompression()

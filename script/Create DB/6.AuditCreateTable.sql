@@ -1,12 +1,8 @@
 
-CREATE SCHEMA audit AUTHORIZATION postgres;
+CREATE TYPE "Operations" AS ENUM ('Select', 'Insert', 'Update', 'Delete');
+ALTER TYPE "Operations" OWNER TO postgres;
 
------------------------------------------------------------------
-
-CREATE TYPE audit."Operations" AS ENUM ('Select', 'Insert', 'Update', 'Delete');
-ALTER TYPE audit."Operations" OWNER TO postgres;
-
-CREATE TYPE audit."Tables" AS ENUM 
+CREATE TYPE "Tables" AS ENUM 
 (
     'Employee',
     'Children',
@@ -51,25 +47,25 @@ CREATE TYPE audit."Tables" AS ENUM
     'CulturalFamily',
     'ActivityFamily'
 );
-ALTER TYPE audit."Tables" OWNER TO postgres;
+ALTER TYPE "Tables" OWNER TO postgres;
 
 -----------------------------------------------------------------
 
-CREATE TABLE audit."Journal" 
+CREATE TABLE "Journal" 
 (
- "Guid"               VARCHAR(36)             NOT NULL  PRIMARY KEY,
- "Operation"          audit."Operations"      NOT NULL,
- "IpUser"			  CIDR 					  NOT NULL,
- "DateTime"           TimeStamp               NOT NULL,
- "EmailUser"          VARCHAR(256)            NOT NULL,
- "Table"              audit."Tables"          NOT NULL
+ "Guid"               VARCHAR(36)       NOT NULL  PRIMARY KEY,
+ "Operation"          "Operations"      NOT NULL,
+ "IpUser"			  CIDR 			    NOT NULL,
+ "DateTime"           TimeStamp         NOT NULL,
+ "EmailUser"          VARCHAR(256)      NOT NULL,
+ "Table"              "Tables"          NOT NULL
 );
-ALTER TABLE audit."Journal" 
+ALTER TABLE "Journal" 
 OWNER TO postgres;
 
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-CREATE OR REPLACE FUNCTION audit.journal_insert_trigger()
+CREATE OR REPLACE FUNCTION journal_insert_trigger()
     RETURNS trigger AS
 $BODY$
 DECLARE
@@ -87,28 +83,28 @@ BEGIN
     IF NOT FOUND
     THEN
     -- Create a partition, inheriting the master table --------------------------
-        EXECUTE 'CREATE TABLE ' || 'audit.' || table_part || '()
-                INHERITS ( ' || 'audit.' || '"' || 'Journal' || '"' || ' )
+        EXECUTE 'CREATE TABLE ' || table_part || '()
+                INHERITS ( ' || '"' || 'Journal' || '"' || ' )
                 WITH ( OIDS=FALSE );
-                ALTER TABLE ' || 'audit.' || table_part || ' OWNER TO postgres;';
+                ALTER TABLE ' || table_part || ' OWNER TO postgres;';
 
     -- Create indexes for the current partition. -------------------------------
-        EXECUTE  'CREATE INDEX ' || table_part || '_journal_date_index ON ' || 'audit.' || table_part || ' USING btree ("Guid", "DateTime", "EmailUser")';  
+        EXECUTE  'CREATE INDEX ' || table_part || '_journal_date_index ON ' || table_part || ' USING btree ("Guid", "DateTime", "EmailUser")';  
     END IF;
 
     -- Insert the data into the partition --------------------------------------------
-        EXECUTE 'INSERT INTO ' || 'audit.' || table_part || ' SELECT ( (' || quote_literal(NEW) || ')::' || 'audit."Journal"' || ' ).*';
+        EXECUTE 'INSERT INTO ' || table_part || ' SELECT ( (' || quote_literal(NEW) || ')::' || '"Journal"' || ' ).*';
 
     RETURN NULL;
 END;
 $BODY$
 LANGUAGE plpgsql VOLATILE
 COST 100;
-ALTER FUNCTION audit.journal_insert_trigger()
+ALTER FUNCTION journal_insert_trigger()
 OWNER TO postgres; 
 
 CREATE TRIGGER journal_insert_trigger
 BEFORE INSERT
-ON audit."Journal"
+ON "Journal"
 FOR EACH ROW
-EXECUTE PROCEDURE audit.journal_insert_trigger();
+EXECUTE PROCEDURE journal_insert_trigger();

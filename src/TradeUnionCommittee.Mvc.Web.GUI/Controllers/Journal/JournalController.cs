@@ -19,6 +19,8 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Journal
             _systemAuditService = systemAuditService;
         }
 
+        [HttpGet]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Index()
         {
             ViewBag.Emails = await _directories.GetEmails();
