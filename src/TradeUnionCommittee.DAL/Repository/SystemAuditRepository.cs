@@ -54,7 +54,7 @@ namespace TradeUnionCommittee.DAL.Repository
             using (var dr = await _dbContext.Database.ExecuteSqlQueryAsync(sqlQuery))
             {
                 var reader = dr.DbDataReader;
-                result.AddRange(from DbDataRecord dbDataRecord in reader select (string)dbDataRecord["tablename"]);
+                result.AddRange(from DbDataRecord dbDataRecord in reader select dbDataRecord["tablename"].ToString());
                 dr.DbDataReader.Close();
             }
             return result;
