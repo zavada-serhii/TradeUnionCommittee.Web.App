@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.Common;
 using System.Linq;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using TradeUnionCommittee.DAL.Audit.EF;
@@ -15,11 +16,10 @@ namespace TradeUnionCommittee.DAL.Audit.Repository
     public interface ISystemAuditRepository : IDisposable
     {
         Task AuditAsync(Journal journal);
-        Task<IEnumerable<string>> GetExistingPartitionInDbAsync();
-        Task<IEnumerable<Journal>> FilterAsync(IEnumerable<string> namesPartitions, string email, DateTime startDate, DateTime endDate);
+        Task<IEnumerable<Journal>> FilterAsync(string email, DateTime startDate, DateTime endDate);
     }
 
-    public class SystemAuditRepository : ISystemAuditRepository
+    internal class SystemAuditRepository : ISystemAuditRepository
     {
         private readonly TradeUnionCommitteeAuditContext _dbContext;
 
@@ -45,7 +45,40 @@ namespace TradeUnionCommittee.DAL.Audit.Repository
             }
         }
 
-        public async Task<IEnumerable<string>> GetExistingPartitionInDbAsync()
+        public async Task<IEnumerable<Journal>> FilterAsync(string email, DateTime startDate, DateTime endDate)
+        {
+            var result = new List<Journal>();
+            var existingPartitionInDb = await GetExistingPartitionInDbAsync();
+            var sequenceDate = startDate.Date.GetListPartitionings(endDate.Date);
+            var namesPartitions = sequenceDate.Intersect(existingPartitionInDb).ToList();
+
+            if (namesPartitions.Any())
+            {
+                var par1 = new NpgsqlParameter("@1", email);
+                var par2 = new NpgsqlParameter("@2", startDate);
+                var par3 = new NpgsqlParameter("@3", endDate);
+
+                using (var dr = await _dbContext.Database.ExecuteSqlQueryAsync(SqlGenerator(namesPartitions), default(CancellationToken), par1, par2, par3))
+                {
+                    var reader = dr.DbDataReader;
+                    if (reader.HasRows)
+                    {
+                        result.AddRange(from DbDataRecord dbDataRecord in reader select new Journal
+                        {
+                            Guid = dbDataRecord["Guid"].ToString(),
+                            Operation = (Operations)Enum.Parse(typeof(Operations), dbDataRecord["Operation"].ToString()),
+                            DateTime = (DateTime)dbDataRecord["DateTime"],
+                            EmailUser = dbDataRecord["EmailUser"].ToString(),
+                            Table = (Tables)Enum.Parse(typeof(Tables), dbDataRecord["Table"].ToString())
+                        });
+                    }
+                    dr.DbDataReader.Close();
+                }
+            }
+            return result;
+        }
+
+        private async Task<IEnumerable<string>> GetExistingPartitionInDbAsync()
         {
             const string sqlQuery = "SELECT tablename FROM pg_tables WHERE schemaname = \'public\' AND tablename != \'Journal\';";
             var result = new List<string>();
@@ -58,52 +91,29 @@ namespace TradeUnionCommittee.DAL.Audit.Repository
             return result;
         }
 
-        public async Task<IEnumerable<Journal>> FilterAsync(IEnumerable<string> namesPartitions, string email, DateTime startDate, DateTime endDate)
-        {
-            var par1 = new NpgsqlParameter("@1", email);
-            var par2 = new NpgsqlParameter("@2", startDate);
-            var par3 = new NpgsqlParameter("@3", endDate);
-
-            var result = new List<Journal>();
-            using (var dr = await _dbContext.Database.ExecuteSqlQueryAsync(SqlGenerator(namesPartitions.ToList()), default(CancellationToken), par1, par2, par3))
-            {
-                var reader = dr.DbDataReader;
-                if (reader.HasRows)
-                {
-                    result.AddRange(from DbDataRecord dbDataRecord in reader select new Journal
-                    {
-                        Guid = dbDataRecord["Guid"].ToString(),
-                        Operation = (Operations)Enum.Parse(typeof(Operations), dbDataRecord["Operation"].ToString()),
-                        DateTime = (DateTime)dbDataRecord["DateTime"],
-                        EmailUser = dbDataRecord["EmailUser"].ToString(),
-                        Table = (Tables)Enum.Parse(typeof(Tables), dbDataRecord["Table"].ToString())
-                    });
-                }
-                dr.DbDataReader.Close();
-            }
-            return result;
-        }
-
         private string SqlGenerator(IReadOnlyList<string> list)
         {
             if (list.Count > 1)
             {
-                var result = string.Empty;
-
+                var builder = new StringBuilder();
                 for (var i = 0; i < list.Count; i++)
                 {
                     if (i != list.Count - 1)
                     {
-                        result += $"SELECT \"Guid\",\"Operation\",\"DateTime\",\"EmailUser\",\"Table\" FROM {list[i]} WHERE \"EmailUser\" = @1 AND \"DateTime\" BETWEEN @2 AND @3 UNION ALL ";
+                        builder.Append("SELECT \"Guid\", CAST(\"Operation\" AS VARCHAR),\"DateTime\",\"EmailUser\",CAST(\"Table\" AS VARCHAR) FROM ");
+                        builder.Append(list[i]);
+                        builder.Append(" WHERE \"EmailUser\" = @1 AND \"DateTime\" BETWEEN @2 AND @3 UNION ALL ");
                     }
                     else
                     {
-                        result += $"SELECT \"Guid\",\"Operation\",\"DateTime\",\"EmailUser\",\"Table\" FROM {list[i]} WHERE \"EmailUser\" = @1 AND \"DateTime\" BETWEEN @2 AND @3";
+                        builder.Append("SELECT \"Guid\", CAST(\"Operation\" AS VARCHAR),\"DateTime\",\"EmailUser\",CAST(\"Table\" AS VARCHAR) FROM ");
+                        builder.Append(list[i]);
+                        builder.Append(" WHERE \"EmailUser\" = @1 AND \"DateTime\" BETWEEN @2 AND @3");
                     }
                 }
-                return result;
+                return builder.ToString();
             }
-            return $"SELECT \"Guid\",\"Operation\",\"DateTime\",\"EmailUser\",\"Table\" FROM {list[0]} WHERE \"EmailUser\" = @1 AND \"DateTime\" BETWEEN @2 AND @3";
+            return $"SELECT \"Guid\", CAST(\"Operation\" AS VARCHAR),\"DateTime\",\"EmailUser\",CAST(\"Table\" AS VARCHAR) FROM {list[0]} WHERE \"EmailUser\" = @1 AND \"DateTime\" BETWEEN @2 AND @3";
         }
 
         public void Dispose()

@@ -3,7 +3,7 @@ using TradeUnionCommittee.DAL.Audit.Extensions;
 
 namespace TradeUnionCommittee.DAL.Audit.EF
 {
-    public sealed class TradeUnionCommitteeAuditContext : DbContext
+    internal sealed class TradeUnionCommitteeAuditContext : DbContext
     {
         public TradeUnionCommitteeAuditContext(DbContextOptions<TradeUnionCommitteeAuditContext> options) : base(options)
         {

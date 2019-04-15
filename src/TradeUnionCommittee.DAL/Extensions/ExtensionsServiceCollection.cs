@@ -11,7 +11,6 @@ namespace TradeUnionCommittee.DAL.Extensions
         {
             services.AddDbContext<TradeUnionCommitteeContext>(options => options.UseNpgsql(connectionString));
             services.AddTransient<ITrigramSearchRepository, TrigramSearchRepository>();
-            services.AddTransient<ISystemAuditRepository, SystemAuditRepository>();
             return services;
         }
     }

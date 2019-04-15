@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.DTO;
-using TradeUnionCommittee.BLL.Extensions;
+using TradeUnionCommittee.BLL.Helpers;
 using TradeUnionCommittee.BLL.Interfaces.SystemAudit;
 using TradeUnionCommittee.Common.ActualResults;
-using TradeUnionCommittee.DAL.Entities;
-using TradeUnionCommittee.DAL.Enums;
-using TradeUnionCommittee.DAL.Repository;
+using TradeUnionCommittee.DAL.Audit.Entities;
+using TradeUnionCommittee.DAL.Audit.Enums;
+using TradeUnionCommittee.DAL.Audit.Repository;
 
 namespace TradeUnionCommittee.BLL.Services.SystemAudit
 {
@@ -22,26 +22,36 @@ namespace TradeUnionCommittee.BLL.Services.SystemAudit
 
         public async Task AuditAsync(string email, string ipUser, Enums.Operations operation, Enums.Tables table)
         {
-            await _auditRepository.AuditAsync(new Journal { EmailUser = email, IpUser = ipUser, Operation = (Operations)operation, Table = (Tables)table });
+            try
+            {
+                await _auditRepository.AuditAsync(new Journal { EmailUser = email, IpUser = ipUser, Operation = (Operations)operation, Table = (Tables)table });
+            }
+            catch (Exception)
+            {
+                // ignored
+            }
         }
 
         public async Task AuditAsync(string email, string ipUser, Enums.Operations operation, Enums.Tables[] tables)
         {
-            foreach (var table in tables)
+            try
             {
-                await AuditAsync(email, ipUser, operation, table);
+                foreach (var table in tables)
+                {
+                    await AuditAsync(email, ipUser, operation, table);
+                }
+            }
+            catch (Exception)
+            {
+                // ignored
             }
         }
 
         public async Task<ActualResult<IEnumerable<JournalDTO>>> FilterAsync(string email, DateTime startDate, DateTime endDate)
         {
-            var existingPartitionInDb = await _auditRepository.GetExistingPartitionInDbAsync();
-            var sequenceDate = startDate.Date.GetListPartitionings(endDate.Date);
-            var resultPartition = sequenceDate.Intersect(existingPartitionInDb).ToList();
-
-            if (resultPartition.Any())
+            try
             {
-                var result = await _auditRepository.FilterAsync(resultPartition, email, startDate, endDate);
+                var result = await _auditRepository.FilterAsync(email, startDate, endDate);
                 return new ActualResult<IEnumerable<JournalDTO>>
                 {
                     Result = result.Select(journal => new JournalDTO
@@ -53,7 +63,10 @@ namespace TradeUnionCommittee.BLL.Services.SystemAudit
                     }).ToList()
                 };
             }
-            return new ActualResult<IEnumerable<JournalDTO>>();
+            catch (Exception exception)
+            {
+                return new ActualResult<IEnumerable<JournalDTO>>(DescriptionExceptionHelper.GetDescriptionError(exception));
+            }
         }
 
         public void Dispose()
