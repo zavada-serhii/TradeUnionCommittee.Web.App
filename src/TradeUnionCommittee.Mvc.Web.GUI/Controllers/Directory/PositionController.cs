@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.DTO;
@@ -18,13 +19,15 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Directory
         private readonly IMapper _mapper;
         private readonly ISystemAuditService _systemAuditService;
         private readonly IHttpContextAccessor _accessor;
+        private readonly ILogger<PositionController> _logger;
 
-        public PositionController(IPositionService services, IMapper mapper, ISystemAuditService systemAuditService, IHttpContextAccessor accessor)
+        public PositionController(IPositionService services, IMapper mapper, ISystemAuditService systemAuditService, IHttpContextAccessor accessor, ILogger<PositionController> logger)
         {
             _services = services;
             _mapper = mapper;
             _systemAuditService = systemAuditService;
             _accessor = accessor;
+            _logger = logger;
         }
 
         //------------------------------------------------------------------------------------------------------------------------------------------
@@ -36,6 +39,7 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Directory
             var result = await _services.GetAllAsync();
             if (result.IsValid)
             {
+                //_logger.LogInformation($"Test Position MVC Controller: {JsonConvert.SerializeObject(result)}");
                 return View(result.Result);
             }
             TempData["ErrorsList"] = result.ErrorsList;

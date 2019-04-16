@@ -10,6 +10,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Serilog;
+using Serilog.Events;
+using Serilog.Sinks.Elasticsearch;
 using Swashbuckle.AspNetCore.Swagger;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using Swashbuckle.AspNetCore.SwaggerUI;
@@ -26,10 +28,26 @@ namespace TradeUnionCommittee.Web.Api
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup(IHostingEnvironment hostingEnvironment)
         {
-            Log.Logger = new LoggerConfiguration().ReadFrom.Configuration(configuration).CreateLogger();
-            Configuration = configuration;
+            var builder = new ConfigurationBuilder()
+                .SetBasePath(hostingEnvironment.ContentRootPath)
+                .AddJsonFile("appsettings.json", true, true)
+                .AddJsonFile($"appsettings.{hostingEnvironment.EnvironmentName}.json", reloadOnChange: true, optional: true)
+                .AddEnvironmentVariables();
+
+            Configuration = builder.Build();
+
+            var elasticUri = Configuration["ElasticConfiguration:Uri"];
+
+            Log.Logger = new LoggerConfiguration()
+                .Enrich.FromLogContext()
+                .WriteTo.Elasticsearch(new ElasticsearchSinkOptions(new Uri(elasticUri))
+                {
+                    AutoRegisterTemplate = true
+                })
+                .WriteTo.Console(LogEventLevel.Information)
+                .CreateLogger();
         }
 
         public IConfiguration Configuration { get; }
@@ -79,9 +97,9 @@ namespace TradeUnionCommittee.Web.Api
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
                 .AddTradeUnionCommitteeValidationModule();
 
-            services.AddSwaggerGen(c => 
+            services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1.0", new Info {Title = "Trade Union Committee API", Description = "Swagger Trade Union Committee API" });
+                c.SwaggerDoc("v1.0", new Info { Title = "Trade Union Committee API", Description = "Swagger Trade Union Committee API" });
                 c.OperationFilter<AuthorizationHeaderParameterOperationFilter>();
             });
 
