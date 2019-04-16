@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using TradeUnionCommittee.Common.Enums;
+using TradeUnionCommittee.BLL.Enums;
 
-namespace TradeUnionCommittee.Common.ActualResults
+namespace TradeUnionCommittee.BLL.ActualResults
 {
     public class ActualResult<T> : ActualResult
     {

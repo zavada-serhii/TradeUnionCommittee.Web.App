@@ -2,7 +2,7 @@
 using Npgsql;
 using System;
 using System.Net.Sockets;
-using TradeUnionCommittee.Common.Enums;
+using TradeUnionCommittee.BLL.Enums;
 
 namespace TradeUnionCommittee.BLL.Helpers
 {

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using TradeUnionCommittee.Common.ActualResults;
+using TradeUnionCommittee.BLL.ActualResults;
 
 namespace TradeUnionCommittee.BLL.Interfaces.Directory
 {

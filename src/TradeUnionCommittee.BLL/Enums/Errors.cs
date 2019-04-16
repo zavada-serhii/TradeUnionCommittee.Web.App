@@ -1,4 +1,4 @@
-﻿namespace TradeUnionCommittee.Common.Enums
+﻿namespace TradeUnionCommittee.BLL.Enums
 {
     public enum Errors
     {

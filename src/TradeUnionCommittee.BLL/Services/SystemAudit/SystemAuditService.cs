@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TradeUnionCommittee.BLL.ActualResults;
 using TradeUnionCommittee.BLL.DTO;
 using TradeUnionCommittee.BLL.Helpers;
 using TradeUnionCommittee.BLL.Interfaces.SystemAudit;
-using TradeUnionCommittee.Common.ActualResults;
 using TradeUnionCommittee.DAL.Audit.Entities;
 using TradeUnionCommittee.DAL.Audit.Enums;
 using TradeUnionCommittee.DAL.Audit.Repository;

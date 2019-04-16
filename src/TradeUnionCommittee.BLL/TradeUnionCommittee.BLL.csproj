@@ -12,7 +12,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\TradeUnionCommittee.Common\TradeUnionCommittee.Common.csproj" />
     <ProjectReference Include="..\TradeUnionCommittee.DAL.Audit\TradeUnionCommittee.DAL.Audit.csproj" />
     <ProjectReference Include="..\TradeUnionCommittee.DAL.Identity\TradeUnionCommittee.DAL.Identity.csproj" />
     <ProjectReference Include="..\TradeUnionCommittee.DAL\TradeUnionCommittee.DAL.csproj" />

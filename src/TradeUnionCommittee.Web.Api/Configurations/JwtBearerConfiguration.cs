@@ -5,8 +5,8 @@ using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using TradeUnionCommittee.BLL.ActualResults;
 using TradeUnionCommittee.BLL.Interfaces.Account;
-using TradeUnionCommittee.Common.ActualResults;
 
 namespace TradeUnionCommittee.Web.Api.Configurations
 {

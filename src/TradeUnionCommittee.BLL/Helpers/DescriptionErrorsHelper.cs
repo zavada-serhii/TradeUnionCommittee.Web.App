@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using TradeUnionCommittee.Common.Enums;
+using TradeUnionCommittee.BLL.Enums;
 
-namespace TradeUnionCommittee.Common.Helpers
+namespace TradeUnionCommittee.BLL.Helpers
 {
     internal sealed class DescriptionErrorsHelper
     {
