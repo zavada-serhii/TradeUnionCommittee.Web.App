@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
+using TradeUnionCommittee.BLL.ActualResults;
 using TradeUnionCommittee.BLL.DTO;
-using TradeUnionCommittee.Common.ActualResults;
 
 namespace TradeUnionCommittee.BLL.Interfaces.PDF
 {

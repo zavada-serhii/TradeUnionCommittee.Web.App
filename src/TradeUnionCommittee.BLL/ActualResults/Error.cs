@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Globalization;
 
-namespace TradeUnionCommittee.Common.ActualResults
+namespace TradeUnionCommittee.BLL.ActualResults
 {
     public class Error
     {

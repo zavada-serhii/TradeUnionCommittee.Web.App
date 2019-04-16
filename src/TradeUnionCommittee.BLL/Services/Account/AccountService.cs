@@ -4,12 +4,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TradeUnionCommittee.BLL.ActualResults;
 using TradeUnionCommittee.BLL.Configurations;
 using TradeUnionCommittee.BLL.DTO;
+using TradeUnionCommittee.BLL.Enums;
 using TradeUnionCommittee.BLL.Helpers;
 using TradeUnionCommittee.BLL.Interfaces.Account;
-using TradeUnionCommittee.Common.ActualResults;
-using TradeUnionCommittee.Common.Enums;
 using TradeUnionCommittee.DAL.Identity.Entities;
 
 namespace TradeUnionCommittee.BLL.Services.Account

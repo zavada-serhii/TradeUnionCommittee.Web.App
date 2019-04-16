@@ -3,12 +3,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TradeUnionCommittee.BLL.ActualResults;
 using TradeUnionCommittee.BLL.Configurations;
 using TradeUnionCommittee.BLL.DTO.Family;
+using TradeUnionCommittee.BLL.Enums;
 using TradeUnionCommittee.BLL.Helpers;
 using TradeUnionCommittee.BLL.Interfaces.Lists.Family;
-using TradeUnionCommittee.Common.ActualResults;
-using TradeUnionCommittee.Common.Enums;
 using TradeUnionCommittee.DAL.EF;
 
 namespace TradeUnionCommittee.BLL.Services.Lists.Family

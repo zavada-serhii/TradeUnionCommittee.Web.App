@@ -1,6 +1,6 @@
 ﻿using System;
+using TradeUnionCommittee.BLL.ActualResults;
 using TradeUnionCommittee.BLL.Enums;
-using TradeUnionCommittee.Common.ActualResults;
 
 namespace TradeUnionCommittee.BLL.Interfaces.Helpers
 {

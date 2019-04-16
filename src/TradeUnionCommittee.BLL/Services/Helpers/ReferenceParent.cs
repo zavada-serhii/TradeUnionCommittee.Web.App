@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Linq;
+using TradeUnionCommittee.BLL.ActualResults;
 using TradeUnionCommittee.BLL.Configurations;
 using TradeUnionCommittee.BLL.Enums;
 using TradeUnionCommittee.BLL.Helpers;
 using TradeUnionCommittee.BLL.Interfaces.Helpers;
-using TradeUnionCommittee.Common.ActualResults;
-using TradeUnionCommittee.Common.Enums;
 using TradeUnionCommittee.DAL.EF;
 
 namespace TradeUnionCommittee.BLL.Services.Helpers

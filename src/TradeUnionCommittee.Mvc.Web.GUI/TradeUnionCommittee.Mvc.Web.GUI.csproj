@@ -7,6 +7,7 @@
     <UserSecretsId>aa33f303-cea5-469e-9fd8-769c7dea7ad2</UserSecretsId>
     <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
     <DockerComposeProjectPath>..\..\docker-compose.dcproj</DockerComposeProjectPath>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
   </PropertyGroup>
 
   <ItemGroup>
@@ -33,7 +34,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\TradeUnionCommittee.BLL\TradeUnionCommittee.BLL.csproj" />
-    <ProjectReference Include="..\TradeUnionCommittee.Common\TradeUnionCommittee.Common.csproj" />
     <ProjectReference Include="..\TradeUnionCommittee.ViewModels\TradeUnionCommittee.ViewModels.csproj" />
   </ItemGroup>
 

@@ -9,8 +9,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{4EC73564-E
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TradeUnionCommittee.BLL", "src\TradeUnionCommittee.BLL\TradeUnionCommittee.BLL.csproj", "{514B296E-A888-4D0A-BC5C-FB90D1EED0CB}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TradeUnionCommittee.Common", "src\TradeUnionCommittee.Common\TradeUnionCommittee.Common.csproj", "{D9BDE0C6-2207-41C7-A9E9-1D528AD5A626}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TradeUnionCommittee.DAL", "src\TradeUnionCommittee.DAL\TradeUnionCommittee.DAL.csproj", "{0BCF9081-B738-4D94-BD77-49887E3D5305}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TradeUnionCommittee.DataAnalysis.Service", "src\TradeUnionCommittee.DataAnalysis.Service\TradeUnionCommittee.DataAnalysis.Service.csproj", "{7F1BC511-A430-4C18-9352-685A0AD2F0E4}"
@@ -27,7 +25,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TradeUnionCommittee.UnitTes
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TradeUnionCommittee.DAL.Identity", "src\TradeUnionCommittee.DAL.Identity\TradeUnionCommittee.DAL.Identity.csproj", "{ABD084B9-A640-408C-9C4A-82CFCC466D79}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TradeUnionCommittee.DAL.Audit", "src\TradeUnionCommittee.DAL.Audit\TradeUnionCommittee.DAL.Audit.csproj", "{A9934650-5D15-49FE-B54E-A8A7C831E029}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TradeUnionCommittee.DAL.Audit", "src\TradeUnionCommittee.DAL.Audit\TradeUnionCommittee.DAL.Audit.csproj", "{A9934650-5D15-49FE-B54E-A8A7C831E029}"
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{079792DE-CBC7-4C86-927C-458F2F6CCA73}"
 EndProject
@@ -41,10 +39,6 @@ Global
 		{514B296E-A888-4D0A-BC5C-FB90D1EED0CB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{514B296E-A888-4D0A-BC5C-FB90D1EED0CB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{514B296E-A888-4D0A-BC5C-FB90D1EED0CB}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D9BDE0C6-2207-41C7-A9E9-1D528AD5A626}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D9BDE0C6-2207-41C7-A9E9-1D528AD5A626}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D9BDE0C6-2207-41C7-A9E9-1D528AD5A626}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D9BDE0C6-2207-41C7-A9E9-1D528AD5A626}.Release|Any CPU.Build.0 = Release|Any CPU
 		{0BCF9081-B738-4D94-BD77-49887E3D5305}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{0BCF9081-B738-4D94-BD77-49887E3D5305}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0BCF9081-B738-4D94-BD77-49887E3D5305}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -91,7 +85,6 @@ Global
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{514B296E-A888-4D0A-BC5C-FB90D1EED0CB} = {03A3EB18-32B0-4C47-874C-8970BC829BCD}
-		{D9BDE0C6-2207-41C7-A9E9-1D528AD5A626} = {03A3EB18-32B0-4C47-874C-8970BC829BCD}
 		{0BCF9081-B738-4D94-BD77-49887E3D5305} = {03A3EB18-32B0-4C47-874C-8970BC829BCD}
 		{7F1BC511-A430-4C18-9352-685A0AD2F0E4} = {03A3EB18-32B0-4C47-874C-8970BC829BCD}
 		{3410C34F-94C3-419C-BC10-767E2BB74043} = {03A3EB18-32B0-4C47-874C-8970BC829BCD}
