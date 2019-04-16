@@ -10,6 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Serilog;
+using Serilog.Events;
 using Serilog.Sinks.Elasticsearch;
 using Swashbuckle.AspNetCore.Swagger;
 using Swashbuckle.AspNetCore.SwaggerGen;
@@ -27,11 +28,11 @@ namespace TradeUnionCommittee.Web.Api
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration, IHostingEnvironment hostingEnvironment)
+        public Startup(IHostingEnvironment hostingEnvironment)
         {
             var builder = new ConfigurationBuilder()
                 .SetBasePath(hostingEnvironment.ContentRootPath)
-                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+                .AddJsonFile("appsettings.json", true, true)
                 .AddJsonFile($"appsettings.{hostingEnvironment.EnvironmentName}.json", reloadOnChange: true, optional: true)
                 .AddEnvironmentVariables();
 
@@ -43,8 +44,9 @@ namespace TradeUnionCommittee.Web.Api
                 .Enrich.FromLogContext()
                 .WriteTo.Elasticsearch(new ElasticsearchSinkOptions(new Uri(elasticUri))
                 {
-                    AutoRegisterTemplate = true,
+                    AutoRegisterTemplate = true
                 })
+                .WriteTo.Console(LogEventLevel.Information)
                 .CreateLogger();
         }
 

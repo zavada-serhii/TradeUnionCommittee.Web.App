@@ -8,6 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Serilog;
+using Serilog.Events;
 using Serilog.Sinks.Elasticsearch;
 using System;
 using System.IO.Compression;
@@ -21,11 +22,11 @@ namespace TradeUnionCommittee.Mvc.Web.GUI
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration, IHostingEnvironment hostingEnvironment)
+        public Startup(IHostingEnvironment hostingEnvironment)
         {
             var builder = new ConfigurationBuilder()
                 .SetBasePath(hostingEnvironment.ContentRootPath)
-                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+                .AddJsonFile("appsettings.json", true, true)
                 .AddJsonFile($"appsettings.{hostingEnvironment.EnvironmentName}.json", reloadOnChange: true, optional: true)
                 .AddEnvironmentVariables();
 
@@ -37,8 +38,9 @@ namespace TradeUnionCommittee.Mvc.Web.GUI
                 .Enrich.FromLogContext()
                 .WriteTo.Elasticsearch(new ElasticsearchSinkOptions(new Uri(elasticUri))
                 {
-                    AutoRegisterTemplate = true,
+                    AutoRegisterTemplate = true
                 })
+                .WriteTo.Console(LogEventLevel.Information)
                 .CreateLogger();
         }
 

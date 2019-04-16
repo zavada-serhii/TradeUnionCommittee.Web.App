@@ -1,0 +1,43 @@
+version: '3.4'
+
+services:
+
+  elasticsearch:
+   image: docker.elastic.co/elasticsearch/elasticsearch:6.2.4
+   container_name: elasticsearch
+   restart: always
+   networks:
+            elk_network:
+                ipv4_address: 172.28.1.4
+   ports:
+    - "9200:9200"
+   volumes:
+    - elasticsearch-data:/usr/share/elasticsearch/data
+
+
+
+  kibana:
+   image: docker.elastic.co/kibana/kibana:6.2.4
+   container_name: kibana
+   restart: always
+   networks:
+            elk_network:
+                ipv4_address: 172.28.1.5
+   ports:
+    - "5601:5601"
+   depends_on:
+    - elasticsearch
+
+
+
+networks:
+    elk_network:
+        ipam:
+            driver: default
+            config:
+                - subnet: 172.28.0.0/16
+
+
+
+volumes:
+  elasticsearch-data:
