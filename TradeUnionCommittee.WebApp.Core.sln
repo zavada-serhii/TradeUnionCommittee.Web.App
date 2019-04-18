@@ -29,6 +29,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TradeUnionCommittee.DAL.Aud
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{079792DE-CBC7-4C86-927C-458F2F6CCA73}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TradeUnionCommittee.CloudStorage.Service", "src\TradeUnionCommittee.CloudStorage.Service\TradeUnionCommittee.CloudStorage.Service.csproj", "{0A4B4547-234A-46EB-8699-EFE1C6EB0CC0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TradeUnionCommittee.DAL.CloudStorage", "src\TradeUnionCommittee.DAL.CloudStorage\TradeUnionCommittee.DAL.CloudStorage.csproj", "{EF3F8AB6-6520-4DE7-A11F-42BBEC070118}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -79,6 +83,14 @@ Global
 		{079792DE-CBC7-4C86-927C-458F2F6CCA73}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{079792DE-CBC7-4C86-927C-458F2F6CCA73}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{079792DE-CBC7-4C86-927C-458F2F6CCA73}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0A4B4547-234A-46EB-8699-EFE1C6EB0CC0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0A4B4547-234A-46EB-8699-EFE1C6EB0CC0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0A4B4547-234A-46EB-8699-EFE1C6EB0CC0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0A4B4547-234A-46EB-8699-EFE1C6EB0CC0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EF3F8AB6-6520-4DE7-A11F-42BBEC070118}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EF3F8AB6-6520-4DE7-A11F-42BBEC070118}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EF3F8AB6-6520-4DE7-A11F-42BBEC070118}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EF3F8AB6-6520-4DE7-A11F-42BBEC070118}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -94,6 +106,8 @@ Global
 		{2B5D5174-B224-48AE-8E5F-D6B76ECFB341} = {4EC73564-EA43-496E-BBBE-1E7AD4A858FA}
 		{ABD084B9-A640-408C-9C4A-82CFCC466D79} = {03A3EB18-32B0-4C47-874C-8970BC829BCD}
 		{A9934650-5D15-49FE-B54E-A8A7C831E029} = {03A3EB18-32B0-4C47-874C-8970BC829BCD}
+		{0A4B4547-234A-46EB-8699-EFE1C6EB0CC0} = {03A3EB18-32B0-4C47-874C-8970BC829BCD}
+		{EF3F8AB6-6520-4DE7-A11F-42BBEC070118} = {03A3EB18-32B0-4C47-874C-8970BC829BCD}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {EC5AC943-9C93-46B6-B905-0EE4F2D6B0DF}
