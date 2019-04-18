@@ -1,0 +1,84 @@
+version: '3.4'
+
+services:
+ minio-node-1:
+  image: minio/minio:RELEASE.2019-04-18T01-15-57Z
+  container_name: minio-node-1
+  restart: always
+  networks:
+           minio_network:
+               ipv4_address: 172.24.1.1
+  ports:
+   - "9001:9000"
+  volumes:
+   - minio-node-1-data:/data
+  environment:
+   MINIO_ACCESS_KEY: minio
+   MINIO_SECRET_KEY: minio123
+  command: server http://172.24.1.1/data http://172.24.1.2/data http://172.24.1.3/data http://172.24.1.4/data 
+ 
+
+ minio-node-2:
+  image: minio/minio:RELEASE.2019-04-18T01-15-57Z
+  container_name: minio-node-2
+  restart: always
+  networks:
+           minio_network:
+               ipv4_address: 172.24.1.2
+  ports:
+   - "9002:9000"
+  volumes:
+   - minio-node-2-data:/data
+  environment:
+   MINIO_ACCESS_KEY: minio
+   MINIO_SECRET_KEY: minio123
+  command: server http://172.24.1.1/data http://172.24.1.2/data http://172.24.1.3/data http://172.24.1.4/data 
+ 
+
+ minio-node-3:
+  image: minio/minio:RELEASE.2019-04-18T01-15-57Z
+  container_name: minio-node-3
+  restart: always
+  networks:
+           minio_network:
+               ipv4_address: 172.24.1.3
+  ports:
+   - "9003:9000"
+  volumes:
+   - minio-node-3-data:/data
+  environment:
+   MINIO_ACCESS_KEY: minio
+   MINIO_SECRET_KEY: minio123
+  command: server http://172.24.1.1/data http://172.24.1.2/data http://172.24.1.3/data http://172.24.1.4/data 
+ 
+
+ minio-node-4:
+  image: minio/minio:RELEASE.2019-04-18T01-15-57Z
+  container_name: minio-node-4
+  restart: always
+  networks:
+           minio_network:
+               ipv4_address: 172.24.1.4
+  ports:
+   - "9004:9000"
+  volumes:
+   - minio-node-4-data:/data
+  environment:
+   MINIO_ACCESS_KEY: minio
+   MINIO_SECRET_KEY: minio123
+  command: server http://172.24.1.1/data http://172.24.1.2/data http://172.24.1.3/data http://172.24.1.4/data 
+
+
+networks:
+    minio_network:
+        ipam:
+            driver: default
+            config:
+                - subnet: 172.24.0.0/16
+
+
+volumes:
+  minio-node-1-data:
+  minio-node-2-data:
+  minio-node-3-data:
+  minio-node-4-data:
