@@ -13,6 +13,7 @@ using Serilog.Sinks.Elasticsearch;
 using System;
 using System.IO.Compression;
 using TradeUnionCommittee.BLL.Configurations;
+using TradeUnionCommittee.BLL.DTO;
 using TradeUnionCommittee.BLL.Extensions;
 using TradeUnionCommittee.Mvc.Web.GUI.Configurations;
 using TradeUnionCommittee.Mvc.Web.GUI.Controllers.Directory;
@@ -81,6 +82,16 @@ namespace TradeUnionCommittee.Mvc.Web.GUI
                 .AddTradeUnionCommitteeServiceModule(connectionString,
                     identityConnectionString,
                     auditConnectionString,
+                    new CloudStorageCredentialsDTO
+                    {
+                        DbConnectionString = Convert.ToBoolean(Configuration["CloudStorageConfiguration:UseDataBaseSSL"])
+                            ? Configuration["CloudStorageConfiguration:DbConnectionStringSSL"]
+                            : Configuration["CloudStorageConfiguration:DbConnectionString"],
+                        UseStorageSsl = Convert.ToBoolean(Configuration["CloudStorageConfiguration:UseStorageSSL"]),
+                        Url = Configuration["CloudStorageConfiguration:Url"],
+                        AccessKey = Configuration["CloudStorageConfiguration:AccessKey"],
+                        SecretKey = Configuration["CloudStorageConfiguration:SecretKey"]
+                    },
                     Configuration.GetSection("HashIdConfigurationSetting").Get<HashIdConfigurationSetting>())
                 .AddTradeUnionCommitteeViewModelsModule()
                 .AddResponseCompression()

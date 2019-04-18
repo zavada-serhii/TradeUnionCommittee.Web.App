@@ -10,13 +10,13 @@ namespace TradeUnionCommittee.DAL.CloudStorage.EF
             Database.EnsureCreated();
         }
 
-        public DbSet<PdfBucket> PdfBucket { get; set; }
+        public DbSet<ReportPdfBucket> ReportPdfBucket { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.HasAnnotation("ProductVersion", "2.2.0-rtm-35687");
 
-            modelBuilder.Entity<PdfBucket>(entity =>
+            modelBuilder.Entity<ReportPdfBucket>(entity =>
             {
                 entity.Property(e => e.DateFrom).HasColumnType("date");
 
@@ -27,6 +27,10 @@ namespace TradeUnionCommittee.DAL.CloudStorage.EF
                     .HasColumnType("character varying");
 
                 entity.Property(e => e.FileName)
+                    .IsRequired()
+                    .HasColumnType("character varying");
+
+                entity.Property(e => e.IpUser)
                     .IsRequired()
                     .HasColumnType("character varying");
             });

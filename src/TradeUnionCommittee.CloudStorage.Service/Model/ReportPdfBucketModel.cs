@@ -1,18 +1,17 @@
 ﻿using System;
-using System.Net;
+using System.IO;
 
-namespace TradeUnionCommittee.DAL.CloudStorage.Entities
+namespace TradeUnionCommittee.CloudStorage.Service.Model
 {
-    public class PdfBucket
+    public class ReportPdfBucketModel
     {
-        public long Id { get; set; }
         public long IdEmployee { get; set; }
         public string FileName { get; set; }
-        public DateTime DateCreated { get; set; }
         public string EmailUser { get; set; }
-        public ValueTuple<IPAddress, int> IpUser { get; set; }
+        public string IpUser { get; set; }
         public int TypeReport { get; set; }
         public DateTime DateFrom { get; set; }
         public DateTime DateTo { get; set; }
+        public Stream Data { get; set; }
     }
 }
