@@ -38,7 +38,7 @@ namespace TradeUnionCommittee.BLL.Extensions
                                                                                   string connectionString, 
                                                                                   string identityConnectionString, 
                                                                                   string auditConnectionString,
-                                                                                  CloudStorageCredentialsDTO credentials, 
+                                                                                  CloudStorageServiceCredentials credentials, 
                                                                                   HashIdConfigurationSetting setting)
         {
             // Injection Main, Identity, Audit, Cloud Storage, Context, HashIdConfiguration, AutoMapperConfiguration

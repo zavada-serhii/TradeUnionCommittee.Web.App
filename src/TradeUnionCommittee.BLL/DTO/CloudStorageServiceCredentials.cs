@@ -1,6 +1,6 @@
 ﻿namespace TradeUnionCommittee.BLL.DTO
 {
-    public class CloudStorageCredentialsDTO
+    public class CloudStorageServiceCredentials
     {
         public string DbConnectionString { get; set; }
         public bool UseStorageSsl { get; set; }

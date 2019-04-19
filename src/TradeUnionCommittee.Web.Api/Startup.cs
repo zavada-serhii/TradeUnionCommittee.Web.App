@@ -95,7 +95,7 @@ namespace TradeUnionCommittee.Web.Api
                 .AddTradeUnionCommitteeServiceModule(connectionString,
                     identityConnectionString,
                     auditConnectionString,
-                    new CloudStorageCredentialsDTO
+                    new CloudStorageServiceCredentials
                     {
                         DbConnectionString = cloudStorageConnectionString,
                         UseStorageSsl = Convert.ToBoolean(Configuration["CloudStorageConfiguration:UseSSL"]),
