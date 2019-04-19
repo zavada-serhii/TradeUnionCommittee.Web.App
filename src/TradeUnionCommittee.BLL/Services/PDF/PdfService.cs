@@ -11,10 +11,12 @@ using TradeUnionCommittee.BLL.Enums;
 using TradeUnionCommittee.BLL.Extensions;
 using TradeUnionCommittee.BLL.Helpers;
 using TradeUnionCommittee.BLL.Interfaces.PDF;
+using TradeUnionCommittee.CloudStorage.Service.Interfaces;
+using TradeUnionCommittee.CloudStorage.Service.Model;
 using TradeUnionCommittee.DAL.EF;
 using TradeUnionCommittee.DAL.Enums;
-using TradeUnionCommittee.PDF.Service;
 using TradeUnionCommittee.PDF.Service.Entities;
+using TradeUnionCommittee.PDF.Service.Interfaces;
 using TradeUnionCommittee.PDF.Service.Models;
 
 namespace TradeUnionCommittee.BLL.Services.PDF
@@ -24,12 +26,16 @@ namespace TradeUnionCommittee.BLL.Services.PDF
         private readonly TradeUnionCommitteeContext _context;
         private readonly AutoMapperConfiguration _mapperService;
         private readonly HashIdConfiguration _hashIdUtilities;
+        private readonly IReportGeneratorService _reportGeneratorService;
+        private readonly IReportPdfBucketService _pdfBucketService;
 
-        public PdfService(TradeUnionCommitteeContext context, AutoMapperConfiguration mapperService, HashIdConfiguration hashIdUtilities)
+        public PdfService(TradeUnionCommitteeContext context, AutoMapperConfiguration mapperService, HashIdConfiguration hashIdUtilities, IReportPdfBucketService pdfBucketService, IReportGeneratorService reportGeneratorService)
         {
             _context = context;
             _mapperService = mapperService;
             _hashIdUtilities = hashIdUtilities;
+            _pdfBucketService = pdfBucketService;
+            _reportGeneratorService = reportGeneratorService;
         }
 
         //------------------------------------------------------------------------------------------
@@ -42,16 +48,24 @@ namespace TradeUnionCommittee.BLL.Services.PDF
                 var validationModel = ValidatePdfModel(model);
                 if (validationModel)
                 {
-                    var pathToFile = new ReportGenerator().Generate(model);
-                    if (!string.IsNullOrEmpty(pathToFile))
+                    var pdfResult = _reportGeneratorService.Generate(model);
+                    if (pdfResult.Length > 0)
                     {
-                        byte[] data;
-                        using (var fstream = File.OpenRead(pathToFile))
+                        using (var data = new MemoryStream(pdfResult))
                         {
-                            data = new byte[fstream.Length];
-                            await fstream.ReadAsync(data, 0, data.Length);
+                            await _pdfBucketService.PutPdfObject(new ReportPdfBucketModel
+                            {
+                                IdEmployee = _hashIdUtilities.DecryptLong(dto.HashEmployeeId),
+                                FileName = Guid.NewGuid().ToString(),
+                                EmailUser = dto.EmailUser,
+                                IpUser = dto.IpUser,
+                                TypeReport = (int)model.Type,
+                                DateFrom = model.StartDate,
+                                DateTo = model.EndDate,
+                                Data = data
+                            });
                         }
-                        return new ActualResult<byte[]> { Result = data };
+                        return new ActualResult<byte[]> { Result = pdfResult };
                     }
                     return new ActualResult<byte[]>(Errors.ApplicationError);
                 }

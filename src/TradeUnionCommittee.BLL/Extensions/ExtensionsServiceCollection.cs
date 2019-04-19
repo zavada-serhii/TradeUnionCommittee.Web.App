@@ -28,6 +28,7 @@ using TradeUnionCommittee.CloudStorage.Service.Model;
 using TradeUnionCommittee.DAL.Audit.Extensions;
 using TradeUnionCommittee.DAL.Extensions;
 using TradeUnionCommittee.DAL.Identity.Extensions;
+using TradeUnionCommittee.PDF.Service.Extensions;
 
 namespace TradeUnionCommittee.BLL.Extensions
 {
@@ -53,6 +54,7 @@ namespace TradeUnionCommittee.BLL.Extensions
                 AccessKey = credentials.AccessKey,
                 SecretKey = credentials.SecretKey
             });
+            services.AddPdfService();
             services.AddSingleton(x => new HashIdConfiguration(setting));
             services.AddSingleton<AutoMapperConfiguration>();
 

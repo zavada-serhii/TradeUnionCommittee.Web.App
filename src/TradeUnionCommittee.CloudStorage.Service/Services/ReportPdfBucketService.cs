@@ -1,6 +1,6 @@
 ﻿using Minio;
-using RestSharp.Extensions;
 using System;
+using System.IO;
 using System.Threading.Tasks;
 using TradeUnionCommittee.CloudStorage.Service.Interfaces;
 using TradeUnionCommittee.CloudStorage.Service.Model;
@@ -11,7 +11,7 @@ namespace TradeUnionCommittee.CloudStorage.Service.Services
 {
     public class ReportPdfBucketService : IReportPdfBucketService, IDisposable
     {
-        private const string BUCKET_NAME = "pdf-bucket";
+        private const string BUCKET_NAME = "report-pdf-bucket";
         private const string EXTENSION_FILE = ".pdf";
         private const string CONTENT_TYPE = "application/pdf";
 
@@ -30,7 +30,14 @@ namespace TradeUnionCommittee.CloudStorage.Service.Services
             var result = new byte[] { };
             await _minioClient.GetObjectAsync(BUCKET_NAME, $"{model.IdEmployee}/{model.FileName}{EXTENSION_FILE}", stream =>
             {
-                result = stream.ReadAsBytes();
+                var buffer = new byte[16 * 1024];
+                using (var ms = new MemoryStream())
+                {
+                    int read;
+                    while ((read = stream.Read(buffer, 0, buffer.Length)) > 0)
+                        ms.Write(buffer, 0, read);
+                    result = ms.ToArray();
+                }
             });
             return result;
         }
@@ -39,6 +46,7 @@ namespace TradeUnionCommittee.CloudStorage.Service.Services
         {
             await CheckBucketExists();
             await _minioClient.PutObjectAsync(BUCKET_NAME, $"{model.IdEmployee}/{model.FileName}{EXTENSION_FILE}", model.Data, model.Data.Length, CONTENT_TYPE);
+            model.Data.Dispose();
             await _context.ReportPdfBucket.AddAsync(new ReportPdfBucket
             {
                 IdEmployee = model.IdEmployee,
