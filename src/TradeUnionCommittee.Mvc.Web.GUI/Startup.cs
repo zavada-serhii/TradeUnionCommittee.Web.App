@@ -78,16 +78,18 @@ namespace TradeUnionCommittee.Mvc.Web.GUI
                 ? Configuration.GetConnectionString("AuditConnectionSSL")
                 : Configuration.GetConnectionString("AuditConnection");
 
+            var cloudStorageConnectionString = Convert.ToBoolean(Configuration.GetConnectionString("UseSSL"))
+                ? Configuration.GetConnectionString("CloudStorageConnectionSSL")
+                : Configuration.GetConnectionString("CloudStorageConnection");
+
             services
                 .AddTradeUnionCommitteeServiceModule(connectionString,
                     identityConnectionString,
                     auditConnectionString,
                     new CloudStorageCredentialsDTO
                     {
-                        DbConnectionString = Convert.ToBoolean(Configuration["CloudStorageConfiguration:UseDataBaseSSL"])
-                            ? Configuration["CloudStorageConfiguration:DbConnectionStringSSL"]
-                            : Configuration["CloudStorageConfiguration:DbConnectionString"],
-                        UseStorageSsl = Convert.ToBoolean(Configuration["CloudStorageConfiguration:UseStorageSSL"]),
+                        DbConnectionString = cloudStorageConnectionString,
+                        UseStorageSsl = Convert.ToBoolean(Configuration["CloudStorageConfiguration:UseSSL"]),
                         Url = Configuration["CloudStorageConfiguration:Url"],
                         AccessKey = Configuration["CloudStorageConfiguration:AccessKey"],
                         SecretKey = Configuration["CloudStorageConfiguration:SecretKey"]
