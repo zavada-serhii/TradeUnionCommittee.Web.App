@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.ActualResults;
@@ -48,24 +47,20 @@ namespace TradeUnionCommittee.BLL.Services.PDF
                 var validationModel = ValidatePdfModel(model);
                 if (validationModel)
                 {
-                    var pdfResult = _reportGeneratorService.Generate(model);
-                    if (pdfResult.Length > 0)
+                    var pdf = _reportGeneratorService.Generate(model);
+                    if (pdf.Length > 0)
                     {
-                        using (var data = new MemoryStream(pdfResult))
+                        await _pdfBucketService.PutPdfObject(new ReportPdfBucketModel
                         {
-                            await _pdfBucketService.PutPdfObject(new ReportPdfBucketModel
-                            {
-                                IdEmployee = _hashIdUtilities.DecryptLong(dto.HashEmployeeId),
-                                FileName = Guid.NewGuid().ToString(),
-                                EmailUser = dto.EmailUser,
-                                IpUser = dto.IpUser,
-                                TypeReport = (int)model.Type,
-                                DateFrom = model.StartDate,
-                                DateTo = model.EndDate,
-                                Data = data
-                            });
-                        }
-                        return new ActualResult<byte[]> { Result = pdfResult };
+                            IdEmployee = _hashIdUtilities.DecryptLong(dto.HashEmployeeId),
+                            EmailUser = dto.EmailUser,
+                            IpUser = dto.IpUser,
+                            TypeReport = (int) model.Type,
+                            DateFrom = model.StartDate,
+                            DateTo = model.EndDate,
+                            Data = pdf
+                        });
+                        return new ActualResult<byte[]> {Result = pdf};
                     }
                     return new ActualResult<byte[]>(Errors.ApplicationError);
                 }

@@ -45,12 +45,17 @@ namespace TradeUnionCommittee.CloudStorage.Service.Services
         public async Task PutPdfObject(ReportPdfBucketModel model)
         {
             await CheckBucketExists();
-            await _minioClient.PutObjectAsync(BUCKET_NAME, $"{model.IdEmployee}/{model.FileName}{EXTENSION_FILE}", model.Data, model.Data.Length, CONTENT_TYPE);
-            model.Data.Dispose();
+            var fileName = Guid.NewGuid().ToString();
+
+            using (var stream = new MemoryStream(model.Data))
+            {
+                await _minioClient.PutObjectAsync(BUCKET_NAME, $"{model.IdEmployee}/{fileName}{EXTENSION_FILE}", stream, stream.Length, CONTENT_TYPE);
+            }
+
             await _context.ReportPdfBucket.AddAsync(new ReportPdfBucket
             {
                 IdEmployee = model.IdEmployee,
-                FileName = model.FileName,
+                FileName = fileName,
                 DateCreated = DateTime.Now,
                 EmailUser = model.EmailUser,
                 IpUser = model.IpUser,
