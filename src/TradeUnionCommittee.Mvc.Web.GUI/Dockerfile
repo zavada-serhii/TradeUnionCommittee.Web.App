@@ -12,6 +12,8 @@ COPY ["src/TradeUnionCommittee.DAL/TradeUnionCommittee.DAL.csproj", "src/TradeUn
 COPY ["src/TradeUnionCommittee.DAL.Identity/TradeUnionCommittee.DAL.Identity.csproj", "src/TradeUnionCommittee.DAL.Identity/"]
 COPY ["src/TradeUnionCommittee.DataAnalysis.Service/TradeUnionCommittee.DataAnalysis.Service.csproj", "src/TradeUnionCommittee.DataAnalysis.Service/"]
 COPY ["src/TradeUnionCommittee.PDF.Service/TradeUnionCommittee.PDF.Service.csproj", "src/TradeUnionCommittee.PDF.Service/"]
+COPY ["src/TradeUnionCommittee.CloudStorage.Service/TradeUnionCommittee.CloudStorage.Service.csproj", "src/TradeUnionCommittee.CloudStorage.Service/"]
+COPY ["src/TradeUnionCommittee.DAL.CloudStorage/TradeUnionCommittee.DAL.CloudStorage.csproj", "src/TradeUnionCommittee.DAL.CloudStorage/"]
 COPY ["src/TradeUnionCommittee.DAL.Audit/TradeUnionCommittee.DAL.Audit.csproj", "src/TradeUnionCommittee.DAL.Audit/"]
 RUN dotnet restore "src/TradeUnionCommittee.Mvc.Web.GUI/TradeUnionCommittee.Mvc.Web.GUI.csproj"
 COPY . .
