@@ -2,7 +2,7 @@
 Information system for the primary trade union organization of the Odessa National Mechnikov University. The application is developed using technologies ASP.NET Core 2.2 MVC &amp; Api, Docker, Elasticsearch, Kibana, Entity Framework Core, HTML, CSS, JS and database management system PostgreSQL 11.
 
 # System architecture
-![](https://github.com/zavada-sergey/TradeUnionCommittee.WebApp.Core/blob/master/blob/System%20architecture%20v4.0.png)
+![](https://github.com/zavada-sergey/TradeUnionCommittee.WebApp.Core/blob/master/blob/System%20architecture.png)
 
 # Road map
 - [ ] Transfer business logic from stored procedures
@@ -30,3 +30,7 @@ Information system for the primary trade union organization of the Odessa Nation
         - URL - http://localhost:5601
     - ElasticSearch
         - URL - http://localhost:9200
+    - MinIO
+        - URL - http://localhost:9001-9004
+        - Login - minio
+        - Password - minio123

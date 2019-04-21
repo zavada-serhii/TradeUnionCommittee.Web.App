@@ -7,8 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.1" />
-    <PackageReference Include="RestSharp" Version="106.3.1" />
+    <PackageReference Include="Minio" Version="3.0.9" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\TradeUnionCommittee.DAL.CloudStorage\TradeUnionCommittee.DAL.CloudStorage.csproj" />
   </ItemGroup>
 
 </Project>

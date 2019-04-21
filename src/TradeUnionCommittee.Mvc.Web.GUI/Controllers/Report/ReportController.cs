@@ -4,8 +4,10 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using TradeUnionCommittee.BLL.DTO;
 using TradeUnionCommittee.BLL.Interfaces.PDF;
+using TradeUnionCommittee.Mvc.Web.GUI.Extensions;
 using TradeUnionCommittee.ViewModels.ViewModels;
 
 namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Report
@@ -14,11 +16,13 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Report
     {
         private readonly IPdfService _pdfService;
         private readonly IMapper _mapper;
+        private readonly IHttpContextAccessor _accessor;
 
-        public ReportController(IHostingEnvironment appEnvironment, IPdfService pdfService, IMapper mapper)
+        public ReportController(IHostingEnvironment appEnvironment, IPdfService pdfService, IMapper mapper, IHttpContextAccessor accessor)
         {
             _pdfService = pdfService;
             _mapper = mapper;
+            _accessor = accessor;
         }
 
         [HttpGet]
@@ -35,7 +39,10 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Report
         {
             if (ModelState.IsValid)
             {
-                var result = await _pdfService.CreateReport(_mapper.Map<ReportPdfDTO>(viewModel));
+                var dto = _mapper.Map<ReportPdfDTO>(viewModel);
+                dto.EmailUser = User.GetEmail();
+                dto.IpUser = _accessor.GetIp();
+                var result = await _pdfService.CreateReport(dto);
                 if (result.IsValid)
                 {
                     return File(result.Result, "application/pdf", $"{Guid.NewGuid()}.pdf");

@@ -12,8 +12,7 @@ namespace TradeUnionCommittee.ViewModels.Attributes
 
         public override bool IsValid(object value)
         {
-            var model = value as RestructuringViewModel;
-            return model == null || model.HashIdMain != model.HashIdSubordinate;
+            return !(value is RestructuringViewModel model) || model.HashIdMain != model.HashIdSubordinate;
         }
     }
 }

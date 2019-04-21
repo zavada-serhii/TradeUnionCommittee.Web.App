@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.ActualResults;
@@ -11,10 +10,12 @@ using TradeUnionCommittee.BLL.Enums;
 using TradeUnionCommittee.BLL.Extensions;
 using TradeUnionCommittee.BLL.Helpers;
 using TradeUnionCommittee.BLL.Interfaces.PDF;
+using TradeUnionCommittee.CloudStorage.Service.Interfaces;
+using TradeUnionCommittee.CloudStorage.Service.Model;
 using TradeUnionCommittee.DAL.EF;
 using TradeUnionCommittee.DAL.Enums;
-using TradeUnionCommittee.PDF.Service;
 using TradeUnionCommittee.PDF.Service.Entities;
+using TradeUnionCommittee.PDF.Service.Interfaces;
 using TradeUnionCommittee.PDF.Service.Models;
 
 namespace TradeUnionCommittee.BLL.Services.PDF
@@ -24,12 +25,16 @@ namespace TradeUnionCommittee.BLL.Services.PDF
         private readonly TradeUnionCommitteeContext _context;
         private readonly AutoMapperConfiguration _mapperService;
         private readonly HashIdConfiguration _hashIdUtilities;
+        private readonly IReportGeneratorService _reportGeneratorService;
+        private readonly IReportPdfBucketService _pdfBucketService;
 
-        public PdfService(TradeUnionCommitteeContext context, AutoMapperConfiguration mapperService, HashIdConfiguration hashIdUtilities)
+        public PdfService(TradeUnionCommitteeContext context, AutoMapperConfiguration mapperService, HashIdConfiguration hashIdUtilities, IReportPdfBucketService pdfBucketService, IReportGeneratorService reportGeneratorService)
         {
             _context = context;
             _mapperService = mapperService;
             _hashIdUtilities = hashIdUtilities;
+            _pdfBucketService = pdfBucketService;
+            _reportGeneratorService = reportGeneratorService;
         }
 
         //------------------------------------------------------------------------------------------
@@ -42,16 +47,20 @@ namespace TradeUnionCommittee.BLL.Services.PDF
                 var validationModel = ValidatePdfModel(model);
                 if (validationModel)
                 {
-                    var pathToFile = new ReportGenerator().Generate(model);
-                    if (!string.IsNullOrEmpty(pathToFile))
+                    var pdf = _reportGeneratorService.Generate(model);
+                    if (pdf.Length > 0)
                     {
-                        byte[] data;
-                        using (var fstream = File.OpenRead(pathToFile))
+                        await _pdfBucketService.PutPdfObject(new ReportPdfBucketModel
                         {
-                            data = new byte[fstream.Length];
-                            await fstream.ReadAsync(data, 0, data.Length);
-                        }
-                        return new ActualResult<byte[]> { Result = data };
+                            IdEmployee = _hashIdUtilities.DecryptLong(dto.HashEmployeeId),
+                            EmailUser = dto.EmailUser,
+                            IpUser = dto.IpUser,
+                            TypeReport = (int) model.Type,
+                            DateFrom = model.StartDate,
+                            DateTo = model.EndDate,
+                            Data = pdf
+                        });
+                        return new ActualResult<byte[]> {Result = pdf};
                     }
                     return new ActualResult<byte[]>(Errors.ApplicationError);
                 }

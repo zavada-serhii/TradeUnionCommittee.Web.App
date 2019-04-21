@@ -7,6 +7,8 @@ namespace TradeUnionCommittee.BLL.DTO
     {
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
+        public string EmailUser { get; set; }
+        public string IpUser { get; set; }
     }
 
     public class ReportPdfDTO : BasePdfDTO

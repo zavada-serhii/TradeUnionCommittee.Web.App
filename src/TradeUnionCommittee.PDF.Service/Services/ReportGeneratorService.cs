@@ -4,12 +4,13 @@ using System;
 using System.IO;
 using System.Linq;
 using TradeUnionCommittee.PDF.Service.Enums;
+using TradeUnionCommittee.PDF.Service.Interfaces;
 using TradeUnionCommittee.PDF.Service.Models;
 using TradeUnionCommittee.PDF.Service.ReportTemplates;
 
-namespace TradeUnionCommittee.PDF.Service
+namespace TradeUnionCommittee.PDF.Service.Services
 {
-    public class ReportGenerator : BaseSettings
+    public class ReportGeneratorService : BaseSettings, IReportGeneratorService
     {
         private decimal _materialAidEmployeesGeneralSum;
         private decimal _awardEmployeesGeneralSum;
@@ -19,11 +20,11 @@ namespace TradeUnionCommittee.PDF.Service
         private decimal _tourEventEmployeesGeneralSum;
         private decimal _giftEmployeesGeneralSum;
 
-        public string Generate(ReportModel model)
+        public byte[] Generate(ReportModel model)
         {
             try
             {
-                using (var stream = new FileStream(PathToFile, FileMode.Create))
+                using (var stream = new MemoryStream())
                 {
                     var document = new Document();
                     var writer = PdfWriter.GetInstance(document, stream);
@@ -43,13 +44,14 @@ namespace TradeUnionCommittee.PDF.Service
 
                     document.Close();
                     writer.Close();
+
+                    return stream.ToArray();
                 }
             }
             catch (Exception)
             {
-                return string.Empty;
+                return new byte[0];
             }
-            return PathToFile;
         }
 
         private void AddNameReport(ReportModel model, IElementListener doc)

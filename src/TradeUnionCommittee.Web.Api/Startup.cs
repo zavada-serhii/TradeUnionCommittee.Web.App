@@ -20,6 +20,7 @@ using System.Collections.Generic;
 using System.IO.Compression;
 using System.Linq;
 using TradeUnionCommittee.BLL.Configurations;
+using TradeUnionCommittee.BLL.DTO;
 using TradeUnionCommittee.BLL.Extensions;
 using TradeUnionCommittee.ViewModels.Extensions;
 using TradeUnionCommittee.Web.Api.Configurations;
@@ -86,10 +87,22 @@ namespace TradeUnionCommittee.Web.Api
                 ? Configuration.GetConnectionString("AuditConnectionSSL")
                 : Configuration.GetConnectionString("AuditConnection");
 
+            var cloudStorageConnectionString = Convert.ToBoolean(Configuration.GetConnectionString("UseSSL"))
+                ? Configuration.GetConnectionString("CloudStorageConnectionSSL")
+                : Configuration.GetConnectionString("CloudStorageConnection");
+
             services
                 .AddTradeUnionCommitteeServiceModule(connectionString,
                     identityConnectionString,
                     auditConnectionString,
+                    new CloudStorageServiceCredentials
+                    {
+                        DbConnectionString = cloudStorageConnectionString,
+                        UseStorageSsl = Convert.ToBoolean(Configuration["CloudStorageConfiguration:UseSSL"]),
+                        Url = Configuration["CloudStorageConfiguration:Url"],
+                        AccessKey = Configuration["CloudStorageConfiguration:AccessKey"],
+                        SecretKey = Configuration["CloudStorageConfiguration:SecretKey"]
+                    },
                     Configuration.GetSection("HashIdConfigurationSetting").Get<HashIdConfigurationSetting>())
                 .AddTradeUnionCommitteeViewModelsModule()
                 .AddResponseCompression()
