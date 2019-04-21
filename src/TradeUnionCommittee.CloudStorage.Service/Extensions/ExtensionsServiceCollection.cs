@@ -20,7 +20,7 @@ namespace TradeUnionCommittee.CloudStorage.Service.Extensions
             {
                 services.AddSingleton(x => new MinioClient(credentials.Url, credentials.AccessKey, credentials.SecretKey));
             }
-            services.AddScoped<IReportPdfBucketService, ReportPdfBucketService>();
+            services.AddTransient<IReportPdfBucketService, ReportPdfBucketService>();
             return services;
         }
     }

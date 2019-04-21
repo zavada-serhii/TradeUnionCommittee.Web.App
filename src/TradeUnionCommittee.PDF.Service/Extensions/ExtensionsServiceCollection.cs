@@ -8,7 +8,7 @@ namespace TradeUnionCommittee.PDF.Service.Extensions
     {
         public static IServiceCollection AddPdfService(this IServiceCollection services)
         {
-            services.AddScoped<IReportGeneratorService, ReportGeneratorService>();
+            services.AddTransient<IReportGeneratorService, ReportGeneratorService>();
             return services;
         }
     }

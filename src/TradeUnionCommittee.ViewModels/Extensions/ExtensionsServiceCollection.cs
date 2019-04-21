@@ -10,10 +10,10 @@ namespace TradeUnionCommittee.ViewModels.Extensions
     {
         public static IServiceCollection AddTradeUnionCommitteeViewModelsModule(this IServiceCollection services)
         {
-            services.AddScoped<IValidator<CreateEmployeeViewModel>, CreateEmployeeValidation>();
-            services.AddScoped<IValidator<UpdateEmployeeViewModel>, UpdateEmployeeValidation>();
-            services.AddScoped<IValidator<PdfReportViewModel>, PdfReportValidation>();
-            services.AddScoped<IValidator<UpdatePositionEmployeesViewModel>, PositionEmployeesValidation>();
+            services.AddTransient<IValidator<CreateEmployeeViewModel>, CreateEmployeeValidation>();
+            services.AddTransient<IValidator<UpdateEmployeeViewModel>, UpdateEmployeeValidation>();
+            services.AddTransient<IValidator<PdfReportViewModel>, PdfReportValidation>();
+            services.AddTransient<IValidator<UpdatePositionEmployeesViewModel>, PositionEmployeesValidation>();
             return services;
         }
     }
