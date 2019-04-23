@@ -12,8 +12,8 @@ services:
             tradeunioncommittee_network:
                 ipv4_address: 172.28.1.1
     ports:
-      - "9090:80"
-      - "9091:443"
+      - "8580:80"
+      - "8585:443"
     build:
       context: .
       dockerfile: src/TradeUnionCommittee.Mvc.Web.GUI/Dockerfile
@@ -28,8 +28,8 @@ services:
             tradeunioncommittee_network:
                 ipv4_address: 172.28.1.2
     ports:
-      - "9092:80"
-      - "9093:443"
+      - "8590:80"
+      - "8595:443"
     build:
       context: .
       dockerfile: src/TradeUnionCommittee.Web.Api/Dockerfile
@@ -44,7 +44,7 @@ services:
             tradeunioncommittee_network:
                 ipv4_address: 172.28.1.3
     ports:
-      - "9595:5432"
+      - "8600:5432"
     environment:    
       POSTGRES_PASSWORD: postgres
       POSTGRES_USER: postgres
