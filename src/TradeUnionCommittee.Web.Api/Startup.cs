@@ -17,6 +17,7 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 using Swashbuckle.AspNetCore.SwaggerUI;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using TradeUnionCommittee.BLL.Configurations;
@@ -24,6 +25,7 @@ using TradeUnionCommittee.BLL.DTO;
 using TradeUnionCommittee.BLL.Extensions;
 using TradeUnionCommittee.ViewModels.Extensions;
 using TradeUnionCommittee.Web.Api.Configurations;
+using TradeUnionCommittee.Web.Api.Model;
 
 namespace TradeUnionCommittee.Web.Api
 {
@@ -55,25 +57,24 @@ namespace TradeUnionCommittee.Web.Api
 
         public void ConfigureServices(IServiceCollection services)
         {
-            Configuration.GetSection("AuthOptions").Get<AuthOptions>();
-
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                .AddJwtBearer(options =>
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
+            {
+                var authOptions = Configuration.GetSection("AuthOptions").Get<AuthOptions>();
+                options.RequireHttpsMetadata = true;
+                options.TokenValidationParameters = new TokenValidationParameters
                 {
-                    options.RequireHttpsMetadata = true;
-                    options.TokenValidationParameters = new TokenValidationParameters
-                    {
-                        ValidateIssuer = true,
-                        ValidIssuer = AuthOptions.Issuer,
+                    ValidateIssuer = true,
+                    ValidIssuer = authOptions.Issuer,
 
-                        ValidateAudience = true,
-                        ValidAudience = AuthOptions.Audience,
-                        ValidateLifetime = true,
+                    ValidateAudience = true,
+                    ValidAudience = authOptions.Audience,
+                    ValidateLifetime = true,
+                    ClockSkew = TimeSpan.Zero,
 
-                        IssuerSigningKey = AuthOptions.GetSymmetricSecurityKey(),
-                        ValidateIssuerSigningKey = true,
-                    };
-                });
+                    IssuerSigningKey = authOptions.GetSymmetricSecurityKey(),
+                    ValidateIssuerSigningKey = true
+                };
+            });
 
             var connectionString = Convert.ToBoolean(Configuration.GetConnectionString("UseSSL"))
                 ? Configuration.GetConnectionString("DefaultConnectionSSL")
@@ -114,6 +115,7 @@ namespace TradeUnionCommittee.Web.Api
             {
                 c.SwaggerDoc("v1.0", new Info { Title = "Trade Union Committee API", Description = "Swagger Trade Union Committee API" });
                 c.OperationFilter<AuthorizationHeaderParameterOperationFilter>();
+                c.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, "TradeUnionCommittee.Web.Api.xml"));
             });
 
             services.Configure<GzipCompressionProviderOptions>(options =>
@@ -156,6 +158,8 @@ namespace TradeUnionCommittee.Web.Api
 
         private void DependencyInjectionSystem(IServiceCollection services)
         {
+            services.AddOptions();
+            services.Configure<AuthOptions>(Configuration.GetSection("AuthOptions"));
             services.AddSingleton(cm => AutoMapperConfiguration.ConfigureAutoMapper());
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddTransient<IJwtBearerConfiguration, JwtBearerConfiguration>();

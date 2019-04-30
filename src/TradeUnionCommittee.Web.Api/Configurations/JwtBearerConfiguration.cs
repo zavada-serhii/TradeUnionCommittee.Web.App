@@ -1,71 +1,62 @@
-﻿using Microsoft.IdentityModel.Tokens;
-using Newtonsoft.Json;
+﻿using Microsoft.Extensions.Options;
 using System;
-using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
+using System.Security.Cryptography;
+using System.Text;
 using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.ActualResults;
 using TradeUnionCommittee.BLL.Interfaces.Account;
+using TradeUnionCommittee.ViewModels.ViewModels;
+using TradeUnionCommittee.Web.Api.Model;
 
 namespace TradeUnionCommittee.Web.Api.Configurations
 {
     public interface IJwtBearerConfiguration
     {
-        Task<ActualResult<string>> GetToken(string username, string password);
+        Task<ActualResult<TokenModel>> SignInByPassword(TokenViewModel model);
+        Task<ActualResult<TokenModel>> SignInByRefreshToken(RefreshTokenViewModel model);
     }
 
     public class JwtBearerConfiguration : IJwtBearerConfiguration
     {
         private readonly IAccountService _accountService;
+        private readonly IOptions<AuthOptions> _authOptions;
 
-        public JwtBearerConfiguration(IAccountService accountService)
+        public JwtBearerConfiguration(IAccountService accountService, IOptions<AuthOptions> authOptions)
         {
             _accountService = accountService;
+            _authOptions = authOptions;
         }
 
-        public async Task<ActualResult<string>> GetToken(string username, string password)
+        public Task<ActualResult<TokenModel>> SignInByPassword(TokenViewModel model)
         {
-            var identity = await GetIdentity(username, password);
-            if (identity == null)
-            {
-                return new ActualResult<string>("Invalid username or password.");
-            }
-
-            var now = DateTime.UtcNow;
-            var jwt = new JwtSecurityToken(
-                AuthOptions.Issuer,
-                AuthOptions.Audience,
-                notBefore: now,
-                claims: identity.Claims,
-                expires: now.Add(TimeSpan.FromMinutes(AuthOptions.LifeTime)),
-                signingCredentials: new SigningCredentials(AuthOptions.GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha256));
-            var encodedJwt = new JwtSecurityTokenHandler().WriteToken(jwt);
-
-            var response = new
-            {
-                access_token = encodedJwt,
-                username = identity.Name
-            };
-
-            var result = JsonConvert.SerializeObject(response, new JsonSerializerSettings { Formatting = Formatting.Indented });
-
-            return new ActualResult<string> { Result = result };
+            throw new System.NotImplementedException();
         }
 
-        private async Task<ClaimsIdentity> GetIdentity(string username, string password)
+        public Task<ActualResult<TokenModel>> SignInByRefreshToken(RefreshTokenViewModel model)
         {
-            var role = await _accountService.SignIn(username, password);
-            if (role != null)
+            throw new System.NotImplementedException();
+        }
+
+        //------------------------------------------------------------------------------------------
+
+        private string GetHash(string input)
+        {
+            using (HashAlgorithm hashAlgorithm = new SHA512CryptoServiceProvider())
             {
-                var claims = new List<Claim>
-                {
-                    new Claim(ClaimsIdentity.DefaultNameClaimType, username),
-                    new Claim(ClaimsIdentity.DefaultRoleClaimType, role)
-                };
-                return new ClaimsIdentity(claims, "Token", ClaimsIdentity.DefaultNameClaimType, ClaimsIdentity.DefaultRoleClaimType);
+                var byteValue = Encoding.UTF8.GetBytes(input + _authOptions.Value.HashRefreshToken);
+                var byteHash = hashAlgorithm.ComputeHash(byteValue);
+                return Convert.ToBase64String(byteHash);
             }
-            return null;
+        }
+
+        private string GenerateRandomCryptographicKey(int keyLength)
+        {
+            using (var rngCryptoServiceProvider = new RNGCryptoServiceProvider())
+            {
+                var randomBytes = new byte[keyLength];
+                rngCryptoServiceProvider.GetBytes(randomBytes);
+                return Convert.ToBase64String(randomBytes);
+            }
         }
     }
 }

@@ -8,8 +8,10 @@
     <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
     <DockerComposeProjectPath>..\..\docker-compose.dcproj</DockerComposeProjectPath>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <NoWarn>1701;1702;1591</NoWarn>
+    <DocumentationFile>bin\$(Configuration)\TradeUnionCommittee.Web.Api.xml</DocumentationFile>
   </PropertyGroup>
-
+  
   <ItemGroup>
     <Folder Include="wwwroot\" />
   </ItemGroup>
