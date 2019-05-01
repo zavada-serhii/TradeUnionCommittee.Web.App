@@ -17,12 +17,6 @@ namespace TradeUnionCommittee.Web.Api.Controllers.Account
             _jwtBearer = jwtBearer;
         }
 
-        /// <summary>
-        /// Examples ClientId:
-        /// 0 - Web Application, 
-        /// 1 - Desktop Application,
-        /// 2 - Mobile Application
-        /// </summary>
         [HttpPost]
         [Route("Token")]
         public async Task Token([FromBody] TokenViewModel viewModel)
@@ -36,12 +30,6 @@ namespace TradeUnionCommittee.Web.Api.Controllers.Account
             await HttpContext.BadRequest(account.ErrorsList);
         }
 
-        /// <summary>
-        /// Examples ClientId:
-        /// 0 - Web Application, 
-        /// 1 - Desktop Application,
-        /// 2 - Mobile Application
-        /// </summary>
         [HttpPost]
         [Route("RefreshToken")]
         public async Task RefreshToken([FromBody] RefreshTokenViewModel viewModel)

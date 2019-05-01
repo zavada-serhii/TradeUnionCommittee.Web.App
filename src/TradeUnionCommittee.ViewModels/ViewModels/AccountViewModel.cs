@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
+using TradeUnionCommittee.ViewModels.Attributes;
 using TradeUnionCommittee.ViewModels.Enums;
 
 namespace TradeUnionCommittee.ViewModels.ViewModels
@@ -23,16 +24,18 @@ namespace TradeUnionCommittee.ViewModels.ViewModels
 
     public class TokenViewModel : BaseLoginViewModel
     {
-        [EnumDataType(typeof(ClientType))]
-        [Required(ErrorMessage = "Id клієнта не може бути порожнім")]
-        public ClientType ClientId { get; set; }
+        [Required]
+        [StringRange(AllowableValues = new[] { "WEB-APPLICATION", "DESKTOP-APPLICATION", "MOBILE-APPLICATION" }, 
+            ErrorMessage = "Client Type must be either 'Web-Application', 'Desktop-Application' or 'Mobile-Application'.")]
+        public string ClientType { get; set; }
     }
 
     public class RefreshTokenViewModel
     {
-        [EnumDataType(typeof(ClientType))]
-        [Required(ErrorMessage = "Id клієнта не може бути порожнім")]
-        public ClientType ClientId { get; set; }
+        [Required]
+        [StringRange(AllowableValues = new[] { "WEB-APPLICATION", "DESKTOP-APPLICATION", "MOBILE-APPLICATION" },
+            ErrorMessage = "ClientType must be either 'Web-Application', 'Desktop-Application' or 'Mobile-Application'.")]
+        public string ClientType { get; set; }
         [Required(ErrorMessage = "Refresh Token не може бути порожнім")]
         public string RefreshToken { get; set; }
     }
