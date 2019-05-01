@@ -222,7 +222,7 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Account
         {
             if (ModelState.IsValid)
             {
-                var result = await _accountService.UpdateRoleAsync(_mapper.Map<AccountRoleDTO>(vm));
+                var result = await _accountService.UpdateRoleAsync(_mapper.Map<AccountDTO>(vm));
                 if (result.IsValid)
                 {
                     return RedirectToAction("Index");

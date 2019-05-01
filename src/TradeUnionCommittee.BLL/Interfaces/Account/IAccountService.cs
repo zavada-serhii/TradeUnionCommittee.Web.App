@@ -25,14 +25,14 @@ namespace TradeUnionCommittee.BLL.Interfaces.Account
 
         Task<ActualResult<IEnumerable<AccountDTO>>> GetAllAccountsAsync();
         Task<ActualResult<AccountDTO>> GetAccountAsync(string hashId);
-        Task<ActualResult<AccountRoleDTO>> GetAccountRoleAsync(string hashId);
+        Task<ActualResult<AccountDTO>> GetAccountRoleAsync(string hashId);
         Task<ActualResult<IEnumerable<RolesDTO>>> GetRoles();
 
         Task<ActualResult> CreateAsync(CreateAccountDTO dto);
         Task<ActualResult> UpdatePersonalDataAsync(AccountDTO dto);
         Task<ActualResult> UpdateEmailAsync(AccountDTO dto);
         Task<ActualResult> UpdatePasswordAsync(UpdateAccountPasswordDTO dto);
-        Task<ActualResult> UpdateRoleAsync(AccountRoleDTO dto);
+        Task<ActualResult> UpdateRoleAsync(AccountDTO dto);
         Task<ActualResult> DeleteAsync(string hashId);
 
         Task<bool> CheckEmailAsync(string email);

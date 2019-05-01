@@ -105,7 +105,7 @@ namespace TradeUnionCommittee.BLL.Services.Account
             }
         }
 
-        public async Task<ActualResult<AccountRoleDTO>> GetAccountRoleAsync(string hashId)
+        public async Task<ActualResult<AccountDTO>> GetAccountRoleAsync(string hashId)
         {
             try
             {
@@ -113,14 +113,14 @@ namespace TradeUnionCommittee.BLL.Services.Account
                 if (user != null)
                 {
                     var roles = await _userManager.GetRolesAsync(user);
-                    var result = new AccountRoleDTO { HashId = hashId, Role = TranslatorHelper.ConvertToUkrainianLang(roles.FirstOrDefault()) };
-                    return new ActualResult<AccountRoleDTO> { Result = result };
+                    var result = new AccountDTO { HashId = hashId, Role = TranslatorHelper.ConvertToUkrainianLang(roles.FirstOrDefault()) };
+                    return new ActualResult<AccountDTO> { Result = result };
                 }
-                return new ActualResult<AccountRoleDTO>(Errors.UserNotFound);
+                return new ActualResult<AccountDTO>(Errors.UserNotFound);
             }
             catch (Exception exception)
             {
-                return new ActualResult<AccountRoleDTO>(DescriptionExceptionHelper.GetDescriptionError(exception));
+                return new ActualResult<AccountDTO>(DescriptionExceptionHelper.GetDescriptionError(exception));
             }
         }
 
@@ -232,7 +232,7 @@ namespace TradeUnionCommittee.BLL.Services.Account
             }
         }
 
-        public async Task<ActualResult> UpdateRoleAsync(AccountRoleDTO dto)
+        public async Task<ActualResult> UpdateRoleAsync(AccountDTO dto)
         {
             try
             {
