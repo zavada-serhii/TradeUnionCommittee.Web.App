@@ -1,5 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
+using TradeUnionCommittee.ViewModels.Attributes;
 
 namespace TradeUnionCommittee.ViewModels.ViewModels
 {
@@ -18,6 +19,24 @@ namespace TradeUnionCommittee.ViewModels.ViewModels
     {
         public string ReturnUrl { get; set; }
         public bool RememberMe { get; set; }
+    }
+
+    public class TokenViewModel : BaseLoginViewModel
+    {
+        [Required]
+        [StringRange(AllowableValues = new[] { "WEB-APPLICATION", "DESKTOP-APPLICATION", "MOBILE-APPLICATION" }, 
+            ErrorMessage = "Client Type must be either 'Web-Application', 'Desktop-Application' or 'Mobile-Application'.")]
+        public string ClientType { get; set; }
+    }
+
+    public class RefreshTokenViewModel
+    {
+        [Required]
+        [StringRange(AllowableValues = new[] { "WEB-APPLICATION", "DESKTOP-APPLICATION", "MOBILE-APPLICATION" },
+            ErrorMessage = "ClientType must be either 'Web-Application', 'Desktop-Application' or 'Mobile-Application'.")]
+        public string ClientType { get; set; }
+        [Required(ErrorMessage = "Refresh Token не може бути порожнім")]
+        public string RefreshToken { get; set; }
     }
 
     public class CreateAccountViewModel

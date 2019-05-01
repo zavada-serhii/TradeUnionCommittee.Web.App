@@ -10,6 +10,7 @@ using TradeUnionCommittee.BLL.DTO;
 using TradeUnionCommittee.BLL.Enums;
 using TradeUnionCommittee.BLL.Helpers;
 using TradeUnionCommittee.BLL.Interfaces.Account;
+using TradeUnionCommittee.DAL.Identity.EF;
 using TradeUnionCommittee.DAL.Identity.Entities;
 
 namespace TradeUnionCommittee.BLL.Services.Account
@@ -19,31 +20,47 @@ namespace TradeUnionCommittee.BLL.Services.Account
         private readonly UserManager<User> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly SignInManager<User> _signInManager;
+        private readonly TradeUnionCommitteeIdentityContext _context;
         private readonly AutoMapperConfiguration _mapperService;
 
         public AccountService(UserManager<User> userManager, 
                               RoleManager<IdentityRole> roleManager, 
-                              SignInManager<User> signInManager, 
+                              SignInManager<User> signInManager,
+                              TradeUnionCommitteeIdentityContext context,
                               AutoMapperConfiguration mapperService)
         {
             _userManager = userManager;
             _roleManager = roleManager;
             _signInManager = signInManager;
+            _context = context;
             _mapperService = mapperService;
         }
 
         //------------------------------------------------------------------------------------------------------------------------------------------
 
-        public async Task<string> SignIn(string email, string password)
+        public async Task<AccountDTO> SignIn(string email, string password, SignInType type)
         {
             try
             {
+                bool isAuthorize;
                 var user = await _userManager.FindByEmailAsync(email);
-                var checkPassword = await _userManager.CheckPasswordAsync(user, password);
-                if (checkPassword)
+
+                switch (type)
+                {
+                    case SignInType.Credentials:
+                        isAuthorize = await _userManager.CheckPasswordAsync(user, password);
+                        break;
+                    case SignInType.RefreshToken:
+                        isAuthorize = user != null;
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException(nameof(type), type, null);
+                }
+
+                if (isAuthorize)
                 {
                     var roles = await _userManager.GetRolesAsync(user);
-                    return roles.FirstOrDefault();
+                    return new AccountDTO { Email = user.Email, Role = roles.First() };
                 }
                 return null;
             }
@@ -105,7 +122,7 @@ namespace TradeUnionCommittee.BLL.Services.Account
             }
         }
 
-        public async Task<ActualResult<AccountRoleDTO>> GetAccountRoleAsync(string hashId)
+        public async Task<ActualResult<AccountDTO>> GetAccountRoleAsync(string hashId)
         {
             try
             {
@@ -113,14 +130,14 @@ namespace TradeUnionCommittee.BLL.Services.Account
                 if (user != null)
                 {
                     var roles = await _userManager.GetRolesAsync(user);
-                    var result = new AccountRoleDTO { HashId = hashId, Role = TranslatorHelper.ConvertToUkrainianLang(roles.FirstOrDefault()) };
-                    return new ActualResult<AccountRoleDTO> { Result = result };
+                    var result = new AccountDTO { HashId = hashId, Role = TranslatorHelper.ConvertToUkrainianLang(roles.FirstOrDefault()) };
+                    return new ActualResult<AccountDTO> { Result = result };
                 }
-                return new ActualResult<AccountRoleDTO>(Errors.UserNotFound);
+                return new ActualResult<AccountDTO>(Errors.UserNotFound);
             }
             catch (Exception exception)
             {
-                return new ActualResult<AccountRoleDTO>(DescriptionExceptionHelper.GetDescriptionError(exception));
+                return new ActualResult<AccountDTO>(DescriptionExceptionHelper.GetDescriptionError(exception));
             }
         }
 
@@ -135,6 +152,45 @@ namespace TradeUnionCommittee.BLL.Services.Account
             catch (Exception exception)
             {
                 return new ActualResult<IEnumerable<RolesDTO>>(DescriptionExceptionHelper.GetDescriptionError(exception));
+            }
+        }
+
+        public async Task<int?> GetClientRefreshTokenLifeTime(string clientType)
+        {
+            try
+            {
+                var client = await _context.Clients.FindAsync(clientType);
+                return client?.RefreshTokenLifeTime;
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+
+        public async Task<ProtectedTicketDTO> GetProtectedTicket(string refreshTokenId)
+        {
+            try
+            {
+                var refreshToken = await _context.RefreshTokens.FindAsync(refreshTokenId);
+                if (refreshToken != null)
+                {
+                    if (DateTime.Now < refreshToken.ExpiresUtc)
+                    {
+                        return new ProtectedTicketDTO
+                        {
+                            ClientType = refreshToken.ClientId,
+                            Email = refreshToken.Subject
+                        };
+                    }
+                    _context.RefreshTokens.Remove(refreshToken);
+                    await _context.SaveChangesAsync();
+                }
+                return null;
+            }
+            catch (Exception)
+            {
+                return null;
             }
         }
 
@@ -166,6 +222,25 @@ namespace TradeUnionCommittee.BLL.Services.Account
             catch (Exception exception)
             {
                 return new ActualResult(DescriptionExceptionHelper.GetDescriptionError(exception));
+            }
+        }
+
+        public async Task CreateRefreshToken(RefreshTokenDTO dto)
+        {
+            try
+            {
+                var existingToken = await _context.RefreshTokens.SingleOrDefaultAsync(x => x.Subject == dto.Subject && x.ClientId == dto.ClientType);
+                if (existingToken != null)
+                {
+                    _context.RefreshTokens.Remove(existingToken);
+                    await _context.SaveChangesAsync();
+                }
+                await _context.RefreshTokens.AddAsync(_mapperService.Mapper.Map<RefreshToken>(dto));
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception)
+            {
+                // ignored
             }
         }
 
@@ -232,7 +307,7 @@ namespace TradeUnionCommittee.BLL.Services.Account
             }
         }
 
-        public async Task<ActualResult> UpdateRoleAsync(AccountRoleDTO dto)
+        public async Task<ActualResult> UpdateRoleAsync(AccountDTO dto)
         {
             try
             {

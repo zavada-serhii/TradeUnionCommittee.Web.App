@@ -1,10 +1,8 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using System.Linq;
+﻿using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
-using TradeUnionCommittee.BLL.Interfaces.Account;
 using TradeUnionCommittee.ViewModels.ViewModels;
 using TradeUnionCommittee.Web.Api.Configurations;
+using TradeUnionCommittee.Web.Api.Extensions;
 
 namespace TradeUnionCommittee.Web.Api.Controllers.Account
 {
@@ -13,27 +11,48 @@ namespace TradeUnionCommittee.Web.Api.Controllers.Account
     public class AccountController : ControllerBase
     {
         private readonly IJwtBearerConfiguration _jwtBearer;
-        private readonly IAccountService _accountService;
 
-        public AccountController(IAccountService accountService, IJwtBearerConfiguration jwtBearer)
+        public AccountController(IJwtBearerConfiguration jwtBearer)
         {
             _jwtBearer = jwtBearer;
-            _accountService = accountService;
         }
 
+        /// <summary>
+        /// Client Type available values:
+        /// 'Web-Application',
+        /// 'Desktop-Application' or
+        /// 'Mobile-Application'
+        /// </summary>
         [HttpPost]
         [Route("Token")]
-        public async Task Token([FromBody] BaseLoginViewModel viewModel)
+        public async Task Token([FromBody] TokenViewModel viewModel)
         {
-            var identity = await _jwtBearer.GetToken(viewModel.Email, viewModel.Password);
-            if (identity.IsValid)
+            var account = await _jwtBearer.SignInByPassword(viewModel);
+            if (account.IsValid)
             {
-                Response.ContentType = "application/json";
-                await Response.WriteAsync(identity.Result);
+                await HttpContext.WriteToken(account.Result);
                 return;
             }
-            Response.StatusCode = 400;
-            await Response.WriteAsync(identity.ErrorsList.FirstOrDefault());
+            await HttpContext.BadRequest(account.ErrorsList);
+        }
+
+        /// <summary>
+        /// Client Type available values:
+        /// 'Web-Application',
+        /// 'Desktop-Application' or
+        /// 'Mobile-Application'
+        /// </summary>
+        [HttpPost]
+        [Route("RefreshToken")]
+        public async Task RefreshToken([FromBody] RefreshTokenViewModel viewModel)
+        {
+            var account = await _jwtBearer.SignInByRefreshToken(viewModel);
+            if (account.IsValid)
+            {
+                await HttpContext.WriteToken(account.Result);
+                return;
+            }
+            await HttpContext.BadRequest(account.ErrorsList);
         }
     }
 }

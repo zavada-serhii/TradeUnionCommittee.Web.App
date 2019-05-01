@@ -45,6 +45,9 @@ namespace TradeUnionCommittee.BLL.Configurations
                     .ForMember(d => d.Name, c => c.MapFrom(x => TranslatorHelper.ConvertToUkrainianLang(x.Name)))
                     .ReverseMap();
 
+                map.CreateMap<RefreshTokenDTO, RefreshToken>()
+                    .ForMember(d => d.ClientId, c => c.MapFrom(x => x.ClientType));
+
                 #endregion
 
                 #region Mapping for Directory

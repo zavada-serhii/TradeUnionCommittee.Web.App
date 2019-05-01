@@ -15,6 +15,9 @@ namespace TradeUnionCommittee.DAL.Identity.EF
             }
         }
 
+        public DbSet<Client> Clients { get; set; }
+        public DbSet<RefreshToken> RefreshTokens { get; set; }
+
         private void InitializeDefaultUsers()
         {
             //--Credentials
@@ -41,6 +44,26 @@ namespace TradeUnionCommittee.DAL.Identity.EF
             {
                 dr.DbDataReader.Close();
             }
+
+            Clients.Add(new Client
+            {
+                Id = "WEB-APPLICATION",
+                RefreshTokenLifeTime = 86400 //60 days
+            });
+
+            Clients.Add(new Client
+            {
+                Id = "DESKTOP-APPLICATION",
+                RefreshTokenLifeTime = 86400 //60 days
+            });
+
+            Clients.Add(new Client
+            {
+                Id = "MOBILE-APPLICATION",
+                RefreshTokenLifeTime = 86400 //60 days
+            });
+
+            SaveChanges();
         }
     }
 }

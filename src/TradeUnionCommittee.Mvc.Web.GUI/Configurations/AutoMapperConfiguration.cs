@@ -30,7 +30,7 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Configurations
                 map.CreateMap<UpdatePersonalDataAccountViewModel, AccountDTO>().ReverseMap();
                 map.CreateMap<UpdateEmailAccountViewModel, AccountDTO>().ReverseMap();
                 map.CreateMap<UpdatePasswordAccountViewModel, UpdateAccountPasswordDTO>();
-                map.CreateMap<UpdateRoleAccountViewModel, AccountRoleDTO>().ReverseMap();
+                map.CreateMap<UpdateRoleAccountViewModel, AccountDTO>().ReverseMap();
 
                 #endregion
 
