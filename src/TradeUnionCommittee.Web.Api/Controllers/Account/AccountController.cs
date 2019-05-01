@@ -17,6 +17,12 @@ namespace TradeUnionCommittee.Web.Api.Controllers.Account
             _jwtBearer = jwtBearer;
         }
 
+        /// <summary>
+        /// Client Type available values:
+        /// 'Web-Application',
+        /// 'Desktop-Application' or
+        /// 'Mobile-Application'
+        /// </summary>
         [HttpPost]
         [Route("Token")]
         public async Task Token([FromBody] TokenViewModel viewModel)
@@ -30,6 +36,12 @@ namespace TradeUnionCommittee.Web.Api.Controllers.Account
             await HttpContext.BadRequest(account.ErrorsList);
         }
 
+        /// <summary>
+        /// Client Type available values:
+        /// 'Web-Application',
+        /// 'Desktop-Application' or
+        /// 'Mobile-Application'
+        /// </summary>
         [HttpPost]
         [Route("RefreshToken")]
         public async Task RefreshToken([FromBody] RefreshTokenViewModel viewModel)

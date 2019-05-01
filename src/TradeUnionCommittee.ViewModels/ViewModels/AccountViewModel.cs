@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 using TradeUnionCommittee.ViewModels.Attributes;
-using TradeUnionCommittee.ViewModels.Enums;
 
 namespace TradeUnionCommittee.ViewModels.ViewModels
 {

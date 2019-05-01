@@ -32,7 +32,7 @@ namespace TradeUnionCommittee.Web.Api.Extensions
             {
                 access_token = model.AccessToken,
                 refresh_token = model.RefreshToken,
-                access_token_expires = model.AccessTokenExpires,
+                expires_in = model.AccessTokenExpires,
                 token_type = model.TokenType,
                 user_name = model.Email,
                 user_role = model.Role
