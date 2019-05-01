@@ -235,16 +235,7 @@ namespace TradeUnionCommittee.BLL.Services.Account
                     _context.RefreshTokens.Remove(existingToken);
                     await _context.SaveChangesAsync();
                 }
-
-                await _context.RefreshTokens.AddAsync(new RefreshToken
-                {
-                    Id = dto.Id,
-                    ClientId = dto.ClientType,
-                    Subject = dto.Subject,
-                    IssuedUtc = dto.IssuedUtc,
-                    ExpiresUtc = dto.ExpiresUtc
-                });
-
+                await _context.RefreshTokens.AddAsync(_mapperService.Mapper.Map<RefreshToken>(dto));
                 await _context.SaveChangesAsync();
             }
             catch (Exception)
