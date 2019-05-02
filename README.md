@@ -5,8 +5,8 @@ Information system for the primary trade union organization of the Odessa Nation
 ![](https://github.com/zavada-sergey/TradeUnionCommittee.WebApp.Core/blob/master/blob/System%20Architecture.png)
 
 # Road map
+- [ ] Data Analysis Service
 - [ ] Transfer business logic from stored procedures
-- [ ] Data Analysis API && Data Analysis Service
 - [ ] Logging
 - [ ] Unit Tests
 
