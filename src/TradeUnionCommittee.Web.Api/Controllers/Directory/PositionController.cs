@@ -10,6 +10,7 @@ using TradeUnionCommittee.BLL.Enums;
 using TradeUnionCommittee.BLL.Interfaces.Directory;
 using TradeUnionCommittee.BLL.Interfaces.SystemAudit;
 using TradeUnionCommittee.ViewModels.ViewModels;
+using TradeUnionCommittee.Web.Api.Extensions;
 
 namespace TradeUnionCommittee.Web.Api.Controllers.Directory
 {
@@ -64,7 +65,7 @@ namespace TradeUnionCommittee.Web.Api.Controllers.Directory
                 var result = await _services.CreateAsync(_mapper.Map<DirectoryDTO>(vm));
                 if (result.IsValid)
                 {
-                    await _systemAuditService.AuditAsync(User.Identity.Name, _accessor.HttpContext.Connection.RemoteIpAddress.ToString(), Operations.Insert, Tables.Position);
+                    await _systemAuditService.AuditAsync(User.GetEmail(), _accessor.GetIp(), Operations.Insert, Tables.Position);
                     return Ok(result);
                 }
                 return BadRequest(result);
@@ -82,7 +83,7 @@ namespace TradeUnionCommittee.Web.Api.Controllers.Directory
                 var result = await _services.UpdateAsync(_mapper.Map<DirectoryDTO>(vm));
                 if (result.IsValid)
                 {
-                    await _systemAuditService.AuditAsync(User.Identity.Name, _accessor.HttpContext.Connection.RemoteIpAddress.ToString(), Operations.Update, Tables.Position);
+                    await _systemAuditService.AuditAsync(User.GetEmail(), _accessor.GetIp(), Operations.Update, Tables.Position);
                     return Ok(result);
                 }
                 return BadRequest(result);
@@ -98,7 +99,7 @@ namespace TradeUnionCommittee.Web.Api.Controllers.Directory
             var result = await _services.DeleteAsync(id);
             if (result.IsValid)
             {
-                await _systemAuditService.AuditAsync(User.Identity.Name, _accessor.HttpContext.Connection.RemoteIpAddress.ToString(), Operations.Delete, Tables.Position);
+                await _systemAuditService.AuditAsync(User.GetEmail(), _accessor.GetIp(), Operations.Delete, Tables.Position);
                 return Ok(result);
             }
             return BadRequest(result);

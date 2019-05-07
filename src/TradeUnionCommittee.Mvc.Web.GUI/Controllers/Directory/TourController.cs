@@ -8,6 +8,7 @@ using TradeUnionCommittee.BLL.DTO;
 using TradeUnionCommittee.BLL.Enums;
 using TradeUnionCommittee.BLL.Interfaces.Directory;
 using TradeUnionCommittee.BLL.Interfaces.SystemAudit;
+using TradeUnionCommittee.Mvc.Web.GUI.Extensions;
 using TradeUnionCommittee.ViewModels.ViewModels;
 
 namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Directory
@@ -61,7 +62,7 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Directory
                 var result = await _services.CreateAsync(_mapper.Map<TourDTO>(vm));
                 if (result.IsValid)
                 {
-                    await _systemAuditService.AuditAsync(User.Identity.Name, _accessor.HttpContext.Connection.RemoteIpAddress.ToString(), Operations.Insert, Tables.Event);
+                    await _systemAuditService.AuditAsync(User.GetEmail(), _accessor.GetIp(), Operations.Insert, Tables.Event);
                     return RedirectToAction("Index");
                 }
                 TempData["ErrorsList"] = result.ErrorsList;
@@ -94,7 +95,7 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Directory
                 var result = await _services.UpdateAsync(_mapper.Map<TourDTO>(vm));
                 if (result.IsValid)
                 {
-                    await _systemAuditService.AuditAsync(User.Identity.Name, _accessor.HttpContext.Connection.RemoteIpAddress.ToString(), Operations.Update, Tables.Event);
+                    await _systemAuditService.AuditAsync(User.GetEmail(), _accessor.GetIp(), Operations.Update, Tables.Event);
                     return RedirectToAction("Index");
                 }
                 TempData["ErrorsListConfirmed"] = result.ErrorsList;
@@ -125,7 +126,7 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Directory
             var result = await _services.DeleteAsync(id);
             if (result.IsValid)
             {
-                await _systemAuditService.AuditAsync(User.Identity.Name, _accessor.HttpContext.Connection.RemoteIpAddress.ToString(), Operations.Delete, Tables.Event);
+                await _systemAuditService.AuditAsync(User.GetEmail(), _accessor.GetIp(), Operations.Delete, Tables.Event);
                 return RedirectToAction("Index");
             }
             TempData["ErrorsList"] = result.ErrorsList;

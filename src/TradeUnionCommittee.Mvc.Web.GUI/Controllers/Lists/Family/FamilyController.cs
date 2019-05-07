@@ -1,13 +1,14 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
+using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.DTO.Family;
 using TradeUnionCommittee.BLL.Enums;
 using TradeUnionCommittee.BLL.Interfaces.Lists.Family;
 using TradeUnionCommittee.BLL.Interfaces.SystemAudit;
+using TradeUnionCommittee.Mvc.Web.GUI.Extensions;
 using TradeUnionCommittee.ViewModels.ViewModels.Family;
 
 namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Lists.Family
@@ -62,7 +63,7 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Lists.Family
                 var result = await _services.CreateAsync(_mapper.Map<FamilyDTO>(vm));
                 if (result.IsValid)
                 {
-                    await _systemAuditService.AuditAsync(User.Identity.Name, _accessor.HttpContext.Connection.RemoteIpAddress.ToString(), Operations.Insert, Tables.Family);
+                    await _systemAuditService.AuditAsync(User.GetEmail(), _accessor.GetIp(), Operations.Insert, Tables.Family);
                     return RedirectToAction("Index", new { id = vm.HashIdEmployee });
                 }
                 TempData["ErrorsList"] = result.ErrorsList;
@@ -95,7 +96,7 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Lists.Family
                 var result = await _services.UpdateAsync(_mapper.Map<FamilyDTO>(vm));
                 if (result.IsValid)
                 {
-                    await _systemAuditService.AuditAsync(User.Identity.Name, _accessor.HttpContext.Connection.RemoteIpAddress.ToString(), Operations.Update, Tables.Family);
+                    await _systemAuditService.AuditAsync(User.GetEmail(), _accessor.GetIp(), Operations.Update, Tables.Family);
                     return RedirectToAction("Index", new { id = vm.HashIdEmployee });
                 }
                 TempData["ErrorsListConfirmed"] = result.ErrorsList;
@@ -126,7 +127,7 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Lists.Family
             var result = await _services.DeleteAsync(hashId);
             if (result.IsValid)
             {
-                await _systemAuditService.AuditAsync(User.Identity.Name, _accessor.HttpContext.Connection.RemoteIpAddress.ToString(), Operations.Delete, Tables.Family);
+                await _systemAuditService.AuditAsync(User.GetEmail(), _accessor.GetIp(), Operations.Delete, Tables.Family);
                 return RedirectToAction("Index", new { id = hashIdEmployee });
             }
             TempData["ErrorsList"] = result.ErrorsList;

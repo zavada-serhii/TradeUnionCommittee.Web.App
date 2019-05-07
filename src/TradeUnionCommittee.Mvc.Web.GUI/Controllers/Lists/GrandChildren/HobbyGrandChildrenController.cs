@@ -1,16 +1,17 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.DTO.GrandChildren;
 using TradeUnionCommittee.BLL.Enums;
 using TradeUnionCommittee.BLL.Interfaces.Helpers;
 using TradeUnionCommittee.BLL.Interfaces.Lists.GrandChildren;
 using TradeUnionCommittee.BLL.Interfaces.SystemAudit;
 using TradeUnionCommittee.Mvc.Web.GUI.Controllers.Directory;
+using TradeUnionCommittee.Mvc.Web.GUI.Extensions;
 using TradeUnionCommittee.ViewModels.ViewModels.GrandChildren;
 
 namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Lists.GrandChildren
@@ -75,7 +76,7 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Lists.GrandChildren
                 var result = await _services.CreateAsync(_mapper.Map<HobbyGrandChildrenDTO>(vm));
                 if (result.IsValid)
                 {
-                    await _systemAuditService.AuditAsync(User.Identity.Name, _accessor.HttpContext.Connection.RemoteIpAddress.ToString(), Operations.Insert, Tables.HobbyGrandChildrens);
+                    await _systemAuditService.AuditAsync(User.GetEmail(), _accessor.GetIp(), Operations.Insert, Tables.HobbyGrandChildrens);
                     return RedirectToAction("Index", new { id = vm.HashIdGrandChildren });
                 }
                 TempData["ErrorsList"] = result.ErrorsList;
@@ -110,7 +111,7 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Lists.GrandChildren
                 var result = await _services.UpdateAsync(_mapper.Map<HobbyGrandChildrenDTO>(vm));
                 if (result.IsValid)
                 {
-                    await _systemAuditService.AuditAsync(User.Identity.Name, _accessor.HttpContext.Connection.RemoteIpAddress.ToString(), Operations.Update, Tables.HobbyGrandChildrens);
+                    await _systemAuditService.AuditAsync(User.GetEmail(), _accessor.GetIp(), Operations.Update, Tables.HobbyGrandChildrens);
                     return RedirectToAction("Index", new { id = vm.HashIdGrandChildren });
                 }
                 TempData["ErrorsListConfirmed"] = result.ErrorsList;
@@ -142,7 +143,7 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Lists.GrandChildren
             var result = await _services.DeleteAsync(hashId);
             if (result.IsValid)
             {
-                await _systemAuditService.AuditAsync(User.Identity.Name, _accessor.HttpContext.Connection.RemoteIpAddress.ToString(), Operations.Delete, Tables.HobbyGrandChildrens);
+                await _systemAuditService.AuditAsync(User.GetEmail(), _accessor.GetIp(), Operations.Delete, Tables.HobbyGrandChildrens);
                 return RedirectToAction("Index", new { id = hashIdGrandChildren });
             }
             TempData["ErrorsList"] = result.ErrorsList;

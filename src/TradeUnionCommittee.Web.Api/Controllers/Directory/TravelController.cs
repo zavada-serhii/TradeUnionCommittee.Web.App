@@ -9,6 +9,7 @@ using TradeUnionCommittee.BLL.Enums;
 using TradeUnionCommittee.BLL.Interfaces.Directory;
 using TradeUnionCommittee.BLL.Interfaces.SystemAudit;
 using TradeUnionCommittee.ViewModels.ViewModels;
+using TradeUnionCommittee.Web.Api.Extensions;
 
 namespace TradeUnionCommittee.Web.Api.Controllers.Directory
 {
@@ -60,7 +61,7 @@ namespace TradeUnionCommittee.Web.Api.Controllers.Directory
                 var result = await _services.CreateAsync(_mapper.Map<TravelDTO>(vm));
                 if (result.IsValid)
                 {
-                    await _systemAuditService.AuditAsync(User.Identity.Name, _accessor.HttpContext.Connection.RemoteIpAddress.ToString(), Operations.Insert, Tables.Event);
+                    await _systemAuditService.AuditAsync(User.GetEmail(), _accessor.GetIp(), Operations.Insert, Tables.Event);
                     return Ok(result);
                 }
                 return BadRequest(result);
@@ -78,7 +79,7 @@ namespace TradeUnionCommittee.Web.Api.Controllers.Directory
                 var result = await _services.UpdateAsync(_mapper.Map<TravelDTO>(vm));
                 if (result.IsValid)
                 {
-                    await _systemAuditService.AuditAsync(User.Identity.Name, _accessor.HttpContext.Connection.RemoteIpAddress.ToString(), Operations.Update, Tables.Event);
+                    await _systemAuditService.AuditAsync(User.GetEmail(), _accessor.GetIp(), Operations.Update, Tables.Event);
                     return Ok(result);
                 }
                 return BadRequest(result);
@@ -94,7 +95,7 @@ namespace TradeUnionCommittee.Web.Api.Controllers.Directory
             var result = await _services.DeleteAsync(id);
             if (result.IsValid)
             {
-                await _systemAuditService.AuditAsync(User.Identity.Name, _accessor.HttpContext.Connection.RemoteIpAddress.ToString(), Operations.Delete, Tables.Event);
+                await _systemAuditService.AuditAsync(User.GetEmail(), _accessor.GetIp(), Operations.Delete, Tables.Event);
                 return Ok(result);
             }
             return BadRequest(result);
