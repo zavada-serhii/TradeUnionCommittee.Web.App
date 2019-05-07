@@ -9,6 +9,7 @@ using TradeUnionCommittee.BLL.Enums;
 using TradeUnionCommittee.BLL.Interfaces.Directory;
 using TradeUnionCommittee.BLL.Interfaces.SystemAudit;
 using TradeUnionCommittee.ViewModels.ViewModels;
+using TradeUnionCommittee.Web.Api.Extensions;
 
 namespace TradeUnionCommittee.Web.Api.Controllers.Directory
 {
@@ -60,7 +61,7 @@ namespace TradeUnionCommittee.Web.Api.Controllers.Directory
                 var result = await _services.CreateAsync(_mapper.Map<DormitoryDTO>(vm));
                 if (result.IsValid)
                 {
-                    await _systemAuditService.AuditAsync(User.Identity.Name, _accessor.HttpContext.Connection.RemoteIpAddress.ToString(), Operations.Insert, Tables.AddressPublicHouse);
+                    await _systemAuditService.AuditAsync(User.GetEmail(), _accessor.GetIp(), Operations.Insert, Tables.AddressPublicHouse);
                     return Ok(result);
                 }
                 return BadRequest(result);
@@ -78,7 +79,7 @@ namespace TradeUnionCommittee.Web.Api.Controllers.Directory
                 var result = await _services.UpdateAsync(_mapper.Map<DormitoryDTO>(vm));
                 if (result.IsValid)
                 {
-                    await _systemAuditService.AuditAsync(User.Identity.Name, _accessor.HttpContext.Connection.RemoteIpAddress.ToString(), Operations.Update, Tables.AddressPublicHouse);
+                    await _systemAuditService.AuditAsync(User.GetEmail(), _accessor.GetIp(), Operations.Update, Tables.AddressPublicHouse);
                     return Ok(result);
                 }
                 return BadRequest(result);
@@ -94,7 +95,7 @@ namespace TradeUnionCommittee.Web.Api.Controllers.Directory
             var result = await _services.DeleteAsync(id);
             if (result.IsValid)
             {
-                await _systemAuditService.AuditAsync(User.Identity.Name, _accessor.HttpContext.Connection.RemoteIpAddress.ToString(), Operations.Delete, Tables.AddressPublicHouse);
+                await _systemAuditService.AuditAsync(User.GetEmail(), _accessor.GetIp(), Operations.Delete, Tables.AddressPublicHouse);
                 return Ok(result);
             }
             return BadRequest(result);

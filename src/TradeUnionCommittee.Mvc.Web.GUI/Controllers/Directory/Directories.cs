@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using TradeUnionCommittee.BLL.DTO;
 using TradeUnionCommittee.BLL.Interfaces.Account;
 using TradeUnionCommittee.BLL.Interfaces.Directory;
@@ -26,7 +26,6 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Directory
         private readonly IActivitiesService _activitiesService;
         private readonly IAwardService _awardService;
         private readonly IMaterialAidService _materialAidService;
-
 
         public Directories(IAccountService accountService,
                            ISubdivisionsService subdivisionsService,

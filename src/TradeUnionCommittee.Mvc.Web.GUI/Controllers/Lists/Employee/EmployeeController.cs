@@ -1,15 +1,15 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
+using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.DTO.Employee;
 using TradeUnionCommittee.BLL.Enums;
-using TradeUnionCommittee.BLL.Interfaces.Lists;
 using TradeUnionCommittee.BLL.Interfaces.Lists.Employee;
 using TradeUnionCommittee.BLL.Interfaces.SystemAudit;
 using TradeUnionCommittee.Mvc.Web.GUI.Controllers.Directory;
+using TradeUnionCommittee.Mvc.Web.GUI.Extensions;
 using TradeUnionCommittee.ViewModels.ViewModels.Employee;
 
 namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Lists.Employee
@@ -68,25 +68,25 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Lists.Employee
                 if (result.IsValid)
                 {
                     var ip = _accessor.HttpContext.Connection.RemoteIpAddress.ToString();
-                    await _systemAuditService.AuditAsync(User.Identity.Name, ip, Operations.Insert, new[] { Tables.Employee, Tables.PositionEmployees });
+                    await _systemAuditService.AuditAsync(User.GetEmail(), ip, Operations.Insert, new[] { Tables.Employee, Tables.PositionEmployees });
 
                     if (model.TypeAccommodation == AccommodationType.Dormitory || model.TypeAccommodation == AccommodationType.Departmental)
                     {
-                        await _systemAuditService.AuditAsync(User.Identity.Name, ip, Operations.Insert, Tables.PublicHouseEmployees);
+                        await _systemAuditService.AuditAsync(User.GetEmail(), ip, Operations.Insert, Tables.PublicHouseEmployees);
                     }
                     else
                     {
-                        await _systemAuditService.AuditAsync(User.Identity.Name, ip, Operations.Insert, Tables.PrivateHouseEmployees);
+                        await _systemAuditService.AuditAsync(User.GetEmail(), ip, Operations.Insert, Tables.PrivateHouseEmployees);
                     }
 
                     if (model.SocialActivity)
                     {
-                        await _systemAuditService.AuditAsync(User.Identity.Name, ip, Operations.Insert, Tables.SocialActivityEmployees);
+                        await _systemAuditService.AuditAsync(User.GetEmail(), ip, Operations.Insert, Tables.SocialActivityEmployees);
                     }
 
                     if (model.Privileges)
                     {
-                        await _systemAuditService.AuditAsync(User.Identity.Name, ip, Operations.Insert, Tables.PrivilegeEmployees);
+                        await _systemAuditService.AuditAsync(User.GetEmail(), ip, Operations.Insert, Tables.PrivilegeEmployees);
                     }
 
                     return RedirectToAction("Create");
@@ -156,7 +156,7 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Lists.Employee
                 var result = await _employeeService.UpdateMainInfoEmployeeAsync(_mapper.Map<GeneralInfoEmployeeDTO>(vm));
                 if (result.IsValid)
                 {
-                    await _systemAuditService.AuditAsync(User.Identity.Name, _accessor.HttpContext.Connection.RemoteIpAddress.ToString(), Operations.Update, Tables.Employee);
+                    await _systemAuditService.AuditAsync(User.GetEmail(), _accessor.GetIp(), Operations.Update, Tables.Employee);
                     return RedirectToAction("Index", "Employee", new {id = vm.HashIdEmployee});
                 }
                 TempData["ErrorsListConfirmed"] = result.ErrorsList;
@@ -190,7 +190,7 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Lists.Employee
             var result = await _employeeService.DeleteAsync(id);
             if (result.IsValid)
             {
-                await _systemAuditService.AuditAsync(User.Identity.Name, _accessor.HttpContext.Connection.RemoteIpAddress.ToString(), Operations.Delete, Tables.Employee);
+                await _systemAuditService.AuditAsync(User.GetEmail(), _accessor.GetIp(), Operations.Delete, Tables.Employee);
                 return RedirectToAction("Directory", "Home");
             }
             TempData["ErrorsList"] = result.ErrorsList;

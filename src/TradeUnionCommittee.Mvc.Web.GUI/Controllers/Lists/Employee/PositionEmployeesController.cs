@@ -1,15 +1,15 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
+using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.DTO.Employee;
 using TradeUnionCommittee.BLL.Enums;
-using TradeUnionCommittee.BLL.Interfaces.Lists;
 using TradeUnionCommittee.BLL.Interfaces.Lists.Employee;
 using TradeUnionCommittee.BLL.Interfaces.SystemAudit;
 using TradeUnionCommittee.Mvc.Web.GUI.Controllers.Directory;
+using TradeUnionCommittee.Mvc.Web.GUI.Extensions;
 using TradeUnionCommittee.ViewModels.ViewModels.Employee;
 
 namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Lists.Employee
@@ -57,7 +57,7 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Lists.Employee
                 var result = await _services.UpdateAsync(_mapper.Map<PositionEmployeesDTO>(vm));
                 if (result.IsValid)
                 {
-                    await _systemAuditService.AuditAsync(User.Identity.Name, _accessor.HttpContext.Connection.RemoteIpAddress.ToString(), Operations.Update, Tables.PositionEmployees);
+                    await _systemAuditService.AuditAsync(User.GetEmail(), _accessor.GetIp(), Operations.Update, Tables.PositionEmployees);
                     return RedirectToAction("Update", new { id = vm.HashIdEmployee });
                 }
                 TempData["ErrorsListConfirmed"] = result.ErrorsList;

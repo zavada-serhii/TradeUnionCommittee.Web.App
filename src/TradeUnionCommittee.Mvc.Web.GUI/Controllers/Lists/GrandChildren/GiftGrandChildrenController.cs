@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
-using AutoMapper;
+﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.DTO.GrandChildren;
@@ -15,11 +15,6 @@ using TradeUnionCommittee.ViewModels.ViewModels.GrandChildren;
 
 namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Lists.GrandChildren
 {
-    //IGiftGrandChildrenService
-    //GiftGrandChildrenDTO
-    //CreateGiftGrandChildrenViewModel
-    //UpdateGiftGrandChildrenViewModel
-
     public class GiftGrandChildrenController : Controller
     {
         private readonly IGiftGrandChildrenService _services;
