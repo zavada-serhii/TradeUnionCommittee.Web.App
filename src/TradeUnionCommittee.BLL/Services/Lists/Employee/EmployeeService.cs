@@ -52,6 +52,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Employee
                     employee.PrivilegeEmployees = _mapperService.Mapper.Map<PrivilegeEmployees>(dto);
                 }
 
+                await _context.Employee.AddAsync(employee);
                 await _context.SaveChangesAsync();
                 return new ActualResult();
             }
