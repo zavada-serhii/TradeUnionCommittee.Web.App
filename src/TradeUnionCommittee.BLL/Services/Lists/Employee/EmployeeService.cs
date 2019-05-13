@@ -30,42 +30,30 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Employee
             try
             {
                 var employee = _mapperService.Mapper.Map<DAL.Entities.Employee>(dto);
-                await _context.Employee.AddAsync(employee);
+                employee.PositionEmployees = _mapperService.Mapper.Map<PositionEmployees>(dto);
 
-                if (await _context.SaveChangesAsync() > 0)
+                if (dto.TypeAccommodation == AccommodationType.PrivateHouse || dto.TypeAccommodation == AccommodationType.FromUniversity)
                 {
-                    dto.IdEmployee = employee.Id;
-
-                    await _context.PositionEmployees.AddAsync(_mapperService.Mapper.Map<PositionEmployees>(dto));
-
-                    if (dto.TypeAccommodation == AccommodationType.PrivateHouse || dto.TypeAccommodation == AccommodationType.FromUniversity)
-                    {
-                        await _context.PrivateHouseEmployees.AddAsync(_mapperService.Mapper.Map<PrivateHouseEmployees>(dto));
-                    }
-
-                    if (dto.TypeAccommodation == AccommodationType.Dormitory || dto.TypeAccommodation == AccommodationType.Departmental)
-                    {
-                        await _context.PublicHouseEmployees.AddAsync(_mapperService.Mapper.Map<PublicHouseEmployees>(dto));
-                    }
-
-                    if (dto.SocialActivity)
-                    {
-                        await _context.SocialActivityEmployees.AddAsync(_mapperService.Mapper.Map<SocialActivityEmployees>(dto));
-                    }
-
-                    if (dto.Privileges)
-                    {
-                        await _context.PrivilegeEmployees.AddAsync(_mapperService.Mapper.Map<PrivilegeEmployees>(dto));
-                    }
-
-                    if (await _context.SaveChangesAsync() > 0)
-                    {
-                        return new ActualResult();
-                    }
+                    employee.PrivateHouseEmployees.Add(_mapperService.Mapper.Map<PrivateHouseEmployees>(dto));
                 }
 
-                await DeleteAsync(dto.IdEmployee);
-                return new ActualResult(Errors.DataBaseError);
+                if (dto.TypeAccommodation == AccommodationType.Dormitory || dto.TypeAccommodation == AccommodationType.Departmental)
+                {
+                    employee.PublicHouseEmployees.Add(_mapperService.Mapper.Map<PublicHouseEmployees>(dto));
+                }
+
+                if (dto.SocialActivity)
+                {
+                    employee.SocialActivityEmployees = _mapperService.Mapper.Map<SocialActivityEmployees>(dto);
+                }
+
+                if (dto.Privileges)
+                {
+                    employee.PrivilegeEmployees = _mapperService.Mapper.Map<PrivilegeEmployees>(dto);
+                }
+
+                await _context.SaveChangesAsync();
+                return new ActualResult();
             }
             catch (Exception exception)
             {
@@ -114,13 +102,9 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Employee
 
         public async Task<ActualResult> DeleteAsync(string hashId)
         {
-            return _mapperService.Mapper.Map<ActualResult>(await DeleteAsync(_hashIdUtilities.DecryptLong(hashId)));
-        }
-
-        private async Task<ActualResult> DeleteAsync(long id)
-        {
             try
             {
+                var id = _hashIdUtilities.DecryptLong(hashId);
                 var result = await _context.Employee.FindAsync(id);
                 if (result != null)
                 {

@@ -164,7 +164,6 @@ namespace TradeUnionCommittee.BLL.Configurations
 
                 map.CreateMap<PositionEmployees, CreateEmployeeDTO>()
                     .ReverseMap()
-                    .ForMember(d => d.IdEmployee, c => c.MapFrom(x => x.IdEmployee))
                     .ForMember(d => d.IdSubdivision, c => c.MapFrom(x => _hashIdUtilities.DecryptLong(x.HashIdSubdivision)))
                     .ForMember(d => d.IdPosition, c => c.MapFrom(x => _hashIdUtilities.DecryptLong(x.HashIdPosition)))
                     .ForMember(d => d.StartDate, c => c.MapFrom(x => x.StartDatePosition))
@@ -172,7 +171,6 @@ namespace TradeUnionCommittee.BLL.Configurations
 
                 map.CreateMap<PrivateHouseEmployees, CreateEmployeeDTO>()
                     .ReverseMap()
-                    .ForMember(x => x.IdEmployee, c => c.MapFrom(x => x.IdEmployee))
                     .ForMember(x => x.City, c => c.MapFrom(x => x.TypeAccommodation == AccommodationType.PrivateHouse ? x.CityPrivateHouse : x.CityHouseUniversity))
                     .ForMember(x => x.Street, c => c.MapFrom(x => x.TypeAccommodation == AccommodationType.PrivateHouse ? x.StreetPrivateHouse : x.StreetHouseUniversity))
                     .ForMember(x => x.NumberHouse, c => c.MapFrom(x => x.TypeAccommodation == AccommodationType.PrivateHouse ? x.NumberHousePrivateHouse : x.NumberHouseUniversity))
@@ -181,20 +179,17 @@ namespace TradeUnionCommittee.BLL.Configurations
 
                 map.CreateMap<PublicHouseEmployees, CreateEmployeeDTO>()
                     .ReverseMap()
-                    .ForMember(x => x.IdEmployee, c => c.MapFrom(x => x.IdEmployee))
                     .ForMember(x => x.IdAddressPublicHouse, c => c.MapFrom(x => DecryptIdAddressPublicHouse(x.TypeAccommodation, x.HashIdDormitory, x.HashIdDepartmental)))
                     .ForMember(x => x.NumberRoom, c => c.MapFrom(x => x.TypeAccommodation == AccommodationType.Dormitory ? x.NumberRoomDormitory : x.NumberRoomDepartmental));
 
                 map.CreateMap<SocialActivityEmployees, CreateEmployeeDTO>()
                     .ReverseMap()
-                    .ForMember(x => x.IdEmployee, c => c.MapFrom(x => x.IdEmployee))
                     .ForMember(x => x.IdSocialActivity, c => c.MapFrom(x => _hashIdUtilities.DecryptLong(x.HashIdSocialActivity)))
                     .ForMember(x => x.Note, c => c.MapFrom(x => x.NoteSocialActivity))
                     .ForMember(d => d.CheckSocialActivity, c => c.MapFrom(x => true));
 
                 map.CreateMap<PrivilegeEmployees, CreateEmployeeDTO>()
                     .ReverseMap()
-                    .ForMember(x => x.IdEmployee, c => c.MapFrom(x => x.IdEmployee))
                     .ForMember(x => x.IdPrivileges, c => c.MapFrom(x => _hashIdUtilities.DecryptLong(x.HashIdPrivileges)))
                     .ForMember(x => x.Note, c => c.MapFrom(x => x.NotePrivileges))
                     .ForMember(d => d.CheckPrivileges, c => c.MapFrom(x => true));

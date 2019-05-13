@@ -37,7 +37,6 @@ namespace TradeUnionCommittee.BLL.DTO.Employee
 
     public class CreateEmployeeDTO
     {
-        internal long IdEmployee { get; set; }
         public string FirstName { get; set; }
         public string SecondName { get; set; }
         public string Patronymic { get; set; }
