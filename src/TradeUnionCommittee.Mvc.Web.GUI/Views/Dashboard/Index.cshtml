@@ -24,6 +24,9 @@
                 <li class="nav-item">
                     <a class="nav-link" id="pills-profile-tab5" data-toggle="pill" href="#pills-profile5" role="tab" aria-controls="pills-profile" aria-selected="false">Tab #5</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="pills-profile-tab6" data-toggle="pill" href="#pills-profile6" role="tab" aria-controls="pills-profile" aria-selected="false">Tab #6</a>
+                </li>
             </ul>
             <hr>
             <div class="tab-content" id="pills-tabContent">
@@ -125,8 +128,26 @@
                     </div>
                 </div>
                 <!--Tab 5 end-->
-                
-                
+                <!--Tab 6 start-->
+                <div class="tab-pane fade" id="pills-profile6" role="tabpanel" aria-labelledby="pills-profile-tab6">
+                    <div class="row">
+
+                        <div class="col-lg-12">
+                            <div class="card mb-3">
+                                <div class="card-header">
+                                    Bubble chart
+                                </div>
+                                <div class="card-body">
+                                    <canvas id="bubbleChart"></canvas>
+                                </div>
+                                <div class="card-footer small text-muted">Оновлено щойно - @DateTime.Now.ToString("dd.MM.yyyy hh:mm:ss")</div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <!--Tab 6 end-->
+
 
             </div>
         </div>
@@ -143,6 +164,7 @@
         <script src="~/js/dashboard/chart-area-demo.js"></script>
         <script src="~/js/dashboard/chart-radar-demo.js"></script>
         <script src="~/js/dashboard/chart-line-demo.js"></script>
+        <script src="~/js/dashboard/chart-bubble-demo.js"></script>
     </environment>
 
     <environment exclude="Development">
@@ -153,5 +175,6 @@
         <script src="~/js/dashboard/chart-area-demo.js" asp-append-version="true"></script>
         <script src="~/js/dashboard/chart-radar-demo.js" asp-append-version="true"></script>
         <script src="~/js/dashboard/chart-line-demo.js" asp-append-version="true"></script>
+        <script src="~/js/dashboard/chart-bubble-demo.js" asp-append-version="true"></script>
     </environment>
 }
