@@ -11,9 +11,10 @@ Information system for the primary trade union organization of the Odessa Nation
 - [ ] Unit Tests
 
 # Docker launch instructions
-1. Go to the project root and start the PowerShell or Terminal as administrator.
-2. Run the command **docker-compose -f docker-compose.yml up --build** and wait for the end.
-3. After that applications will be available at the following links.
+1. Checkout branch 'orchestration' and pull project.
+2. Go to the project root and start the PowerShell or Terminal as administrator.
+3. Run the command **docker-compose -f docker-compose.yml up --build** and wait for the end.
+4. After that applications will be available at the following links.
     - Site
         - URL - http://localhost:8580
         - Login - stewie.griffin@test.com
