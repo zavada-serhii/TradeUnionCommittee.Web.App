@@ -25,4 +25,19 @@ namespace TradeUnionCommittee.BLL.DTO
     public class RadarResult : BaseDashboardResult<DataSet> { }
 
     public class LineResult : BaseDashboardResult<DataSet> { }
+
+    public class BubbleResult
+    {
+        public string Label { get; set; }
+        public string BackgroundColor { get; set; }
+        public string BorderColor { get; set; }
+        public IEnumerable<Bubble> Data { get; set; }
+    }
+
+    public class Bubble
+    {
+        public double X { get; set; }
+        public double Y { get; set; }
+        public double R { get; set; }
+    }
 }
