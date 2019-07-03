@@ -62,6 +62,13 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Dashboard
             return Json(_services.LineData_Test());
         }
 
+        [HttpGet]
+        [Authorize(Roles = "Admin")]
+        public IActionResult BubbleData()
+        {
+            return Json(_services.BubbleData_Test());
+        }
+
         //------------------------------------------------------------------------------------------------------------------------------------------
 
         protected override void Dispose(bool disposing)
