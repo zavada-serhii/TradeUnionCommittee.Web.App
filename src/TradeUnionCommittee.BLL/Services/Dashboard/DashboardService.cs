@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.IO;
 using System.Linq;
 using TradeUnionCommittee.BLL.Configurations;
 using TradeUnionCommittee.BLL.DTO;
@@ -26,7 +25,7 @@ namespace TradeUnionCommittee.BLL.Services.Dashboard
             const int count = 12;
             return new PieResult
             {
-                Data = RandomNumbers(1, 20, count),
+                Data = RandomDoubleNumbers(1, 20, count),
                 Labels = RandomStrings(count)
             };
         }
@@ -36,7 +35,7 @@ namespace TradeUnionCommittee.BLL.Services.Dashboard
             const int count = 20;
             return new BarResult
             {
-                Data = RandomNumbers(1, 20000, count),
+                Data = RandomDoubleNumbers(1, 20000, count),
                 Labels = RandomStrings(count)
             };
         }
@@ -46,7 +45,7 @@ namespace TradeUnionCommittee.BLL.Services.Dashboard
             const int count = 40;
             return new AreaResult
             {
-                Data = RandomNumbers(1, 40000, count),
+                Data = RandomDoubleNumbers(1, 40000, count),
                 Labels = RandomStrings(count)
             };
         }
@@ -62,7 +61,7 @@ namespace TradeUnionCommittee.BLL.Services.Dashboard
                 radar.Add(new DataSet
                 {
                     Label = RandomStrings(1).FirstOrDefault(),
-                    Data = RandomNumbers(1, 20, count)
+                    Data = RandomDoubleNumbers(1, 20, count)
                 });
             }
 
@@ -83,7 +82,7 @@ namespace TradeUnionCommittee.BLL.Services.Dashboard
                 line.Add(new DataSet
                 {
                     Label = RandomStrings(1).FirstOrDefault(),
-                    Data = RandomNumbers(1, 20, count)
+                    Data = RandomDoubleNumbers(1, 20, count)
                 });
             }
 
@@ -112,25 +111,9 @@ namespace TradeUnionCommittee.BLL.Services.Dashboard
             return result;
         }
 
-        public IEnumerable<Bubble> RandomBubble()
-        {
-            var bubbles = new List<Bubble>();
-            var randomNumber = RandomNumber(0, 150);
-            for (var j = 0; j < randomNumber; j++)
-            {
-                bubbles.Add(new Bubble
-                {
-                    X = RandomNumber(0.0, 300.0),
-                    Y = RandomNumber(0.0, 300.0),
-                    R = 4
-                });
-            }
-            return bubbles;
-        }
-
         //------------------------------------------------------------------------------------------------------------------------------------------
 
-        private IEnumerable<double> RandomNumbers(double minimum, double maximum, int count)
+        private IEnumerable<double> RandomDoubleNumbers(double minimum, double maximum, int count)
         {
             var random = new Random();
             var result = new List<double>();
@@ -143,15 +126,9 @@ namespace TradeUnionCommittee.BLL.Services.Dashboard
             return result;
         }
 
-        private int RandomNumber(int minimum, int maximum)
-        {
-            return new Random().Next(minimum, maximum);
-        }
-
         private double RandomNumber(double minimum, double maximum)
         {
-            var random = new Random();
-            return Math.Round(random.NextDouble() * (maximum - minimum) + minimum, 2);
+            return Math.Round(new Random().NextDouble() * (maximum - minimum) + minimum, 2);
         }
 
         private IEnumerable<string> RandomStrings(int count)
@@ -181,16 +158,27 @@ namespace TradeUnionCommittee.BLL.Services.Dashboard
             return Color.FromArgb(random.Next(256), random.Next(256), random.Next(256));
         }
 
+        private IEnumerable<Bubble> RandomBubble()
+        {
+            var bubbles = new List<Bubble>();
+            var randomNumber = new Random().Next(0, 150);
+            for (var j = 0; j < randomNumber; j++)
+            {
+                bubbles.Add(new Bubble
+                {
+                    X = RandomNumber(0.0, 300.0),
+                    Y = RandomNumber(0.0, 300.0),
+                    R = 4
+                });
+            }
+            return bubbles;
+        }
+
         //------------------------------------------------------------------------------------------------------------------------------------------
 
         private string HexConverter(Color c)
         {
             return "#" + c.R.ToString("X2") + c.G.ToString("X2") + c.B.ToString("X2");
-        }
-
-        private string RgbConverter(Color c)
-        {
-            return "RGB(" + c.R + "," + c.G + "," + c.B + ")";
         }
 
         //------------------------------------------------------------------------------------------------------------------------------------------
