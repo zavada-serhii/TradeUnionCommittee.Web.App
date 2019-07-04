@@ -53,7 +53,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Employee
                 var validation = await CheckDate(dto);
                 if (validation.IsValid)
                 {
-                    await _context.PositionEmployees.AddAsync(_mapperService.Mapper.Map<PositionEmployees>(dto));
+                    _context.Entry(_mapperService.Mapper.Map<PositionEmployees>(dto)).State = EntityState.Modified;
                     await _context.SaveChangesAsync();
                     return new ActualResult();
                 }

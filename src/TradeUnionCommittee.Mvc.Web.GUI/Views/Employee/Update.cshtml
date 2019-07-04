@@ -92,23 +92,23 @@
                     <div class="row">
                         <div class="form-group col-md-4">
                             <label asp-for="IdentificationСode">Iдентифiкацiйний код</label>
-                            <input asp-for="IdentificationСode" type="text" class="form-control" placeholder="111111111111">
+                            <input asp-for="IdentificationСode" id="ident-code" type="text" class="form-control" placeholder="111111111111">
                         </div>
 
                         <div class="form-group col-md-4">
                             <label asp-for="MechnikovCard">MECHNIKOV TEACHER CARD</label>
-                            <input asp-for="MechnikovCard" type="text" class="form-control" placeholder="1-111111-111111">
+                            <input asp-for="MechnikovCard" id="Mechnikov-code" type="text" class="form-control" placeholder="1-111111-111111">
                         </div>
                     </div>
 
                     <div class="row">
                         <div class="form-group col-lg-6 col-xl-4">
                             <label asp-for="MobilePhone">Мобiльний номер</label>
-                            <input asp-for="MobilePhone" type="text" class="form-control" placeholder="+38 (000) 000-00-00">
+                            <input asp-for="MobilePhone" id="mobile-phone" type="text" class="form-control" placeholder="+38 (000) 000-00-00">
                         </div>
                         <div class="form-group col-lg-6 col-xl-4">
                             <label asp-for="CityPhone">Мicкий номер</label>
-                            <input asp-for="CityPhone" type="text" class="form-control">
+                            <input asp-for="CityPhone" type="number" class="form-control">
                             <span asp-validation-for="CityPhone" class="text-danger"></span>
                         </div>
                     </div>
@@ -125,7 +125,7 @@
                             </div>
                             <div class="form-group col-lg-6 col-xl-4">
                                 <label asp-for="StartYearWork">Рiк початку роботи в ОНУ</label>
-                                <input asp-for="StartYearWork" type="text" class="form-control" placeholder="1990">
+                                <input asp-for="StartYearWork" id="year" type="text" class="form-control" placeholder="1990">
                                 <span asp-validation-for="StartYearWork" class="text-danger"></span>
                             </div>
                             <div class="form-group col-lg-6 col-xl-4">
@@ -227,4 +227,15 @@
 @if (TempData["ErrorsListConfirmed"] != null)
 {
     await Html.RenderPartialAsync("_Errors", TempData["ErrorsListConfirmed"]);
+}
+
+
+@section Scripts
+    {
+    <environment include="Development">
+        <script src="~/js/view/update-employee.js"></script>
+    </environment>
+    <environment exclude="Development">
+        <script src="~/js/view/update-employee.min.js" asp-append-version="true"></script>
+    </environment>
 }
