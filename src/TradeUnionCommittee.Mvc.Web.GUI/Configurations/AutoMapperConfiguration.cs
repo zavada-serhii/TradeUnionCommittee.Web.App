@@ -66,6 +66,8 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Configurations
 
                 map.CreateMap<CreateMainSubdivisionViewModel, CreateSubdivisionDTO>();
                 map.CreateMap<CreateSubordinateSubdivisionViewModel, CreateSubordinateSubdivisionDTO>();
+                map.CreateMap<SubdivisionDTO, UpdateNameSubdivisionViewModel>();
+                map.CreateMap<SubdivisionDTO, UpdateAbbreviationSubdivisionViewModel>();
                 map.CreateMap<UpdateSubdivisionNameDTO, UpdateNameSubdivisionViewModel>().ReverseMap();
                 map.CreateMap<UpdateSubdivisionAbbreviationDTO, UpdateAbbreviationSubdivisionViewModel>().ReverseMap();
                 map.CreateMap<RestructuringViewModel, RestructuringSubdivisionDTO>()
