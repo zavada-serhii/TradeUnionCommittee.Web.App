@@ -12,15 +12,15 @@
     ]
   },
   {
-    "outputFileName": "wwwroot/js/view/create-employee.min.js",
+    "outputFileName": "wwwroot/js/views/create-employee.min.js",
     "inputFiles": [
-      "wwwroot/js/view/create-employee.js"
+      "wwwroot/js/views/create-employee.js"
     ]
   },
   {
-    "outputFileName": "wwwroot/js/view/search.min.js",
+    "outputFileName": "wwwroot/js/views/search.min.js",
     "inputFiles": [
-      "wwwroot/js/view/search.js"
+      "wwwroot/js/views/search.js"
     ]
   },
   {
@@ -30,9 +30,9 @@
     ]
   },
   {
-    "outputFileName": "wwwroot/js/view/update-employee.min.js",
+    "outputFileName": "wwwroot/js/views/update-employee.min.js",
     "inputFiles": [
-      "wwwroot/js/view/update-employee.js"
+      "wwwroot/js/views/update-employee.js"
     ]
   }
 ]
