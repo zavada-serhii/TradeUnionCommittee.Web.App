@@ -344,7 +344,7 @@
                                             <div class="card-body pb-3 pt-3">
                                                 <div class="form-group col-lg-12">
                                                     <label>Міський номер</label>
-                                                    <input minlength="6" maxlength="7" type="text" class="form-control" name="cityPhone" aria-label="Recipient's username" aria-describedby="basic-addon2" required>
+                                                    <input type="number" value="" class="form-control" name="cityPhone" aria-label="Recipient's username" aria-describedby="basic-addon2" required>
                                                 </div>
                                                 <div class="input-group-append col-md-12">
                                                     <input type="submit" value="Знайти" class="btn btn-success btn-block" />
@@ -629,3 +629,14 @@
         </div>
     </div>
 </section>
+
+
+@section Scripts
+    {
+    <environment include="Development">
+        <script src="~/js/views/search.js"></script>
+    </environment>
+    <environment exclude="Development">
+        <script src="~/js/views/search.min.js" asp-append-version="true"></script>
+    </environment>
+}

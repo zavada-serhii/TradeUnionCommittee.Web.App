@@ -6,15 +6,33 @@
     ]
   },
   {
-    "outputFileName": "wwwroot/js/site.min.js",
-    "inputFiles": [
-      "wwwroot/js/site.js"
-    ]
-  },
-  {
     "outputFileName": "wwwroot/js/currency.min.js",
     "inputFiles": [
       "wwwroot/js/currency.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/js/view/create-employee.min.js",
+    "inputFiles": [
+      "wwwroot/js/view/create-employee.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/js/view/search.min.js",
+    "inputFiles": [
+      "wwwroot/js/view/search.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/js/main.min.js",
+    "inputFiles": [
+      "wwwroot/js/main.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/js/view/update-employee.min.js",
+    "inputFiles": [
+      "wwwroot/js/view/update-employee.js"
     ]
   }
 ]
