@@ -31,18 +31,21 @@
         <label for="inputEmail" class="sr-only">Email address</label>
         <input type="email" asp-for="Email" id="inputEmail" class="form-control" placeholder="Email" autofocus>
         <span asp-validation-for="Email" class="text-danger" style="color: red"></span>
-
+        &nbsp;
         <label for="inputPassword" class="sr-only">Password</label>
         <input type="password" asp-for="Password" id="inputPassword" class="form-control" placeholder="Пароль">
         <span asp-validation-for="Password" class="text-danger" style="color: red"></span>
-
+        &nbsp;
         <div class="checkbox mb-3">
             <label>
                 <input type="checkbox" asp-for="RememberMe"> Запам'ятати мене
             </label>
         </div>
-        <hr />
-        <div style="text-align: center; color: red;">@ViewBag.IncorectLoginPassword</div>
+        @if (ViewBag.IncorectLoginPassword != null)
+        {
+            <div style="text-align: center; color: red;">@ViewBag.IncorectLoginPassword</div>
+            <h6>&nbsp;</h6>
+        }
         <button class="btn btn-lg btn-primary btn-block" type="submit">Увійти</button>
         <p class="mt-5 mb-3 text-muted">&copy; ППО ОНУ ім. І.І. Мечникова - @DateTime.Now.Year</p>
     </form>
