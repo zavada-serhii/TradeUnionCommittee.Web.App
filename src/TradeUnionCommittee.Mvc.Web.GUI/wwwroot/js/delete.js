@@ -1,48 +1,31 @@
 ﻿$((function () {
     var url;
     var target;
+    var typeModal = {
+        DELETE: 1,
+        ERROR: 2
+    };
 
     $("body").append(`
-                    <div class="modal" id="deleteModal" tabindex="-1" role="dialog">
-                        <div class="modal-dialog modal-dialog-centered" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                     <h5 class="modal-title" style="color: red; font-weight: bold; font-size: 20px;">Видалення</h5>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                                <div class="modal-body delete-modal-body">
+            <div class="modal" tabindex="-1" role="dialog" id="deleteModal">
+                <div class="modal-dialog" role="document" id="typeModal">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                             <h5 class="modal-title" style="color: red; font-weight: bold; font-size: 20px;" id="headerModal"></h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div style="white-space: pre-line" class="modal-body" id="body-modal">
     
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-primary" data-dismiss="modal" id="cancel-delete">Скасувати</button>
-                                    <button type="button" class="btn btn-danger" id="confirm-delete">Видалити</button>
-                                </div>
-                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" data-dismiss="modal" id="cancel-delete"></button>
+                            <button type="button" class="btn btn-danger" id="confirm-delete">Видалити</button>
                         </div>
                     </div>
-
-
-
-                    <div class="modal" id="deleteErrorModal" tabindex="-1" role="dialog">
-                        <div class="modal-dialog" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" style="color: red; font-weight: bold; font-size: 20px;">Сталась помилка</h5>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                                <div style="white-space: pre-line" class="modal-body delete-error-modal-body">
-                
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-primary" data-dismiss="modal">Закрити</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                </div>
+            </div>
 `);
 
     //Delete Action
@@ -56,7 +39,8 @@
         var bodyMessage = $(target).data("body-message");
 
         url = `/${controller}/${action}/${id}`;
-        $(".delete-modal-body").text(bodyMessage);
+        switchModalType(typeModal.DELETE);
+        changeTextModal(bodyMessage);
         $("#deleteModal").modal("show");
     });
 
@@ -64,22 +48,48 @@
         $.ajax({
             url: url,
             type: 'DELETE',
-            success: function (result) {
+            success: function(result) {
                 if (result.isValid) {
                     document.location.reload(true);
                 } else {
-                    let iterator = 1;
-                    let errorMessage = "";
-                    result.errorsList.forEach(error => {
-                        errorMessage += `${iterator}. ${error}\n`;
-                        iterator++;
-                    });
-                    $(".delete-error-modal-body").text(errorMessage);
-                    $("#deleteErrorModal").modal("show");
+                    showErrors(result.errorsList);
                 }
             }
-        }).always(() => {
-            $("#deleteModal").modal("hide");
         });
     });
+
+    function showErrors(errorsList) {
+
+        let iterator = 1;
+        let errorMessage = "";
+        errorsList.forEach(error => {
+            errorMessage += `${iterator}. ${error}\n`;
+            iterator++;
+        });
+
+        switchModalType(typeModal.ERROR);
+        changeTextModal(errorMessage);
+    }
+
+    function switchModalType (type) {
+        switch (type) {
+            case typeModal.DELETE:
+                $("#typeModal").addClass("modal-dialog-centered");
+                $("#headerModal").text("Видалення");
+                $("#cancel-delete").text("Скасувати");
+                $("#confirm-delete").show();
+            break;
+            case typeModal.ERROR:
+                $("#typeModal").removeClass("modal-dialog-centered");
+                $("#headerModal").text("Сталась помилка");
+                $("#cancel-delete").text("Закрити");
+                $("#confirm-delete").hide();
+                break;
+        }
+    }
+
+    function changeTextModal(text) {
+        $("#body-modal").text(text);
+    }
+
 }()));
