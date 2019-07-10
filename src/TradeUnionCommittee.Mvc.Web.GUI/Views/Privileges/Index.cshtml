@@ -43,7 +43,12 @@
 
                                                 @if (User.IsInRole("Admin"))
                                                 {
-                                                    <a class="dropdown-item" asp-action="Delete" asp-route-id="@item.HashId">Видалити</a>
+                                                    <a class="dropdown-item delete"
+                                                       href=""
+                                                       data-controller="Privileges"
+                                                       data-action="Delete"
+                                                       data-id="@item.HashId"
+                                                       data-body-message="Ви впевнені, що хочете видалити пільгу?">Видалити</a>
                                                 }
                                             </div>
                                         </div>
@@ -62,3 +67,15 @@
         </div>
     </div>
 </section>
+
+
+@section Scripts
+{
+    <environment include="Development">
+        <script src="~/js/delete.js"></script>
+    </environment>
+
+    <environment exclude="Development">
+        <script src="~/js/delete.min.js" asp-append-version="true"></script>
+    </environment>
+}

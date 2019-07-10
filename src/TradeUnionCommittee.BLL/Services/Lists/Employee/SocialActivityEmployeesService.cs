@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.ActualResults;
 using TradeUnionCommittee.BLL.Configurations;
 using TradeUnionCommittee.BLL.DTO.Employee;
-using TradeUnionCommittee.BLL.Enums;
 using TradeUnionCommittee.BLL.Helpers;
 using TradeUnionCommittee.BLL.Interfaces.Lists.Employee;
 using TradeUnionCommittee.DAL.EF;
@@ -35,7 +34,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Employee
                     .FirstOrDefaultAsync(x => x.IdEmployee == id);
                 if (socialActivity == null)
                 {
-                    return new ActualResult<SocialActivityEmployeesDTO>(Errors.TupleDeleted);
+                    return new ActualResult<SocialActivityEmployeesDTO>();
                 }
                 var result = _mapperService.Mapper.Map<SocialActivityEmployeesDTO>(socialActivity);
                 return new ActualResult<SocialActivityEmployeesDTO> { Result = result };
