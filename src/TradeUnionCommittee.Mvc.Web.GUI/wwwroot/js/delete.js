@@ -1,5 +1,6 @@
 ﻿$((function () {
     var url;
+    var redirectUrl;
     var target;
     var typeModal = {
         DELETE: 1,
@@ -37,6 +38,7 @@
         var controller = $(target).data("controller");
         var action = $(target).data("action");
         var bodyMessage = $(target).data("body-message");
+        redirectUrl = $(target).data('redirect-url');
 
         url = `/${controller}/${action}/${id}`;
         switchModalType(typeModal.DELETE);
@@ -50,7 +52,11 @@
             type: 'DELETE',
             success: function(result) {
                 if (result.isValid) {
-                    document.location.reload(true);
+                    if (redirectUrl) {
+                        window.location.href = redirectUrl;
+                    } else {
+                        document.location.reload(true);
+                    }
                 } else {
                     showErrors(result.errorsList);
                 }
