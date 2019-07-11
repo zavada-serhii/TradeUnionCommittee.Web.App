@@ -234,31 +234,11 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Account
 
         //------------------------------------------------------------------------------------------------------------------------------------------
 
-        [HttpGet]
+        [HttpDelete]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete([Required] string id)
         {
-            var result = await _accountService.GetAccountAsync(id);
-            if (result.IsValid)
-            {
-                return View(result.Result);
-            }
-            TempData["ErrorsList"] = result.ErrorsList;
-            return View();
-        }
-
-        [HttpPost, ActionName("Delete")]
-        [Authorize(Roles = "Admin")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed([Required] string id)
-        {
-            var result = await _accountService.DeleteAsync(id);
-            if (result.IsValid)
-            {
-                return RedirectToAction("Index");
-            }
-            TempData["ErrorsList"] = result.ErrorsList;
-            return View();
+            return Ok(await _accountService.DeleteAsync(id));
         }
 
         //------------------------------------------------------------------------------------------------------------------------------------------
