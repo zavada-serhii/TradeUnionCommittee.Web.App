@@ -6,8 +6,9 @@ using TradeUnionCommittee.Web.Api.Extensions;
 
 namespace TradeUnionCommittee.Web.Api.Controllers.Account
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [ApiVersion("1.0")]
+    [Route("api/v{version:apiVersion}/[controller]")]
     public class AccountController : ControllerBase
     {
         private readonly IJwtBearerConfiguration _jwtBearer;
@@ -25,6 +26,7 @@ namespace TradeUnionCommittee.Web.Api.Controllers.Account
         /// </summary>
         [HttpPost]
         [Route("Token")]
+        [MapToApiVersion("1.0")]
         public async Task Token([FromBody] TokenViewModel viewModel)
         {
             var account = await _jwtBearer.SignInByPassword(viewModel);
@@ -44,6 +46,7 @@ namespace TradeUnionCommittee.Web.Api.Controllers.Account
         /// </summary>
         [HttpPost]
         [Route("RefreshToken")]
+        [MapToApiVersion("1.0")]
         public async Task RefreshToken([FromBody] RefreshTokenViewModel viewModel)
         {
             var account = await _jwtBearer.SignInByRefreshToken(viewModel);

@@ -14,8 +14,9 @@ using TradeUnionCommittee.Web.Api.Extensions;
 
 namespace TradeUnionCommittee.Web.Api.Controllers.Directory
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [ApiVersion("1.0")]
+    [Route("api/v{version:apiVersion}/[controller]")]
     public class PositionController : ControllerBase
     {
         private readonly IPositionService _services;
@@ -35,6 +36,7 @@ namespace TradeUnionCommittee.Web.Api.Controllers.Directory
 
         [HttpGet]
         [Route("GetAll")]
+        [MapToApiVersion("1.0")]
         [Authorize(Roles = "Admin,Accountant,Deputy", AuthenticationSchemes = "Bearer")]
         public async Task<IActionResult> GetAll()
         {
@@ -44,6 +46,7 @@ namespace TradeUnionCommittee.Web.Api.Controllers.Directory
 
         [HttpGet]
         [Route("Get/{id}")]
+        [MapToApiVersion("1.0")]
         [Authorize(Roles = "Admin,Accountant,Deputy", AuthenticationSchemes = "Bearer")]
         public async Task<IActionResult> Get([Required] string id)
         {
@@ -57,6 +60,7 @@ namespace TradeUnionCommittee.Web.Api.Controllers.Directory
 
         [HttpPost]
         [Route("Create")]
+        [MapToApiVersion("1.0")]
         [Authorize(Roles = "Admin,Accountant,Deputy", AuthenticationSchemes = "Bearer")]
         public async Task<IActionResult> Create([FromBody] CreatePositionViewModel vm)
         {
@@ -75,6 +79,7 @@ namespace TradeUnionCommittee.Web.Api.Controllers.Directory
 
         [HttpPut]
         [Route("Update")]
+        [MapToApiVersion("1.0")]
         [Authorize(Roles = "Admin,Accountant,Deputy", AuthenticationSchemes = "Bearer")]
         public async Task<IActionResult> Update([FromBody] UpdatePositionViewModel vm)
         {
@@ -93,6 +98,7 @@ namespace TradeUnionCommittee.Web.Api.Controllers.Directory
 
         [HttpDelete]
         [Route("Delete/{id}")]
+        [MapToApiVersion("1.0")]
         [Authorize(Roles = "Admin", AuthenticationSchemes = "Bearer")]
         public async Task<IActionResult> Delete([Required] string id)
         {
