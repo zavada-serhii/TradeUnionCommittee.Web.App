@@ -17,50 +17,50 @@
             <div class="row main-block">
                 <table class="table">
                     <thead>
-                    <tr>
-                        <th>
-                            Посади
-                        </th>
-                        <th></th>
-                    </tr>
+                        <tr>
+                            <th>
+                                Посади
+                            </th>
+                            <th></th>
+                        </tr>
                     </thead>
                     <tbody>
 
-                    @if (TempData["ErrorsList"] == null)
-                    {
-                        foreach (var item in Model)
+                        @if (TempData["ErrorsList"] == null)
                         {
-                            <tr>
-                                <td>
-                                    @item.Name
-                                </td>
+                            foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        @item.Name
+                                    </td>
 
-                                <td class="text-right">
-                                    <div class="btn-group">
-                                        <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown"></button>
-                                        <div class="dropdown-menu">
-                                            <a class="dropdown-item" asp-action="Update" asp-route-id="@item.HashId">Редагувати назву</a>
+                                    <td class="text-right">
+                                        <div class="btn-group">
+                                            <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown"></button>
+                                            <div class="dropdown-menu">
+                                                <a class="dropdown-item" asp-action="Update" asp-route-id="@item.HashId">Редагувати назву</a>
 
-                                            @if (User.IsInRole("Admin"))
-                                            {
-                                                <a class="dropdown-item delete"
-                                                   href=""
-                                                   data-controller="Position"
-                                                   data-action="Delete"
-                                                   data-id="@item.HashId"
-                                                   data-body-message="Ви впевнені, що хочете видалити посаду?">Видалити</a>
-                                            }
+                                                @if (User.IsInRole("Admin"))
+                                                {
+                                                    <a class="dropdown-item delete"
+                                                       href=""
+                                                       data-controller="Position"
+                                                       data-action="Delete"
+                                                       data-id="@item.HashId"
+                                                       data-body-message="Ви впевнені, що хочете видалити посаду?">Видалити</a>
+                                                }
+                                            </div>
                                         </div>
-                                    </div>
-                                </td>
+                                    </td>
 
-                            </tr>
+                                </tr>
+                            }
                         }
-                    }
-                    else
-                    {
-                        await Html.RenderPartialAsync("_Errors", TempData["ErrorsList"]);
-                    }
+                        else
+                        {
+                            await Html.RenderPartialAsync("_Errors", TempData["ErrorsList"]);
+                        }
                     </tbody>
                 </table>
             </div>
@@ -68,13 +68,17 @@
     </div>
 </section>
 
-@section Scripts
-{
-    <environment include="Development">
-        <script src="~/js/delete.js"></script>
-    </environment>
 
-    <environment exclude="Development">
-        <script src="~/js/delete.min.js" asp-append-version="true"></script>
-    </environment>
+@if (User.IsInRole("Admin"))
+{
+    @section Scripts
+    {
+        <environment include="Development">
+            <script src="~/js/delete.js"></script>
+        </environment>
+
+        <environment exclude="Development">
+            <script src="~/js/delete.min.js" asp-append-version="true"></script>
+        </environment>
+    }
 }
