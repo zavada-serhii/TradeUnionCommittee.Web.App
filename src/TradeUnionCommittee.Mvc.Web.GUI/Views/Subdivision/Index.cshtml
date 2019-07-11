@@ -50,9 +50,15 @@
                                                 <a class="dropdown-item" asp-action="Details" asp-route-id="@item.HashIdMain">Підрозділи</a>
                                                 <a class="dropdown-item" asp-action="CreateSubordinate" asp-route-id="@item.HashIdMain">Додати підрозділ</a>
                                                 <a class="dropdown-item" asp-action="Restructuring" asp-route-id="@item.HashIdMain">Реструктуризація</a>
+
                                                 @if (User.IsInRole("Admin"))
                                                 {
-                                                    <a class="dropdown-item" asp-action="Delete" asp-route-id="@item.HashIdMain">Видалити</a>
+                                                    <a class="dropdown-item delete"
+                                                       href=""
+                                                       data-controller="Subdivision"
+                                                       data-action="Delete"
+                                                       data-id="@item.HashIdMain"
+                                                       data-body-message="Ви впевнені, що хочете видалити підрозділ?">Видалити</a>
                                                 }
                                             </div>
                                         </div>
@@ -70,3 +76,18 @@
         </div>
     </div>
 </section>
+
+
+@if (User.IsInRole("Admin"))
+{
+    @section Scripts
+    {
+        <environment include="Development">
+            <script src="~/js/delete.js"></script>
+        </environment>
+
+        <environment exclude="Development">
+            <script src="~/js/delete.min.js" asp-append-version="true"></script>
+        </environment>
+    }
+}

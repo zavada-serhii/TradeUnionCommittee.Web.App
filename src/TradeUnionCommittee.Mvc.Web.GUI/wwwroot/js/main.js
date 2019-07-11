@@ -1,3 +1,3 @@
 $(function () {
-    $('.modal').modal('show');
+    $('#errorModal').modal('show');
 });

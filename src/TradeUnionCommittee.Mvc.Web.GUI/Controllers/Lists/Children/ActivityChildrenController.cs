@@ -122,32 +122,16 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Lists.Children
 
         //------------------------------------------------------------------------------------------------------------------------------------------
 
-        [HttpGet]
+        [HttpDelete]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete([Required] string id)
         {
-            var result = await _services.GetAsync(id);
-            if (result.IsValid)
-            {
-                return View(result.Result);
-            }
-            TempData["ErrorsList"] = result.ErrorsList;
-            return View();
-        }
-
-        [HttpPost, ActionName("Delete")]
-        [Authorize(Roles = "Admin")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed([Required] string hashId, [Required] string hashIdChildren)
-        {
-            var result = await _services.DeleteAsync(hashId);
+            var result = await _services.DeleteAsync(id);
             if (result.IsValid)
             {
                 await _systemAuditService.AuditAsync(User.GetEmail(), _accessor.GetIp(), Operations.Delete, Tables.ActivityChildrens);
-                return RedirectToAction("Index", new { id = hashIdChildren });
             }
-            TempData["ErrorsList"] = result.ErrorsList;
-            return View();
+            return Ok(result);
         }
 
         //------------------------------------------------------------------------------------------------------------------------------------------

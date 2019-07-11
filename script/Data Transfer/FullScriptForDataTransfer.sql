@@ -73,6 +73,9 @@ SELECT IdAddressPublicHouse, idemployees,NumberRoom FROM maindb.listpublichouse;
 INSERT INTO public."PrivilegeEmployees" ("Id", "IdEmployee", "IdPrivileges", "Note", "CheckPrivileges") 
 SELECT id, idemployees,nameprivileges, note, CheckPrivileges  FROM maindb.listprivileges;
 
+INSERT INTO public."SocialActivityEmployees" ("Id", "IdEmployee", "IdSocialActivity", "Note", "CheckSocialActivity") 
+SELECT id, idemployees,namesocialactivity, note, checksocialactivity  FROM maindb.listsocialactivity;
+
 INSERT INTO public."HobbyEmployees" ("Id", "IdEmployee", "IdHobby") 
 SELECT id, idemployees,namehobby  FROM maindb.listhobbyemployees;
 
@@ -234,6 +237,7 @@ SELECT setval('"GrandChildren_Id_seq"', (SELECT last_value FROM maindb.listgrand
 SELECT setval('"Family_Id_seq"', (SELECT last_value FROM maindb.listspouse_id_seq), TRUE);
 SELECT setval('"PrivateHouseEmployees_Id_seq"', (SELECT last_value FROM maindb.listprivatehouse_id_seq), TRUE);
 SELECT setval('"PrivilegeEmployees_Id_seq"', (SELECT last_value FROM maindb.listprivileges_id_seq), TRUE);
+SELECT setval('"SocialActivityEmployees_Id_seq"', (SELECT last_value FROM maindb.listsocialactivity_id_seq), TRUE);
 SELECT setval('"HobbyEmployees_Id_seq"', (SELECT last_value FROM maindb.listhobbyemployees_id_seq), TRUE);
 SELECT setval('"HobbyChildrens_Id_seq"', (SELECT last_value FROM maindb.listhobbychildren_id_seq), TRUE);
 SELECT setval('"HobbyGrandChildrens_Id_seq"', (SELECT last_value FROM maindb.listhobbygrandchildren_id_seq), TRUE);
