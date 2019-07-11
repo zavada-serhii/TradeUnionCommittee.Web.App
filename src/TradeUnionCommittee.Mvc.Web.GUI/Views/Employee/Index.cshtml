@@ -300,7 +300,13 @@
 
                         @if (User.IsInRole("Admin"))
                         {
-                            <a asp-action="Delete" asp-route-id="@Model.HashIdEmployee" class="btn btn-danger"><i class="fas fa-trash-alt"></i>Видалити</a>
+                            <a class="btn btn-danger delete"
+                               href=""
+                               data-controller="Employee"
+                               data-action="Delete"
+                               data-id="@Model.HashIdEmployee"
+                               data-redirect-url="/"
+                               data-body-message="Ви впевнені, що хочете видалити члена профспілки?"><i class="fas fa-trash-alt"></i>Видалити</a>
                         }
 
                     </div>
@@ -310,3 +316,18 @@
         }
     </div>
 </section>
+
+
+@if (User.IsInRole("Admin"))
+{
+    @section Scripts
+    {
+        <environment include="Development">
+            <script src="~/js/delete.js"></script>
+        </environment>
+
+        <environment exclude="Development">
+            <script src="~/js/delete.min.js" asp-append-version="true"></script>
+        </environment>
+    }
+}

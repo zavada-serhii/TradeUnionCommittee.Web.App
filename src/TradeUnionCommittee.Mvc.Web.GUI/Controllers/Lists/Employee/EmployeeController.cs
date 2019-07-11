@@ -169,32 +169,16 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Lists.Employee
 
         //------------------------------------------------------------------------------------------------------------------------------------------
 
-        [HttpGet]
+        [HttpDelete]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete([Required] string id)
-        {
-            var result = await _employeeService.GetMainInfoEmployeeAsync(id);
-            if (result.IsValid)
-            {
-                return View(result.Result);
-            }
-            TempData["ErrorsList"] = result.ErrorsList;
-            return View();
-        }
-
-        [HttpPost, ActionName("Delete")]
-        [Authorize(Roles = "Admin")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed([Required] string id)
         {
             var result = await _employeeService.DeleteAsync(id);
             if (result.IsValid)
             {
                 await _systemAuditService.AuditAsync(User.GetEmail(), _accessor.GetIp(), Operations.Delete, Tables.Employee);
-                return RedirectToAction("Directory", "Home");
             }
-            TempData["ErrorsList"] = result.ErrorsList;
-            return View();
+            return Ok(result);
         }
 
         //------------------------------------------------------------------------------------------------------------------------------------------
