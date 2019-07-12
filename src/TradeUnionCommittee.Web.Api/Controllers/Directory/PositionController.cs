@@ -40,8 +40,8 @@ namespace TradeUnionCommittee.Web.Api.Controllers.Directory
         [HttpGet]
         [Route("GetAll")]
         [MapToApiVersion("1.0")]
-        [ProducesResponseType(typeof(IEnumerable<string>), 400)]
-        [ProducesResponseType(typeof(IEnumerable<DirectoryDTO>), 200)]
+        [ProducesResponseType(typeof(IEnumerable<string>), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(IEnumerable<DirectoryDTO>), StatusCodes.Status200OK)]
         [Authorize(Roles = "Admin,Accountant,Deputy", AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> GetAll()
         {
@@ -55,10 +55,10 @@ namespace TradeUnionCommittee.Web.Api.Controllers.Directory
         }
 
         [HttpGet]
-        [Route("Get/{id}")]
+        [Route("Get/{id}", Name = "Get")]
         [MapToApiVersion("1.0")]
-        [ProducesResponseType(typeof(DirectoryDTO), 200)]
-        [ProducesResponseType(typeof(IEnumerable<string>), 404)]
+        [ProducesResponseType(typeof(DirectoryDTO), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(IEnumerable<string>), StatusCodes.Status404NotFound)]
         [Authorize(Roles = "Admin,Accountant,Deputy", AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> Get([Required] string id)
         {
@@ -74,8 +74,8 @@ namespace TradeUnionCommittee.Web.Api.Controllers.Directory
         [Route("Create")]
         [ModelValidation]
         [MapToApiVersion("1.0")]
-        [ProducesResponseType(200)]
-        [ProducesResponseType(typeof(IEnumerable<string>), 422)]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(IEnumerable<string>), StatusCodes.Status422UnprocessableEntity)]
         [Authorize(Roles = "Admin,Accountant,Deputy", AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> Create([FromBody] CreatePositionViewModel vm)
         {
@@ -83,8 +83,7 @@ namespace TradeUnionCommittee.Web.Api.Controllers.Directory
             if (result.IsValid)
             {
                 await _systemAuditService.AuditAsync(User.GetEmail(), _accessor.GetIp(), Operations.Insert, Tables.Position);
-                return Ok();
-                //return Created();
+                return CreatedAtRoute(nameof(Get), new { id = result.Result }, vm);
             }
             return UnprocessableEntity(result.ErrorsList);
         }
@@ -93,8 +92,8 @@ namespace TradeUnionCommittee.Web.Api.Controllers.Directory
         [Route("Update")]
         [ModelValidation]
         [MapToApiVersion("1.0")]
-        [ProducesResponseType(200)]
-        [ProducesResponseType(typeof(IEnumerable<string>), 422)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(IEnumerable<string>), StatusCodes.Status422UnprocessableEntity)]
         [Authorize(Roles = "Admin,Accountant,Deputy", AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> Update([FromBody] UpdatePositionViewModel vm)
         {
@@ -110,8 +109,8 @@ namespace TradeUnionCommittee.Web.Api.Controllers.Directory
         [HttpDelete]
         [Route("Delete/{id}")]
         [MapToApiVersion("1.0")]
-        [ProducesResponseType(200)]
-        [ProducesResponseType(typeof(IEnumerable<string>), 404)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(IEnumerable<string>), StatusCodes.Status404NotFound)]
         [Authorize(Roles = "Admin", AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> Delete([Required] string id)
         {
