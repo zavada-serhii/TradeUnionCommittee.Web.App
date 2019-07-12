@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -10,6 +11,7 @@ using TradeUnionCommittee.BLL.Enums;
 using TradeUnionCommittee.BLL.Interfaces.Directory;
 using TradeUnionCommittee.BLL.Interfaces.SystemAudit;
 using TradeUnionCommittee.ViewModels.ViewModels;
+using TradeUnionCommittee.Web.Api.Attributes;
 using TradeUnionCommittee.Web.Api.Extensions;
 
 namespace TradeUnionCommittee.Web.Api.Controllers.Directory
@@ -37,7 +39,7 @@ namespace TradeUnionCommittee.Web.Api.Controllers.Directory
         [HttpGet]
         [Route("GetAll")]
         [MapToApiVersion("1.0")]
-        [Authorize(Roles = "Admin,Accountant,Deputy", AuthenticationSchemes = "Bearer")]
+        [Authorize(Roles = "Admin,Accountant,Deputy", AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> GetAll()
         {
             //_logger.LogInformation($"Test Position API Controller: {JsonConvert.SerializeObject(await _services.GetAllAsync())}");
@@ -47,7 +49,7 @@ namespace TradeUnionCommittee.Web.Api.Controllers.Directory
         [HttpGet]
         [Route("Get/{id}")]
         [MapToApiVersion("1.0")]
-        [Authorize(Roles = "Admin,Accountant,Deputy", AuthenticationSchemes = "Bearer")]
+        [Authorize(Roles = "Admin,Accountant,Deputy", AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> Get([Required] string id)
         {
             var result = await _services.GetAsync(id);
@@ -60,46 +62,40 @@ namespace TradeUnionCommittee.Web.Api.Controllers.Directory
 
         [HttpPost]
         [Route("Create")]
+        [ModelValidation]
         [MapToApiVersion("1.0")]
-        [Authorize(Roles = "Admin,Accountant,Deputy", AuthenticationSchemes = "Bearer")]
+        [Authorize(Roles = "Admin,Accountant,Deputy", AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> Create([FromBody] CreatePositionViewModel vm)
         {
-            if (ModelState.IsValid)
+            var result = await _services.CreateAsync(_mapper.Map<DirectoryDTO>(vm));
+            if (result.IsValid)
             {
-                var result = await _services.CreateAsync(_mapper.Map<DirectoryDTO>(vm));
-                if (result.IsValid)
-                {
-                    await _systemAuditService.AuditAsync(User.GetEmail(), _accessor.GetIp(), Operations.Insert, Tables.Position);
-                    return Ok(result);
-                }
-                return BadRequest(result);
+                await _systemAuditService.AuditAsync(User.GetEmail(), _accessor.GetIp(), Operations.Insert, Tables.Position);
+                return Ok(result);
             }
-            return BadRequest();
+            return BadRequest(result);
         }
 
         [HttpPut]
         [Route("Update")]
+        [ModelValidation]
         [MapToApiVersion("1.0")]
-        [Authorize(Roles = "Admin,Accountant,Deputy", AuthenticationSchemes = "Bearer")]
+        [Authorize(Roles = "Admin,Accountant,Deputy", AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> Update([FromBody] UpdatePositionViewModel vm)
         {
-            if (ModelState.IsValid)
+            var result = await _services.UpdateAsync(_mapper.Map<DirectoryDTO>(vm));
+            if (result.IsValid)
             {
-                var result = await _services.UpdateAsync(_mapper.Map<DirectoryDTO>(vm));
-                if (result.IsValid)
-                {
-                    await _systemAuditService.AuditAsync(User.GetEmail(), _accessor.GetIp(), Operations.Update, Tables.Position);
-                    return Ok(result);
-                }
-                return BadRequest(result);
+                await _systemAuditService.AuditAsync(User.GetEmail(), _accessor.GetIp(), Operations.Update, Tables.Position);
+                return Ok(result);
             }
-            return BadRequest();
+            return BadRequest(result);
         }
 
         [HttpDelete]
         [Route("Delete/{id}")]
         [MapToApiVersion("1.0")]
-        [Authorize(Roles = "Admin", AuthenticationSchemes = "Bearer")]
+        [Authorize(Roles = "Admin", AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> Delete([Required] string id)
         {
             var result = await _services.DeleteAsync(id);

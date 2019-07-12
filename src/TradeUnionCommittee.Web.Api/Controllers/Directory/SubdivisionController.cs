@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -11,12 +12,14 @@ using TradeUnionCommittee.BLL.Enums;
 using TradeUnionCommittee.BLL.Interfaces.Directory;
 using TradeUnionCommittee.BLL.Interfaces.SystemAudit;
 using TradeUnionCommittee.ViewModels.ViewModels;
+using TradeUnionCommittee.Web.Api.Attributes;
 using TradeUnionCommittee.Web.Api.Extensions;
 
 namespace TradeUnionCommittee.Web.Api.Controllers.Directory
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [ApiVersion("1.0")]
+    [Route("api/v{version:apiVersion}/[controller]")]
     public class SubdivisionController : ControllerBase
     {
         private readonly ISubdivisionsService _services;
@@ -36,7 +39,8 @@ namespace TradeUnionCommittee.Web.Api.Controllers.Directory
 
         [HttpGet]
         [Route("GetAllMainSubdivision")]
-        [Authorize(Roles = "Admin,Accountant,Deputy", AuthenticationSchemes = "Bearer")]
+        [MapToApiVersion("1.0")]
+        [Authorize(Roles = "Admin,Accountant,Deputy", AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> GetAllMainSubdivision()
         {
             return Ok(await _services.GetAllAsync());
@@ -44,7 +48,8 @@ namespace TradeUnionCommittee.Web.Api.Controllers.Directory
 
         [HttpGet]
         [Route("Get/{id}")]
-        [Authorize(Roles = "Admin,Accountant,Deputy", AuthenticationSchemes = "Bearer")]
+        [MapToApiVersion("1.0")]
+        [Authorize(Roles = "Admin,Accountant,Deputy", AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> Get([Required] string id)
         {
             var result = await _services.GetAsync(id);
@@ -57,7 +62,8 @@ namespace TradeUnionCommittee.Web.Api.Controllers.Directory
 
         [HttpGet]
         [Route("GetSubordinateSubdivisions/{id}")]
-        [Authorize(Roles = "Admin,Accountant,Deputy", AuthenticationSchemes = "Bearer")]
+        [MapToApiVersion("1.0")]
+        [Authorize(Roles = "Admin,Accountant,Deputy", AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> GetSubordinateSubdivisions([Required] string id)
         {
             var result = await _services.GetSubordinateSubdivisions(id);
@@ -72,101 +78,92 @@ namespace TradeUnionCommittee.Web.Api.Controllers.Directory
 
         [HttpPost]
         [Route("CreateMainSubdivision")]
-        [Authorize(Roles = "Admin,Accountant,Deputy", AuthenticationSchemes = "Bearer")]
+        [ModelValidation]
+        [MapToApiVersion("1.0")]
+        [Authorize(Roles = "Admin,Accountant,Deputy", AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> CreateMainSubdivision([FromBody] CreateMainSubdivisionViewModel vm)
         {
-            if (ModelState.IsValid)
+            var result = await _services.CreateMainSubdivisionAsync(_mapper.Map<CreateSubdivisionDTO>(vm));
+            if (result.IsValid)
             {
-                var result = await _services.CreateMainSubdivisionAsync(_mapper.Map<CreateSubdivisionDTO>(vm));
-                if (result.IsValid)
-                {
-                    await _systemAuditService.AuditAsync(User.GetEmail(), _accessor.GetIp(), Operations.Insert, Tables.Subdivisions);
-                    return Ok(result);
-                }
-                return BadRequest(result);
+                await _systemAuditService.AuditAsync(User.GetEmail(), _accessor.GetIp(), Operations.Insert, Tables.Subdivisions);
+                return Ok(result);
             }
-            return BadRequest();
+            return BadRequest(result);
         }
 
         [HttpPost]
         [Route("CreateSubordinateSubdivision")]
-        [Authorize(Roles = "Admin,Accountant,Deputy", AuthenticationSchemes = "Bearer")]
+        [ModelValidation]
+        [MapToApiVersion("1.0")]
+        [Authorize(Roles = "Admin,Accountant,Deputy", AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> CreateSubordinateSubdivision([FromBody] CreateSubordinateSubdivisionViewModel vm)
         {
-            if (ModelState.IsValid)
+            var result = await _services.CreateSubordinateSubdivisionAsync(_mapper.Map<CreateSubordinateSubdivisionDTO>(vm));
+            if (result.IsValid)
             {
-                var result = await _services.CreateSubordinateSubdivisionAsync(_mapper.Map<CreateSubordinateSubdivisionDTO>(vm));
-                if (result.IsValid)
-                {
-                    await _systemAuditService.AuditAsync(User.GetEmail(), _accessor.GetIp(), Operations.Insert, Tables.Subdivisions);
-                    return Ok(result);
-                }
-                return BadRequest(result);
+                await _systemAuditService.AuditAsync(User.GetEmail(), _accessor.GetIp(), Operations.Insert, Tables.Subdivisions);
+                return Ok(result);
             }
-            return BadRequest();
+            return BadRequest(result);
         }
 
         //------------------------------------------------------------------------------------------------------------------------------------------
 
         [HttpPut]
         [Route("UpdateName")]
-        [Authorize(Roles = "Admin,Accountant,Deputy", AuthenticationSchemes = "Bearer")]
+        [ModelValidation]
+        [MapToApiVersion("1.0")]
+        [Authorize(Roles = "Admin,Accountant,Deputy", AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> UpdateName([FromBody] UpdateNameSubdivisionViewModel vm)
         {
-            if (ModelState.IsValid)
+            var result = await _services.UpdateNameSubdivisionAsync(_mapper.Map<UpdateSubdivisionNameDTO>(vm));
+            if (result.IsValid)
             {
-                var result = await _services.UpdateNameSubdivisionAsync(_mapper.Map<UpdateSubdivisionNameDTO>(vm));
-                if (result.IsValid)
-                {
-                    await _systemAuditService.AuditAsync(User.GetEmail(), _accessor.GetIp(), Operations.Update, Tables.Subdivisions);
-                    return Ok(result);
-                }
-                return BadRequest(result);
+                await _systemAuditService.AuditAsync(User.GetEmail(), _accessor.GetIp(), Operations.Update, Tables.Subdivisions);
+                return Ok(result);
             }
-            return BadRequest();
+            return BadRequest(result);
         }
 
         [HttpPut]
         [Route("UpdateAbbreviation")]
-        [Authorize(Roles = "Admin,Accountant,Deputy", AuthenticationSchemes = "Bearer")]
+        [ModelValidation]
+        [MapToApiVersion("1.0")]
+        [Authorize(Roles = "Admin,Accountant,Deputy", AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> UpdateAbbreviation([FromBody] UpdateAbbreviationSubdivisionViewModel vm)
         {
-            if (ModelState.IsValid)
+            var result = await _services.UpdateAbbreviationSubdivisionAsync(_mapper.Map<UpdateSubdivisionAbbreviationDTO>(vm));
+            if (result.IsValid)
             {
-                var result = await _services.UpdateAbbreviationSubdivisionAsync(_mapper.Map<UpdateSubdivisionAbbreviationDTO>(vm));
-                if (result.IsValid)
-                {
-                    await _systemAuditService.AuditAsync(User.GetEmail(), _accessor.GetIp(), Operations.Update, Tables.Subdivisions);
-                    return Ok(result);
-                }
-                return BadRequest(result);
+                await _systemAuditService.AuditAsync(User.GetEmail(), _accessor.GetIp(), Operations.Update, Tables.Subdivisions);
+                return Ok(result);
             }
-            return BadRequest();
+            return BadRequest(result);
         }
 
         [HttpPut]
         [Route("RestructuringUnits")]
-        [Authorize(Roles = "Admin,Accountant,Deputy", AuthenticationSchemes = "Bearer")]
+        [ModelValidation]
+        [MapToApiVersion("1.0")]
+        [Authorize(Roles = "Admin,Accountant,Deputy", AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> RestructuringUnits([FromBody] RestructuringViewModel vm)
         {
-            if (ModelState.IsValid)
+            var result = await _services.RestructuringUnits(_mapper.Map<RestructuringSubdivisionDTO>(vm));
+            if (result.IsValid)
             {
-                var result = await _services.RestructuringUnits(_mapper.Map<RestructuringSubdivisionDTO>(vm));
-                if (result.IsValid)
-                {
-                    await _systemAuditService.AuditAsync(User.GetEmail(), _accessor.GetIp(), Operations.Update, Tables.Subdivisions);
-                    return Ok(result);
-                }
-                return BadRequest(result);
+                await _systemAuditService.AuditAsync(User.GetEmail(), _accessor.GetIp(), Operations.Update, Tables.Subdivisions);
+                return Ok(result);
             }
-            return BadRequest();
+            return BadRequest(result);
         }
 
         //------------------------------------------------------------------------------------------------------------------------------------------
 
         [HttpDelete]
         [Route("Delete/{id}")]
-        [Authorize(Roles = "Admin", AuthenticationSchemes = "Bearer")]
+        [MapToApiVersion("1.0")]
+        [Authorize(Roles = "Admin", AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> Delete([Required] string id)
         {
             var result = await _services.DeleteAsync(id);
@@ -177,6 +174,5 @@ namespace TradeUnionCommittee.Web.Api.Controllers.Directory
             }
             return BadRequest(result);
         }
-
     }
 }

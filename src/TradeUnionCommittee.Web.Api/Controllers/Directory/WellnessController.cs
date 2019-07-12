@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -9,12 +10,14 @@ using TradeUnionCommittee.BLL.Enums;
 using TradeUnionCommittee.BLL.Interfaces.Directory;
 using TradeUnionCommittee.BLL.Interfaces.SystemAudit;
 using TradeUnionCommittee.ViewModels.ViewModels;
+using TradeUnionCommittee.Web.Api.Attributes;
 using TradeUnionCommittee.Web.Api.Extensions;
 
 namespace TradeUnionCommittee.Web.Api.Controllers.Directory
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [ApiVersion("1.0")]
+    [Route("api/v{version:apiVersion}/[controller]")]
     public class WellnessController : ControllerBase
     {
         private readonly IWellnessService _services;
@@ -32,7 +35,8 @@ namespace TradeUnionCommittee.Web.Api.Controllers.Directory
 
         [HttpGet]
         [Route("GetAll")]
-        [Authorize(Roles = "Admin,Accountant,Deputy", AuthenticationSchemes = "Bearer")]
+        [MapToApiVersion("1.0")]
+        [Authorize(Roles = "Admin,Accountant,Deputy", AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> GetAll()
         {
             return Ok(await _services.GetAllAsync());
@@ -40,7 +44,8 @@ namespace TradeUnionCommittee.Web.Api.Controllers.Directory
 
         [HttpGet]
         [Route("Get/{id}")]
-        [Authorize(Roles = "Admin,Accountant,Deputy", AuthenticationSchemes = "Bearer")]
+        [MapToApiVersion("1.0")]
+        [Authorize(Roles = "Admin,Accountant,Deputy", AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> Get([Required] string id)
         {
             var result = await _services.GetAsync(id);
@@ -53,43 +58,40 @@ namespace TradeUnionCommittee.Web.Api.Controllers.Directory
 
         [HttpPost]
         [Route("Create")]
-        [Authorize(Roles = "Admin,Accountant,Deputy", AuthenticationSchemes = "Bearer")]
+        [ModelValidation]
+        [MapToApiVersion("1.0")]
+        [Authorize(Roles = "Admin,Accountant,Deputy", AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> Create([FromBody] CreateWellnessViewModel vm)
         {
-            if (ModelState.IsValid)
+            var result = await _services.CreateAsync(_mapper.Map<WellnessDTO>(vm));
+            if (result.IsValid)
             {
-                var result = await _services.CreateAsync(_mapper.Map<WellnessDTO>(vm));
-                if (result.IsValid)
-                {
-                    await _systemAuditService.AuditAsync(User.GetEmail(), _accessor.GetIp(), Operations.Insert, Tables.Event);
-                    return Ok(result);
-                }
-                return BadRequest(result);
+                await _systemAuditService.AuditAsync(User.GetEmail(), _accessor.GetIp(), Operations.Insert, Tables.Event);
+                return Ok(result);
             }
-            return BadRequest();
+            return BadRequest(result);
         }
 
         [HttpPut]
         [Route("Update")]
-        [Authorize(Roles = "Admin,Accountant,Deputy", AuthenticationSchemes = "Bearer")]
+        [ModelValidation]
+        [MapToApiVersion("1.0")]
+        [Authorize(Roles = "Admin,Accountant,Deputy", AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> Update([FromBody] UpdateWellnessViewModel vm)
         {
-            if (ModelState.IsValid)
+            var result = await _services.UpdateAsync(_mapper.Map<WellnessDTO>(vm));
+            if (result.IsValid)
             {
-                var result = await _services.UpdateAsync(_mapper.Map<WellnessDTO>(vm));
-                if (result.IsValid)
-                {
-                    await _systemAuditService.AuditAsync(User.GetEmail(), _accessor.GetIp(), Operations.Update, Tables.Event);
-                    return Ok(result);
-                }
-                return BadRequest(result);
+                await _systemAuditService.AuditAsync(User.GetEmail(), _accessor.GetIp(), Operations.Update, Tables.Event);
+                return Ok(result);
             }
-            return BadRequest();
+            return BadRequest(result);
         }
 
         [HttpDelete]
         [Route("Delete/{id}")]
-        [Authorize(Roles = "Admin", AuthenticationSchemes = "Bearer")]
+        [MapToApiVersion("1.0")]
+        [Authorize(Roles = "Admin", AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> Delete([Required] string id)
         {
             var result = await _services.DeleteAsync(id);
