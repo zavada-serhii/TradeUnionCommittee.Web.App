@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.DTO;
@@ -39,31 +40,42 @@ namespace TradeUnionCommittee.Web.Api.Controllers.Directory
         [HttpGet]
         [Route("GetAll")]
         [MapToApiVersion("1.0")]
+        [ProducesResponseType(typeof(IEnumerable<string>), 400)]
+        [ProducesResponseType(typeof(IEnumerable<DirectoryDTO>), 200)]
         [Authorize(Roles = "Admin,Accountant,Deputy", AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> GetAll()
         {
             //_logger.LogInformation($"Test Position API Controller: {JsonConvert.SerializeObject(await _services.GetAllAsync())}");
-            return Ok(await _services.GetAllAsync());
+            var result = await _services.GetAllAsync();
+            if (result.IsValid)
+            {
+                return Ok(result.Result);
+            }
+            return BadRequest(result.ErrorsList);
         }
 
         [HttpGet]
         [Route("Get/{id}")]
         [MapToApiVersion("1.0")]
+        [ProducesResponseType(typeof(DirectoryDTO), 200)]
+        [ProducesResponseType(typeof(IEnumerable<string>), 404)]
         [Authorize(Roles = "Admin,Accountant,Deputy", AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> Get([Required] string id)
         {
             var result = await _services.GetAsync(id);
             if (result.IsValid)
             {
-                return Ok(result);
+                return Ok(result.Result);
             }
-            return BadRequest(result);
+            return NotFound(result.ErrorsList);
         }
 
         [HttpPost]
         [Route("Create")]
         [ModelValidation]
         [MapToApiVersion("1.0")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(typeof(IEnumerable<string>), 422)]
         [Authorize(Roles = "Admin,Accountant,Deputy", AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> Create([FromBody] CreatePositionViewModel vm)
         {
@@ -71,15 +83,18 @@ namespace TradeUnionCommittee.Web.Api.Controllers.Directory
             if (result.IsValid)
             {
                 await _systemAuditService.AuditAsync(User.GetEmail(), _accessor.GetIp(), Operations.Insert, Tables.Position);
-                return Ok(result);
+                return Ok();
+                //return Created();
             }
-            return BadRequest(result);
+            return UnprocessableEntity(result.ErrorsList);
         }
 
         [HttpPut]
         [Route("Update")]
         [ModelValidation]
         [MapToApiVersion("1.0")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(typeof(IEnumerable<string>), 422)]
         [Authorize(Roles = "Admin,Accountant,Deputy", AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> Update([FromBody] UpdatePositionViewModel vm)
         {
@@ -87,14 +102,16 @@ namespace TradeUnionCommittee.Web.Api.Controllers.Directory
             if (result.IsValid)
             {
                 await _systemAuditService.AuditAsync(User.GetEmail(), _accessor.GetIp(), Operations.Update, Tables.Position);
-                return Ok(result);
+                return Ok();
             }
-            return BadRequest(result);
+            return UnprocessableEntity(result.ErrorsList);
         }
 
         [HttpDelete]
         [Route("Delete/{id}")]
         [MapToApiVersion("1.0")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(typeof(IEnumerable<string>), 404)]
         [Authorize(Roles = "Admin", AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> Delete([Required] string id)
         {
@@ -102,9 +119,9 @@ namespace TradeUnionCommittee.Web.Api.Controllers.Directory
             if (result.IsValid)
             {
                 await _systemAuditService.AuditAsync(User.GetEmail(), _accessor.GetIp(), Operations.Delete, Tables.Position);
-                return Ok(result);
+                return Ok();
             }
-            return BadRequest(result);
+            return NotFound(result.ErrorsList);
         }
     }
 }
