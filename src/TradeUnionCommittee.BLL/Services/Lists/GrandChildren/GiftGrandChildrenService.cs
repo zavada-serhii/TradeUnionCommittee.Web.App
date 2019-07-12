@@ -64,17 +64,19 @@ namespace TradeUnionCommittee.BLL.Services.Lists.GrandChildren
             }
         }
 
-        public async Task<ActualResult> CreateAsync(GiftGrandChildrenDTO item)
+        public async Task<ActualResult<string>> CreateAsync(GiftGrandChildrenDTO item)
         {
             try
             {
-                await _context.GiftGrandChildrens.AddAsync(_mapperService.Mapper.Map<GiftGrandChildrens>(item));
+                var giftGrandChildren = _mapperService.Mapper.Map<GiftGrandChildrens>(item);
+                await _context.GiftGrandChildrens.AddAsync(giftGrandChildren);
                 await _context.SaveChangesAsync();
-                return new ActualResult();
+                var hashId = _hashIdUtilities.EncryptLong(giftGrandChildren.Id);
+                return new ActualResult<string> { Result = hashId };
             }
             catch (Exception exception)
             {
-                return new ActualResult(DescriptionExceptionHelper.GetDescriptionError(exception));
+                return new ActualResult<string>(DescriptionExceptionHelper.GetDescriptionError(exception));
             }
         }
 

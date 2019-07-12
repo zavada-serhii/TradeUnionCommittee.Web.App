@@ -45,18 +45,20 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Employee
             }
         }
 
-        public async Task<ActualResult> CreateAsync(SocialActivityEmployeesDTO dto)
+        public async Task<ActualResult<string>> CreateAsync(SocialActivityEmployeesDTO dto)
         {
             try
             {
                 dto.CheckSocialActivity = true;
-                await _context.SocialActivityEmployees.AddAsync(_mapperService.Mapper.Map<SocialActivityEmployees>(dto));
+                var socialActivityEmployees = _mapperService.Mapper.Map<SocialActivityEmployees>(dto);
+                await _context.SocialActivityEmployees.AddAsync(socialActivityEmployees);
                 await _context.SaveChangesAsync();
-                return new ActualResult();
+                var hashId = _hashIdUtilities.EncryptLong(socialActivityEmployees.Id);
+                return new ActualResult<string> { Result = hashId };
             }
             catch (Exception exception)
             {
-                return new ActualResult(DescriptionExceptionHelper.GetDescriptionError(exception));
+                return new ActualResult<string>(DescriptionExceptionHelper.GetDescriptionError(exception));
             }
         }
 

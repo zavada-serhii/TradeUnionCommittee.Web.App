@@ -61,17 +61,19 @@ namespace TradeUnionCommittee.BLL.Services.Directory
             }
         }
 
-        public async Task<ActualResult> CreateAsync(TourDTO dto)
+        public async Task<ActualResult<string>> CreateAsync(TourDTO dto)
         {
             try
             {
-                await _context.Event.AddAsync(_mapperService.Mapper.Map<Event>(dto));
+                var tour = _mapperService.Mapper.Map<Event>(dto);
+                await _context.Event.AddAsync(tour);
                 await _context.SaveChangesAsync();
-                return new ActualResult();
+                var hashId = _hashIdUtilities.EncryptLong(tour.Id);
+                return new ActualResult<string> { Result = hashId };
             }
             catch (Exception exception)
             {
-                return new ActualResult<DirectoryDTO>(DescriptionExceptionHelper.GetDescriptionError(exception));
+                return new ActualResult<string>(DescriptionExceptionHelper.GetDescriptionError(exception));
             }
         }
 

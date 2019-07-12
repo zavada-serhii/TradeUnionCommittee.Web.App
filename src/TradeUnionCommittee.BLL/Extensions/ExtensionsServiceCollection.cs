@@ -126,7 +126,7 @@ namespace TradeUnionCommittee.BLL.Extensions
             services.AddTransient<ICulturalGrandChildrenService, CulturalGrandChildrenService>();
             services.AddTransient<IGiftGrandChildrenService, GiftGrandChildrenService>();
 
-            services.AddTransient<IReferenceParent, ReferenceParent>();
+            services.AddTransient<IReferenceParentService, ReferenceParentService>();
 
             //---------------------------------------------------------------------------------------------
 

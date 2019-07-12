@@ -62,17 +62,19 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Family
             }
         }
 
-        public async Task<ActualResult> CreateAsync(FamilyDTO item)
+        public async Task<ActualResult<string>> CreateAsync(FamilyDTO item)
         {
             try
             {
-                await _context.Family.AddAsync(_mapperService.Mapper.Map<DAL.Entities.Family>(item));
+                var family = _mapperService.Mapper.Map<DAL.Entities.Family>(item);
+                await _context.Family.AddAsync(family);
                 await _context.SaveChangesAsync();
-                return new ActualResult();
+                var hashId = _hashIdUtilities.EncryptLong(family.Id);
+                return new ActualResult<string> { Result = hashId };
             }
             catch (Exception exception)
             {
-                return new ActualResult(DescriptionExceptionHelper.GetDescriptionError(exception));
+                return new ActualResult<string>(DescriptionExceptionHelper.GetDescriptionError(exception));
             }
         }
 

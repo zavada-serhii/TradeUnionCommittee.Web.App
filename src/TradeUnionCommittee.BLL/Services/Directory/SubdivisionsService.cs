@@ -117,31 +117,35 @@ namespace TradeUnionCommittee.BLL.Services.Directory
 
         //-------------------------------------------------------------------------------------------------------------------
 
-        public async Task<ActualResult> CreateMainSubdivisionAsync(CreateSubdivisionDTO dto)
+        public async Task<ActualResult<string>> CreateMainSubdivisionAsync(CreateSubdivisionDTO dto)
         {
             try
             {
-                await _context.Subdivisions.AddAsync(_mapperService.Mapper.Map<Subdivisions>(dto));
+                var subdivision = _mapperService.Mapper.Map<Subdivisions>(dto);
+                await _context.Subdivisions.AddAsync(subdivision);
                 await _context.SaveChangesAsync();
-                return new ActualResult();
+                var hashId = _hashIdUtilities.EncryptLong(subdivision.Id);
+                return new ActualResult<string> { Result = hashId };
             }
             catch (Exception exception)
             {
-                return new ActualResult(DescriptionExceptionHelper.GetDescriptionError(exception));
+                return new ActualResult<string>(DescriptionExceptionHelper.GetDescriptionError(exception));
             }
         }
 
-        public async Task<ActualResult> CreateSubordinateSubdivisionAsync(CreateSubordinateSubdivisionDTO dto)
+        public async Task<ActualResult<string>> CreateSubordinateSubdivisionAsync(CreateSubordinateSubdivisionDTO dto)
         {
             try
             {
-                await _context.Subdivisions.AddAsync(_mapperService.Mapper.Map<Subdivisions>(dto));
+                var subdivision = _mapperService.Mapper.Map<Subdivisions>(dto);
+                await _context.Subdivisions.AddAsync(subdivision);
                 await _context.SaveChangesAsync();
-                return new ActualResult();
+                var hashId = _hashIdUtilities.EncryptLong(subdivision.Id);
+                return new ActualResult<string> { Result = hashId };
             }
             catch (Exception exception)
             {
-                return new ActualResult(DescriptionExceptionHelper.GetDescriptionError(exception));
+                return new ActualResult<string>(DescriptionExceptionHelper.GetDescriptionError(exception));
             }
         }
 

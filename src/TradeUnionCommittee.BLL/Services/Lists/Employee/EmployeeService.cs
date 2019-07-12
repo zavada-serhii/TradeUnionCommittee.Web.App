@@ -25,7 +25,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Employee
             _hashIdUtilities = hashIdUtilities;
         }
 
-        public async Task<ActualResult> AddEmployeeAsync(CreateEmployeeDTO dto)
+        public async Task<ActualResult<string>> AddEmployeeAsync(CreateEmployeeDTO dto)
         {
             try
             {
@@ -54,11 +54,12 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Employee
 
                 await _context.Employee.AddAsync(employee);
                 await _context.SaveChangesAsync();
-                return new ActualResult();
+                var hashId = _hashIdUtilities.EncryptLong(employee.Id);
+                return new ActualResult<string> { Result = hashId };
             }
             catch (Exception exception)
             {
-                return new ActualResult(DescriptionExceptionHelper.GetDescriptionError(exception));
+                return new ActualResult<string>(DescriptionExceptionHelper.GetDescriptionError(exception));
             }
         }
 

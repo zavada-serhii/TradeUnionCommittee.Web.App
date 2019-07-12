@@ -21,9 +21,9 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Lists.Children
         private readonly IMapper _mapper;
         private readonly ISystemAuditService _systemAuditService;
         private readonly IHttpContextAccessor _accessor;
-        private readonly IReferenceParent _referenceParent;
+        private readonly IReferenceParentService _referenceParent;
 
-        public GiftChildrenController(IGiftChildrenService services, IMapper mapper, ISystemAuditService systemAuditService, IHttpContextAccessor accessor, IReferenceParent referenceParent)
+        public GiftChildrenController(IGiftChildrenService services, IMapper mapper, ISystemAuditService systemAuditService, IHttpContextAccessor accessor, IReferenceParentService referenceParent)
         {
             _services = services;
             _mapper = mapper;
