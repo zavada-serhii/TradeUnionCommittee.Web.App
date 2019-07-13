@@ -3,6 +3,7 @@ using Npgsql;
 using System;
 using System.Net.Sockets;
 using TradeUnionCommittee.BLL.Enums;
+using TradeUnionCommittee.BLL.Exceptions;
 
 namespace TradeUnionCommittee.BLL.Helpers
 {
@@ -45,6 +46,11 @@ namespace TradeUnionCommittee.BLL.Helpers
                 {
                     return Errors.ConnectionLost;
                 }
+            }
+
+            if (exception is DecryptHashIdException)
+            {
+                return Errors.IncorrectHashId;
             }
 
             return Errors.DataBaseError;

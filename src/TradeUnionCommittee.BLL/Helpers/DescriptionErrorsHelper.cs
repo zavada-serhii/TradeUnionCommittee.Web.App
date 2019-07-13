@@ -46,6 +46,9 @@ namespace TradeUnionCommittee.BLL.Helpers
                 case Errors.FileNotFound:
                     return "Файл не знайдено!";
 
+                case Errors.IncorrectHashId:
+                    return "Недійсний ідентифікатор";
+
                 default:
                     return "Oops! Трапилась невідома помилка!";
             }

@@ -13,6 +13,7 @@
         EmployeeDeleted,
         DataUsed,
         NotFound,
-        FileNotFound
+        FileNotFound,
+        IncorrectHashId
     }
 }
