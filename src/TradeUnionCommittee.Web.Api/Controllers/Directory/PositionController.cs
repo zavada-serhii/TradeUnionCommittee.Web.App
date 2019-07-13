@@ -74,7 +74,7 @@ namespace TradeUnionCommittee.Web.Api.Controllers.Directory
         [Route("Create")]
         [ModelValidation]
         [MapToApiVersion("1.0")]
-        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(CreatePositionViewModel), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(IEnumerable<string>), StatusCodes.Status422UnprocessableEntity)]
         [Authorize(Roles = "Admin,Accountant,Deputy", AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> Create([FromBody] CreatePositionViewModel vm)
