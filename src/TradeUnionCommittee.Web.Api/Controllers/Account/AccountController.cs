@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using TradeUnionCommittee.ViewModels.ViewModels;
 using TradeUnionCommittee.Web.Api.Configurations;
-using TradeUnionCommittee.Web.Api.Extensions;
+using TradeUnionCommittee.Web.Api.Model;
 
 namespace TradeUnionCommittee.Web.Api.Controllers.Account
 {
@@ -25,17 +27,18 @@ namespace TradeUnionCommittee.Web.Api.Controllers.Account
         /// 'Mobile-Application'
         /// </summary>
         [HttpPost]
-        [Route("Token")]
+        [Route("Token", Name = "Token")]
         [MapToApiVersion("1.0")]
-        public async Task Token([FromBody] TokenViewModel viewModel)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(IEnumerable<string>), StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> Token([FromBody] TokenViewModel viewModel)
         {
             var account = await _jwtBearer.SignInByPassword(viewModel);
             if (account.IsValid)
             {
-                await HttpContext.WriteToken(account.Result);
-                return;
+                return WriteToken(account.Result);
             }
-            await HttpContext.BadRequest(account.ErrorsList);
+            return BadRequest(account.ErrorsList);
         }
 
         /// <summary>
@@ -45,17 +48,33 @@ namespace TradeUnionCommittee.Web.Api.Controllers.Account
         /// 'Mobile-Application'
         /// </summary>
         [HttpPost]
-        [Route("RefreshToken")]
+        [Route("RefreshToken", Name = "RefreshToken")]
         [MapToApiVersion("1.0")]
-        public async Task RefreshToken([FromBody] RefreshTokenViewModel viewModel)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(IEnumerable<string>), StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenViewModel viewModel)
         {
             var account = await _jwtBearer.SignInByRefreshToken(viewModel);
             if (account.IsValid)
             {
-                await HttpContext.WriteToken(account.Result);
-                return;
+                return WriteToken(account.Result);
             }
-            await HttpContext.BadRequest(account.ErrorsList);
+            return BadRequest(account.ErrorsList);
+        }
+
+        //-----------------------------------------------------------------------------------------------
+
+        private OkObjectResult WriteToken(TokenModel model)
+        {
+            return Ok(new
+            {
+                access_token = model.AccessToken,
+                refresh_token = model.RefreshToken,
+                expires_in = model.AccessTokenExpires.Ticks,
+                token_type = model.TokenType,
+                user_name = model.Email,
+                user_role = model.Role
+            });
         }
     }
 }

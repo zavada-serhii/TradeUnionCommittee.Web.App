@@ -109,7 +109,7 @@ namespace TradeUnionCommittee.Web.Api.Controllers.Directory
         [HttpDelete]
         [Route("Delete/{id}", Name = "Delete")]
         [MapToApiVersion("1.0")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(IEnumerable<string>), StatusCodes.Status404NotFound)]
         [Authorize(Roles = "Admin", AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> Delete([Required] string id)
@@ -118,7 +118,7 @@ namespace TradeUnionCommittee.Web.Api.Controllers.Directory
             if (result.IsValid)
             {
                 await _systemAuditService.AuditAsync(User.GetEmail(), _accessor.GetIp(), Operations.Delete, Tables.Position);
-                return Ok();
+                return NoContent();
             }
             return NotFound(result.ErrorsList);
         }
