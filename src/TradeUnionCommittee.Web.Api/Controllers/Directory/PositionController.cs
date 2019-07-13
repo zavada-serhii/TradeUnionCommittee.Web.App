@@ -38,7 +38,7 @@ namespace TradeUnionCommittee.Web.Api.Controllers.Directory
         }
 
         [HttpGet]
-        [Route("GetAll")]
+        [Route("GetAll", Name = "GetAll")]
         [MapToApiVersion("1.0")]
         [ProducesResponseType(typeof(IEnumerable<string>), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(IEnumerable<DirectoryDTO>), StatusCodes.Status200OK)]
@@ -71,7 +71,7 @@ namespace TradeUnionCommittee.Web.Api.Controllers.Directory
         }
 
         [HttpPost]
-        [Route("Create")]
+        [Route("Create", Name = "Create")]
         [ModelValidation]
         [MapToApiVersion("1.0")]
         [ProducesResponseType(typeof(CreatePositionViewModel), StatusCodes.Status201Created)]
@@ -89,11 +89,11 @@ namespace TradeUnionCommittee.Web.Api.Controllers.Directory
         }
 
         [HttpPut]
-        [Route("Update")]
+        [Route("Update", Name = "Update")]
         [ModelValidation]
         [MapToApiVersion("1.0")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(IEnumerable<string>), StatusCodes.Status422UnprocessableEntity)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(typeof(IEnumerable<string>), StatusCodes.Status400BadRequest)]
         [Authorize(Roles = "Admin,Accountant,Deputy", AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> Update([FromBody] UpdatePositionViewModel vm)
         {
@@ -101,13 +101,13 @@ namespace TradeUnionCommittee.Web.Api.Controllers.Directory
             if (result.IsValid)
             {
                 await _systemAuditService.AuditAsync(User.GetEmail(), _accessor.GetIp(), Operations.Update, Tables.Position);
-                return Ok();
+                return NoContent();
             }
-            return UnprocessableEntity(result.ErrorsList);
+            return BadRequest(result.ErrorsList);
         }
 
         [HttpDelete]
-        [Route("Delete/{id}")]
+        [Route("Delete/{id}", Name = "Delete")]
         [MapToApiVersion("1.0")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(IEnumerable<string>), StatusCodes.Status404NotFound)]
