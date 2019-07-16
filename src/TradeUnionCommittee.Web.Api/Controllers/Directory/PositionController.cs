@@ -42,8 +42,8 @@ namespace TradeUnionCommittee.Web.Api.Controllers.Directory
         [MapToApiVersion("1.0")]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        [ProducesResponseType(typeof(IEnumerable<string>), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(IEnumerable<DirectoryDTO>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(IEnumerable<string>), StatusCodes.Status400BadRequest)]
         [Authorize(Roles = "Admin,Accountant,Deputy", AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> GetAll()
         {
@@ -117,8 +117,8 @@ namespace TradeUnionCommittee.Web.Api.Controllers.Directory
         [HttpDelete]
         [Route("Delete/{id}")]
         [MapToApiVersion("1.0")]
-        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(typeof(IEnumerable<string>), StatusCodes.Status404NotFound)]

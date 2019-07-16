@@ -30,6 +30,7 @@ namespace TradeUnionCommittee.Web.Api.Controllers.Account
         [Route("Token", Name = "Token")]
         [MapToApiVersion("1.0")]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(typeof(IEnumerable<string>), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Token([FromBody] TokenViewModel viewModel)
         {
@@ -51,6 +52,7 @@ namespace TradeUnionCommittee.Web.Api.Controllers.Account
         [Route("RefreshToken", Name = "RefreshToken")]
         [MapToApiVersion("1.0")]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(typeof(IEnumerable<string>), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenViewModel viewModel)
         {
