@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
@@ -25,13 +26,15 @@ namespace TradeUnionCommittee.Web.Api.Controllers.Directory
         private readonly ISystemAuditService _systemAuditService;
         private readonly IMapper _mapper;
         private readonly IHttpContextAccessor _accessor;
+        private readonly ILogger<HobbyController> _logger;
 
-        public HobbyController(IHobbyService services, ISystemAuditService systemAuditService, IMapper mapper, IHttpContextAccessor accessor)
+        public HobbyController(IHobbyService services, ISystemAuditService systemAuditService, IMapper mapper, IHttpContextAccessor accessor, ILogger<HobbyController> logger)
         {
             _services = services;
             _systemAuditService = systemAuditService;
             _mapper = mapper;
             _accessor = accessor;
+            _logger = logger;
         }
 
         [HttpGet]

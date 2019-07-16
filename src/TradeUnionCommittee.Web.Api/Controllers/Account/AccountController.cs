@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using TradeUnionCommittee.ViewModels.ViewModels;
+using TradeUnionCommittee.Web.Api.Attributes;
 using TradeUnionCommittee.Web.Api.Configurations;
 using TradeUnionCommittee.Web.Api.Model;
 
@@ -14,10 +16,12 @@ namespace TradeUnionCommittee.Web.Api.Controllers.Account
     public class AccountController : ControllerBase
     {
         private readonly IJwtBearerConfiguration _jwtBearer;
+        private readonly ILogger<AccountController> _logger;
 
-        public AccountController(IJwtBearerConfiguration jwtBearer)
+        public AccountController(IJwtBearerConfiguration jwtBearer, ILogger<AccountController> logger)
         {
             _jwtBearer = jwtBearer;
+            _logger = logger;
         }
 
         /// <summary>
@@ -28,6 +32,7 @@ namespace TradeUnionCommittee.Web.Api.Controllers.Account
         /// </summary>
         [HttpPost]
         [Route("Token", Name = "Token")]
+        [ModelValidation]
         [MapToApiVersion("1.0")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -50,6 +55,7 @@ namespace TradeUnionCommittee.Web.Api.Controllers.Account
         /// </summary>
         [HttpPost]
         [Route("RefreshToken", Name = "RefreshToken")]
+        [ModelValidation]
         [MapToApiVersion("1.0")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
