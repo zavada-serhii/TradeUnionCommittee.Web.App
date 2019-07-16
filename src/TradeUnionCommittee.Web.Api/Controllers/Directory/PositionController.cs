@@ -38,9 +38,10 @@ namespace TradeUnionCommittee.Web.Api.Controllers.Directory
         }
 
         [HttpGet]
-        [Route("GetAll", Name = "GetAll")]
+        [Route("GetAll")]
         [MapToApiVersion("1.0")]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(typeof(IEnumerable<string>), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(IEnumerable<DirectoryDTO>), StatusCodes.Status200OK)]
         [Authorize(Roles = "Admin,Accountant,Deputy", AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
@@ -56,9 +57,10 @@ namespace TradeUnionCommittee.Web.Api.Controllers.Directory
         }
 
         [HttpGet]
-        [Route("Get/{id}", Name = "Get")]
+        [Route("Get/{id}", Name = "GetPosition")]
         [MapToApiVersion("1.0")]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(typeof(DirectoryDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(IEnumerable<string>), StatusCodes.Status404NotFound)]
         [Authorize(Roles = "Admin,Accountant,Deputy", AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
@@ -73,10 +75,11 @@ namespace TradeUnionCommittee.Web.Api.Controllers.Directory
         }
 
         [HttpPost]
-        [Route("Create", Name = "Create")]
+        [Route("Create")]
         [ModelValidation]
         [MapToApiVersion("1.0")]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(typeof(CreatePositionViewModel), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(IEnumerable<string>), StatusCodes.Status422UnprocessableEntity)]
         [Authorize(Roles = "Admin,Accountant,Deputy", AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
@@ -86,17 +89,18 @@ namespace TradeUnionCommittee.Web.Api.Controllers.Directory
             if (result.IsValid)
             {
                 await _systemAuditService.AuditAsync(User.GetEmail(), _accessor.GetIp(), Operations.Insert, Tables.Position);
-                return CreatedAtRoute(nameof(Get), new { id = result.Result }, vm);
+                return CreatedAtRoute("GetPosition", new { id = result.Result }, vm);
             }
             return UnprocessableEntity(result.ErrorsList);
         }
 
         [HttpPut]
-        [Route("Update", Name = "Update")]
+        [Route("Update")]
         [ModelValidation]
         [MapToApiVersion("1.0")]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(typeof(IEnumerable<string>), StatusCodes.Status400BadRequest)]
         [Authorize(Roles = "Admin,Accountant,Deputy", AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> Update([FromBody] UpdatePositionViewModel vm)
@@ -111,11 +115,12 @@ namespace TradeUnionCommittee.Web.Api.Controllers.Directory
         }
 
         [HttpDelete]
-        [Route("Delete/{id}", Name = "Delete")]
+        [Route("Delete/{id}")]
         [MapToApiVersion("1.0")]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(typeof(IEnumerable<string>), StatusCodes.Status404NotFound)]
         [Authorize(Roles = "Admin", AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> Delete([Required] string id)
