@@ -13,7 +13,7 @@ using TradeUnionCommittee.BLL.DTO;
 using TradeUnionCommittee.BLL.Enums;
 using TradeUnionCommittee.BLL.Interfaces.Account;
 using TradeUnionCommittee.ViewModels.ViewModels;
-using TradeUnionCommittee.Web.Api.Model;
+using TradeUnionCommittee.Web.Api.Models;
 
 namespace TradeUnionCommittee.Web.Api.Configurations
 {

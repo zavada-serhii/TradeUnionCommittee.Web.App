@@ -22,7 +22,8 @@ using TradeUnionCommittee.BLL.DTO;
 using TradeUnionCommittee.BLL.Extensions;
 using TradeUnionCommittee.ViewModels.Extensions;
 using TradeUnionCommittee.Web.Api.Configurations;
-using TradeUnionCommittee.Web.Api.Model;
+using TradeUnionCommittee.Web.Api.Extensions;
+using TradeUnionCommittee.Web.Api.Models;
 
 namespace TradeUnionCommittee.Web.Api
 {
@@ -147,6 +148,7 @@ namespace TradeUnionCommittee.Web.Api
             app.UseDefaultFiles();
             app.UseStaticFiles();
             app.UseResponseCompression();
+            app.UseCustomMiddlewares();
 
             app.UseAuthentication();
             app.UseMvc();

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using TradeUnionCommittee.ViewModels.ViewModels;
 using TradeUnionCommittee.Web.Api.Attributes;
 using TradeUnionCommittee.Web.Api.Configurations;
-using TradeUnionCommittee.Web.Api.Model;
+using TradeUnionCommittee.Web.Api.Models;
 
 namespace TradeUnionCommittee.Web.Api.Controllers.Account
 {
