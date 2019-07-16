@@ -31,33 +31,21 @@ namespace TradeUnionCommittee.Web.Api.Configurations
                     Description = "Swagger Trade Union Committee API"
                 });
             }
-            options.OperationFilter<AuthorizationHeaderParameterOperationFilter>();
+
             options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, "TradeUnionCommittee.Web.Api.xml"));
-        }
-    }
 
-    public class AuthorizationHeaderParameterOperationFilter : IOperationFilter
-    {
-        public void Apply(Operation operation, OperationFilterContext context)
-        {
-            var filterPipeline = context.ApiDescription.ActionDescriptor.FilterDescriptors;
-            var isAuthorized = filterPipeline.Select(filterInfo => filterInfo.Filter).Any(filter => filter is AuthorizeFilter);
-            var allowAnonymous = filterPipeline.Select(filterInfo => filterInfo.Filter).Any(filter => filter is IAllowAnonymousFilter);
-
-            if (isAuthorized && !allowAnonymous)
+            options.AddSecurityDefinition("Bearer", new ApiKeyScheme
             {
-                if (operation.Parameters == null)
-                    operation.Parameters = new List<IParameter>();
+               In = "header",
+               Description = "Please enter into field the word 'Bearer' following by space and JWT",
+               Name = "Authorization",
+               Type = "apiKey"
+            });
 
-                operation.Parameters.Add(new NonBodyParameter
-                {
-                    Name = "Authorization",
-                    In = "header",
-                    Description = "Bearer access token",
-                    Required = true,
-                    Type = "string"
-                });
-            }
+            options.AddSecurityRequirement(new Dictionary<string, IEnumerable<string>>
+            {
+                { "Bearer", Enumerable.Empty<string>() }
+            });
         }
     }
 }
