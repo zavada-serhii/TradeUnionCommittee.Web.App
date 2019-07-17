@@ -57,7 +57,7 @@ namespace TradeUnionCommittee.Web.Api
         {
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
             {
-                var authOptions = Configuration.GetSection("AuthOptions").Get<AuthOptions>();
+                var authOptions = Configuration.GetSection("AuthOptions").Get<AuthModel>();
                 options.RequireHttpsMetadata = true;
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
@@ -167,7 +167,7 @@ namespace TradeUnionCommittee.Web.Api
         private void DependencyInjectionSystem(IServiceCollection services)
         {
             services.AddOptions();
-            services.Configure<AuthOptions>(Configuration.GetSection("AuthOptions"));
+            services.Configure<AuthModel>(Configuration.GetSection("AuthOptions"));
             services.AddSingleton(cm => AutoMapperConfiguration.ConfigureAutoMapper());
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddTransient<IJwtBearerConfiguration, JwtBearerConfiguration>();

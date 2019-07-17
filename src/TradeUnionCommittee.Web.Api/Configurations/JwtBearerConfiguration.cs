@@ -26,9 +26,9 @@ namespace TradeUnionCommittee.Web.Api.Configurations
     public class JwtBearerConfiguration : IJwtBearerConfiguration
     {
         private readonly IAccountService _accountService;
-        private readonly IOptions<AuthOptions> _authOptions;
+        private readonly IOptions<AuthModel> _authOptions;
 
-        public JwtBearerConfiguration(IAccountService accountService, IOptions<AuthOptions> authOptions)
+        public JwtBearerConfiguration(IAccountService accountService, IOptions<AuthModel> authOptions)
         {
             _accountService = accountService;
             _authOptions = authOptions;

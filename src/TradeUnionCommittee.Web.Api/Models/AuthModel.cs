@@ -3,7 +3,7 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace TradeUnionCommittee.Web.Api.Models
 {
-    public class AuthOptions
+    public class AuthModel
     {
         public string Issuer { get; set; }
         public string Audience { get; set; }
