@@ -25,12 +25,12 @@ namespace TradeUnionCommittee.Web.Api.Middleware
             }
             catch (Exception exception)
             {
-                _logger.LogError(exception, "[Exception] Internal Server Error");
+                _logger.LogError(exception, "Internal Server Error");
                 await HandleExceptionAsync(httpContext);
             }
         }
 
-        private static Task HandleExceptionAsync(HttpContext context)
+        private Task HandleExceptionAsync(HttpContext context)
         {
             context.Response.ContentType = "application/json";
             context.Response.StatusCode = StatusCodes.Status500InternalServerError;
