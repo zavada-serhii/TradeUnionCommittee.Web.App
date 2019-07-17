@@ -1,10 +1,10 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using System;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
-using System;
-using System.Threading.Tasks;
 
-namespace TradeUnionCommittee.Web.Api.Middlewares
+namespace TradeUnionCommittee.Web.Api.Middleware
 {
     public class ExceptionMiddleware
     {

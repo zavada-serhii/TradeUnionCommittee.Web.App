@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Builder;
-using TradeUnionCommittee.Web.Api.Middlewares;
+using TradeUnionCommittee.Web.Api.Middleware;
 
 namespace TradeUnionCommittee.Web.Api.Extensions
 {
