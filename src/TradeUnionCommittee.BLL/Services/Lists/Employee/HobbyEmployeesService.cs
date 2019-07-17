@@ -67,17 +67,19 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Employee
             }
         }
 
-        public async Task<ActualResult> CreateAsync(HobbyEmployeesDTO item)
+        public async Task<ActualResult<string>> CreateAsync(HobbyEmployeesDTO item)
         {
             try
             {
-                await _context.HobbyEmployees.AddAsync(_mapperService.Mapper.Map<HobbyEmployees>(item));
+                var hobbyEmployees = _mapperService.Mapper.Map<HobbyEmployees>(item);
+                await _context.HobbyEmployees.AddAsync(hobbyEmployees);
                 await _context.SaveChangesAsync();
-                return new ActualResult();
+                var hashId = _hashIdUtilities.EncryptLong(hobbyEmployees.Id);
+                return new ActualResult<string> { Result = hashId };
             }
             catch (Exception exception)
             {
-                return new ActualResult(DescriptionExceptionHelper.GetDescriptionError(exception));
+                return new ActualResult<string>(DescriptionExceptionHelper.GetDescriptionError(exception));
             }
         }
 

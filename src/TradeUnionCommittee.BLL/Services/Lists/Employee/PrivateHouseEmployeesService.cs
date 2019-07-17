@@ -79,18 +79,26 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Employee
                 switch (type)
                 {
                     case PrivateHouse.PrivateHouse:
-                        await _context.PrivateHouseEmployees.AddAsync(_mapperService.Mapper.Map<PrivateHouseEmployees>(item));
+                    {
+                        var privateHouse = _mapperService.Mapper.Map<PrivateHouseEmployees>(item);
+                        await _context.PrivateHouseEmployees.AddAsync(privateHouse);
                         await _context.SaveChangesAsync();
-                        return new ActualResult();
+                        var hashId = _hashIdUtilities.EncryptLong(privateHouse.Id);
+                        return new ActualResult<string> { Result = hashId };
+                    }
                     case PrivateHouse.UniversityHouse:
+                    {
                         var check = await CheckDate(item);
                         if (check.IsValid)
                         {
-                            await _context.PrivateHouseEmployees.AddAsync(_mapperService.Mapper.Map<PrivateHouseEmployees>(item));
+                            var universityHouse = _mapperService.Mapper.Map<PrivateHouseEmployees>(item);
+                            await _context.PrivateHouseEmployees.AddAsync(universityHouse);
                             await _context.SaveChangesAsync();
-                            return new ActualResult();
+                            var hashId = _hashIdUtilities.EncryptLong(universityHouse.Id);
+                            return new ActualResult<string> { Result = hashId };
                         }
                         return check;
+                    }
                     default:
                         throw new ArgumentOutOfRangeException(nameof(type), type, null);
                 }

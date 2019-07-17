@@ -3,29 +3,27 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Authorization;
+using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Serilog;
 using Serilog.Events;
 using Serilog.Sinks.Elasticsearch;
-using Swashbuckle.AspNetCore.Swagger;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using Swashbuckle.AspNetCore.SwaggerUI;
 using System;
-using System.Collections.Generic;
-using System.IO;
 using System.IO.Compression;
-using System.Linq;
 using TradeUnionCommittee.BLL.Configurations;
 using TradeUnionCommittee.BLL.DTO;
 using TradeUnionCommittee.BLL.Extensions;
 using TradeUnionCommittee.ViewModels.Extensions;
 using TradeUnionCommittee.Web.Api.Configurations;
-using TradeUnionCommittee.Web.Api.Model;
+using TradeUnionCommittee.Web.Api.Extensions;
+using TradeUnionCommittee.Web.Api.Models;
 
 namespace TradeUnionCommittee.Web.Api
 {
@@ -59,7 +57,7 @@ namespace TradeUnionCommittee.Web.Api
         {
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
             {
-                var authOptions = Configuration.GetSection("AuthOptions").Get<AuthOptions>();
+                var authOptions = Configuration.GetSection("AuthOptions").Get<AuthModel>();
                 options.RequireHttpsMetadata = true;
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
@@ -111,12 +109,13 @@ namespace TradeUnionCommittee.Web.Api
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
                 .AddTradeUnionCommitteeValidationModule();
 
-            services.AddSwaggerGen(c =>
+            services.AddApiVersioning(options => options.ReportApiVersions = true);
+            services.AddVersionedApiExplorer(options =>
             {
-                c.SwaggerDoc("v1.0", new Info { Title = "Trade Union Committee API", Description = "Swagger Trade Union Committee API" });
-                c.OperationFilter<AuthorizationHeaderParameterOperationFilter>();
-                c.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, "TradeUnionCommittee.Web.Api.xml"));
+                options.GroupNameFormat = "'v'VVV";
+                options.SubstituteApiVersionInUrl = true;
             });
+            services.AddSwaggerGen();
 
             services.Configure<GzipCompressionProviderOptions>(options =>
             {
@@ -131,7 +130,7 @@ namespace TradeUnionCommittee.Web.Api
             DependencyInjectionSystem(services);
         }
 
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, IApiVersionDescriptionProvider provider)
         {
             loggerFactory.AddSerilog();
 
@@ -149,45 +148,30 @@ namespace TradeUnionCommittee.Web.Api
             app.UseDefaultFiles();
             app.UseStaticFiles();
             app.UseResponseCompression();
+            app.UseCustomMiddlewares();
 
             app.UseAuthentication();
             app.UseMvc();
             app.UseSwagger();
-            app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/v1.0/swagger.json", "Trade Union Committee API"); c.DocExpansion(DocExpansion.None); });
+            app.UseSwaggerUI(c =>
+            {
+                foreach (var description in provider.ApiVersionDescriptions)
+                {
+                    c.SwaggerEndpoint($"/swagger/{description.GroupName}/swagger.json", description.GroupName.ToUpperInvariant()); 
+                }
+                c.DocExpansion(DocExpansion.None);
+                c.EnableValidator();
+            });
         }
 
         private void DependencyInjectionSystem(IServiceCollection services)
         {
             services.AddOptions();
-            services.Configure<AuthOptions>(Configuration.GetSection("AuthOptions"));
+            services.Configure<AuthModel>(Configuration.GetSection("AuthOptions"));
             services.AddSingleton(cm => AutoMapperConfiguration.ConfigureAutoMapper());
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddTransient<IJwtBearerConfiguration, JwtBearerConfiguration>();
-        }
-    }
-
-    public class AuthorizationHeaderParameterOperationFilter : IOperationFilter
-    {
-        public void Apply(Operation operation, OperationFilterContext context)
-        {
-            var filterPipeline = context.ApiDescription.ActionDescriptor.FilterDescriptors;
-            var isAuthorized = filterPipeline.Select(filterInfo => filterInfo.Filter).Any(filter => filter is AuthorizeFilter);
-            var allowAnonymous = filterPipeline.Select(filterInfo => filterInfo.Filter).Any(filter => filter is IAllowAnonymousFilter);
-
-            if (isAuthorized && !allowAnonymous)
-            {
-                if (operation.Parameters == null)
-                    operation.Parameters = new List<IParameter>();
-
-                operation.Parameters.Add(new NonBodyParameter
-                {
-                    Name = "Authorization",
-                    In = "header",
-                    Description = "Bearer access token",
-                    Required = true,
-                    Type = "string"
-                });
-            }
+            services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
         }
     }
 }

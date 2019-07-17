@@ -9,12 +9,12 @@ using TradeUnionCommittee.DAL.EF;
 
 namespace TradeUnionCommittee.BLL.Services.Helpers
 {
-    internal class ReferenceParent : IReferenceParent
+    internal class ReferenceParentService : IReferenceParentService
     {
         private readonly TradeUnionCommitteeContext _context;
         private readonly HashIdConfiguration _hashIdUtilities;
 
-        public ReferenceParent(TradeUnionCommitteeContext context, HashIdConfiguration hashIdUtilities)
+        public ReferenceParentService(TradeUnionCommitteeContext context, HashIdConfiguration hashIdUtilities)
         {
             _context = context;
             _hashIdUtilities = hashIdUtilities;

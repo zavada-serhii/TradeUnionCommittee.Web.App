@@ -89,7 +89,7 @@ namespace TradeUnionCommittee.Mvc.Web.GUI.Controllers.Lists.Employee
                         await _systemAuditService.AuditAsync(User.GetEmail(), ip, Operations.Insert, Tables.PrivilegeEmployees);
                     }
 
-                    return RedirectToAction("Create");
+                    return RedirectToAction("Index", new { id = result.Result });
                 }
                 TempData["ErrorsList"] = result.ErrorsList;
             }

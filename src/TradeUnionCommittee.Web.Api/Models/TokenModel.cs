@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace TradeUnionCommittee.Web.Api.Model
+namespace TradeUnionCommittee.Web.Api.Models
 {
     public class TokenModel
     {

@@ -1,9 +1,9 @@
-﻿using Microsoft.IdentityModel.Tokens;
-using System.Text;
+﻿using System.Text;
+using Microsoft.IdentityModel.Tokens;
 
-namespace TradeUnionCommittee.Web.Api.Model
+namespace TradeUnionCommittee.Web.Api.Models
 {
-    public class AuthOptions
+    public class AuthModel
     {
         public string Issuer { get; set; }
         public string Audience { get; set; }
