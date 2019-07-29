@@ -5,13 +5,13 @@ VisualStudioVersion = 15.0.28307.757
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{D6995BB6-26C1-4751-803B-4A469DB85CE4}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "core", "core", "{5E472298-9A43-4C54-9E4D-A9959B0F6F22}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "api", "api", "{5E472298-9A43-4C54-9E4D-A9959B0F6F22}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TradeUnionCommittee.UnitTests", "..\..\test\core\TradeUnionCommittee.UnitTests\TradeUnionCommittee.UnitTests.csproj", "{0CAA0C5A-2623-4165-8C5A-743A9BF61251}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{C1C49C99-546A-4628-B2EA-502163C2BC39}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "core", "core", "{88C1FACF-1E97-4CC6-B90F-DD4658B31432}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "api", "api", "{88C1FACF-1E97-4CC6-B90F-DD4658B31432}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TradeUnionCommittee.Mvc.Web.GUI", "TradeUnionCommittee.Mvc.Web.GUI\TradeUnionCommittee.Mvc.Web.GUI.csproj", "{99A920CB-F384-4BC0-AA3F-A9994E19C775}"
 EndProject
