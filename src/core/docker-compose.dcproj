@@ -3,7 +3,7 @@
   <PropertyGroup Label="Globals">
     <ProjectVersion>2.1</ProjectVersion>
     <DockerTargetOS>Linux</DockerTargetOS>
-    <ProjectGuid>079792de-cbc7-4c86-927c-458f2f6cca73</ProjectGuid>
+    <ProjectGuid>970e1bc9-c9a4-44b2-ba4d-1b586773dbdc</ProjectGuid>
     <DockerLaunchAction>LaunchBrowser</DockerLaunchAction>
     <DockerServiceUrl>{Scheme}://localhost:{ServicePort}</DockerServiceUrl>
     <DockerServiceName>tradeunioncommittee.mvc.web.gui</DockerServiceName>

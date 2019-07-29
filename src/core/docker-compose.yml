@@ -16,7 +16,7 @@ services:
       - "8585:443"
     build:
       context: .
-      dockerfile: src/TradeUnionCommittee.Mvc.Web.GUI/Dockerfile
+      dockerfile: TradeUnionCommittee.Mvc.Web.GUI/Dockerfile
 
 
 
@@ -32,7 +32,7 @@ services:
       - "8595:443"
     build:
       context: .
-      dockerfile: src/TradeUnionCommittee.Web.Api/Dockerfile
+      dockerfile: TradeUnionCommittee.Web.Api/Dockerfile
 
 
 
