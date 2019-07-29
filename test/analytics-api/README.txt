@@ -1,0 +1,1 @@
+Here will be tests for analytics app (Python/Flask)
