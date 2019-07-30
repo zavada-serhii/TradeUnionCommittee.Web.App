@@ -12,7 +12,7 @@ Information system for the primary trade union organization of the Odessa Nation
 
 # Docker launch instructions
 1. Go to the branch **orchestration** and pull the project.
-2. Go to the **src/api** and start the **PowerShell** or **Terminal** as administrator.
+2. Go to the folder **src** and start the **PowerShell** or **Terminal** as administrator.
 3. Run the command **docker-compose -f docker-compose.yml up --build** and wait for the end.
 4. After that applications will be available at the following links.
     - Site

@@ -1,2 +1,2 @@
-Here will be analytics app (Python/Flask)
+Here will be analytics app and tests (Python/Flask)
 TradeUnionCommittee.DataAnalysis.Api
