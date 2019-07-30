@@ -32,7 +32,7 @@ services:
       - "8595:443"
     build:
       context: .
-      dockerfile: TradeUnionCommittee.Web.Api/Dockerfile
+      dockerfile: TradeUnionCommittee.Api/Dockerfile
 
 
 

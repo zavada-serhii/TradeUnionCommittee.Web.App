@@ -15,7 +15,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "api", "api", "{88C1FACF-1E9
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TradeUnionCommittee.Mvc.Web.GUI", "TradeUnionCommittee.Mvc.Web.GUI\TradeUnionCommittee.Mvc.Web.GUI.csproj", "{99A920CB-F384-4BC0-AA3F-A9994E19C775}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TradeUnionCommittee.Web.Api", "TradeUnionCommittee.Web.Api\TradeUnionCommittee.Web.Api.csproj", "{A88E0F25-8B2D-49DD-826E-0EC9C7878365}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TradeUnionCommittee.Api", "TradeUnionCommittee.Api\TradeUnionCommittee.Api.csproj", "{A88E0F25-8B2D-49DD-826E-0EC9C7878365}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TradeUnionCommittee.ViewModels", "TradeUnionCommittee.ViewModels\TradeUnionCommittee.ViewModels.csproj", "{7C832CB1-DE0F-4C80-B3B5-27DC5DD25F39}"
 EndProject
