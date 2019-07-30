@@ -6,7 +6,7 @@
     <ProjectGuid>970e1bc9-c9a4-44b2-ba4d-1b586773dbdc</ProjectGuid>
     <DockerLaunchAction>LaunchBrowser</DockerLaunchAction>
     <DockerServiceUrl>{Scheme}://localhost:{ServicePort}</DockerServiceUrl>
-    <DockerServiceName>tradeunioncommittee.mvc.web.gui</DockerServiceName>
+    <DockerServiceName>tradeunioncommittee.app</DockerServiceName>
   </PropertyGroup>
   <ItemGroup>
     <None Include="docker-compose.override.yml">
