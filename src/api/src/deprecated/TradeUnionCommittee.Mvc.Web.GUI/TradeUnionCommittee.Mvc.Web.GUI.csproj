@@ -40,11 +40,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\TradeUnionCommittee.BLL\TradeUnionCommittee.BLL.csproj" />
-    <ProjectReference Include="..\TradeUnionCommittee.ViewModels\TradeUnionCommittee.ViewModels.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Folder Include="Views\Children\" />
     <Folder Include="Views\GrandChildren\" />
     <Folder Include="Views\HobbyGrandChildren\" />
@@ -67,6 +62,11 @@
     <Folder Include="Views\WellnessFamily\" />
     <Folder Include="Views\TourEmployees\" />
     <Folder Include="Views\WellnessEmployees\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\TradeUnionCommittee.BLL\TradeUnionCommittee.BLL.csproj" />
+    <ProjectReference Include="..\..\TradeUnionCommittee.ViewModels\TradeUnionCommittee.ViewModels.csproj" />
   </ItemGroup>
 
 </Project>

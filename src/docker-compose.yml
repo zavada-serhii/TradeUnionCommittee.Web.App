@@ -16,7 +16,7 @@ services:
       - "8585:443"
     build:
       context: .
-      dockerfile: api/src/TradeUnionCommittee.Mvc.Web.GUI/Dockerfile
+      dockerfile: api/src/deprecated/TradeUnionCommittee.Mvc.Web.GUI/Dockerfile
 
 
 
