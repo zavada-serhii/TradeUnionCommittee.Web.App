@@ -17,7 +17,7 @@ COPY ["api/src/TradeUnionCommittee.DAL.CloudStorage/TradeUnionCommittee.DAL.Clou
 COPY ["api/src/TradeUnionCommittee.DAL.Audit/TradeUnionCommittee.DAL.Audit.csproj", "api/src/TradeUnionCommittee.DAL.Audit/"]
 RUN dotnet restore "api/src/TradeUnionCommittee.Api/TradeUnionCommittee.Api.csproj"
 COPY . .
-WORKDIR "/src/src/TradeUnionCommittee.Api"
+WORKDIR "/src/TradeUnionCommittee.Api"
 RUN dotnet build "/src/api/src/TradeUnionCommittee.Api/TradeUnionCommittee.Api.csproj" -c Release -o /app
 
 FROM build AS publish
