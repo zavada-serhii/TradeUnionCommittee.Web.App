@@ -1,1 +1,0 @@
-Here will be SPA app and tests (React or Angular)

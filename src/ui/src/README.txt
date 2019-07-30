@@ -1,0 +1,1 @@
+Here will be SPA (React or Angular).
