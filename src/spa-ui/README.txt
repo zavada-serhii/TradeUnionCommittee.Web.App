@@ -1,0 +1,1 @@
+Here will be SPA UI app (React or Angular)

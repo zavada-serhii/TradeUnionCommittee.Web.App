@@ -1,1 +1,0 @@
-Here will be tests for UI app (React or Angular)

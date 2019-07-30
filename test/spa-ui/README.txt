@@ -1,0 +1,1 @@
+Here will be tests for SPA UI app (React or Angular)
