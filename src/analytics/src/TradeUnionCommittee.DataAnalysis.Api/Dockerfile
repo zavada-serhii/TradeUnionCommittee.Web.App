@@ -1,6 +1,6 @@
 FROM python:3.6
 
-WORKDIR /code
+WORKDIR /app
 
 ENV FLASK_APP runserver.py
 ENV FLASK_RUN_HOST 0.0.0.0
