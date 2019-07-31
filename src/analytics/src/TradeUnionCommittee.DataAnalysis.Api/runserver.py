@@ -2,9 +2,9 @@ from os import environ
 from controllers import app
 
 if __name__ == '__main__':
-    HOST = environ.get('SERVER_HOST', 'localhost')
+    HOST = environ.get('SERVER_HOST', '0.0.0.0')
     try:
-        PORT = 8700
+        PORT = 5000
     except ValueError:
-        PORT = 8700
+        PORT = 5000
     app.run(HOST, PORT)

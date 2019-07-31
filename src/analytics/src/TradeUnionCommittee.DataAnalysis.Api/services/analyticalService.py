@@ -2,7 +2,7 @@ import json
 import numpy as np
 from models.employee import Employee 
 
-def hello(input_json):
+def test(input_json):
     listEmployee = []
     for employee in input_json:
         listEmployee.append(Employee(employee['Id'],employee['FullName'],employee['Email']))
