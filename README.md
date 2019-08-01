@@ -1,5 +1,5 @@
 # Trade Union Committee App
-Information system for the primary trade union organization of the Odessa National Mechnikov University. The application is developed using technologies ASP.NET Core 2.2 MVC &amp; Api, Python/Flask, Docker, Elasticsearch, Kibana and database management system PostgreSQL 11.
+Information system for the primary trade union organization of the Odessa National Mechnikov University. The application is developed using technologies ASP.NET Core 2.2 MVC &amp; Api, Python/Flask, Docker, ELK Stack and database management system PostgreSQL 11.
 
 # System architecture
 ![](https://github.com/zavada-sergey/TradeUnionCommittee.WebApp.Core/blob/master/blob/Architecture.png)
