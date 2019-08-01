@@ -23,6 +23,7 @@ using TradeUnionCommittee.BLL.Services.PDF;
 using TradeUnionCommittee.BLL.Services.Search;
 using TradeUnionCommittee.BLL.Services.SystemAudit;
 using TradeUnionCommittee.CloudStorage.Service.Extensions;
+using TradeUnionCommittee.DataAnalysis.Service;
 using TradeUnionCommittee.DAL.Audit.Extensions;
 using TradeUnionCommittee.DAL.Extensions;
 using TradeUnionCommittee.DAL.Identity.Extensions;
@@ -49,6 +50,7 @@ namespace TradeUnionCommittee.BLL.Extensions
                 AccessKey = connectionStrings.CloudStorageCredentials.AccessKey,
                 SecretKey = connectionStrings.CloudStorageCredentials.SecretKey,
             });
+            services.AddDataAnalysisService(connectionStrings.DataAnalysisConnection);
             services.AddPdfService();
             services.AddSingleton(x => new HashIdConfiguration(setting));
             services.AddSingleton<AutoMapperConfiguration>();
