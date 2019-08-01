@@ -2,52 +2,50 @@ version: '3.4'
 
 services:
 
-
-
-  tradeunioncommittee.mvc.web.gui:
-    image: ${DOCKER_REGISTRY-}tradeunioncommittee_webapp_core_mvc
-    container_name: tradeunioncommittee_webapp_core_mvc
-    restart: always
-    networks:
-            tradeunioncommittee_network:
-                ipv4_address: 172.28.1.1
-    ports:
-      - "8580:80"
-      - "8585:443"
-    build:
-      context: .
-      dockerfile: api/src/deprecated/TradeUnionCommittee.Mvc.Web.GUI/Dockerfile
-
-
-
-  tradeunioncommittee.web.api:
-    image: ${DOCKER_REGISTRY-}tradeunioncommittee_webapp_core_api
-    container_name: tradeunioncommittee_webapp_core_api
+  tradeunioncommittee.api:
+    image: ${DOCKER_REGISTRY-}tradeunioncommittee_api
+    container_name: tradeunioncommittee_api
     restart: always
     networks:
             tradeunioncommittee_network:
                 ipv4_address: 172.28.1.2
     ports:
-      - "8590:80"
-      - "8595:443"
+      - "8510:80"
+      - "8515:443"
     build:
       context: .
       dockerfile: api/src/TradeUnionCommittee.Api/Dockerfile
 
 
 
-  tradeUnioncommittee.dataanalysis.api:
-    image: ${DOCKER_REGISTRY-}tradeunioncommittee_dataanalysis_api
-    container_name: tradeunioncommittee_dataanalysis_api
+  tradeunioncommittee.data.analysis.api:
+    image: ${DOCKER_REGISTRY-}tradeunioncommittee_data_analysis_api
+    container_name: tradeunioncommittee_data_analysis_api
     restart: always
     networks:
             tradeunioncommittee_network:
-                ipv4_address: 172.28.1.10
+                ipv4_address: 172.28.1.3
     ports:
-      - "8700:5000"
+      - "8520:5000"
     build:
       context: .
       dockerfile: analytics/src/TradeUnionCommittee.DataAnalysis.Api/Dockerfile
+
+
+
+  tradeunioncommittee.mvc.web.gui:
+    image: ${DOCKER_REGISTRY-}tradeunioncommittee_mvc_web_gui
+    container_name: tradeunioncommittee_mvc_web_gui
+    restart: always
+    networks:
+            tradeunioncommittee_network:
+                ipv4_address: 172.28.1.4
+    ports:
+      - "8530:80"
+      - "8535:443"
+    build:
+      context: .
+      dockerfile: api/src/deprecated/TradeUnionCommittee.Mvc.Web.GUI/Dockerfile
 
 
 
@@ -57,7 +55,7 @@ services:
     restart: always
     networks:
             tradeunioncommittee_network:
-                ipv4_address: 172.28.1.3
+                ipv4_address: 172.28.1.7
     ports:
       - "8600:5432"
     environment:    
@@ -72,7 +70,7 @@ services:
    restart: always
    networks:
             tradeunioncommittee_network:
-                ipv4_address: 172.28.1.4
+                ipv4_address: 172.28.1.8
    ports:
     - "9200:9200"
    volumes:
@@ -86,7 +84,7 @@ services:
    restart: always
    networks:
             tradeunioncommittee_network:
-                ipv4_address: 172.28.1.5
+                ipv4_address: 172.28.1.9
    ports:
     - "5601:5601"
    depends_on:
@@ -100,7 +98,7 @@ services:
    restart: always
    networks:
             tradeunioncommittee_network:
-                ipv4_address: 172.28.1.6
+                ipv4_address: 172.28.1.10
    ports:
      - "9001:9000"
    volumes:
@@ -108,7 +106,7 @@ services:
    environment:
      MINIO_ACCESS_KEY: minio
      MINIO_SECRET_KEY: minio123
-   command: server http://172.28.1.6/data http://172.28.1.7/data http://172.28.1.8/data http://172.28.1.9/data
+   command: server http://172.28.1.10/data http://172.28.1.11/data http://172.28.1.12/data http://172.28.1.13/data
 
 
 
@@ -118,7 +116,7 @@ services:
    restart: always
    networks:
             tradeunioncommittee_network:
-                ipv4_address: 172.28.1.7
+                ipv4_address: 172.28.1.11
    ports:
      - "9002:9000"
    volumes:
@@ -126,7 +124,7 @@ services:
    environment:
      MINIO_ACCESS_KEY: minio
      MINIO_SECRET_KEY: minio123
-   command: server http://172.28.1.6/data http://172.28.1.7/data http://172.28.1.8/data http://172.28.1.9/data
+   command: server http://172.28.1.10/data http://172.28.1.11/data http://172.28.1.12/data http://172.28.1.13/data
 
 
 
@@ -136,7 +134,7 @@ services:
    restart: always
    networks:
             tradeunioncommittee_network:
-                ipv4_address: 172.28.1.8
+                ipv4_address: 172.28.1.12
    ports:
      - "9003:9000"
    volumes:
@@ -144,7 +142,7 @@ services:
    environment:
      MINIO_ACCESS_KEY: minio
      MINIO_SECRET_KEY: minio123
-   command: server http://172.28.1.6/data http://172.28.1.7/data http://172.28.1.8/data http://172.28.1.9/data
+   command: server http://172.28.1.10/data http://172.28.1.11/data http://172.28.1.12/data http://172.28.1.13/data
 
 
 
@@ -154,7 +152,7 @@ services:
    restart: always
    networks:
             tradeunioncommittee_network:
-                ipv4_address: 172.28.1.9
+                ipv4_address: 172.28.1.13
    ports:
      - "9004:9000"
    volumes:
@@ -162,7 +160,9 @@ services:
    environment:
      MINIO_ACCESS_KEY: minio
      MINIO_SECRET_KEY: minio123
-   command: server http://172.28.1.6/data http://172.28.1.7/data http://172.28.1.8/data http://172.28.1.9/data
+   command: server http://172.28.1.10/data http://172.28.1.11/data http://172.28.1.12/data http://172.28.1.13/data
+
+
 
 networks:
     tradeunioncommittee_network:
