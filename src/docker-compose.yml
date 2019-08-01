@@ -36,6 +36,21 @@ services:
 
 
 
+  tradeUnioncommittee.dataanalysis.api:
+    image: ${DOCKER_REGISTRY-}tradeunioncommittee_dataanalysis_api
+    container_name: tradeunioncommittee_dataanalysis_api
+    restart: always
+    networks:
+            tradeunioncommittee_network:
+                ipv4_address: 172.28.1.10
+    ports:
+      - "8700:5000"
+    build:
+      context: .
+      dockerfile: analytics/src/TradeUnionCommittee.DataAnalysis.Api/Dockerfile
+
+
+
   postgres:
     image: postgres:11.2
     container_name: postgres
