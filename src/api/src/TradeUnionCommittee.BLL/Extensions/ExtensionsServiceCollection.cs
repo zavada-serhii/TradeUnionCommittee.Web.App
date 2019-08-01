@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using TradeUnionCommittee.BLL.Configurations;
-using TradeUnionCommittee.BLL.DTO;
 using TradeUnionCommittee.BLL.Interfaces.Account;
 using TradeUnionCommittee.BLL.Interfaces.Dashboard;
 using TradeUnionCommittee.BLL.Interfaces.Directory;
@@ -24,7 +23,6 @@ using TradeUnionCommittee.BLL.Services.PDF;
 using TradeUnionCommittee.BLL.Services.Search;
 using TradeUnionCommittee.BLL.Services.SystemAudit;
 using TradeUnionCommittee.CloudStorage.Service.Extensions;
-using TradeUnionCommittee.CloudStorage.Service.Model;
 using TradeUnionCommittee.DAL.Audit.Extensions;
 using TradeUnionCommittee.DAL.Extensions;
 using TradeUnionCommittee.DAL.Identity.Extensions;
@@ -35,24 +33,21 @@ namespace TradeUnionCommittee.BLL.Extensions
     public static class ExtensionsServiceCollection
     {
         public static IServiceCollection AddTradeUnionCommitteeServiceModule(this IServiceCollection services, 
-                                                                                  string connectionString, 
-                                                                                  string identityConnectionString, 
-                                                                                  string auditConnectionString,
-                                                                                  CloudStorageServiceCredentials credentials, 
+                                                                                  ConnectionStrings connectionStrings, 
                                                                                   HashIdConfigurationSetting setting)
         {
             // Injection Main, Identity, Audit, Cloud Storage, Context, HashIdConfiguration, AutoMapperConfiguration
 
-            services.AddDbContext(connectionString);
-            services.AddIdentityContext(identityConnectionString);
-            services.AddAuditDbContext(auditConnectionString);
-            services.AddCloudStorageService(new CloudStorageCredentials
+            services.AddDbContext(connectionStrings.DefaultConnectionUseSSL ? connectionStrings.DefaultConnectionSSL : connectionStrings.DefaultConnection);
+            services.AddIdentityContext(connectionStrings.IdentityConnectionUseSSL ? connectionStrings.IdentityConnectionSSL : connectionStrings.IdentityConnection);
+            services.AddAuditDbContext(connectionStrings.AuditConnectionUseSSL ? connectionStrings.AuditConnectionSSL : connectionStrings.AuditConnection);
+            services.AddCloudStorageService(new CloudStorage.Service.Model.CloudStorageCredentials
             {
-                DbConnectionString = credentials.DbConnectionString,
-                UseStorageSsl = credentials.UseStorageSsl,
-                Url = credentials.Url,
-                AccessKey = credentials.AccessKey,
-                SecretKey = credentials.SecretKey
+                DbConnectionString = connectionStrings.CloudStorageConnectionUseSSL ? connectionStrings.CloudStorageConnectionSSL : connectionStrings.CloudStorageConnection,
+                UseStorageSsl = connectionStrings.CloudStorageCredentials.UseSSL,
+                Url = connectionStrings.CloudStorageCredentials.Url,
+                AccessKey = connectionStrings.CloudStorageCredentials.AccessKey,
+                SecretKey = connectionStrings.CloudStorageCredentials.SecretKey,
             });
             services.AddPdfService();
             services.AddSingleton(x => new HashIdConfiguration(setting));
@@ -96,7 +91,7 @@ namespace TradeUnionCommittee.BLL.Extensions
             services.AddTransient<IWellnessEmployeesService, WellnessEmployeesService>();
             services.AddTransient<ITourEmployeesService, TourEmployeesService>();
             services.AddTransient<IActivityEmployeesService, ActivityEmployeesService>();
-            services.AddTransient<ICulturalEmployeesService, CulturalEmployeesService> ();
+            services.AddTransient<ICulturalEmployeesService, CulturalEmployeesService>();
             services.AddTransient<IGiftEmployeesService, GiftEmployeesService>();
             services.AddTransient<IFluorographyEmployeesService, FluorographyEmployeesService>();
             services.AddTransient<IApartmentAccountingEmployeesService, ApartmentAccountingEmployeesService>();

@@ -12,8 +12,8 @@ using Serilog.Events;
 using Serilog.Sinks.Elasticsearch;
 using System;
 using System.IO.Compression;
+using TradeUnionCommittee.BLL;
 using TradeUnionCommittee.BLL.Configurations;
-using TradeUnionCommittee.BLL.DTO;
 using TradeUnionCommittee.BLL.Extensions;
 using TradeUnionCommittee.Mvc.Web.GUI.Configurations;
 using TradeUnionCommittee.Mvc.Web.GUI.Controllers.Directory;
@@ -33,11 +33,9 @@ namespace TradeUnionCommittee.Mvc.Web.GUI
 
             Configuration = builder.Build();
 
-            var elasticUri = Configuration["ElasticConfiguration:Uri"];
-
             Log.Logger = new LoggerConfiguration()
                 .Enrich.FromLogContext()
-                .WriteTo.Elasticsearch(new ElasticsearchSinkOptions(new Uri(elasticUri))
+                .WriteTo.Elasticsearch(new ElasticsearchSinkOptions(new Uri(Configuration["ConnectionStrings:ElasticConnection"]))
                 {
                     AutoRegisterTemplate = true
                 })
@@ -66,34 +64,9 @@ namespace TradeUnionCommittee.Mvc.Web.GUI
                 options.SlidingExpiration = true;
             });
 
-            var connectionString = Convert.ToBoolean(Configuration.GetConnectionString("UseSSL"))
-                ? Configuration.GetConnectionString("DefaultConnectionSSL")
-                : Configuration.GetConnectionString("DefaultConnection");
-
-            var identityConnectionString = Convert.ToBoolean(Configuration.GetConnectionString("UseSSL"))
-                ? Configuration.GetConnectionString("IdentityConnectionSSL")
-                : Configuration.GetConnectionString("IdentityConnection");
-
-            var auditConnectionString = Convert.ToBoolean(Configuration.GetConnectionString("UseSSL"))
-                ? Configuration.GetConnectionString("AuditConnectionSSL")
-                : Configuration.GetConnectionString("AuditConnection");
-
-            var cloudStorageConnectionString = Convert.ToBoolean(Configuration.GetConnectionString("UseSSL"))
-                ? Configuration.GetConnectionString("CloudStorageConnectionSSL")
-                : Configuration.GetConnectionString("CloudStorageConnection");
-
             services
-                .AddTradeUnionCommitteeServiceModule(connectionString,
-                    identityConnectionString,
-                    auditConnectionString,
-                    new CloudStorageServiceCredentials
-                    {
-                        DbConnectionString = cloudStorageConnectionString,
-                        UseStorageSsl = Convert.ToBoolean(Configuration["CloudStorageConfiguration:UseSSL"]),
-                        Url = Configuration["CloudStorageConfiguration:Url"],
-                        AccessKey = Configuration["CloudStorageConfiguration:AccessKey"],
-                        SecretKey = Configuration["CloudStorageConfiguration:SecretKey"]
-                    },
+                .AddTradeUnionCommitteeServiceModule(
+                    Configuration.GetSection("ConnectionStrings").Get<ConnectionStrings>(),
                     Configuration.GetSection("HashIdConfigurationSetting").Get<HashIdConfigurationSetting>())
                 .AddTradeUnionCommitteeViewModelsModule()
                 .AddResponseCompression()
