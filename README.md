@@ -29,8 +29,6 @@ Information system for the primary trade union organization of the Odessa Nation
         - Password - postgres.
     - Kibana 
         - URL - http://localhost:5601
-    - Logstash
-        - URL - http://localhost:9200
     - MinIO
         - URL - http://localhost:9001-9004
         - Login - minio
