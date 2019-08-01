@@ -16,11 +16,11 @@ Information system for the primary trade union organization of the Odessa Nation
 3. Run the command **docker-compose -f docker-compose.yml up --build** and wait for the end.
 4. After that applications will be available at the following links.
     - Site
-        - URL - http://localhost:8580
+        - URL - http://localhost:8530
         - Login - stewie.griffin@test.com
         - Password - P@ssw0rd_admin
     - API for this site
-        - URL - http://localhost:8590/swagger
+        - URL - http://localhost:8510/swagger
         - Login - stewie.griffin@test.com
         - Password - P@ssw0rd_admin
     - PostgreSQL
