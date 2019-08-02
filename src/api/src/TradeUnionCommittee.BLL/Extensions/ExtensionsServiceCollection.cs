@@ -24,6 +24,7 @@ using TradeUnionCommittee.BLL.Services.Search;
 using TradeUnionCommittee.BLL.Services.SystemAudit;
 using TradeUnionCommittee.CloudStorage.Service.Extensions;
 using TradeUnionCommittee.DataAnalysis.Service;
+using TradeUnionCommittee.DataAnalysis.Service.Extensions;
 using TradeUnionCommittee.DAL.Audit.Extensions;
 using TradeUnionCommittee.DAL.Extensions;
 using TradeUnionCommittee.DAL.Identity.Extensions;
