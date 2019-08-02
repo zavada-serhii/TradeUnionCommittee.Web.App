@@ -27,17 +27,17 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="controllers\analyticalСontroller.py">
+    <Compile Include="controllers\testСontroller.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="controllers\__init__.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="models\employee.py">
+    <Compile Include="models\testModel.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="runserver.py" />
-    <Compile Include="services\analyticalService.py">
+    <Compile Include="services\testService.py">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
