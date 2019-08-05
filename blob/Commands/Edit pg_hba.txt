@@ -1,0 +1,6 @@
+docker exec -it <container> bash
+apt-get update
+apt-get install nano
+nano usr/share/postgresql/11/pg_hba.conf.sample
+
+SELECT pg_reload_conf();
