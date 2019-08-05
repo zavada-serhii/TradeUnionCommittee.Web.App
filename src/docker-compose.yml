@@ -92,13 +92,25 @@ services:
 
 
 
+  adminer:
+   image: adminer
+   container_name: adminer
+   restart: always
+   networks:
+            tradeunioncommittee_network:
+                ipv4_address: 172.28.1.10
+   ports:
+     - "8080:8080"
+
+
+
   minio-node-1:
    image: minio/minio:RELEASE.2019-04-18T01-15-57Z
    container_name: minio-node-1
    restart: always
    networks:
             tradeunioncommittee_network:
-                ipv4_address: 172.28.1.10
+                ipv4_address: 172.28.1.13
    ports:
      - "9001:9000"
    volumes:
@@ -106,7 +118,7 @@ services:
    environment:
      MINIO_ACCESS_KEY: minio
      MINIO_SECRET_KEY: minio123
-   command: server http://172.28.1.10/data http://172.28.1.11/data http://172.28.1.12/data http://172.28.1.13/data
+   command: server http://172.28.1.13/data http://172.28.1.14/data http://172.28.1.15/data http://172.28.1.16/data
 
 
 
@@ -116,7 +128,7 @@ services:
    restart: always
    networks:
             tradeunioncommittee_network:
-                ipv4_address: 172.28.1.11
+                ipv4_address: 172.28.1.14
    ports:
      - "9002:9000"
    volumes:
@@ -124,7 +136,7 @@ services:
    environment:
      MINIO_ACCESS_KEY: minio
      MINIO_SECRET_KEY: minio123
-   command: server http://172.28.1.10/data http://172.28.1.11/data http://172.28.1.12/data http://172.28.1.13/data
+   command: server http://172.28.1.13/data http://172.28.1.14/data http://172.28.1.15/data http://172.28.1.16/data
 
 
 
@@ -134,7 +146,7 @@ services:
    restart: always
    networks:
             tradeunioncommittee_network:
-                ipv4_address: 172.28.1.12
+                ipv4_address: 172.28.1.15
    ports:
      - "9003:9000"
    volumes:
@@ -142,7 +154,7 @@ services:
    environment:
      MINIO_ACCESS_KEY: minio
      MINIO_SECRET_KEY: minio123
-   command: server http://172.28.1.10/data http://172.28.1.11/data http://172.28.1.12/data http://172.28.1.13/data
+   command: server http://172.28.1.13/data http://172.28.1.14/data http://172.28.1.15/data http://172.28.1.16/data
 
 
 
@@ -152,7 +164,7 @@ services:
    restart: always
    networks:
             tradeunioncommittee_network:
-                ipv4_address: 172.28.1.13
+                ipv4_address: 172.28.1.16
    ports:
      - "9004:9000"
    volumes:
@@ -160,19 +172,7 @@ services:
    environment:
      MINIO_ACCESS_KEY: minio
      MINIO_SECRET_KEY: minio123
-   command: server http://172.28.1.10/data http://172.28.1.11/data http://172.28.1.12/data http://172.28.1.13/data
-
-
-
-  adminer:
-   image: adminer
-   container_name: adminer
-   restart: always
-   networks:
-            tradeunioncommittee_network:
-                ipv4_address: 172.28.1.14
-   ports:
-     - "8080:8080"
+   command: server http://172.28.1.13/data http://172.28.1.14/data http://172.28.1.15/data http://172.28.1.16/data
 
 
 
