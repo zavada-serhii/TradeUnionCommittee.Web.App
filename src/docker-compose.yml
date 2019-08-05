@@ -164,6 +164,18 @@ services:
 
 
 
+  adminer:
+   image: adminer
+   container_name: adminer
+   restart: always
+   networks:
+            tradeunioncommittee_network:
+                ipv4_address: 172.28.1.14
+   ports:
+     - "8080:8080"
+
+
+
 networks:
     tradeunioncommittee_network:
         ipam:
