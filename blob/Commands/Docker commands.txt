@@ -1,26 +1,44 @@
---Select container
+-- Select container --
 docker container ls
 
---Select images
+-- Select images --
 docker images
 
---Select networks
+-- Select networks --
 docker network ls
 
---Delete container
-docker rm --force [96e53ef47ae3]
+-- Select volumes --
+docker volume ls
 
---Delete image
-docker rmi -f [d03e2a8f3ed4]
+----------------------------------------------------------------------------------------
 
---Delete network
-docker network rm [bc1722b45964]
+-- Delete container --
+docker rm --force <container_hash>
 
---Delete all container 
+-- Delete image --
+docker rmi -f <image_hash>
+
+-- Delete network --
+docker network rm <network_hash>
+
+-- Delete volume --
+docker volume rm <volume_name>
+
+----------------------------------------------------------------------------------------
+
+-- Delete all container --
 docker rm --force $(docker ps -a -q)
 
---Delete all images
+-- Delete all images --
 docker rmi -f $(docker images -q)
 
--- Docker Compose
+-- Delete all networks --
+docker network rm $(docker network ls -q)
+
+-- Delete all volumes --
+docker volume rm --force $(docker volume ls -q)
+
+----------------------------------------------------------------------------------------
+
+-- Docker Compose --
 docker-compose -f docker-compose.yml up --build
