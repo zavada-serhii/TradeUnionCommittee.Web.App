@@ -41,7 +41,7 @@ namespace TradeUnionCommittee.Api
 
             Log.Logger = new LoggerConfiguration()
                 .Enrich.FromLogContext()
-                .WriteTo.Elasticsearch(new ElasticsearchSinkOptions(new Uri(Configuration["ConnectionStrings:ElasticConnection"]))
+                .WriteTo.Elasticsearch(new ElasticsearchSinkOptions(new Uri(Configuration["RestConnection:ElasticUrl"]))
                 {
                     AutoRegisterTemplate = true
                 })
