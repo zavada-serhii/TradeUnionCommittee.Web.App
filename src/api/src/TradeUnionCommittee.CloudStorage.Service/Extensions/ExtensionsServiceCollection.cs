@@ -9,10 +9,10 @@ namespace TradeUnionCommittee.CloudStorage.Service.Extensions
 {
     public static class ExtensionsServiceCollection
     {
-        public static IServiceCollection AddCloudStorageService(this IServiceCollection services, CloudStorageCredentials credentials)
+        public static IServiceCollection AddCloudStorageService(this IServiceCollection services, CloudStorageConnection credentials, string dbConnection)
         {
-            services.AddCloudStorageContext(credentials.DbConnectionString);
-            if (credentials.UseStorageSsl)
+            services.AddCloudStorageContext(dbConnection);
+            if (credentials.UseSsl)
             {
                 services.AddSingleton(x => new MinioClient(credentials.Url, credentials.AccessKey, credentials.SecretKey).WithSSL());
             }

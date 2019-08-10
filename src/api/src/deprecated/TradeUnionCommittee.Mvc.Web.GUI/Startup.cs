@@ -35,7 +35,7 @@ namespace TradeUnionCommittee.Mvc.Web.GUI
 
             Log.Logger = new LoggerConfiguration()
                 .Enrich.FromLogContext()
-                .WriteTo.Elasticsearch(new ElasticsearchSinkOptions(new Uri(Configuration["ConnectionStrings:ElasticConnection"]))
+                .WriteTo.Elasticsearch(new ElasticsearchSinkOptions(new Uri(Configuration["RestConnection:ElasticUrl"]))
                 {
                     AutoRegisterTemplate = true
                 })
@@ -67,6 +67,8 @@ namespace TradeUnionCommittee.Mvc.Web.GUI
             services
                 .AddTradeUnionCommitteeServiceModule(
                     Configuration.GetSection("ConnectionStrings").Get<ConnectionStrings>(),
+                    Configuration.GetSection("CloudStorageConnection").Get<CloudStorageConnection>(),
+                    Configuration.GetSection("RestConnection").Get<RestConnection>(),
                     Configuration.GetSection("HashIdConfigurationSetting").Get<HashIdConfigurationSetting>())
                 .AddTradeUnionCommitteeViewModelsModule()
                 .AddResponseCompression()

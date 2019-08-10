@@ -23,35 +23,35 @@ using TradeUnionCommittee.BLL.Services.PDF;
 using TradeUnionCommittee.BLL.Services.Search;
 using TradeUnionCommittee.BLL.Services.SystemAudit;
 using TradeUnionCommittee.CloudStorage.Service.Extensions;
-using TradeUnionCommittee.DataAnalysis.Service;
-using TradeUnionCommittee.DataAnalysis.Service.Extensions;
 using TradeUnionCommittee.DAL.Audit.Extensions;
 using TradeUnionCommittee.DAL.Extensions;
 using TradeUnionCommittee.DAL.Identity.Extensions;
+using TradeUnionCommittee.DataAnalysis.Service.Extensions;
 using TradeUnionCommittee.PDF.Service.Extensions;
 
 namespace TradeUnionCommittee.BLL.Extensions
 {
     public static class ExtensionsServiceCollection
     {
-        public static IServiceCollection AddTradeUnionCommitteeServiceModule(this IServiceCollection services, 
-                                                                                  ConnectionStrings connectionStrings, 
+        public static IServiceCollection AddTradeUnionCommitteeServiceModule(this IServiceCollection services,
+                                                                                  ConnectionStrings connectionStrings,
+                                                                                  CloudStorageConnection cloudStorageConnection,
+                                                                                  RestConnection restConnection,
                                                                                   HashIdConfigurationSetting setting)
         {
             // Injection Main, Identity, Audit, Cloud Storage, Context, HashIdConfiguration, AutoMapperConfiguration
 
-            services.AddDbContext(connectionStrings.DefaultConnectionUseSSL ? connectionStrings.DefaultConnectionSSL : connectionStrings.DefaultConnection);
-            services.AddIdentityContext(connectionStrings.IdentityConnectionUseSSL ? connectionStrings.IdentityConnectionSSL : connectionStrings.IdentityConnection);
-            services.AddAuditDbContext(connectionStrings.AuditConnectionUseSSL ? connectionStrings.AuditConnectionSSL : connectionStrings.AuditConnection);
-            services.AddCloudStorageService(new CloudStorage.Service.Model.CloudStorageCredentials
+            services.AddDbContext(connectionStrings.DefaultConnection);
+            services.AddIdentityContext(connectionStrings.IdentityConnection);
+            services.AddAuditDbContext(connectionStrings.AuditConnection);
+            services.AddCloudStorageService(new CloudStorage.Service.Model.CloudStorageConnection
             {
-                DbConnectionString = connectionStrings.CloudStorageConnectionUseSSL ? connectionStrings.CloudStorageConnectionSSL : connectionStrings.CloudStorageConnection,
-                UseStorageSsl = connectionStrings.CloudStorageCredentials.UseSSL,
-                Url = connectionStrings.CloudStorageCredentials.Url,
-                AccessKey = connectionStrings.CloudStorageCredentials.AccessKey,
-                SecretKey = connectionStrings.CloudStorageCredentials.SecretKey,
-            });
-            services.AddDataAnalysisService(connectionStrings.DataAnalysisConnection);
+                UseSsl = cloudStorageConnection.UseSsl,
+                Url = cloudStorageConnection.Url,
+                AccessKey = cloudStorageConnection.AccessKey,
+                SecretKey = cloudStorageConnection.SecretKey,
+            }, connectionStrings.CloudStorageConnection);
+            services.AddDataAnalysisService(restConnection.DataAnalysisUrl);
             services.AddPdfService();
             services.AddSingleton(x => new HashIdConfiguration(setting));
             services.AddSingleton<AutoMapperConfiguration>();
