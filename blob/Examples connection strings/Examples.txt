@@ -1,0 +1,5 @@
+Without SSL
+Host=localhost;Database=Test;Port=5432;Username=postgres;Password=postgres;
+
+With SSL
+Host=localhost;Database=Test;Port=5432;Username=postgres;Password=postgres;UseSslStream=true;SslMode=Require;

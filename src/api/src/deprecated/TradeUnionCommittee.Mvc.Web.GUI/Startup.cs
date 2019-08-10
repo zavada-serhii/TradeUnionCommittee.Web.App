@@ -67,6 +67,8 @@ namespace TradeUnionCommittee.Mvc.Web.GUI
             services
                 .AddTradeUnionCommitteeServiceModule(
                     Configuration.GetSection("ConnectionStrings").Get<ConnectionStrings>(),
+                    Configuration.GetSection("CloudStorageConnection").Get<CloudStorageConnection>(),
+                    Configuration.GetSection("RestConnection").Get<RestConnection>(),
                     Configuration.GetSection("HashIdConfigurationSetting").Get<HashIdConfigurationSetting>())
                 .AddTradeUnionCommitteeViewModelsModule()
                 .AddResponseCompression()
