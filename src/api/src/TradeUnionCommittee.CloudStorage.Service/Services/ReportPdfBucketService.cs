@@ -2,6 +2,7 @@
 using System;
 using System.IO;
 using System.Threading.Tasks;
+using TradeUnionCommittee.CloudStorage.Service.Extensions;
 using TradeUnionCommittee.CloudStorage.Service.Interfaces;
 using TradeUnionCommittee.CloudStorage.Service.Model;
 using TradeUnionCommittee.DAL.CloudStorage.EF;
@@ -30,14 +31,7 @@ namespace TradeUnionCommittee.CloudStorage.Service.Services
             var result = new byte[] { };
             await _minioClient.GetObjectAsync(BUCKET_NAME, $"{model.IdEmployee}/{model.FileName}{EXTENSION_FILE}", stream =>
             {
-                var buffer = new byte[16 * 1024];
-                using (var ms = new MemoryStream())
-                {
-                    int read;
-                    while ((read = stream.Read(buffer, 0, buffer.Length)) > 0)
-                        ms.Write(buffer, 0, read);
-                    result = ms.ToArray();
-                }
+                result = stream.ReadAsBytes();
             });
             return result;
         }
