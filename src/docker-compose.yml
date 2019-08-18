@@ -50,7 +50,7 @@ services:
 
 
   postgres:
-    image: postgres:11.2
+    image: postgres:latest
     container_name: postgres
     restart: always
     networks:
