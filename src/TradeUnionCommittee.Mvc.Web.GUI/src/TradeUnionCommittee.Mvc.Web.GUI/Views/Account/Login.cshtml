@@ -1,0 +1,58 @@
+﻿@model TradeUnionCommittee.ViewModels.ViewModels.LoginViewModel
+@{
+    ViewData["Title"] = "Авторизація";
+    Layout = null;
+}
+
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="author" content="Zavada Serhii">
+    <link rel="icon" href="~/favicon.ico">
+
+    <!-- Bootstrap core CSS -->
+    <link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="~/css/signin.css" rel="stylesheet">
+</head>
+
+<body class="text-center">
+
+    <form method="post" asp-controller="Account" asp-action="Login" asp-route-returnUrl="@Model.ReturnUrl">
+        <img class="mb-4" src="~/images/logo.svg" alt="" width="72" height="72">
+        <h1 class="h3 mb-3 font-weight-normal">Увійдіть у систему</h1>
+
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+
+        <label for="inputEmail" class="sr-only">Email address</label>
+        <input type="email" asp-for="Email" id="inputEmail" class="form-control" placeholder="Email" autofocus>
+        <span asp-validation-for="Email" class="text-danger" style="color: red"></span>
+        &nbsp;
+        <label for="inputPassword" class="sr-only">Password</label>
+        <input type="password" asp-for="Password" id="inputPassword" class="form-control" placeholder="Пароль">
+        <span asp-validation-for="Password" class="text-danger" style="color: red"></span>
+        &nbsp;
+        <div class="checkbox mb-3">
+            <label>
+                <input type="checkbox" asp-for="RememberMe"> Запам'ятати мене
+            </label>
+        </div>
+        @if (ViewBag.IncorectLoginPassword != null)
+        {
+            <div style="text-align: center; color: red;">@ViewBag.IncorectLoginPassword</div>
+            <h6>&nbsp;</h6>
+        }
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Увійти</button>
+        <p class="mt-5 mb-3 text-muted">&copy; ППО ОНУ ім. І.І. Мечникова - @DateTime.Now.Year</p>
+    </form>
+
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
+
+</body>
+</html>

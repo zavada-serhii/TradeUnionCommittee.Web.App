@@ -1,0 +1,44 @@
+[
+  {
+    "outputFileName": "wwwroot/css/site.min.css",
+    "inputFiles": [
+      "wwwroot/css/site.css"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/js/currency.min.js",
+    "inputFiles": [
+      "wwwroot/js/currency.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/js/views/create-employee.min.js",
+    "inputFiles": [
+      "wwwroot/js/views/create-employee.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/js/views/search.min.js",
+    "inputFiles": [
+      "wwwroot/js/views/search.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/js/main.min.js",
+    "inputFiles": [
+      "wwwroot/js/main.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/js/views/update-employee.min.js",
+    "inputFiles": [
+      "wwwroot/js/views/update-employee.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/js/delete.min.js",
+    "inputFiles": [
+      "wwwroot/js/delete.js"
+    ]
+  }
+]

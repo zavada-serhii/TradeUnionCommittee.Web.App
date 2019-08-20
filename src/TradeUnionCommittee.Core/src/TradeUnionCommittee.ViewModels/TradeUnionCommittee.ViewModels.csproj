@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <TargetLatestRuntimePatch>True</TargetLatestRuntimePatch>
+    <LangVersion>7.3</LangVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="ViewModels\Children\NewFolder\**" />
+    <EmbeddedResource Remove="ViewModels\Children\NewFolder\**" />
+    <None Remove="ViewModels\Children\NewFolder\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="FluentValidation.AspNetCore" Version="8.4.0" />
+  </ItemGroup>
+
+</Project>

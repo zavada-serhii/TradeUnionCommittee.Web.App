@@ -1,0 +1,96 @@
+﻿@model TradeUnionCommittee.ViewModels.ViewModels.Employee.UpdateApartmentAccountingEmployeesViewModel
+@{
+    ViewData["Title"] = "Update";
+}
+
+<section class="add-user container-fluid">
+    <div class="row justify-content-center">
+        <div class="col-md-12 add-user_block">
+
+            <div class="row align-items-center mt-3">
+                <div class="col-md-10">
+                    <h1>Редагування обліку</h1>
+                </div>
+            </div>
+            <hr>
+            @if (TempData["ErrorsList"] == null)
+            {
+                <form asp-action="Update">
+
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                    <input type="hidden" asp-for="HashId" />
+                    <input type="hidden" asp-for="HashIdEmployee" />
+                    <input type="hidden" asp-for="RowVersion" />
+
+                    <div class="row">
+
+                        <div class="form-group col-lg-4 col-xl-4">
+                            <label asp-for="FamilyComposition" class="control-label required">Кількість членів сім'ї</label><br>
+                            <input type="number" asp-for="FamilyComposition" class="form-control" step="1" min="0">
+                            <span asp-validation-for="FamilyComposition" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group col-lg-4 col-xl-4">
+                            <label asp-for="NameAdministration" class="control-label required">Назва адміністрації</label><br>
+                            <input type="text" asp-for="NameAdministration" class="form-control">
+                            <span asp-validation-for="NameAdministration" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group col-lg-4 col-xl-4">
+                            <label asp-for="PriorityType" class="control-label required">Черговість</label><br>
+                            <input type="text" asp-for="PriorityType" class="form-control">
+                            <span asp-validation-for="PriorityType" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group col-lg-4 col-xl-4">
+                            <label asp-for="DateAdoption" class="control-label required">Дата прийняття</label>
+                            <input asp-for="DateAdoption" type="date" class="form-control">
+                            <span asp-validation-for="DateAdoption" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group col-lg-4 col-xl-4">
+                            <label asp-for="DateInclusion" class="control-label required">Дата для пільговиків</label>
+                            <input asp-for="DateInclusion" type="date" class="form-control">
+                            <span asp-validation-for="DateInclusion" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group col-lg-4 col-xl-4">
+                            <label asp-for="Position" class="control-label required">Посада</label><br>
+                            <input type="text" asp-for="Position" class="form-control">
+                            <span asp-validation-for="Position" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group col-lg-4 col-xl-4">
+                            <label asp-for="StartYearWork" class="control-label required">Рік початку роботи в ОНУ</label>
+                            <input asp-for="StartYearWork" id="year" type="text" class="form-control" placeholder="1990">
+                            <span asp-validation-for="StartYearWork" class="text-danger"></span>
+                        </div>
+
+                    </div>
+
+                    <div class="row justify-content-between">
+                        <div class="form-group col-lg-3">
+                            <div>
+                                <a asp-action="Index" asp-route-id="@Model.HashIdEmployee">Повернутися</a>
+                            </div>
+                        </div>
+                        <div class="col-md-6 text-right">
+                            <input type="submit" value="Зберегти" class="btn btn-success btn-default" />
+                        </div>
+                    </div>
+
+                </form>
+            }
+            else
+            {
+                await Html.RenderPartialAsync("_Errors", TempData["ErrorsList"]);
+            }
+        </div>
+    </div>
+</section>
+
+@if (TempData["ErrorsListConfirmed"] != null)
+{
+    await Html.RenderPartialAsync("_Errors", TempData["ErrorsListConfirmed"]);
+}

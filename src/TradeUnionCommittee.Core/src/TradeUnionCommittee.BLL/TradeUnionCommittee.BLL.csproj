@@ -1,0 +1,27 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <LangVersion>7.3</LangVersion>
+    <TargetLatestRuntimePatch>True</TargetLatestRuntimePatch>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="9.0.0" />
+    <PackageReference Include="Hashids.net" Version="1.2.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\TradeUnionCommittee.CloudStorage.Service\TradeUnionCommittee.CloudStorage.Service.csproj" />
+    <ProjectReference Include="..\TradeUnionCommittee.DAL.Audit\TradeUnionCommittee.DAL.Audit.csproj" />
+    <ProjectReference Include="..\TradeUnionCommittee.DAL.Identity\TradeUnionCommittee.DAL.Identity.csproj" />
+    <ProjectReference Include="..\TradeUnionCommittee.DAL\TradeUnionCommittee.DAL.csproj" />
+    <ProjectReference Include="..\TradeUnionCommittee.DataAnalysis.Service\TradeUnionCommittee.DataAnalysis.Service.csproj" />
+    <ProjectReference Include="..\TradeUnionCommittee.PDF.Service\TradeUnionCommittee.PDF.Service.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Services\Lists\Employee\" />
+  </ItemGroup>
+
+</Project>

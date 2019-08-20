@@ -1,0 +1,72 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <TargetLatestRuntimePatch>True</TargetLatestRuntimePatch>
+    <LangVersion>7.3</LangVersion>
+    <UserSecretsId>aa33f303-cea5-469e-9fd8-769c7dea7ad2</UserSecretsId>
+    <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
+    <DockerComposeProjectPath>..\..\docker-compose.dcproj</DockerComposeProjectPath>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Remove="bundleconfig.json" />
+    <Content Remove="wwwroot\js\views\update-employee.min.js" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="wwwroot\js\views\update-employee.min.js" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="bundleconfig.json" />
+    <None Include="wwwroot\js\views\update-employee.min.js" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="9.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.AspNetCore.ResponseCompression" Version="2.2.0" />
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.9.2" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.2.3" />
+    <PackageReference Include="Serilog" Version="2.8.0" />
+    <PackageReference Include="Serilog.AspNetCore" Version="2.1.1" />
+    <PackageReference Include="Serilog.Extensions.Logging" Version="3.0.0" />
+    <PackageReference Include="Serilog.Settings.Configuration" Version="3.1.0" />
+    <PackageReference Include="Serilog.Sinks.Console" Version="3.1.1" />
+    <PackageReference Include="Serilog.Sinks.Elasticsearch" Version="8.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Views\Children\" />
+    <Folder Include="Views\GrandChildren\" />
+    <Folder Include="Views\HobbyGrandChildren\" />
+    <Folder Include="Views\MaterialAidEmployees\" />
+    <Folder Include="Views\CulturalEmployees\" />
+    <Folder Include="Views\GiftEmployees\" />
+    <Folder Include="Views\ApartmentAccountingEmployees\" />
+    <Folder Include="Views\ActivityFamily\" />
+    <Folder Include="Views\CulturalFamily\" />
+    <Folder Include="Views\ActivityChildren\" />
+    <Folder Include="Views\CulturalChildren\" />
+    <Folder Include="Views\GiftChildren\" />
+    <Folder Include="Views\ActivityGrandChildren\" />
+    <Folder Include="Views\CulturalGrandChildren\" />
+    <Folder Include="Views\GiftGrandChildren\" />
+    <Folder Include="Views\TourGrandChildren\" />
+    <Folder Include="Views\TourChildren\" />
+    <Folder Include="Views\WellnessChildren\" />
+    <Folder Include="Views\TourFamily\" />
+    <Folder Include="Views\WellnessFamily\" />
+    <Folder Include="Views\TourEmployees\" />
+    <Folder Include="Views\WellnessEmployees\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\TradeUnionCommittee.Core\src\TradeUnionCommittee.BLL\TradeUnionCommittee.BLL.csproj" />
+    <ProjectReference Include="..\..\..\TradeUnionCommittee.Core\src\TradeUnionCommittee.ViewModels\TradeUnionCommittee.ViewModels.csproj" />
+  </ItemGroup>
+
+</Project>
