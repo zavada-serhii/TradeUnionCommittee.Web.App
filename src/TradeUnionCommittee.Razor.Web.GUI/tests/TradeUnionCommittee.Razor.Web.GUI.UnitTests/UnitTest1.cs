@@ -1,6 +1,6 @@
 using NUnit.Framework;
 
-namespace TradeUnionCommittee.Api.UnitTests
+namespace TradeUnionCommittee.Razor.Web.GUI.UnitTests
 {
     public class Tests
     {

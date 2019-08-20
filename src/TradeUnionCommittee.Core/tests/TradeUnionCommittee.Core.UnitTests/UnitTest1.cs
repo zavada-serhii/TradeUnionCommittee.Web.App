@@ -1,6 +1,6 @@
 using NUnit.Framework;
 
-namespace Tests
+namespace TradeUnionCommittee.Core.UnitTests
 {
     public class Tests
     {
