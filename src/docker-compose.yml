@@ -45,7 +45,7 @@ services:
       - "8535:443"
     build:
       context: .
-      dockerfile: TradeUnionCommittee.Web.GUI/src/TradeUnionCommittee.Mvc.Web.GUI/Dockerfile
+      dockerfile: TradeUnionCommittee.Mvc.Web.GUI/src/TradeUnionCommittee.Mvc.Web.GUI/Dockerfile
 
 
 
