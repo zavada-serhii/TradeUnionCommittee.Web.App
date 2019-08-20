@@ -14,7 +14,7 @@ services:
       - "8515:443"
     build:
       context: .
-      dockerfile: api/src/TradeUnionCommittee.Api/Dockerfile
+      dockerfile: TradeUnionCommittee.Api/src/TradeUnionCommittee.Api/Dockerfile
 
 
 
@@ -29,7 +29,7 @@ services:
       - "8520:5000"
     build:
       context: .
-      dockerfile: analytics/src/TradeUnionCommittee.DataAnalysis.Api/Dockerfile
+      dockerfile: TradeUnionCommittee.DataAnalysis.Api/src/TradeUnionCommittee.DataAnalysis.Api/Dockerfile
 
 
 
@@ -45,7 +45,7 @@ services:
       - "8535:443"
     build:
       context: .
-      dockerfile: api/src/deprecated/TradeUnionCommittee.Mvc.Web.GUI/Dockerfile
+      dockerfile: TradeUnionCommittee.Web.GUI/src/TradeUnionCommittee.Mvc.Web.GUI/Dockerfile
 
 
 
