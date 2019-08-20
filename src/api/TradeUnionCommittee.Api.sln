@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28307.757
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29209.62
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{F90DF1C8-45A8-45E1-AD25-D9893D612B1F}"
 EndProject
@@ -28,10 +28,6 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TradeUnionCommittee.DataAnalysis.Service", "src\TradeUnionCommittee.DataAnalysis.Service\TradeUnionCommittee.DataAnalysis.Service.csproj", "{00C380F5-14BF-4A20-9FAF-2599C69B03FB}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TradeUnionCommittee.UnitTests", "tests\TradeUnionCommittee.UnitTests\TradeUnionCommittee.UnitTests.csproj", "{96747DD9-C089-442D-B314-2D3215D59F6C}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "deprecated", "deprecated", "{00A4D42D-483D-41AB-B7AB-E5092FCBD410}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TradeUnionCommittee.Mvc.Web.GUI", "src\deprecated\TradeUnionCommittee.Mvc.Web.GUI\TradeUnionCommittee.Mvc.Web.GUI.csproj", "{55124606-46DB-48C1-9AE4-42E8C999ABF9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -83,10 +79,6 @@ Global
 		{96747DD9-C089-442D-B314-2D3215D59F6C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{96747DD9-C089-442D-B314-2D3215D59F6C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{96747DD9-C089-442D-B314-2D3215D59F6C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{55124606-46DB-48C1-9AE4-42E8C999ABF9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{55124606-46DB-48C1-9AE4-42E8C999ABF9}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{55124606-46DB-48C1-9AE4-42E8C999ABF9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{55124606-46DB-48C1-9AE4-42E8C999ABF9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -103,8 +95,6 @@ Global
 		{8E69435E-6A13-43A0-8CBF-A84EE948BFAC} = {F90DF1C8-45A8-45E1-AD25-D9893D612B1F}
 		{00C380F5-14BF-4A20-9FAF-2599C69B03FB} = {F90DF1C8-45A8-45E1-AD25-D9893D612B1F}
 		{96747DD9-C089-442D-B314-2D3215D59F6C} = {FF227AA7-2A30-4462-9FB2-CBC14ED12833}
-		{00A4D42D-483D-41AB-B7AB-E5092FCBD410} = {F90DF1C8-45A8-45E1-AD25-D9893D612B1F}
-		{55124606-46DB-48C1-9AE4-42E8C999ABF9} = {00A4D42D-483D-41AB-B7AB-E5092FCBD410}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F1F97ADE-EF6D-439B-8120-12D813E378DE}
