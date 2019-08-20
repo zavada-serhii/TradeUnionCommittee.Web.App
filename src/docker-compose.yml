@@ -14,7 +14,7 @@ services:
       - "8515:443"
     build:
       context: .
-      dockerfile: api/src/TradeUnionCommittee.Api/Dockerfile
+      dockerfile: TradeUnionCommittee.Api/src/TradeUnionCommittee.Api/Dockerfile
 
 
 
@@ -29,13 +29,13 @@ services:
       - "8520:5000"
     build:
       context: .
-      dockerfile: analytics/src/TradeUnionCommittee.DataAnalysis.Api/Dockerfile
+      dockerfile: TradeUnionCommittee.DataAnalysis.Api/src/TradeUnionCommittee.DataAnalysis.Api/Dockerfile
 
 
 
-  tradeunioncommittee.mvc.web.gui:
-    image: ${DOCKER_REGISTRY-}tradeunioncommittee_mvc_web_gui
-    container_name: tradeunioncommittee_mvc_web_gui
+  tradeunioncommittee.razor.web.gui:
+    image: ${DOCKER_REGISTRY-}tradeunioncommittee_razor_web_gui
+    container_name: tradeunioncommittee_razor_web_gui
     restart: always
     networks:
             tradeunioncommittee_network:
@@ -45,7 +45,7 @@ services:
       - "8535:443"
     build:
       context: .
-      dockerfile: api/src/deprecated/TradeUnionCommittee.Mvc.Web.GUI/Dockerfile
+      dockerfile: TradeUnionCommittee.Razor.Web.GUI/src/TradeUnionCommittee.Razor.Web.GUI/Dockerfile
 
 
 
