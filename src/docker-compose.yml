@@ -33,9 +33,9 @@ services:
 
 
 
-  tradeunioncommittee.mvc.web.gui:
-    image: ${DOCKER_REGISTRY-}tradeunioncommittee_mvc_web_gui
-    container_name: tradeunioncommittee_mvc_web_gui
+  tradeunioncommittee.razor.web.gui:
+    image: ${DOCKER_REGISTRY-}tradeunioncommittee_razor_web_gui
+    container_name: tradeunioncommittee_razor_web_gui
     restart: always
     networks:
             tradeunioncommittee_network:
@@ -45,7 +45,7 @@ services:
       - "8535:443"
     build:
       context: .
-      dockerfile: TradeUnionCommittee.Mvc.Web.GUI/src/TradeUnionCommittee.Mvc.Web.GUI/Dockerfile
+      dockerfile: TradeUnionCommittee.Razor.Web.GUI/src/TradeUnionCommittee.Razor.Web.GUI/Dockerfile
 
 
 

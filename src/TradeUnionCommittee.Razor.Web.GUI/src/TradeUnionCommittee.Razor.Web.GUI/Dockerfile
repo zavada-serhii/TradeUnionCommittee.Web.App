@@ -5,7 +5,7 @@ EXPOSE 443
 
 FROM microsoft/dotnet:2.2-sdk AS build
 WORKDIR /src
-COPY ["TradeUnionCommittee.Mvc.Web.GUI/src/TradeUnionCommittee.Mvc.Web.GUI/TradeUnionCommittee.Mvc.Web.GUI.csproj", "TradeUnionCommittee.Mvc.Web.GUI/src/TradeUnionCommittee.Mvc.Web.GUI/"]
+COPY ["TradeUnionCommittee.Razor.Web.GUI/src/TradeUnionCommittee.Razor.Web.GUI/TradeUnionCommittee.Razor.Web.GUI.csproj", "TradeUnionCommittee.Razor.Web.GUI/src/TradeUnionCommittee.Razor.Web.GUI/"]
 COPY ["TradeUnionCommittee.Core/src/TradeUnionCommittee.ViewModels/TradeUnionCommittee.ViewModels.csproj", "TradeUnionCommittee.Core/src/TradeUnionCommittee.ViewModels/"]
 COPY ["TradeUnionCommittee.Core/src/TradeUnionCommittee.BLL/TradeUnionCommittee.BLL.csproj", "TradeUnionCommittee.Core/src/TradeUnionCommittee.BLL/"]
 COPY ["TradeUnionCommittee.Core/src/TradeUnionCommittee.DAL/TradeUnionCommittee.DAL.csproj", "TradeUnionCommittee.Core/src/TradeUnionCommittee.DAL/"]
@@ -15,15 +15,15 @@ COPY ["TradeUnionCommittee.Core/src/TradeUnionCommittee.PDF.Service/TradeUnionCo
 COPY ["TradeUnionCommittee.Core/src/TradeUnionCommittee.CloudStorage.Service/TradeUnionCommittee.CloudStorage.Service.csproj", "TradeUnionCommittee.Core/src/TradeUnionCommittee.CloudStorage.Service/"]
 COPY ["TradeUnionCommittee.Core/src/TradeUnionCommittee.DAL.CloudStorage/TradeUnionCommittee.DAL.CloudStorage.csproj", "TradeUnionCommittee.Core/src/TradeUnionCommittee.DAL.CloudStorage/"]
 COPY ["TradeUnionCommittee.Core/src/TradeUnionCommittee.DAL.Audit/TradeUnionCommittee.DAL.Audit.csproj", "TradeUnionCommittee.Core/src/TradeUnionCommittee.DAL.Audit/"]
-RUN dotnet restore "TradeUnionCommittee.Mvc.Web.GUI/src/TradeUnionCommittee.Mvc.Web.GUI/TradeUnionCommittee.Mvc.Web.GUI.csproj"
+RUN dotnet restore "TradeUnionCommittee.Razor.Web.GUI/src/TradeUnionCommittee.Razor.Web.GUI/TradeUnionCommittee.Razor.Web.GUI.csproj"
 COPY . .
-WORKDIR "/src/TradeUnionCommittee.Mvc.Web.GUI"
-RUN dotnet build "/src/TradeUnionCommittee.Mvc.Web.GUI/src/TradeUnionCommittee.Mvc.Web.GUI/TradeUnionCommittee.Mvc.Web.GUI.csproj" -c Release -o /app
+WORKDIR "/src/TradeUnionCommittee.Razor.Web.GUI"
+RUN dotnet build "/src/TradeUnionCommittee.Razor.Web.GUI/src/TradeUnionCommittee.Razor.Web.GUI/TradeUnionCommittee.Razor.Web.GUI.csproj" -c Release -o /app
 
 FROM build AS publish
-RUN dotnet publish "/src/TradeUnionCommittee.Mvc.Web.GUI/src/TradeUnionCommittee.Mvc.Web.GUI/TradeUnionCommittee.Mvc.Web.GUI.csproj" -c Release -o /app
+RUN dotnet publish "/src/TradeUnionCommittee.Razor.Web.GUI/src/TradeUnionCommittee.Razor.Web.GUI/TradeUnionCommittee.Razor.Web.GUI.csproj" -c Release -o /app
 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app .
-ENTRYPOINT ["dotnet", "TradeUnionCommittee.Mvc.Web.GUI.dll"]
+ENTRYPOINT ["dotnet", "TradeUnionCommittee.Razor.Web.GUI.dll"]
