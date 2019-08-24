@@ -27,7 +27,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TradeUnionCommittee.PDF.Ser
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TradeUnionCommittee.ViewModels", "..\TradeUnionCommittee.Core\src\TradeUnionCommittee.ViewModels\TradeUnionCommittee.ViewModels.csproj", "{2485A527-8E84-4F57-AEBD-17E992792768}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TradeUnionCommittee.Api.UnitTests", "tests\TradeUnionCommittee.Api.UnitTests\TradeUnionCommittee.Api.UnitTests.csproj", "{0354928E-AE76-4B0E-93B7-B1A291943A17}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TradeUnionCommittee.Api.UnitTests", "tests\TradeUnionCommittee.Api.UnitTests\TradeUnionCommittee.Api.UnitTests.csproj", "{0354928E-AE76-4B0E-93B7-B1A291943A17}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TradeUnionCommittee.Core.UnitTests", "..\TradeUnionCommittee.Core\tests\TradeUnionCommittee.Core.UnitTests\TradeUnionCommittee.Core.UnitTests.csproj", "{9DFB8ECD-35F1-47C4-B5B4-B918F1C9641B}"
 EndProject
