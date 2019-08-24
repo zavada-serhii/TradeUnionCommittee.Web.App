@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
-    <TargetLatestRuntimePatch>True</TargetLatestRuntimePatch>
     <LangVersion>7.3</LangVersion>
+    <TargetLatestRuntimePatch>True</TargetLatestRuntimePatch>
     <UserSecretsId>b99bd0f2-43de-4acc-8c56-d36e1113b89f</UserSecretsId>
     <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
     <DockerComposeProjectPath>..\..\docker-compose.dcproj</DockerComposeProjectPath>
