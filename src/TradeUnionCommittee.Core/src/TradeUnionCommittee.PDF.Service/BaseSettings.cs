@@ -8,15 +8,16 @@ namespace TradeUnionCommittee.PDF.Service
 {
     public abstract class BaseSettings
     {
-        private static readonly string BasePath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
         protected readonly Font Font;
         protected readonly Font FontBold;
         protected const string Сurrency = "грн";
 
         protected BaseSettings()
         {
-            var pathDivider = GetPathDividerForTargetPlatform();
-            var baseFont = BaseFont.CreateFont($@"{BasePath}{pathDivider}Fonts{pathDivider}TimesNewRoman.ttf", BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
+            var basePath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            var pathToFont = Path.Combine(basePath, "Fonts", "TimesNewRoman.ttf");
+
+            var baseFont = BaseFont.CreateFont(pathToFont, BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
             Font = new Font(baseFont, 14, Font.NORMAL);
             FontBold = new Font(baseFont, 12, Font.BOLD);
         }
@@ -46,23 +47,6 @@ namespace TradeUnionCommittee.PDF.Service
             for (var i = 0; i < count; i++)
             {
                 document.Add(new Phrase(Environment.NewLine));
-            }
-        }
-
-        private char GetPathDividerForTargetPlatform()
-        {
-            switch (Environment.OSVersion.Platform)
-            {
-                case PlatformID.Win32S:
-                case PlatformID.Win32Windows:
-                case PlatformID.Win32NT:
-                case PlatformID.WinCE:
-                    return '\\';
-                case PlatformID.Unix:
-                case PlatformID.MacOSX:
-                    return '/';
-                default:
-                    throw new ArgumentOutOfRangeException();
             }
         }
     }

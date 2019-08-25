@@ -1,7 +1,6 @@
 ﻿using iTextSharp.text;
 using iTextSharp.text.pdf;
 using System.Collections.Generic;
-using System.Linq;
 using TradeUnionCommittee.PDF.Service.Entities;
 
 namespace TradeUnionCommittee.PDF.Service.Templates.Report
@@ -10,12 +9,8 @@ namespace TradeUnionCommittee.PDF.Service.Templates.Report
     {
         public void CreateBody(Document doc, IReadOnlyCollection<CulturalEmployeeEntity> model)
         {
-            var table = new PdfPTable(4);
-
-            //---------------------------------------------------------------
-
-            AddEmptyParagraph(doc, 3);
-            table.WidthPercentage = 100;
+            var table = new PdfPTable(4) { WidthPercentage = 100 };
+            AddEmptyParagraph(doc, 1);
 
             //---------------------------------------------------------------
 
@@ -33,13 +28,10 @@ namespace TradeUnionCommittee.PDF.Service.Templates.Report
             }
 
             doc.Add(table);
+        }
 
-            //---------------------------------------------------------------
-
-            var sumAmount = model.Sum(x => x.Amount);
-            var sumDiscount = model.Sum(x => x.Discount);
-            var generalSum = sumAmount + sumDiscount;
-
+        public void AddSum(Document doc, decimal sumAmount, decimal sumDiscount, decimal generalSum)
+        {
             doc.Add(AddParagraph($"Сумма дотацій - {sumAmount} {Сurrency}", Element.ALIGN_RIGHT));
             doc.Add(AddParagraph($"Сумма знижок - {sumDiscount} {Сurrency}", Element.ALIGN_RIGHT));
             doc.Add(AddParagraph($"Загальна сумма - {generalSum} {Сurrency}", Element.ALIGN_RIGHT));

@@ -10,12 +10,8 @@ namespace TradeUnionCommittee.PDF.Service.Templates.Report
     {
         public void CreateBody(Document doc, IReadOnlyCollection<MaterialIncentivesEmployeeEntity> model)
         {
-            var table = new PdfPTable(6);
-
-            //---------------------------------------------------------------
-
-            AddEmptyParagraph(doc, 3);
-            table.WidthPercentage = 100;
+            var table = new PdfPTable(6) { WidthPercentage = 100 };
+            AddEmptyParagraph(doc, 1);
 
             //---------------------------------------------------------------
 
@@ -34,14 +30,15 @@ namespace TradeUnionCommittee.PDF.Service.Templates.Report
 
             //---------------------------------------------------------------
 
-            var generalSum = model.Sum(x => x.Amount);
-
             foreach (var item in model.GroupBy(l => l.Name).Select(cl => new { cl.First().Name, Sum = cl.Sum(c => c.Amount) }).ToList())
             {
                 doc.Add(AddParagraph($"Cумма від {item.Name} - {item.Sum} {Сurrency}", Element.ALIGN_RIGHT));
             }
+        }
 
-            doc.Add(AddParagraph($"Загальна сумма - {generalSum} {Сurrency}", Element.ALIGN_RIGHT));
+        public void AddSum(Document doc, decimal sumAmount)
+        {
+            doc.Add(AddParagraph($"Загальна сумма - {sumAmount} {Сurrency}", Element.ALIGN_RIGHT));
         }
     }
 }

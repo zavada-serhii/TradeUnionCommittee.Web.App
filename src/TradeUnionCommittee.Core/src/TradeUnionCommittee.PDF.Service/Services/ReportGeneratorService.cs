@@ -79,118 +79,137 @@ namespace TradeUnionCommittee.PDF.Service.Services
 
             _document.Add(AddBoldParagraph(model.FullNameEmployee, Element.ALIGN_CENTER));
             _document.Add(AddBoldParagraph($"за період з {model.StartDate:dd/MM/yyyy}р по {model.EndDate:dd/MM/yyyy}р", Element.ALIGN_CENTER));
-            if (model.Type == TypeReport.All)
-            {
-                AddEmptyParagraph(_document, 2);
-            }
+            AddEmptyParagraph(_document, 2);
         }
 
         private void AddBody(ReportModel model)
         {
-            switch (model.Type)
-            {
-                case TypeReport.All:
-                    FullReport(model);
-                    break;
-                case TypeReport.MaterialAid:
-                    new MaterialAidTemplate().CreateBody(_document, model.MaterialAidEmployees.ToList());
-                    break;
-                case TypeReport.Award:
-                    new AwardTemplate().CreateBody(_document, model.AwardEmployees.ToList());
-                    break;
-                case TypeReport.Cultural:
-                    new CulturalTemplate().CreateBody(_document, model.CulturalEmployees.ToList());
-                    break;
-                case TypeReport.Travel:
-                case TypeReport.Wellness:
-                case TypeReport.Tour:
-                    new EventTemplate().CreateBody(_document, model.Type, model.EventEmployees.ToList());
-                    break;
-                case TypeReport.Gift:
-                    new GiftTemplate().CreateBody(_document, model.GiftEmployees.ToList());
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-        }
-
-        private void FullReport(DataModel model)
-        {
-            var generalSum = 0.0M;
+            var sum = 0.0M;
 
             if (model.MaterialAidEmployees.Any())
             {
+                var sumAmount = model.MaterialAidEmployees.Sum(x => x.Amount);
+
                 _document.Add(AddBoldParagraph("Матеріальні допомоги", Element.ALIGN_CENTER));
-                new MaterialAidTemplate().CreateBody(_document, model.MaterialAidEmployees.ToList());
+
+                var template = new MaterialAidTemplate();
+                template.CreateBody(_document, model.MaterialAidEmployees.ToList());
+                template.AddSum(_document, sumAmount);
+
                 AddEmptyParagraph(_document, 2);
 
-                generalSum += model.MaterialAidEmployees.Sum(x => x.Amount);
+                sum += sumAmount;
             }
 
             if (model.AwardEmployees.Any())
             {
+                var sumAmount = model.AwardEmployees.Sum(x => x.Amount);
+
                 _document.Add(AddBoldParagraph("Матеріальні заохочення", Element.ALIGN_CENTER));
-                new AwardTemplate().CreateBody(_document, model.AwardEmployees.ToList());
+
+                var template = new AwardTemplate();
+                template.CreateBody(_document, model.AwardEmployees.ToList());
+                template.AddSum(_document, sumAmount);
+
                 AddEmptyParagraph(_document, 2);
 
-                generalSum += model.AwardEmployees.Sum(x => x.Amount);
+                sum += sumAmount;
             }
 
             if (model.CulturalEmployees.Any())
             {
+                var sumAmount = model.CulturalEmployees.Sum(x => x.Amount);
+                var sumDiscount = model.CulturalEmployees.Sum(x => x.Discount);
+                var generalSum = sumAmount + sumDiscount;
+
                 _document.Add(AddBoldParagraph("Культурно-просвітницькі заклади", Element.ALIGN_CENTER));
-                new CulturalTemplate().CreateBody(_document, model.CulturalEmployees.ToList());
+
+                var template = new CulturalTemplate();
+                template.CreateBody(_document, model.CulturalEmployees.ToList());
+                template.AddSum(_document, sumAmount, sumDiscount, generalSum);
+
                 AddEmptyParagraph(_document, 2);
 
-                generalSum += model.CulturalEmployees.Sum(x => x.Amount);
-                generalSum += model.CulturalEmployees.Sum(x => x.Discount);
+                sum += generalSum;
             }
 
             if (model.EventEmployees.Any(x => x.TypeEvent == TypeEvent.Travel))
             {
-                _document.Add(AddBoldParagraph("Поїздки", Element.ALIGN_CENTER));
                 var travel = model.EventEmployees.Where(x => x.TypeEvent == TypeEvent.Travel).ToList();
-                new EventTemplate().CreateBody(_document, TypeReport.Travel, travel);
+                var sumAmount = travel.Sum(x => x.Amount);
+                var sumDiscount = travel.Sum(x => x.Discount);
+                var generalSum = sumAmount + sumDiscount;
+
+                _document.Add(AddBoldParagraph("Поїздки", Element.ALIGN_CENTER));
+
+                var template = new EventTemplate();
+                template.CreateBody(_document, TypeReport.Travel, travel);
+                template.AddSum(_document, sumAmount, sumDiscount, generalSum);
+
                 AddEmptyParagraph(_document, 2);
 
-                generalSum += travel.Sum(x => x.Amount);
-                generalSum += travel.Sum(x => x.Discount);
+                sum += generalSum;
             }
 
             if (model.EventEmployees.Any(x => x.TypeEvent == TypeEvent.Wellness))
             {
-                _document.Add(AddBoldParagraph("Оздоровлення", Element.ALIGN_CENTER));
                 var wellness = model.EventEmployees.Where(x => x.TypeEvent == TypeEvent.Wellness).ToList();
-                new EventTemplate().CreateBody(_document, TypeReport.Wellness, wellness);
+                var sumAmount = wellness.Sum(x => x.Amount);
+                var sumDiscount = wellness.Sum(x => x.Discount);
+                var generalSum = sumAmount + sumDiscount;
+
+                _document.Add(AddBoldParagraph("Оздоровлення", Element.ALIGN_CENTER));
+
+                var template = new EventTemplate();
+                template.CreateBody(_document, TypeReport.Wellness, wellness);
+                template.AddSum(_document, sumAmount, sumDiscount, generalSum);
+
                 AddEmptyParagraph(_document, 2);
 
-                generalSum += wellness.Sum(x => x.Amount);
-                generalSum += wellness.Sum(x => x.Discount);
+                sum += generalSum;
             }
 
             if (model.EventEmployees.Any(x => x.TypeEvent == TypeEvent.Tour))
             {
-                _document.Add(AddBoldParagraph("Путівки", Element.ALIGN_CENTER));
                 var tour = model.EventEmployees.Where(x => x.TypeEvent == TypeEvent.Tour).ToList();
-                new EventTemplate().CreateBody(_document, TypeReport.Tour, tour);
+                var sumAmount = tour.Sum(x => x.Amount);
+                var sumDiscount = tour.Sum(x => x.Discount);
+                var generalSum = sumAmount + sumDiscount;
+
+                _document.Add(AddBoldParagraph("Путівки", Element.ALIGN_CENTER));
+
+                var template = new EventTemplate();
+                template.CreateBody(_document, TypeReport.Tour, tour);
+                template.AddSum(_document, sumAmount, sumDiscount, generalSum);
+
                 AddEmptyParagraph(_document, 2);
 
-                generalSum += tour.Sum(x => x.Amount);
-                generalSum += tour.Sum(x => x.Discount);
+                sum += generalSum;
             }
 
             if (model.GiftEmployees.Any())
             {
+                var sumAmount = model.GiftEmployees.Sum(x => x.Amount);
+                var sumDiscount = model.GiftEmployees.Sum(x => x.Discount);
+                var generalSum = sumAmount + sumDiscount;
+
                 _document.Add(AddBoldParagraph("Подарунки", Element.ALIGN_CENTER));
-                new GiftTemplate().CreateBody(_document, model.GiftEmployees.ToList());
+
+                var template = new GiftTemplate();
+                template.CreateBody(_document, model.GiftEmployees.ToList());
+                template.AddSum(_document, sumAmount, sumDiscount, generalSum);
+
                 AddEmptyParagraph(_document, 2);
 
-                generalSum += model.GiftEmployees.Sum(x => x.Amount);
-                generalSum += model.GiftEmployees.Sum(x => x.Discount);
+                sum += generalSum;
             }
 
-            AddEmptyParagraph(_document, 2);
-            _document.Add(AddParagraph($"Cумма - {generalSum} {Сurrency}", Element.ALIGN_RIGHT));
+            if (model.Type == TypeReport.All)
+            {
+                AddEmptyParagraph(_document, 2);
+                _document.Add(AddParagraph($"Cумма - {sum} {Сurrency}", Element.ALIGN_RIGHT));
+            }
+
             AddEmptyParagraph(_document, 2);
         }
 
