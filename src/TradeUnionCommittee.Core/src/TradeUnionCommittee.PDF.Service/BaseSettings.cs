@@ -6,7 +6,7 @@ using System.Reflection;
 
 namespace TradeUnionCommittee.PDF.Service
 {
-    public class BaseSettings
+    public abstract class BaseSettings
     {
         private static readonly string BasePath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
         protected readonly Font Font;

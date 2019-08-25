@@ -13,24 +13,27 @@ namespace TradeUnionCommittee.PDF.Service.Services
 {
     public class ReportGeneratorService : BaseSettings, IReportGeneratorService
     {
+        private readonly Document _document;
+
+        public ReportGeneratorService()
+        {
+            _document = new Document();
+        }
+
         public byte[] Generate(ReportModel model)
         {
             try
             {
                 using (var stream = new MemoryStream())
                 {
-                    var document = new Document();
-                    var writer = PdfWriter.GetInstance(document, stream);
+                    var writer = PdfWriter.GetInstance(_document, stream);
+                    _document.Open();
 
-                    document.Open();
+                    AddTitle(model);
+                    AddBody(model);
+                    AddSignature();
 
-                    AddTitle(model, document);
-
-                    AddBody(model, document);
-
-                    AddSignature(document);
-
-                    document.Close();
+                    _document.Close();
                     writer.Close();
 
                     return stream.ToArray();
@@ -42,102 +45,102 @@ namespace TradeUnionCommittee.PDF.Service.Services
             }
         }
 
-        private void AddTitle(ReportModel model, IElementListener doc)
+        private void AddTitle(ReportModel model)
         {
             switch (model.Type)
             {
                 case TypeReport.All:
-                    doc.Add(AddBoldParagraph("Звіт по всім дотаційним заходам члена профспілки", Element.ALIGN_CENTER));
+                    _document.Add(AddBoldParagraph("Звіт по всім дотаційним заходам члена профспілки", Element.ALIGN_CENTER));
                     break;
                 case TypeReport.MaterialAid:
-                    doc.Add(AddBoldParagraph("Звіт по матеріальним допомогам члена профспілки", Element.ALIGN_CENTER));
+                    _document.Add(AddBoldParagraph("Звіт по матеріальним допомогам члена профспілки", Element.ALIGN_CENTER));
                     break;
                 case TypeReport.Award:
-                    doc.Add(AddBoldParagraph("Звіт по матеріальним заохоченням члена профспілки", Element.ALIGN_CENTER));
+                    _document.Add(AddBoldParagraph("Звіт по матеріальним заохоченням члена профспілки", Element.ALIGN_CENTER));
                     break;
                 case TypeReport.Travel:
-                    doc.Add(AddBoldParagraph("Звіт по поїздкам члена профспілки", Element.ALIGN_CENTER));
+                    _document.Add(AddBoldParagraph("Звіт по поїздкам члена профспілки", Element.ALIGN_CENTER));
                     break;
                 case TypeReport.Wellness:
-                    doc.Add(AddBoldParagraph("Звіт по оздоровленням члена профспілки", Element.ALIGN_CENTER));
+                    _document.Add(AddBoldParagraph("Звіт по оздоровленням члена профспілки", Element.ALIGN_CENTER));
                     break;
                 case TypeReport.Tour:
-                    doc.Add(AddBoldParagraph("Звіт по путівкам члена профспілки", Element.ALIGN_CENTER));
+                    _document.Add(AddBoldParagraph("Звіт по путівкам члена профспілки", Element.ALIGN_CENTER));
                     break;
                 case TypeReport.Cultural:
-                    doc.Add(AddBoldParagraph("Звіт по культурно-просвітницьким закладам члена профспілки", Element.ALIGN_CENTER));
+                    _document.Add(AddBoldParagraph("Звіт по культурно-просвітницьким закладам члена профспілки", Element.ALIGN_CENTER));
                     break;
                 case TypeReport.Gift:
-                    doc.Add(AddBoldParagraph("Звіт по подарункам члена профспілки", Element.ALIGN_CENTER));
+                    _document.Add(AddBoldParagraph("Звіт по подарункам члена профспілки", Element.ALIGN_CENTER));
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
 
-            doc.Add(AddBoldParagraph(model.FullNameEmployee, Element.ALIGN_CENTER));
-            doc.Add(AddBoldParagraph($"за період з {model.StartDate:dd/MM/yyyy}р по {model.EndDate:dd/MM/yyyy}р", Element.ALIGN_CENTER));
+            _document.Add(AddBoldParagraph(model.FullNameEmployee, Element.ALIGN_CENTER));
+            _document.Add(AddBoldParagraph($"за період з {model.StartDate:dd/MM/yyyy}р по {model.EndDate:dd/MM/yyyy}р", Element.ALIGN_CENTER));
             if (model.Type == TypeReport.All)
             {
-                AddEmptyParagraph(doc, 2);
+                AddEmptyParagraph(_document, 2);
             }
         }
 
-        private void AddBody(ReportModel model, Document doc)
+        private void AddBody(ReportModel model)
         {
             switch (model.Type)
             {
                 case TypeReport.All:
-                    FullReport(model, doc);
+                    FullReport(model);
                     break;
                 case TypeReport.MaterialAid:
-                    new MaterialAidTemplate().CreateBody(doc, model.MaterialAidEmployees.ToList());
+                    new MaterialAidTemplate().CreateBody(_document, model.MaterialAidEmployees.ToList());
                     break;
                 case TypeReport.Award:
-                    new AwardTemplate().CreateBody(doc, model.AwardEmployees.ToList());
+                    new AwardTemplate().CreateBody(_document, model.AwardEmployees.ToList());
                     break;
                 case TypeReport.Cultural:
-                    new CulturalTemplate().CreateBody(doc, model.CulturalEmployees.ToList());
+                    new CulturalTemplate().CreateBody(_document, model.CulturalEmployees.ToList());
                     break;
                 case TypeReport.Travel:
                 case TypeReport.Wellness:
                 case TypeReport.Tour:
-                    new EventTemplate().CreateBody(doc, model.Type, model.EventEmployees.ToList());
+                    new EventTemplate().CreateBody(_document, model.Type, model.EventEmployees.ToList());
                     break;
                 case TypeReport.Gift:
-                    new GiftTemplate().CreateBody(doc, model.GiftEmployees.ToList());
+                    new GiftTemplate().CreateBody(_document, model.GiftEmployees.ToList());
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
         }
 
-        private void FullReport(DataModel model, Document doc)
+        private void FullReport(DataModel model)
         {
             var generalSum = 0.0M;
 
             if (model.MaterialAidEmployees.Any())
             {
-                doc.Add(AddBoldParagraph("Матеріальні допомоги", Element.ALIGN_CENTER));
-                new MaterialAidTemplate().CreateBody(doc, model.MaterialAidEmployees.ToList());
-                AddEmptyParagraph(doc, 2);
+                _document.Add(AddBoldParagraph("Матеріальні допомоги", Element.ALIGN_CENTER));
+                new MaterialAidTemplate().CreateBody(_document, model.MaterialAidEmployees.ToList());
+                AddEmptyParagraph(_document, 2);
 
                 generalSum += model.MaterialAidEmployees.Sum(x => x.Amount);
             }
 
             if (model.AwardEmployees.Any())
             {
-                doc.Add(AddBoldParagraph("Матеріальні заохочення", Element.ALIGN_CENTER));
-                new AwardTemplate().CreateBody(doc, model.AwardEmployees.ToList());
-                AddEmptyParagraph(doc, 2);
+                _document.Add(AddBoldParagraph("Матеріальні заохочення", Element.ALIGN_CENTER));
+                new AwardTemplate().CreateBody(_document, model.AwardEmployees.ToList());
+                AddEmptyParagraph(_document, 2);
 
                 generalSum += model.AwardEmployees.Sum(x => x.Amount);
             }
 
             if (model.CulturalEmployees.Any())
             {
-                doc.Add(AddBoldParagraph("Культурно-просвітницькі заклади", Element.ALIGN_CENTER));
-                new CulturalTemplate().CreateBody(doc, model.CulturalEmployees.ToList());
-                AddEmptyParagraph(doc, 2);
+                _document.Add(AddBoldParagraph("Культурно-просвітницькі заклади", Element.ALIGN_CENTER));
+                new CulturalTemplate().CreateBody(_document, model.CulturalEmployees.ToList());
+                AddEmptyParagraph(_document, 2);
 
                 generalSum += model.CulturalEmployees.Sum(x => x.Amount);
                 generalSum += model.CulturalEmployees.Sum(x => x.Discount);
@@ -145,10 +148,10 @@ namespace TradeUnionCommittee.PDF.Service.Services
 
             if (model.EventEmployees.Any(x => x.TypeEvent == TypeEvent.Travel))
             {
-                doc.Add(AddBoldParagraph("Поїздки", Element.ALIGN_CENTER));
+                _document.Add(AddBoldParagraph("Поїздки", Element.ALIGN_CENTER));
                 var travel = model.EventEmployees.Where(x => x.TypeEvent == TypeEvent.Travel).ToList();
-                new EventTemplate().CreateBody(doc, TypeReport.Travel, travel);
-                AddEmptyParagraph(doc, 2);
+                new EventTemplate().CreateBody(_document, TypeReport.Travel, travel);
+                AddEmptyParagraph(_document, 2);
 
                 generalSum += travel.Sum(x => x.Amount);
                 generalSum += travel.Sum(x => x.Discount);
@@ -156,10 +159,10 @@ namespace TradeUnionCommittee.PDF.Service.Services
 
             if (model.EventEmployees.Any(x => x.TypeEvent == TypeEvent.Wellness))
             {
-                doc.Add(AddBoldParagraph("Оздоровлення", Element.ALIGN_CENTER));
+                _document.Add(AddBoldParagraph("Оздоровлення", Element.ALIGN_CENTER));
                 var wellness = model.EventEmployees.Where(x => x.TypeEvent == TypeEvent.Wellness).ToList();
-                new EventTemplate().CreateBody(doc, TypeReport.Wellness, wellness);
-                AddEmptyParagraph(doc, 2);
+                new EventTemplate().CreateBody(_document, TypeReport.Wellness, wellness);
+                AddEmptyParagraph(_document, 2);
 
                 generalSum += wellness.Sum(x => x.Amount);
                 generalSum += wellness.Sum(x => x.Discount);
@@ -167,10 +170,10 @@ namespace TradeUnionCommittee.PDF.Service.Services
 
             if (model.EventEmployees.Any(x => x.TypeEvent == TypeEvent.Tour))
             {
-                doc.Add(AddBoldParagraph("Путівки", Element.ALIGN_CENTER));
+                _document.Add(AddBoldParagraph("Путівки", Element.ALIGN_CENTER));
                 var tour = model.EventEmployees.Where(x => x.TypeEvent == TypeEvent.Tour).ToList();
-                new EventTemplate().CreateBody(doc, TypeReport.Tour, tour);
-                AddEmptyParagraph(doc, 2);
+                new EventTemplate().CreateBody(_document, TypeReport.Tour, tour);
+                AddEmptyParagraph(_document, 2);
 
                 generalSum += tour.Sum(x => x.Amount);
                 generalSum += tour.Sum(x => x.Discount);
@@ -178,20 +181,20 @@ namespace TradeUnionCommittee.PDF.Service.Services
 
             if (model.GiftEmployees.Any())
             {
-                doc.Add(AddBoldParagraph("Подарунки", Element.ALIGN_CENTER));
-                new GiftTemplate().CreateBody(doc, model.GiftEmployees.ToList());
-                AddEmptyParagraph(doc, 2);
+                _document.Add(AddBoldParagraph("Подарунки", Element.ALIGN_CENTER));
+                new GiftTemplate().CreateBody(_document, model.GiftEmployees.ToList());
+                AddEmptyParagraph(_document, 2);
 
                 generalSum += model.GiftEmployees.Sum(x => x.Amount);
                 generalSum += model.GiftEmployees.Sum(x => x.Discount);
             }
 
-            AddEmptyParagraph(doc, 2);
-            doc.Add(AddParagraph($"Cумма - {generalSum} {Сurrency}", Element.ALIGN_RIGHT));
-            AddEmptyParagraph(doc, 2);
+            AddEmptyParagraph(_document, 2);
+            _document.Add(AddParagraph($"Cумма - {generalSum} {Сurrency}", Element.ALIGN_RIGHT));
+            AddEmptyParagraph(_document, 2);
         }
 
-        private void AddSignature(IElementListener doc)
+        private void AddSignature()
         {
             var builder = new StringBuilder();
 
@@ -200,7 +203,7 @@ namespace TradeUnionCommittee.PDF.Service.Services
             builder.Append(' ').Append(' ');
             builder.Append(new string('_', 18));
 
-            doc.Add(AddParagraph(builder.ToString(), Element.ALIGN_RIGHT));
+            _document.Add(AddParagraph(builder.ToString(), Element.ALIGN_RIGHT));
         }
     }
 }
