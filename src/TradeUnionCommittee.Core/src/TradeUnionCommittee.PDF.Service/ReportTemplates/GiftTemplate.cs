@@ -8,7 +8,7 @@ namespace TradeUnionCommittee.PDF.Service.ReportTemplates
 {
     internal class GiftTemplate : BaseSettings
     {
-        public decimal CreateBody(Document doc, IEnumerable<GiftEmployeeEntity> model)
+        public void CreateBody(Document doc, IEnumerable<GiftEmployeeEntity> model)
         {
             var table = new PdfPTable(5);
 
@@ -45,8 +45,6 @@ namespace TradeUnionCommittee.PDF.Service.ReportTemplates
             doc.Add(new Paragraph($"Сумма - {sumAmount} {Сurrency}", Font) { Alignment = Element.ALIGN_RIGHT });
             doc.Add(new Paragraph($"Сумма знижок - {sumDiscount} {Сurrency}", Font) { Alignment = Element.ALIGN_RIGHT });
             doc.Add(new Paragraph($"Загальна сумма - {generalSum} {Сurrency}", Font) { Alignment = Element.ALIGN_RIGHT });
-
-            return generalSum;
         }
     }
 }

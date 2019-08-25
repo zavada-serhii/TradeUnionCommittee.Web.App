@@ -8,7 +8,7 @@ namespace TradeUnionCommittee.PDF.Service.ReportTemplates
 {
     internal class AwardTemplate : BaseSettings
     {
-        public decimal CreateBody(Document doc, IEnumerable<MaterialIncentivesEmployeeEntity> model)
+        public void CreateBody(Document doc, IEnumerable<MaterialIncentivesEmployeeEntity> model)
         {
             var table = new PdfPTable(6);
 
@@ -42,10 +42,6 @@ namespace TradeUnionCommittee.PDF.Service.ReportTemplates
             }
 
             doc.Add(new Paragraph($"Загальна сумма - {generalSum} {Сurrency}", Font) { Alignment = Element.ALIGN_RIGHT });
-
-            //---------------------------------------------------------------
-
-            return generalSum;
         }
     }
 }
