@@ -4,11 +4,11 @@ using System.Collections.Generic;
 using System.Linq;
 using TradeUnionCommittee.PDF.Service.Entities;
 
-namespace TradeUnionCommittee.PDF.Service.ReportTemplates
+namespace TradeUnionCommittee.PDF.Service.Templates.Report
 {
     internal class CulturalTemplate : BaseSettings
     {
-        public void CreateBody(Document doc, IEnumerable<CulturalEmployeeEntity> model)
+        public void CreateBody(Document doc, IReadOnlyCollection<CulturalEmployeeEntity> model)
         {
             var table = new PdfPTable(4);
 
@@ -40,9 +40,9 @@ namespace TradeUnionCommittee.PDF.Service.ReportTemplates
             var sumDiscount = model.Sum(x => x.Discount);
             var generalSum = sumAmount + sumDiscount;
 
-            doc.Add(new Paragraph($"Сумма дотацій - {sumAmount} {Сurrency}", Font) { Alignment = Element.ALIGN_RIGHT });
-            doc.Add(new Paragraph($"Сумма знижок - {sumDiscount} {Сurrency}", Font) { Alignment = Element.ALIGN_RIGHT });
-            doc.Add(new Paragraph($"Загальна сумма - {generalSum} {Сurrency}", Font) { Alignment = Element.ALIGN_RIGHT });
+            doc.Add(AddParagraph($"Сумма дотацій - {sumAmount} {Сurrency}", Element.ALIGN_RIGHT));
+            doc.Add(AddParagraph($"Сумма знижок - {sumDiscount} {Сurrency}", Element.ALIGN_RIGHT));
+            doc.Add(AddParagraph($"Загальна сумма - {generalSum} {Сurrency}", Element.ALIGN_RIGHT));
         }
     }
 }

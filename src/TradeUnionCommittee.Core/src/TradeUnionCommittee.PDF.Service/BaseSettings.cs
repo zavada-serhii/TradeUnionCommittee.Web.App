@@ -21,14 +21,6 @@ namespace TradeUnionCommittee.PDF.Service
             FontBold = new Font(baseFont, 12, Font.BOLD);
         }
 
-        protected void AddEmptyParagraph(IElementListener document, int count)
-        {
-            for (var i = 0; i < count; i++)
-            {
-                document.Add(new Phrase(Environment.NewLine));
-            }
-        }
-
         protected void AddCell(PdfPTable table, Font font, int colspan, string value)
         {
             table.AddCell(new PdfPCell(new Phrase(value, font))
@@ -39,14 +31,22 @@ namespace TradeUnionCommittee.PDF.Service
             });
         }
 
-        protected Paragraph GetDefaultParagraph(string str, int alignment)
+        protected Paragraph AddParagraph(string str, int alignment)
         {
             return new Paragraph(str, Font) { Alignment = alignment };
         }
 
-        protected Paragraph GetBoldParagraph(string str, int alignment)
+        protected Paragraph AddBoldParagraph(string str, int alignment)
         {
             return new Paragraph(str, FontBold) {Alignment = alignment };
+        }
+
+        protected void AddEmptyParagraph(IElementListener document, int count)
+        {
+            for (var i = 0; i < count; i++)
+            {
+                document.Add(new Phrase(Environment.NewLine));
+            }
         }
 
         private char GetPathDividerForTargetPlatform()
