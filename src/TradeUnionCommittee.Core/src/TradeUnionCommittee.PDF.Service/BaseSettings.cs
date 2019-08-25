@@ -39,6 +39,16 @@ namespace TradeUnionCommittee.PDF.Service
             });
         }
 
+        protected Paragraph GetDefaultParagraph(string str, int alignment)
+        {
+            return new Paragraph(str, Font) { Alignment = alignment };
+        }
+
+        protected Paragraph GetBoldParagraph(string str, int alignment)
+        {
+            return new Paragraph(str, FontBold) {Alignment = alignment };
+        }
+
         private char GetPathDividerForTargetPlatform()
         {
             switch (Environment.OSVersion.Platform)
