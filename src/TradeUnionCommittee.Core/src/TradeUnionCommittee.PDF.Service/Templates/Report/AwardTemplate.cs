@@ -24,13 +24,9 @@ namespace TradeUnionCommittee.PDF.Service.Templates.Report
 
         public void CreateBody()
         {
-            _document.Add(_pdfHelper.AddBoldParagraph("Матеріальні заохочення", Element.ALIGN_CENTER));
-            _pdfHelper.AddEmptyParagraph(_document, 1);
-
-            //---------------------------------------------------------------
-
             var table = new PdfPTable(6) { WidthPercentage = 100 };
 
+            _pdfHelper.AddTitleTemplate(table, 6, "Матеріальні заохочення");
             _pdfHelper.AddBoldCell(table, 2, "Джерело");
             _pdfHelper.AddBoldCell(table, 2, "Розмір");
             _pdfHelper.AddBoldCell(table, 2, "Дата отримання");

@@ -26,17 +26,10 @@ namespace TradeUnionCommittee.PDF.Service.Templates.Report
 
         public void CreateBody()
         {
+            var table = new PdfPTable(5) { WidthPercentage = 100 };
             var eventName = GetEventName(_model.First().TypeEvent);
 
-            //---------------------------------------------------------------
-
-            _document.Add(_pdfHelper.AddBoldParagraph(eventName, Element.ALIGN_CENTER));
-            _pdfHelper.AddEmptyParagraph(_document, 1);
-
-            //---------------------------------------------------------------
-
-            var table = new PdfPTable(5) { WidthPercentage = 100 };
-
+            _pdfHelper.AddTitleTemplate(table, 5, eventName);
             _pdfHelper.AddBoldCell(table, 1, $"Назва {eventName}");
             _pdfHelper.AddBoldCell(table, 1, "Розмір дотації");
             _pdfHelper.AddBoldCell(table, 1, "Розмір знижки");

@@ -1,4 +1,5 @@
-﻿using iTextSharp.text;
+﻿using System;
+using iTextSharp.text;
 using iTextSharp.text.pdf;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,13 +25,9 @@ namespace TradeUnionCommittee.PDF.Service.Templates.Report
 
         public void CreateBody()
         {
-            _document.Add(_pdfHelper.AddBoldParagraph("Матеріальні допомоги", Element.ALIGN_CENTER));
-            _pdfHelper.AddEmptyParagraph(_document, 1);
-
-            //---------------------------------------------------------------
-
             var table = new PdfPTable(6) { WidthPercentage = 100 };
 
+            _pdfHelper.AddTitleTemplate(table,6, "Матеріальні допомоги");
             _pdfHelper.AddBoldCell(table, 2, "Джерело");
             _pdfHelper.AddBoldCell(table, 2, "Розмір");
             _pdfHelper.AddBoldCell(table, 2, "Дата отримання");

@@ -24,13 +24,9 @@ namespace TradeUnionCommittee.PDF.Service.Templates.Report
 
         public void CreateBody()
         {
-            _document.Add(_pdfHelper.AddBoldParagraph("Подарунки", Element.ALIGN_CENTER));
-            _pdfHelper.AddEmptyParagraph(_document, 1);
-
-            //---------------------------------------------------------------
-
             var table = new PdfPTable(5) { WidthPercentage = 100 };
 
+            _pdfHelper.AddTitleTemplate(table, 5, "Подарунки");
             _pdfHelper.AddBoldCell(table, 1, "Назва заходу");
             _pdfHelper.AddBoldCell(table, 1, "Назва подарунку");
             _pdfHelper.AddBoldCell(table, 1, "Ціна");

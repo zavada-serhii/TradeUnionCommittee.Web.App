@@ -44,6 +44,17 @@ namespace TradeUnionCommittee.PDF.Service.Helpers
             });
         }
 
+        public void AddTitleTemplate(PdfPTable table, int colspan, string value)
+        {
+            table.AddCell(new PdfPCell(new Phrase(value, FontBold))
+            {
+                PaddingTop = 15,
+                PaddingBottom = 15,
+                HorizontalAlignment = Element.ALIGN_CENTER,
+                Colspan = colspan
+            });
+        }
+
         //--------------------------------------------------------------------------------
 
         public Paragraph AddParagraph(string str, int alignment)
