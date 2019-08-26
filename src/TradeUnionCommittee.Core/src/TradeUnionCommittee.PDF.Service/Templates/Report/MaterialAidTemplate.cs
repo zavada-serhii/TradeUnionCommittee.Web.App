@@ -3,40 +3,43 @@ using iTextSharp.text.pdf;
 using System.Collections.Generic;
 using System.Linq;
 using TradeUnionCommittee.PDF.Service.Entities;
+using TradeUnionCommittee.PDF.Service.Helpers;
 
 namespace TradeUnionCommittee.PDF.Service.Templates.Report
 {
-    internal class MaterialAidTemplate : BaseSettings
+    public class MaterialAidTemplate
     {
+        private readonly PdfHelper _pdfHelper;
         private readonly Document _document;
         private readonly IEnumerable<MaterialIncentivesEmployeeEntity> _model;
 
         public decimal GeneralSum { get; private set; }
 
-        public MaterialAidTemplate(Document document, IEnumerable<MaterialIncentivesEmployeeEntity> model)
+        public MaterialAidTemplate(PdfHelper pdfHelper, Document document, IEnumerable<MaterialIncentivesEmployeeEntity> model)
         {
+            _pdfHelper = pdfHelper;
             _document = document;
             _model = model;
         }
 
         public void CreateBody()
         {
-            _document.Add(AddBoldParagraph("Матеріальні допомоги", Element.ALIGN_CENTER));
-            AddEmptyParagraph(_document, 1);
+            _document.Add(_pdfHelper.AddBoldParagraph("Матеріальні допомоги", Element.ALIGN_CENTER));
+            _pdfHelper.AddEmptyParagraph(_document, 1);
 
             //---------------------------------------------------------------
 
             var table = new PdfPTable(6) { WidthPercentage = 100 };
 
-            AddCell(table, FontBold, 2, "Джерело");
-            AddCell(table, FontBold, 2, "Розмір");
-            AddCell(table, FontBold, 2, "Дата отримання");
+            _pdfHelper.AddBoldCell(table, 2, "Джерело");
+            _pdfHelper.AddBoldCell(table, 2, "Розмір");
+            _pdfHelper.AddBoldCell(table, 2, "Дата отримання");
 
             foreach (var materialInterestse in _model)
             {
-                AddCell(table, Font, 2, $"{materialInterestse.Name}");
-                AddCell(table, Font, 2, $"{materialInterestse.Amount} {Сurrency}");
-                AddCell(table, Font, 2, $"{materialInterestse.Date:dd/MM/yyyy}");
+                _pdfHelper.AddCell(table, 2, $"{materialInterestse.Name}");
+                _pdfHelper.AddCell(table, 2, $"{materialInterestse.Amount} {_pdfHelper.Сurrency}");
+                _pdfHelper.AddCell(table, 2, $"{materialInterestse.Date:dd/MM/yyyy}");
             }
 
             _document.Add(table);
@@ -48,12 +51,12 @@ namespace TradeUnionCommittee.PDF.Service.Templates.Report
 
             foreach (var item in _model.GroupBy(l => l.Name).Select(cl => new { cl.First().Name, Sum = cl.Sum(c => c.Amount) }).ToList())
             {
-                _document.Add(AddParagraph($"Cумма від {item.Name} - {item.Sum} {Сurrency}", Element.ALIGN_RIGHT));
+                _document.Add(_pdfHelper.AddParagraph($"Cумма від {item.Name} - {item.Sum} {_pdfHelper.Сurrency}", Element.ALIGN_RIGHT));
             }
 
-            _document.Add(AddParagraph($"Загальна сумма - {sumAmount} {Сurrency}", Element.ALIGN_RIGHT));
+            _document.Add(_pdfHelper.AddParagraph($"Загальна сумма - {sumAmount} {_pdfHelper.Сurrency}", Element.ALIGN_RIGHT));
 
-            AddEmptyParagraph(_document, 2);
+            _pdfHelper.AddEmptyParagraph(_document, 2);
 
             GeneralSum = sumAmount;
         }

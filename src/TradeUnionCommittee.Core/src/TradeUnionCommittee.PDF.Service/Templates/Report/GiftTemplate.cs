@@ -3,44 +3,47 @@ using iTextSharp.text.pdf;
 using System.Collections.Generic;
 using System.Linq;
 using TradeUnionCommittee.PDF.Service.Entities;
+using TradeUnionCommittee.PDF.Service.Helpers;
 
 namespace TradeUnionCommittee.PDF.Service.Templates.Report
 {
-    internal class GiftTemplate : BaseSettings
+    public class GiftTemplate
     {
+        private readonly PdfHelper _pdfHelper;
         private readonly Document _document;
         private readonly IEnumerable<GiftEmployeeEntity> _model;
 
         public decimal GeneralSum { get; private set; }
 
-        public GiftTemplate(Document document, IEnumerable<GiftEmployeeEntity> model)
+        public GiftTemplate(PdfHelper pdfHelper, Document document, IEnumerable<GiftEmployeeEntity> model)
         {
+            _pdfHelper = pdfHelper;
             _document = document;
             _model = model;
         }
 
         public void CreateBody()
         {
-            _document.Add(AddBoldParagraph("Подарунки", Element.ALIGN_CENTER));
-            AddEmptyParagraph(_document, 1);
+            _document.Add(_pdfHelper.AddBoldParagraph("Подарунки", Element.ALIGN_CENTER));
+            _pdfHelper.AddEmptyParagraph(_document, 1);
 
             //---------------------------------------------------------------
 
             var table = new PdfPTable(5) { WidthPercentage = 100 };
 
-            AddCell(table, FontBold, 1, "Назва заходу");
-            AddCell(table, FontBold, 1, "Назва подарунку");
-            AddCell(table, FontBold, 1, "Ціна");
-            AddCell(table, FontBold, 1, "Розмір знижки");
-            AddCell(table, FontBold, 1, "Дата отримання");
+            _pdfHelper.AddBoldCell(table, 1, "Назва заходу");
+            _pdfHelper.AddBoldCell(table, 1, "Назва подарунку");
+            _pdfHelper.AddBoldCell(table, 1, "Ціна");
+            _pdfHelper.AddBoldCell(table, 1, "Розмір знижки");
+            _pdfHelper.AddBoldCell(table, 1, "Дата отримання");
 
             foreach (var gift in _model)
             {
-                AddCell(table, Font, 1, $"{gift.Name}");
-                AddCell(table, Font, 1, $"{gift.NameGift}");
-                AddCell(table, Font, 1, $"{gift.Amount} {Сurrency}");
-                AddCell(table, Font, 1, $"{gift.Discount} {Сurrency}");
-                AddCell(table, Font, 2, $"{gift.Date:dd/MM/yyyy}");
+                _pdfHelper.AddCell(table, 1, $"{gift.Name}");
+                _pdfHelper.AddCell(table, 1, $"{gift.NameGift}");
+                _pdfHelper.AddCell(table, 1, $"{gift.Amount} {_pdfHelper.Сurrency}");
+                _pdfHelper.AddCell(table, 1, $"{gift.Discount} {_pdfHelper.Сurrency}");
+                _pdfHelper.AddCell(table, 2, $"{gift.Date:dd/MM/yyyy}");
             }
 
             _document.Add(table);
@@ -52,11 +55,11 @@ namespace TradeUnionCommittee.PDF.Service.Templates.Report
             var sumDiscount = _model.Sum(x => x.Discount);
             var generalSum = sumAmount + sumDiscount;
 
-            _document.Add(AddParagraph($"Сумма - {sumAmount} {Сurrency}", Element.ALIGN_RIGHT));
-            _document.Add(AddParagraph($"Сумма знижок - {sumDiscount} {Сurrency}", Element.ALIGN_RIGHT));
-            _document.Add(AddParagraph($"Загальна сумма - {generalSum} {Сurrency}", Element.ALIGN_RIGHT));
+            _document.Add(_pdfHelper.AddParagraph($"Сумма - {sumAmount} {_pdfHelper.Сurrency}", Element.ALIGN_RIGHT));
+            _document.Add(_pdfHelper.AddParagraph($"Сумма знижок - {sumDiscount} {_pdfHelper.Сurrency}", Element.ALIGN_RIGHT));
+            _document.Add(_pdfHelper.AddParagraph($"Загальна сумма - {generalSum} {_pdfHelper.Сurrency}", Element.ALIGN_RIGHT));
 
-            AddEmptyParagraph(_document, 2);
+            _pdfHelper.AddEmptyParagraph(_document, 2);
 
             GeneralSum = generalSum;
         }
