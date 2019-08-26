@@ -15,38 +15,43 @@ namespace TradeUnionCommittee.PDF.Service.Services
 {
     public class ReportGeneratorService : IReportGeneratorService
     {
-        private readonly Document _document;
         private readonly PdfHelper _pdfHelper;
 
         public ReportGeneratorService()
         {
-            _document = new Document();
             _pdfHelper = new PdfHelper();
         }
 
+        //----------------------------------------------------------------------------------------------------
+
         public byte[] Generate(ReportModel model)
         {
-            byte[] pdf;
-
             using (var stream = new MemoryStream())
             {
-                var writer = PdfWriter.GetInstance(_document, stream);
-                _document.Open();
+                FillPdf(stream, model);
+                SignPdf(stream, model);
 
-                AddTitle(model);
-                AddBody(model);
-                AddPlaceForSignatureAccountant();
-
-                _document.Close();
-                writer.Close();
-
-                pdf = stream.ToArray();
+                return stream.ToArray();
             }
-
-            return SignPdf(pdf, model);
         }
 
-        private void AddTitle(ReportModel model)
+        //----------------------------------------------------------------------------------------------------
+
+        private void FillPdf(Stream stream, ReportModel model)
+        {
+            var document = new Document();
+            var writer = PdfWriter.GetInstance(document, stream);
+            document.Open();
+
+            AddTitle(document, model);
+            AddBody(document, model);
+            AddPlaceForSignatureAccountant(document);
+
+            document.Close();
+            writer.Close();
+        }
+
+        private void AddTitle(Document document, ReportModel model)
         {
             StringBuilder title = new StringBuilder();
 
@@ -89,16 +94,16 @@ namespace TradeUnionCommittee.PDF.Service.Services
                 .Append(Environment.NewLine)
                 .Append($"Reference: {model.HashIdEmployee}");
 
-            new TitleTemplate(_pdfHelper, _document).AddTitle(title.ToString());
+            new TitleTemplate(_pdfHelper, document).AddTitle(title.ToString());
         }
 
-        private void AddBody(ReportModel model)
+        private void AddBody(Document document, ReportModel model)
         {
             var generalSum = 0.0M;
 
             if (model.MaterialAidEmployees.Any())
             {
-                var template = new MaterialAidTemplate(_pdfHelper, _document, model.MaterialAidEmployees);
+                var template = new MaterialAidTemplate(_pdfHelper, document, model.MaterialAidEmployees);
                 template.CreateBody();
                 template.AddSum();
 
@@ -107,7 +112,7 @@ namespace TradeUnionCommittee.PDF.Service.Services
 
             if (model.AwardEmployees.Any())
             {
-                var template = new AwardTemplate(_pdfHelper, _document, model.AwardEmployees);
+                var template = new AwardTemplate(_pdfHelper, document, model.AwardEmployees);
                 template.CreateBody();
                 template.AddSum();
 
@@ -116,7 +121,7 @@ namespace TradeUnionCommittee.PDF.Service.Services
 
             if (model.CulturalEmployees.Any())
             {
-                var template = new CulturalTemplate(_pdfHelper, _document, model.CulturalEmployees);
+                var template = new CulturalTemplate(_pdfHelper, document, model.CulturalEmployees);
                 template.CreateBody();
                 template.AddSum();
 
@@ -125,7 +130,7 @@ namespace TradeUnionCommittee.PDF.Service.Services
 
             if (model.EventEmployees.Any(x => x.TypeEvent == TypeEvent.Travel))
             {
-                var template = new EventTemplate(_pdfHelper, _document, model.EventEmployees.Where(x => x.TypeEvent == TypeEvent.Travel));
+                var template = new EventTemplate(_pdfHelper, document, model.EventEmployees.Where(x => x.TypeEvent == TypeEvent.Travel));
                 template.CreateBody();
                 template.AddSum();
 
@@ -134,7 +139,7 @@ namespace TradeUnionCommittee.PDF.Service.Services
 
             if (model.EventEmployees.Any(x => x.TypeEvent == TypeEvent.Wellness))
             {
-                var template = new EventTemplate(_pdfHelper, _document, model.EventEmployees.Where(x => x.TypeEvent == TypeEvent.Wellness));
+                var template = new EventTemplate(_pdfHelper, document, model.EventEmployees.Where(x => x.TypeEvent == TypeEvent.Wellness));
                 template.CreateBody();
                 template.AddSum();
 
@@ -143,7 +148,7 @@ namespace TradeUnionCommittee.PDF.Service.Services
 
             if (model.EventEmployees.Any(x => x.TypeEvent == TypeEvent.Tour))
             {
-                var template = new EventTemplate(_pdfHelper, _document, model.EventEmployees.Where(x => x.TypeEvent == TypeEvent.Tour));
+                var template = new EventTemplate(_pdfHelper, document, model.EventEmployees.Where(x => x.TypeEvent == TypeEvent.Tour));
                 template.CreateBody();
                 template.AddSum();
 
@@ -152,7 +157,7 @@ namespace TradeUnionCommittee.PDF.Service.Services
 
             if (model.GiftEmployees.Any())
             {
-                var template = new GiftTemplate(_pdfHelper,_document, model.GiftEmployees);
+                var template = new GiftTemplate(_pdfHelper,document, model.GiftEmployees);
                 template.CreateBody();
                 template.AddSum();
 
@@ -161,14 +166,14 @@ namespace TradeUnionCommittee.PDF.Service.Services
 
             if (model.Type == TypeReport.All)
             {
-                _pdfHelper.AddEmptyParagraph(_document, 2);
-                _document.Add(_pdfHelper.AddParagraph($"Cумма - {generalSum} {_pdfHelper.Сurrency}", Element.ALIGN_RIGHT));
+                _pdfHelper.AddEmptyParagraph(document, 2);
+                document.Add(_pdfHelper.AddParagraph($"Cумма - {generalSum} {_pdfHelper.Сurrency}", Element.ALIGN_RIGHT));
             }
 
-            _pdfHelper.AddEmptyParagraph(_document, 2);
+            _pdfHelper.AddEmptyParagraph(document, 2);
         }
 
-        private void AddPlaceForSignatureAccountant()
+        private void AddPlaceForSignatureAccountant(IElementListener document)
         {
             var builder = new StringBuilder();
 
@@ -177,29 +182,26 @@ namespace TradeUnionCommittee.PDF.Service.Services
             builder.Append(' ').Append(' ');
             builder.Append(new string('_', 18));
 
-            _document.Add(_pdfHelper.AddParagraph(builder.ToString(), Element.ALIGN_RIGHT));
+            document.Add(_pdfHelper.AddParagraph(builder.ToString(), Element.ALIGN_RIGHT));
         }
 
-        public byte[] SignPdf(byte[] pdf, ReportModel model)
+        //----------------------------------------------------------------------------------------------------
+
+        private void SignPdf(MemoryStream stream, ReportModel model)
         {
-            using (MemoryStream stream = new MemoryStream())
+            var reader = new PdfReader(stream.ToArray());
+            PdfStamper stamper = new PdfStamper(reader, stream);
+            var signature = $"eZign: {model.FileName}        Reference: {model.HashIdEmployee}";
+
+            int numberOfPages = reader.NumberOfPages;
+            for (int i = 2; i <= numberOfPages; i++)
             {
-                var reader = new PdfReader(pdf);
-                PdfStamper stamper = new PdfStamper(reader, stream);
-                var signature = $"eZign: {model.FileName}        Reference: {model.HashIdEmployee}";
-
-                int numberOfPages = reader.NumberOfPages;
-                for (int i = 2; i <= numberOfPages; i++)
-                {
-                    ColumnText.ShowTextAligned(stamper.GetUnderContent(i), Element.ALIGN_CENTER, new Phrase($"{i} / {numberOfPages}", _pdfHelper.Font), 297f, 15f, 0);
-                    ColumnText.ShowTextAligned(stamper.GetUnderContent(i), Element.ALIGN_LEFT, new Phrase(signature, _pdfHelper.SignFont), 18f, 825f, 0);
-                }
-
-                stamper.Close();
-                reader.Close();
-
-                return stream.ToArray();
+                ColumnText.ShowTextAligned(stamper.GetUnderContent(i), Element.ALIGN_CENTER, new Phrase($"{i} / {numberOfPages}", _pdfHelper.Font), 297f, 15f, 0);
+                ColumnText.ShowTextAligned(stamper.GetUnderContent(i), Element.ALIGN_LEFT, new Phrase(signature, _pdfHelper.SignFont), 18f, 825f, 0);
             }
+
+            stamper.Close();
+            reader.Close();
         }
     }
 }
