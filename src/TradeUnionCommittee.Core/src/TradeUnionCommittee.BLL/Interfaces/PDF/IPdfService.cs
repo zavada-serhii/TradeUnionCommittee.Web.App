@@ -7,6 +7,6 @@ namespace TradeUnionCommittee.BLL.Interfaces.PDF
 {
     public interface IPdfService : IDisposable
     {
-        Task<ActualResult<byte[]>> CreateReport(ReportPdfDTO dto);
+        Task<ActualResult<FileDTO>> CreateReport(ReportPdfDTO dto);
     }
 }

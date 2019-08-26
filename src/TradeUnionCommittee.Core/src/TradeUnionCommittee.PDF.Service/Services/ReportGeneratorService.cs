@@ -26,26 +26,19 @@ namespace TradeUnionCommittee.PDF.Service.Services
 
         public byte[] Generate(ReportModel model)
         {
-            try
+            using (var stream = new MemoryStream())
             {
-                using (var stream = new MemoryStream())
-                {
-                    var writer = PdfWriter.GetInstance(_document, stream);
-                    _document.Open();
+                var writer = PdfWriter.GetInstance(_document, stream);
+                _document.Open();
 
-                    AddTitle(model);
-                    AddBody(model);
-                    AddSignature();
+                AddTitle(model);
+                AddBody(model);
+                AddSignature();
 
-                    _document.Close();
-                    writer.Close();
+                _document.Close();
+                writer.Close();
 
-                    return stream.ToArray();
-                }
-            }
-            catch (Exception)
-            {
-                return new byte[0];
+                return stream.ToArray();
             }
         }
 
