@@ -44,7 +44,7 @@ namespace TradeUnionCommittee.BLL.Services.PDF
             try
             {
                 var fileName = Guid.NewGuid().ToString();
-                var model = await FillModelReport(dto);
+                var model = await FillModelReport(dto, fileName);
                 var pdf = _reportGeneratorService.Generate(model);
 
                 await _pdfBucketService.PutPdfObject(new ReportPdfBucketModel
@@ -69,10 +69,12 @@ namespace TradeUnionCommittee.BLL.Services.PDF
 
         //------------------------------------------------------------------------------------------
 
-        private async Task<ReportModel> FillModelReport(ReportPdfDTO dto)
+        private async Task<ReportModel> FillModelReport(ReportPdfDTO dto, string fileName)
         {
             var model = new ReportModel
             {
+                HashIdEmployee = dto.HashEmployeeId,
+                FileName = fileName,
                 Type = (TradeUnionCommittee.PDF.Service.Enums.TypeReport)dto.Type,
                 FullNameEmployee = await GetFullNameEmployee(dto),
                 StartDate = dto.StartDate,

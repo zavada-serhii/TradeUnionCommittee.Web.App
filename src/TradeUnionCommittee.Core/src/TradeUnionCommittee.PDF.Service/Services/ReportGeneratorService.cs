@@ -26,6 +26,8 @@ namespace TradeUnionCommittee.PDF.Service.Services
 
         public byte[] Generate(ReportModel model)
         {
+            byte[] pdf;
+
             using (var stream = new MemoryStream())
             {
                 var writer = PdfWriter.GetInstance(_document, stream);
@@ -33,13 +35,15 @@ namespace TradeUnionCommittee.PDF.Service.Services
 
                 AddTitle(model);
                 AddBody(model);
-                AddSignature();
+                AddPlaceForSignatureAccountant();
 
                 _document.Close();
                 writer.Close();
 
-                return stream.ToArray();
+                pdf = stream.ToArray();
             }
+
+            return SignPdf(pdf, model);
         }
 
         private void AddTitle(ReportModel model)
@@ -79,7 +83,11 @@ namespace TradeUnionCommittee.PDF.Service.Services
             title.Append(Environment.NewLine)
                 .Append(model.FullNameEmployee)
                 .Append(Environment.NewLine)
-                .Append($"за період з {model.StartDate:dd/MM/yyyy}р по {model.EndDate:dd/MM/yyyy}р");
+                .Append($"за період з {model.StartDate:dd/MM/yyyy}р по {model.EndDate:dd/MM/yyyy}р")
+                .Append(Environment.NewLine)
+                .Append($"eZign: {model.FileName}")
+                .Append(Environment.NewLine)
+                .Append($"Reference: {model.HashIdEmployee}");
 
             new TitleTemplate(_pdfHelper, _document).AddTitle(title.ToString());
         }
@@ -160,7 +168,7 @@ namespace TradeUnionCommittee.PDF.Service.Services
             _pdfHelper.AddEmptyParagraph(_document, 2);
         }
 
-        private void AddSignature()
+        private void AddPlaceForSignatureAccountant()
         {
             var builder = new StringBuilder();
 
@@ -170,6 +178,28 @@ namespace TradeUnionCommittee.PDF.Service.Services
             builder.Append(new string('_', 18));
 
             _document.Add(_pdfHelper.AddParagraph(builder.ToString(), Element.ALIGN_RIGHT));
+        }
+
+        public byte[] SignPdf(byte[] pdf, ReportModel model)
+        {
+            using (MemoryStream stream = new MemoryStream())
+            {
+                var reader = new PdfReader(pdf);
+                PdfStamper stamper = new PdfStamper(reader, stream);
+                var signature = $"eZign: {model.FileName}        Reference: {model.HashIdEmployee}";
+
+                int numberOfPages = reader.NumberOfPages;
+                for (int i = 2; i <= numberOfPages; i++)
+                {
+                    ColumnText.ShowTextAligned(stamper.GetUnderContent(i), Element.ALIGN_CENTER, new Phrase($"{i} / {numberOfPages}", _pdfHelper.Font), 297f, 15f, 0);
+                    ColumnText.ShowTextAligned(stamper.GetUnderContent(i), Element.ALIGN_LEFT, new Phrase(signature, _pdfHelper.SignFont), 18f, 825f, 0);
+                }
+
+                stamper.Close();
+                reader.Close();
+
+                return stream.ToArray();
+            }
         }
     }
 }

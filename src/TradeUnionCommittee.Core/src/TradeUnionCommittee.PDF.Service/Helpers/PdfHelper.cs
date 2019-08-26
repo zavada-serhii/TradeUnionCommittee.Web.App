@@ -8,8 +8,9 @@ namespace TradeUnionCommittee.PDF.Service.Helpers
 {
     public class PdfHelper
     {
-        private readonly Font Font;
-        private readonly Font FontBold;
+        public readonly Font Font;
+        public readonly Font FontBold;
+        public readonly Font SignFont;
         public readonly string Сurrency = "грн";
 
         public PdfHelper()
@@ -20,6 +21,7 @@ namespace TradeUnionCommittee.PDF.Service.Helpers
             var baseFont = BaseFont.CreateFont(pathToFont, BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
             Font = new Font(baseFont, 14, Font.NORMAL);
             FontBold = new Font(baseFont, 12, Font.BOLD);
+            SignFont = new Font(baseFont, 8, Font.NORMAL);
         }
 
         //--------------------------------------------------------------------------------
