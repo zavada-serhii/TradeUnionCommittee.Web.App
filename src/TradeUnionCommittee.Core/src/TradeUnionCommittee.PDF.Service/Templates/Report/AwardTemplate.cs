@@ -26,7 +26,7 @@ namespace TradeUnionCommittee.PDF.Service.Templates.Report
         {
             var table = new PdfPTable(6) { WidthPercentage = 100 };
 
-            _pdfHelper.AddTitleTemplate(table, 6, "Матеріальні заохочення");
+            _pdfHelper.AddTitleCell(table, 6, "Матеріальні заохочення");
             _pdfHelper.AddBoldCell(table, 2, "Джерело");
             _pdfHelper.AddBoldCell(table, 2, "Розмір");
             _pdfHelper.AddBoldCell(table, 2, "Дата отримання");

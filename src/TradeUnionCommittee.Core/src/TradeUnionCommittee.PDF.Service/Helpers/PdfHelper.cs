@@ -29,6 +29,7 @@ namespace TradeUnionCommittee.PDF.Service.Helpers
             table.AddCell(new PdfPCell(new Phrase(value, Font))
             {
                 PaddingTop = 5,
+                PaddingBottom = 5,
                 HorizontalAlignment = Element.ALIGN_CENTER,
                 Colspan = colspan
             });
@@ -39,12 +40,13 @@ namespace TradeUnionCommittee.PDF.Service.Helpers
             table.AddCell(new PdfPCell(new Phrase(value, FontBold))
             {
                 PaddingTop = 5,
+                PaddingBottom = 5,
                 HorizontalAlignment = Element.ALIGN_CENTER,
                 Colspan = colspan
             });
         }
 
-        public void AddTitleTemplate(PdfPTable table, int colspan, string value)
+        public void AddTitleCell(PdfPTable table, int colspan, string value)
         {
             table.AddCell(new PdfPCell(new Phrase(value, FontBold))
             {
@@ -60,11 +62,6 @@ namespace TradeUnionCommittee.PDF.Service.Helpers
         public Paragraph AddParagraph(string str, int alignment)
         {
             return new Paragraph(str, Font) { Alignment = alignment };
-        }
-
-        public Paragraph AddBoldParagraph(string str, int alignment)
-        {
-            return new Paragraph(str, FontBold) { Alignment = alignment };
         }
 
         public void AddEmptyParagraph(IElementListener document, int count)

@@ -26,7 +26,7 @@ namespace TradeUnionCommittee.PDF.Service.Templates.Report
         {
             var table = new PdfPTable(4) { WidthPercentage = 100 };
 
-            _pdfHelper.AddTitleTemplate(table, 4, "Культурно-просвітницькі заклади");
+            _pdfHelper.AddTitleCell(table, 4, "Культурно-просвітницькі заклади");
             _pdfHelper.AddBoldCell(table, 1, "Назва закладу");
             _pdfHelper.AddBoldCell(table, 1, "Розмір дотації");
             _pdfHelper.AddBoldCell(table, 1, "Розмір знижки");

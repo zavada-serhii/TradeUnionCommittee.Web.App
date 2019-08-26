@@ -8,6 +8,7 @@ using TradeUnionCommittee.PDF.Service.Enums;
 using TradeUnionCommittee.PDF.Service.Helpers;
 using TradeUnionCommittee.PDF.Service.Interfaces;
 using TradeUnionCommittee.PDF.Service.Models;
+using TradeUnionCommittee.PDF.Service.Templates;
 using TradeUnionCommittee.PDF.Service.Templates.Report;
 
 namespace TradeUnionCommittee.PDF.Service.Services
@@ -50,39 +51,44 @@ namespace TradeUnionCommittee.PDF.Service.Services
 
         private void AddTitle(ReportModel model)
         {
+            StringBuilder title = new StringBuilder();
+
             switch (model.Type)
             {
                 case TypeReport.All:
-                    _document.Add(_pdfHelper.AddBoldParagraph("Звіт по всім дотаційним заходам члена профспілки", Element.ALIGN_CENTER));
+                    title.Append("Звіт по всім дотаційним заходам члена профспілки");
                     break;
                 case TypeReport.MaterialAid:
-                    _document.Add(_pdfHelper.AddBoldParagraph("Звіт по матеріальним допомогам члена профспілки", Element.ALIGN_CENTER));
+                    title.Append("Звіт по матеріальним допомогам члена профспілки");
                     break;
                 case TypeReport.Award:
-                    _document.Add(_pdfHelper.AddBoldParagraph("Звіт по матеріальним заохоченням члена профспілки", Element.ALIGN_CENTER));
+                    title.Append("Звіт по матеріальним заохоченням члена профспілки");
                     break;
                 case TypeReport.Travel:
-                    _document.Add(_pdfHelper.AddBoldParagraph("Звіт по поїздкам члена профспілки", Element.ALIGN_CENTER));
+                    title.Append("Звіт по поїздкам члена профспілки");
                     break;
                 case TypeReport.Wellness:
-                    _document.Add(_pdfHelper.AddBoldParagraph("Звіт по оздоровленням члена профспілки", Element.ALIGN_CENTER));
+                    title.Append("Звіт по оздоровленням члена профспілки");
                     break;
                 case TypeReport.Tour:
-                    _document.Add(_pdfHelper.AddBoldParagraph("Звіт по путівкам члена профспілки", Element.ALIGN_CENTER));
+                    title.Append("Звіт по путівкам члена профспілки");
                     break;
                 case TypeReport.Cultural:
-                    _document.Add(_pdfHelper.AddBoldParagraph("Звіт по культурно-просвітницьким закладам члена профспілки", Element.ALIGN_CENTER));
+                    title.Append("Звіт по культурно-просвітницьким закладам члена профспілки");
                     break;
                 case TypeReport.Gift:
-                    _document.Add(_pdfHelper.AddBoldParagraph("Звіт по подарункам члена профспілки", Element.ALIGN_CENTER));
+                    title.Append("Звіт по подарункам члена профспілки");
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
 
-            _document.Add(_pdfHelper.AddBoldParagraph(model.FullNameEmployee, Element.ALIGN_CENTER));
-            _document.Add(_pdfHelper.AddBoldParagraph($"за період з {model.StartDate:dd/MM/yyyy}р по {model.EndDate:dd/MM/yyyy}р", Element.ALIGN_CENTER));
-            _pdfHelper.AddEmptyParagraph(_document, 2);
+            title.Append(Environment.NewLine)
+                .Append(model.FullNameEmployee)
+                .Append(Environment.NewLine)
+                .Append($"за період з {model.StartDate:dd/MM/yyyy}р по {model.EndDate:dd/MM/yyyy}р");
+
+            new TitleTemplate(_pdfHelper, _document).AddTitle(title.ToString());
         }
 
         private void AddBody(ReportModel model)
