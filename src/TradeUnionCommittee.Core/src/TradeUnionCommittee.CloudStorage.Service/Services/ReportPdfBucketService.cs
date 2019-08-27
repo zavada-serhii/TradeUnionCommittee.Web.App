@@ -29,7 +29,7 @@ namespace TradeUnionCommittee.CloudStorage.Service.Services
         {
             var model = _context.ReportPdfBucket.Find(id);
             var result = new byte[] { };
-            await _minioClient.GetObjectAsync(BUCKET_NAME, $"{model.IdEmployee}/{model.FileName}{EXTENSION_FILE}", stream =>
+            await _minioClient.GetObjectAsync(BUCKET_NAME, $"{model.HashIdEmployee}/{model.FileName}{EXTENSION_FILE}", stream =>
             {
                 result = stream.ReadAsBytes();
             });
@@ -42,12 +42,12 @@ namespace TradeUnionCommittee.CloudStorage.Service.Services
 
             using (var stream = new MemoryStream(model.Data))
             {
-                await _minioClient.PutObjectAsync(BUCKET_NAME, $"{model.IdEmployee}/{model.FileName}{EXTENSION_FILE}", stream, stream.Length, CONTENT_TYPE);
+                await _minioClient.PutObjectAsync(BUCKET_NAME, $"{model.HashIdEmployee}/{model.FileName}{EXTENSION_FILE}", stream, stream.Length, CONTENT_TYPE);
             }
 
             await _context.ReportPdfBucket.AddAsync(new ReportPdfBucket
             {
-                IdEmployee = model.IdEmployee,
+                HashIdEmployee = model.HashIdEmployee,
                 FileName = model.FileName,
                 DateCreated = DateTime.Now,
                 EmailUser = model.EmailUser,

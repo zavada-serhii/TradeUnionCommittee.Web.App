@@ -90,9 +90,9 @@ namespace TradeUnionCommittee.PDF.Service.Services
                 .Append(Environment.NewLine)
                 .Append($"за період з {model.StartDate:dd/MM/yyyy}р по {model.EndDate:dd/MM/yyyy}р")
                 .Append(Environment.NewLine)
-                .Append($"eZign: {model.FileName}")
+                .Append($"eZign: {model.HashIdEmployee}")
                 .Append(Environment.NewLine)
-                .Append($"Reference: {model.HashIdEmployee}");
+                .Append($"Reference: {model.FileName}");
 
             new TitleTemplate(_pdfHelper, document).AddTitle(title.ToString());
         }
@@ -191,7 +191,7 @@ namespace TradeUnionCommittee.PDF.Service.Services
         {
             var reader = new PdfReader(stream.ToArray());
             PdfStamper stamper = new PdfStamper(reader, stream);
-            var signature = $"eZign: {model.FileName}        Reference: {model.HashIdEmployee}";
+            var signature = $"eZign: {model.HashIdEmployee}        Reference: {model.FileName}";
 
             int numberOfPages = reader.NumberOfPages;
             for (int i = 2; i <= numberOfPages; i++)

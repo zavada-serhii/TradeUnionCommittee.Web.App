@@ -26,7 +26,7 @@ namespace TradeUnionCommittee.PDF.Service.Templates
             rect.EnableBorderSide(4);
             rect.EnableBorderSide(8);
 
-            for (var i = 0; i < 7; i++)
+            for (var i = 0; i < 5; i++)
             {
                 builder.Append(Environment.NewLine);
             }

@@ -27,7 +27,7 @@ namespace TradeUnionCommittee.Razor.Web.GUI.Controllers.Report
         [Authorize(Roles = "Admin,Accountant,Deputy")]
         public IActionResult Index(string id)
         {
-            return View(new PdfReportViewModel {HashEmployeeId = id});
+            return View(new PdfReportViewModel {HashIdEmployee = id});
         }
 
         [HttpPost]
