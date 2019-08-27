@@ -46,16 +46,10 @@ namespace TradeUnionCommittee.BLL.Services.PDF
                 var model = await FillModelReport(dto);
                 var pdf = _reportGeneratorService.Generate(model);
 
-                await _pdfBucketService.PutPdfObject(new ReportPdfBucketModel
-                {
-                    HashIdEmployee = dto.HashIdEmployee,
-                    EmailUser = dto.EmailUser,
-                    IpUser = dto.IpUser,
-                    TypeReport = (int)dto.TypeReport,
-                    DateFrom = dto.StartDate,
-                    DateTo = dto.EndDate,
-                    Pdf = pdf
-                });
+                var reportBucketModel = _mapperService.Mapper.Map<ReportPdfBucketModel>(dto);
+                reportBucketModel.Pdf = pdf;
+
+                await _pdfBucketService.PutPdfObject(reportBucketModel);
 
                 return new ActualResult<(string FileName, byte[] Data)> { Result = pdf };
             }
@@ -69,14 +63,8 @@ namespace TradeUnionCommittee.BLL.Services.PDF
 
         private async Task<ReportModel> FillModelReport(ReportPdfDTO dto)
         {
-            var model = new ReportModel
-            {
-                HashIdEmployee = dto.HashIdEmployee,
-                TypeReport = (TradeUnionCommittee.PDF.Service.Enums.TypeReport)dto.TypeReport,
-                FullNameEmployee = await GetFullNameEmployee(dto),
-                StartDate = dto.StartDate,
-                EndDate = dto.EndDate
-            };
+            var model = _mapperService.Mapper.Map<ReportModel>(dto);
+            model.FullNameEmployee = await GetFullNameEmployee(dto);
 
             switch (dto.TypeReport)
             {
