@@ -4,7 +4,8 @@ namespace TradeUnionCommittee.PDF.Service.Models
 {
     public class ReportModel : DataModel
     {
-        public TypeReport Type { get; set; }
+        public TypeReport TypeReport { get; set; }
+        public string HashIdEmployee { get; set; }
         public string FullNameEmployee { get; set; }
     }
 }

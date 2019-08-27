@@ -39,36 +39,22 @@ namespace TradeUnionCommittee.BLL.Services.PDF
 
         //------------------------------------------------------------------------------------------
 
-        public async Task<ActualResult<byte[]>> CreateReport(ReportPdfDTO dto)
+        public async Task<ActualResult<(string FileName, byte[] Data)>> CreateReport(ReportPdfDTO dto)
         {
             try
             {
                 var model = await FillModelReport(dto);
-                var validationModel = ValidatePdfModel(model);
-                if (validationModel)
-                {
-                    var pdf = _reportGeneratorService.Generate(model);
-                    if (pdf.Length > 0)
-                    {
-                        await _pdfBucketService.PutPdfObject(new ReportPdfBucketModel
-                        {
-                            IdEmployee = _hashIdUtilities.DecryptLong(dto.HashEmployeeId),
-                            EmailUser = dto.EmailUser,
-                            IpUser = dto.IpUser,
-                            TypeReport = (int) model.Type,
-                            DateFrom = model.StartDate,
-                            DateTo = model.EndDate,
-                            Data = pdf
-                        });
-                        return new ActualResult<byte[]> {Result = pdf};
-                    }
-                    return new ActualResult<byte[]>(Errors.ApplicationError);
-                }
-                return new ActualResult<byte[]>(Errors.NotFound);
+                var pdf = _reportGeneratorService.Generate(model);
+
+                var reportBucketModel = _mapperService.Mapper.Map<ReportPdfBucketModel>(dto);
+                reportBucketModel.Pdf = pdf;
+                await _pdfBucketService.PutPdfObject(reportBucketModel);
+
+                return new ActualResult<(string FileName, byte[] Data)> { Result = pdf };
             }
             catch (Exception exception)
             {
-                return new ActualResult<byte[]>(DescriptionExceptionHelper.GetDescriptionError(exception));
+                return new ActualResult<(string FileName, byte[] Data)>(DescriptionExceptionHelper.GetDescriptionError(exception));
             }
         }
 
@@ -76,15 +62,10 @@ namespace TradeUnionCommittee.BLL.Services.PDF
 
         private async Task<ReportModel> FillModelReport(ReportPdfDTO dto)
         {
-            var model = new ReportModel
-            {
-                Type = (TradeUnionCommittee.PDF.Service.Enums.TypeReport)dto.Type,
-                FullNameEmployee = await GetFullNameEmployee(dto),
-                StartDate = dto.StartDate,
-                EndDate = dto.EndDate
-            };
+            var model = _mapperService.Mapper.Map<ReportModel>(dto);
+            model.FullNameEmployee = await GetFullNameEmployee(dto);
 
-            switch (dto.Type)
+            switch (dto.TypeReport)
             {
                 case TypeReport.All:
                     model.MaterialAidEmployees = await GetMaterialAid(dto);
@@ -124,14 +105,14 @@ namespace TradeUnionCommittee.BLL.Services.PDF
 
         private async Task<string> GetFullNameEmployee(ReportPdfDTO dto)
         {
-            var id = _hashIdUtilities.DecryptLong(dto.HashEmployeeId);
+            var id = _hashIdUtilities.DecryptLong(dto.HashIdEmployee);
             var employee = await _context.Employee.FindAsync(id);
             return $"{employee.FirstName} {employee.SecondName} {employee.Patronymic}";
         }
 
         private async Task<IEnumerable<MaterialIncentivesEmployeeEntity>> GetMaterialAid(ReportPdfDTO dto)
         {
-            var id = _hashIdUtilities.DecryptLong(dto.HashEmployeeId);
+            var id = _hashIdUtilities.DecryptLong(dto.HashIdEmployee);
             var result = await _context.MaterialAidEmployees
                 .Include(x => x.IdMaterialAidNavigation)
                 .Where(x => x.DateIssue.Between(dto.StartDate, dto.EndDate) && x.IdEmployee == id)
@@ -142,7 +123,7 @@ namespace TradeUnionCommittee.BLL.Services.PDF
 
         private async Task<IEnumerable<MaterialIncentivesEmployeeEntity>> GetAward(ReportPdfDTO dto)
         {
-            var id = _hashIdUtilities.DecryptLong(dto.HashEmployeeId);
+            var id = _hashIdUtilities.DecryptLong(dto.HashIdEmployee);
             var result = await _context.AwardEmployees
                 .Include(x => x.IdAwardNavigation)
                 .Where(x => x.DateIssue.Between(dto.StartDate, dto.EndDate) && x.IdEmployee == id)
@@ -153,7 +134,7 @@ namespace TradeUnionCommittee.BLL.Services.PDF
 
         private async Task<IEnumerable<CulturalEmployeeEntity>> GetCultural(ReportPdfDTO dto)
         {
-            var id = _hashIdUtilities.DecryptLong(dto.HashEmployeeId);
+            var id = _hashIdUtilities.DecryptLong(dto.HashIdEmployee);
             var result = await _context.CulturalEmployees
                 .Include(x => x.IdCulturalNavigation)
                 .Where(x => x.DateVisit.Between(dto.StartDate, dto.EndDate) && x.IdEmployee == id)
@@ -164,7 +145,7 @@ namespace TradeUnionCommittee.BLL.Services.PDF
 
         private async Task<IEnumerable<EventEmployeeEntity>> GetEvent(ReportPdfDTO dto, TypeEvent typeEvent)
         {
-            var id = _hashIdUtilities.DecryptLong(dto.HashEmployeeId);
+            var id = _hashIdUtilities.DecryptLong(dto.HashIdEmployee);
             var result = await _context.EventEmployees
                 .Include(x => x.IdEventNavigation)
                 .Where(x => x.StartDate.Between(dto.StartDate, dto.EndDate) &&
@@ -178,7 +159,7 @@ namespace TradeUnionCommittee.BLL.Services.PDF
 
         private async Task<IEnumerable<GiftEmployeeEntity>> GetGift(ReportPdfDTO dto)
         {
-            var id = _hashIdUtilities.DecryptLong(dto.HashEmployeeId);
+            var id = _hashIdUtilities.DecryptLong(dto.HashIdEmployee);
             var result = await _context.GiftEmployees
                 .Where(x => x.DateGift.Between(dto.StartDate, dto.EndDate) && x.IdEmployee == id)
                 .OrderBy(x => x.DateGift)
@@ -193,46 +174,6 @@ namespace TradeUnionCommittee.BLL.Services.PDF
             result.AddRange(await GetEvent(dto, TypeEvent.Wellness));
             result.AddRange(await GetEvent(dto, TypeEvent.Tour));
             return result;
-        }
-
-        private bool ValidatePdfModel(ReportModel model)
-        {
-            var result = new List<bool>();
-            switch (model.Type)
-            {
-                case TradeUnionCommittee.PDF.Service.Enums.TypeReport.All:
-                    result.Add(model.MaterialAidEmployees.Any()); 
-                    result.Add(model.AwardEmployees.Any());
-                    result.Add(model.EventEmployees.Any());
-                    result.Add(model.CulturalEmployees.Any());
-                    result.Add(model.GiftEmployees.Any());
-                    break;
-                case TradeUnionCommittee.PDF.Service.Enums.TypeReport.MaterialAid:
-                    result.Add(model.MaterialAidEmployees.Any());
-                    break;
-                case TradeUnionCommittee.PDF.Service.Enums.TypeReport.Award:
-                    result.Add(model.AwardEmployees.Any());
-                    break;
-                case TradeUnionCommittee.PDF.Service.Enums.TypeReport.Travel:
-                    result.Add(model.EventEmployees.Any(x => x.TypeEvent == TradeUnionCommittee.PDF.Service.Enums.TypeEvent.Travel));
-                    break;
-                case TradeUnionCommittee.PDF.Service.Enums.TypeReport.Wellness:
-                    result.Add(model.EventEmployees.Any(x => x.TypeEvent == TradeUnionCommittee.PDF.Service.Enums.TypeEvent.Wellness));
-                    break;
-                case TradeUnionCommittee.PDF.Service.Enums.TypeReport.Tour:
-                    result.Add(model.EventEmployees.Any(x => x.TypeEvent == TradeUnionCommittee.PDF.Service.Enums.TypeEvent.Tour));
-                    break;
-                case TradeUnionCommittee.PDF.Service.Enums.TypeReport.Cultural:
-                    result.Add(model.CulturalEmployees.Any());
-                    break;
-                case TradeUnionCommittee.PDF.Service.Enums.TypeReport.Gift:
-                    result.Add(model.GiftEmployees.Any());
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-
-            return result.Any(x => x);
         }
 
         public void Dispose()

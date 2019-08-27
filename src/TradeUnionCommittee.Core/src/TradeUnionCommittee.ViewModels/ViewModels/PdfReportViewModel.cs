@@ -11,9 +11,9 @@ namespace TradeUnionCommittee.ViewModels.ViewModels
         [Required(ErrorMessage = "Дата по не може бути пустою")]
         public DateTime EndDate { get; set; }
         [Required]
-        public string HashEmployeeId { get; set; }
+        public string HashIdEmployee { get; set; }
         [Required]
         [EnumDataType(typeof(TypeReport))]
-        public TypeReport Type { get; set; }
+        public TypeReport TypeReport { get; set; }
     }
 }

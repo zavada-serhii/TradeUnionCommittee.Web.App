@@ -9,11 +9,13 @@ using TradeUnionCommittee.BLL.DTO.GrandChildren;
 using TradeUnionCommittee.BLL.Enums;
 using TradeUnionCommittee.BLL.Extensions;
 using TradeUnionCommittee.BLL.Helpers;
+using TradeUnionCommittee.CloudStorage.Service.Model;
 using TradeUnionCommittee.DAL.Entities;
 using TradeUnionCommittee.DAL.Enums;
 using TradeUnionCommittee.DAL.Identity.Entities;
 using TradeUnionCommittee.DAL.Repository;
 using TradeUnionCommittee.PDF.Service.Entities;
+using TradeUnionCommittee.PDF.Service.Models;
 
 namespace TradeUnionCommittee.BLL.Configurations
 {
@@ -627,6 +629,12 @@ namespace TradeUnionCommittee.BLL.Configurations
                     .ForMember(x => x.Name, opt => opt.MapFrom(c => c.NameEvent))
                     .ForMember(x => x.Amount, opt => opt.MapFrom(c => c.Price))
                     .ForMember(x => x.Date, opt => opt.MapFrom(c => c.DateGift));
+
+                map.CreateMap<ReportPdfDTO, ReportPdfBucketModel>()
+                    .ForMember(x => x.DateFrom, opt => opt.MapFrom(c => c.StartDate))
+                    .ForMember(x => x.DateTo, opt => opt.MapFrom(c => c.EndDate));
+
+                map.CreateMap<ReportPdfDTO, ReportModel>();
 
                 #endregion
 

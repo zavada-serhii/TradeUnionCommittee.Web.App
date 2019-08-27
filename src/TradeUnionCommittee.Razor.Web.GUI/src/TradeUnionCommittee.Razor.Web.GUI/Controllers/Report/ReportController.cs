@@ -1,10 +1,8 @@
-﻿using System;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.DTO;
 using TradeUnionCommittee.BLL.Interfaces.PDF;
 using TradeUnionCommittee.Razor.Web.GUI.Extensions;
@@ -18,7 +16,7 @@ namespace TradeUnionCommittee.Razor.Web.GUI.Controllers.Report
         private readonly IMapper _mapper;
         private readonly IHttpContextAccessor _accessor;
 
-        public ReportController(IHostingEnvironment appEnvironment, IPdfService pdfService, IMapper mapper, IHttpContextAccessor accessor)
+        public ReportController(IPdfService pdfService, IMapper mapper, IHttpContextAccessor accessor)
         {
             _pdfService = pdfService;
             _mapper = mapper;
@@ -29,7 +27,7 @@ namespace TradeUnionCommittee.Razor.Web.GUI.Controllers.Report
         [Authorize(Roles = "Admin,Accountant,Deputy")]
         public IActionResult Index(string id)
         {
-            return View(new PdfReportViewModel {HashEmployeeId = id});
+            return View(new PdfReportViewModel {HashIdEmployee = id});
         }
 
         [HttpPost]
@@ -45,7 +43,7 @@ namespace TradeUnionCommittee.Razor.Web.GUI.Controllers.Report
                 var result = await _pdfService.CreateReport(dto);
                 if (result.IsValid)
                 {
-                    return File(result.Result, "application/pdf", $"{Guid.NewGuid()}.pdf");
+                    return File(result.Result.Data, "application/pdf", $"{result.Result.FileName}.pdf");
                 }
                 return BadRequest();
             }

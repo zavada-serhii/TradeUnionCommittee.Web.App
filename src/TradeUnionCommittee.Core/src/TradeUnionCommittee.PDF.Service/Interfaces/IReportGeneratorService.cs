@@ -4,6 +4,6 @@ namespace TradeUnionCommittee.PDF.Service.Interfaces
 {
     public interface IReportGeneratorService
     {
-        byte[] Generate(ReportModel model);
+        (string FileName, byte[] Data) Generate(ReportModel model);
     }
 }
