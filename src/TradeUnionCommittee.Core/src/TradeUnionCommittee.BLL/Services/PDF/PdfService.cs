@@ -50,12 +50,12 @@ namespace TradeUnionCommittee.BLL.Services.PDF
                 await _pdfBucketService.PutPdfObject(new ReportPdfBucketModel
                 {
                     HashIdEmployee = dto.HashIdEmployee,
-                    FileName = fileName,
                     EmailUser = dto.EmailUser,
                     IpUser = dto.IpUser,
-                    TypeReport = (int)model.Type,
-                    DateFrom = model.StartDate,
-                    DateTo = model.EndDate,
+                    TypeReport = (int)dto.Type,
+                    DateFrom = dto.StartDate,
+                    DateTo = dto.EndDate,
+                    FileName = fileName,
                     Data = pdf
                 });
 
