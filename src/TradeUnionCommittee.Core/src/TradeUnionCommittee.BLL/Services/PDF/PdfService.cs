@@ -43,9 +43,8 @@ namespace TradeUnionCommittee.BLL.Services.PDF
         {
             try
             {
-                var fileName = Guid.NewGuid().ToString();
-                var model = await FillModelReport(dto, fileName);
-                var pdf = _reportGeneratorService.Generate(model);
+                var model = await FillModelReport(dto);
+                var (FileName, Data) = _reportGeneratorService.Generate(model);
 
                 await _pdfBucketService.PutPdfObject(new ReportPdfBucketModel
                 {
@@ -55,11 +54,11 @@ namespace TradeUnionCommittee.BLL.Services.PDF
                     TypeReport = (int)dto.Type,
                     DateFrom = dto.StartDate,
                     DateTo = dto.EndDate,
-                    FileName = fileName,
-                    Data = pdf
+                    FileName = FileName,
+                    Data = Data
                 });
 
-                return new ActualResult<FileDTO> { Result = new FileDTO { FileName = fileName, Data = pdf} };
+                return new ActualResult<FileDTO> { Result = new FileDTO { FileName = FileName, Data = Data } };
             }
             catch (Exception exception)
             {
@@ -69,12 +68,11 @@ namespace TradeUnionCommittee.BLL.Services.PDF
 
         //------------------------------------------------------------------------------------------
 
-        private async Task<ReportModel> FillModelReport(ReportPdfDTO dto, string fileName)
+        private async Task<ReportModel> FillModelReport(ReportPdfDTO dto)
         {
             var model = new ReportModel
             {
                 HashIdEmployee = dto.HashIdEmployee,
-                FileName = fileName,
                 Type = (TradeUnionCommittee.PDF.Service.Enums.TypeReport)dto.Type,
                 FullNameEmployee = await GetFullNameEmployee(dto),
                 StartDate = dto.StartDate,

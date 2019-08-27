@@ -24,26 +24,28 @@ namespace TradeUnionCommittee.PDF.Service.Services
 
         //----------------------------------------------------------------------------------------------------
 
-        public byte[] Generate(ReportModel model)
+        public (string FileName, byte[] Data) Generate(ReportModel model)
         {
             using (var stream = new MemoryStream())
             {
-                FillPdf(stream, model);
-                SignPdf(stream, model);
+                var fileName = Guid.NewGuid().ToString();
 
-                return stream.ToArray();
+                FillPdf(stream, model, fileName);
+                SignPdf(stream, model, fileName);
+
+                return (fileName, stream.ToArray());
             }
         }
 
         //----------------------------------------------------------------------------------------------------
 
-        private void FillPdf(Stream stream, ReportModel model)
+        private void FillPdf(Stream stream, ReportModel model, string fileName)
         {
             var document = new Document();
             var writer = PdfWriter.GetInstance(document, stream);
             document.Open();
 
-            AddTitle(document, model);
+            AddTitle(document, model, fileName);
             AddBody(document, model);
             AddPlaceForSignatureAccountant(document);
 
@@ -51,7 +53,7 @@ namespace TradeUnionCommittee.PDF.Service.Services
             writer.Close();
         }
 
-        private void AddTitle(Document document, ReportModel model)
+        private void AddTitle(Document document, ReportModel model, string fileName)
         {
             StringBuilder title = new StringBuilder();
 
@@ -92,7 +94,7 @@ namespace TradeUnionCommittee.PDF.Service.Services
                 .Append(Environment.NewLine)
                 .Append($"eZign: {model.HashIdEmployee}")
                 .Append(Environment.NewLine)
-                .Append($"Reference: {model.FileName}");
+                .Append($"Reference: {fileName}");
 
             new TitleTemplate(_pdfHelper, document).AddTitle(title.ToString());
         }
@@ -187,11 +189,11 @@ namespace TradeUnionCommittee.PDF.Service.Services
 
         //----------------------------------------------------------------------------------------------------
 
-        private void SignPdf(MemoryStream stream, ReportModel model)
+        private void SignPdf(MemoryStream stream, ReportModel model, string fileName)
         {
             var reader = new PdfReader(stream.ToArray());
             PdfStamper stamper = new PdfStamper(reader, stream);
-            var signature = $"eZign: {model.HashIdEmployee}        Reference: {model.FileName}";
+            var signature = $"eZign: {model.HashIdEmployee}        Reference: {fileName}";
 
             int numberOfPages = reader.NumberOfPages;
             for (int i = 2; i <= numberOfPages; i++)
