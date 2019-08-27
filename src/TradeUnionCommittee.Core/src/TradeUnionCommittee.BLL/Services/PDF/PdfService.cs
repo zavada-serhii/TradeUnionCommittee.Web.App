@@ -78,12 +78,7 @@ namespace TradeUnionCommittee.BLL.Services.PDF
                 Type = (TradeUnionCommittee.PDF.Service.Enums.TypeReport)dto.Type,
                 FullNameEmployee = await GetFullNameEmployee(dto),
                 StartDate = dto.StartDate,
-                EndDate = dto.EndDate, 
-                MaterialAidEmployees = new List<MaterialIncentivesEmployeeEntity>(),
-                AwardEmployees = new List<MaterialIncentivesEmployeeEntity>(),
-                CulturalEmployees = new List<CulturalEmployeeEntity>(), 
-                EventEmployees = new List<EventEmployeeEntity>(),
-                GiftEmployees = new List<GiftEmployeeEntity>()
+                EndDate = dto.EndDate
             };
 
             switch (dto.Type)
