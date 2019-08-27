@@ -40,15 +40,15 @@ namespace TradeUnionCommittee.CloudStorage.Service.Services
         {
             await CheckBucketExists();
 
-            using (var stream = new MemoryStream(model.Data))
+            using (var stream = new MemoryStream(model.Pdf.Data))
             {
-                await _minioClient.PutObjectAsync(BUCKET_NAME, $"{model.HashIdEmployee}/{model.FileName}{EXTENSION_FILE}", stream, stream.Length, CONTENT_TYPE);
+                await _minioClient.PutObjectAsync(BUCKET_NAME, $"{model.HashIdEmployee}/{model.Pdf.FileName}{EXTENSION_FILE}", stream, stream.Length, CONTENT_TYPE);
             }
 
             await _context.ReportPdfBucket.AddAsync(new ReportPdfBucket
             {
                 HashIdEmployee = model.HashIdEmployee,
-                FileName = model.FileName,
+                FileName = model.Pdf.FileName,
                 DateCreated = DateTime.Now,
                 EmailUser = model.EmailUser,
                 IpUser = model.IpUser,
