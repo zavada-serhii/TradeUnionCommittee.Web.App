@@ -14,6 +14,6 @@ namespace TradeUnionCommittee.ViewModels.ViewModels
         public string HashIdEmployee { get; set; }
         [Required]
         [EnumDataType(typeof(TypeReport))]
-        public TypeReport Type { get; set; }
+        public TypeReport TypeReport { get; set; }
     }
 }

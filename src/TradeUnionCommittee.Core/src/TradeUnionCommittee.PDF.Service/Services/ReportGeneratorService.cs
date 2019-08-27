@@ -57,7 +57,7 @@ namespace TradeUnionCommittee.PDF.Service.Services
         {
             StringBuilder title = new StringBuilder();
 
-            switch (model.Type)
+            switch (model.TypeReport)
             {
                 case TypeReport.All:
                     title.Append("Звіт по всім дотаційним заходам члена профспілки");
@@ -166,7 +166,7 @@ namespace TradeUnionCommittee.PDF.Service.Services
                 generalSum += template.GeneralSum;
             }
 
-            if (model.Type == TypeReport.All)
+            if (model.TypeReport == TypeReport.All)
             {
                 _pdfHelper.AddEmptyParagraph(document, 2);
                 document.Add(_pdfHelper.AddParagraph($"Cумма - {generalSum} {_pdfHelper.Сurrency}", Element.ALIGN_RIGHT));

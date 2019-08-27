@@ -51,7 +51,7 @@ namespace TradeUnionCommittee.BLL.Services.PDF
                     HashIdEmployee = dto.HashIdEmployee,
                     EmailUser = dto.EmailUser,
                     IpUser = dto.IpUser,
-                    TypeReport = (int)dto.Type,
+                    TypeReport = (int)dto.TypeReport,
                     DateFrom = dto.StartDate,
                     DateTo = dto.EndDate,
                     Pdf = pdf
@@ -72,13 +72,13 @@ namespace TradeUnionCommittee.BLL.Services.PDF
             var model = new ReportModel
             {
                 HashIdEmployee = dto.HashIdEmployee,
-                Type = (TradeUnionCommittee.PDF.Service.Enums.TypeReport)dto.Type,
+                TypeReport = (TradeUnionCommittee.PDF.Service.Enums.TypeReport)dto.TypeReport,
                 FullNameEmployee = await GetFullNameEmployee(dto),
                 StartDate = dto.StartDate,
                 EndDate = dto.EndDate
             };
 
-            switch (dto.Type)
+            switch (dto.TypeReport)
             {
                 case TypeReport.All:
                     model.MaterialAidEmployees = await GetMaterialAid(dto);
