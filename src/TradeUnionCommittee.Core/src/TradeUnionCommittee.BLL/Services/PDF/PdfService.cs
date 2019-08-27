@@ -48,7 +48,6 @@ namespace TradeUnionCommittee.BLL.Services.PDF
 
                 var reportBucketModel = _mapperService.Mapper.Map<ReportPdfBucketModel>(dto);
                 reportBucketModel.Pdf = pdf;
-
                 await _pdfBucketService.PutPdfObject(reportBucketModel);
 
                 return new ActualResult<(string FileName, byte[] Data)> { Result = pdf };
