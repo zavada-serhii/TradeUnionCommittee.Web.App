@@ -1,5 +1,4 @@
-﻿using Newtonsoft.Json;
-using RestSharp;
+﻿using RestSharp;
 using ServiceStack.Text;
 using System.Collections.Generic;
 using System.Net;
@@ -31,7 +30,7 @@ namespace TradeUnionCommittee.DataAnalysis.Service.Services
 
             var response = _client.Execute(request);
             return response.StatusCode == HttpStatusCode.OK 
-                ? JsonConvert.DeserializeObject<List<TestModel>>(response.Content) 
+                ? JsonSerializer.DeserializeFromString<List<TestModel>>(response.Content)
                 : null;
         }
 
