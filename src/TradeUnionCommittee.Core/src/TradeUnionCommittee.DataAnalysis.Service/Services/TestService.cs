@@ -38,7 +38,8 @@ namespace TradeUnionCommittee.DataAnalysis.Service.Services
         public string TestPostCsv()
         {
             var request = new RestRequest("api/test/postcsv", Method.POST) { RequestFormat = DataFormat.Json };
-            request.AddBody(CsvSerializer.SerializeToString(GetTestData));
+            var csv = CsvSerializer.SerializeToString(GetTestData);
+            request.AddBody(csv);
 
             var response = _client.Execute(request);
             return response.StatusCode == HttpStatusCode.OK
