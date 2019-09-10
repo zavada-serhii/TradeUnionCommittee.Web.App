@@ -7,7 +7,12 @@ import services.testService as service
 def healt_check():
     return "Trade Union Committee Data Analysis API => Works", 200, {'ContentType':'application/json'} 
 
-@app.route('/api/test/post', methods=['POST'])
-def test_post():
+@app.route('/api/test/postjson', methods=['POST'])
+def test_post_json():
     input_json = request.get_json(force=True)
-    return service.test(input_json)
+    return service.test_json(input_json)
+
+@app.route('/api/test/postcsv', methods=['POST'])
+def test_post_csv():
+    input_csv = request.get_json(force=True)
+    return service.test_csv(input_csv)
