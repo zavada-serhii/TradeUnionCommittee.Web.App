@@ -25,7 +25,7 @@ namespace TradeUnionCommittee.DataAnalysis.Service.Services
 
         public IEnumerable<TestModel> TestPostJson()
         {
-            var request = new RestRequest("api/test/postjson", Method.POST) {RequestFormat = DataFormat.Json};
+            var request = new RestRequest("api/test/postjson", Method.POST) { RequestFormat = DataFormat.Json };
             request.AddBody(GetTestData);
 
             var response = _client.Execute(request);
