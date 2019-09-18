@@ -10,7 +10,7 @@ from sklearn.cluster import KMeans
 from sklearn import decomposition
 
 from io import StringIO
-from models.testModel import Test 
+from models.TestModel import Test 
 
 
 def test_json(input_json):

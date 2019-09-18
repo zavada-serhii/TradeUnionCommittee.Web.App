@@ -11,6 +11,7 @@ using TradeUnionCommittee.BLL.Helpers;
 using TradeUnionCommittee.BLL.Interfaces.Directory;
 using TradeUnionCommittee.DAL.EF;
 using TradeUnionCommittee.DAL.Entities;
+using TradeUnionCommittee.DataAnalysis.Service.Interfaces;
 
 namespace TradeUnionCommittee.BLL.Services.Directory
 {
@@ -19,18 +20,24 @@ namespace TradeUnionCommittee.BLL.Services.Directory
         private readonly TradeUnionCommitteeContext _context;
         private readonly AutoMapperConfiguration _mapperService;
         private readonly HashIdConfiguration _hashIdUtilities;
+        private readonly ITestService _testService;
 
-        public PositionService(TradeUnionCommitteeContext context, AutoMapperConfiguration mapperService, HashIdConfiguration hashIdUtilities)
+        public PositionService(TradeUnionCommitteeContext context, AutoMapperConfiguration mapperService, HashIdConfiguration hashIdUtilities, ITestService testService)
         {
             _context = context;
             _mapperService = mapperService;
             _hashIdUtilities = hashIdUtilities;
+            _testService = testService;
         }
 
         public async Task<ActualResult<IEnumerable<DirectoryDTO>>> GetAllAsync()
         {
             try
             {
+                //var tmp1 = _testService.HealthCheck();
+                //var tmp2 = _testService.TestPostJson();
+                //var tmp3 = _testService.TestPostCsv();
+
                 var position = await _context.Position.OrderBy(x => x.Name).ToListAsync();
                 var result = _mapperService.Mapper.Map<IEnumerable<DirectoryDTO>>(position);
                 return new ActualResult<IEnumerable<DirectoryDTO>> { Result = result };

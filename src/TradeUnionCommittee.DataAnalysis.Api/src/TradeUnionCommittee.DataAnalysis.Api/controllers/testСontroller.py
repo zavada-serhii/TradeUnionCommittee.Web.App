@@ -1,6 +1,6 @@
 from controllers import app
 from flask import Flask, request, jsonify, json
-import services.testService as service
+import services.TestService as service
 
 @app.route('/', methods=['GET'])
 @app.route('/api/test/healtcheck', methods=['GET'])
