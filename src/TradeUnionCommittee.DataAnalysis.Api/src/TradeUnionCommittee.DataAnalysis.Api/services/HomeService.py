@@ -10,13 +10,13 @@ from sklearn.cluster import KMeans
 from sklearn import decomposition
 
 from io import StringIO
-from models.TestModel import Test 
+from models.UserModel import User 
 
 
 def test_json(input_json):
     listEmployee = []
     for employee in input_json:
-        listEmployee.append(Test(employee['Id'], "Hello, " + employee['FullName'], employee['Email']))
+        listEmployee.append(User(employee['Id'], "Hello, " + employee['FullName'], employee['Email']))
     result = np.array(listEmployee).tolist()
     return json.dumps(result, default=lambda x: x.__dict__)
 
