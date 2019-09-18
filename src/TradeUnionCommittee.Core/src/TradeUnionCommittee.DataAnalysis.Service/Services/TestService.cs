@@ -18,14 +18,14 @@ namespace TradeUnionCommittee.DataAnalysis.Service.Services
 
         public bool HealthCheck()
         {
-            var request = new RestRequest("api/home/healtcheck", Method.GET);
+            var request = new RestRequest("api/Home/HealtCheck", Method.GET);
             var response = _client.Execute(request);
             return response.StatusCode == HttpStatusCode.OK;
         }
 
         public IEnumerable<TestModel> TestPostJson()
         {
-            var request = new RestRequest("api/home/postjson", Method.POST) { RequestFormat = DataFormat.Json };
+            var request = new RestRequest("api/Home/PostJson", Method.POST) { RequestFormat = DataFormat.Json };
             request.AddBody(GetTestData);
 
             var response = _client.Execute(request);
@@ -36,7 +36,7 @@ namespace TradeUnionCommittee.DataAnalysis.Service.Services
 
         public string TestPostCsv()
         {
-            var request = new RestRequest("api/home/postcsv", Method.POST) { RequestFormat = DataFormat.Json };
+            var request = new RestRequest("api/Home/PostCsv", Method.POST) { RequestFormat = DataFormat.Json };
             var csv = CsvSerializer.SerializeToString(GetTestData);
             request.AddBody(csv);
 
