@@ -27,7 +27,19 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="controllers\CheckingController.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="controllers\DeterminingController.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="controllers\ForecastingController.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="controllers\HomeController.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="controllers\OptimizationController.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="controllers\__init__.py">
@@ -37,7 +49,19 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="runserver.py" />
+    <Compile Include="services\CheckingService.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="services\DeterminingService.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="services\ForecastingService.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="services\HomeService.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="services\OptimizationService.py">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
