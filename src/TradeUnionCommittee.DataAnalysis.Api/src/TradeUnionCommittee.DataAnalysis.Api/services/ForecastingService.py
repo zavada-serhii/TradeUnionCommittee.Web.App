@@ -17,7 +17,6 @@ def correlation_analysis(input_csv):
 
     sio = StringIO(input_csv) 
     data = pd.read_csv(sio)
-    data = data.drop(['FullName', 'Cultural_Count', 'Gifts_Count', 'Activities_Count', 'Award_Count', 'MaterialAid_Count' ], axis=1)
     columns = list(data.head(0))
 
     correlation = data.corr()
@@ -33,7 +32,6 @@ def checking_significance_coefficients(input_csv):
     
     sio = StringIO(input_csv) 
     data = pd.read_csv(sio)
-    data = data.drop(['FullName', 'Cultural_Count', 'Gifts_Count', 'Activities_Count', 'Award_Count', 'MaterialAid_Count' ], axis=1)
     columns = list(data.head(0))
 
     result = ''

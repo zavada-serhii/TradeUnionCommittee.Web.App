@@ -6,6 +6,7 @@ using TradeUnionCommittee.BLL.Configurations;
 using TradeUnionCommittee.BLL.DTO;
 using TradeUnionCommittee.BLL.Interfaces.Dashboard;
 using TradeUnionCommittee.DAL.EF;
+using TradeUnionCommittee.DataAnalysis.Service.Interfaces;
 
 namespace TradeUnionCommittee.BLL.Services.Dashboard
 {
@@ -13,15 +14,22 @@ namespace TradeUnionCommittee.BLL.Services.Dashboard
     {
         private readonly TradeUnionCommitteeContext _context;
         private readonly AutoMapperConfiguration _mapperService;
+        private readonly ITestService _testService;
 
-        public DashboardService(TradeUnionCommitteeContext context, AutoMapperConfiguration mapperService)
+        public DashboardService(TradeUnionCommitteeContext context, AutoMapperConfiguration mapperService, ITestService testService)
         {
             _context = context;
             _mapperService = mapperService;
+            _testService = testService;
         }
 
         public PieResult PieData_Test()
         {
+            //var tmp1 = _testService.HealthCheck();
+            //var tmp2 = _testService.TestPostJson();
+            //var tmp3 = _testService.TestPostCsv();
+            //var tmp4 = _testService.TestTasks();
+
             const int count = 12;
             return new PieResult
             {

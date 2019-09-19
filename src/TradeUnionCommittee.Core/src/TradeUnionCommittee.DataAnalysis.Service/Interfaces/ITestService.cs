@@ -8,5 +8,6 @@ namespace TradeUnionCommittee.DataAnalysis.Service.Interfaces
         bool HealthCheck();
         IEnumerable<TestModel> TestPostJson();
         string TestPostCsv();
+        Dictionary<string, bool> TestTasks();
     }
 }

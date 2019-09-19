@@ -1,5 +1,6 @@
 ﻿using RestSharp;
 using ServiceStack.Text;
+using System;
 using System.Collections.Generic;
 using System.Net;
 using TradeUnionCommittee.DataAnalysis.Service.Interfaces;
@@ -44,6 +45,50 @@ namespace TradeUnionCommittee.DataAnalysis.Service.Services
             return response.StatusCode == HttpStatusCode.OK
                 ? response.Content
                 : null;
+        }
+
+        //--------------------------------------------------------------------------------
+
+        public Dictionary<string, bool> TestTasks()
+        {
+            var random = new Random();
+            var testData = new List<object>();
+            var result = new Dictionary<string, bool>();
+
+            IEnumerable<string> actions = new List<string>
+            {
+                "api/Forecasting/ActualingTrips/Task1",
+                "api/Forecasting/ActualingTrips/Task3",
+                "api/Forecasting/ActualingTrips/Task4",
+
+                "api/Determining/ProbablePastime/Task1",
+                "api/Determining/UnpopularPastime/Task1",
+                "api/Optimization/Premiums/Task1",
+                "api/Checking/RelevanceWellnessTrips/Task1",
+            };
+
+            for (var i = 0; i < 1000; i++)
+            {
+                testData.Add(new
+                {
+                    Age = random.Next(25, 95),
+                    Travel_Count = random.Next(0, 10),
+                    Wellness_Count = random.Next(0, 10),
+                    Tour_Count = random.Next(0, 10)
+                });
+            }
+
+            foreach (var action in actions)
+            {
+                var request = new RestRequest(action, Method.POST) { RequestFormat = DataFormat.Json };
+                var csv = CsvSerializer.SerializeToString(testData);
+                request.AddBody(csv);
+
+                var response = _client.Execute(request);
+                result.Add(action, response.StatusCode == HttpStatusCode.OK);
+            }
+
+            return result;
         }
 
         private IEnumerable<TestModel> GetTestData => new List<TestModel>

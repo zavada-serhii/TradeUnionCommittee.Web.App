@@ -9,6 +9,10 @@ from sklearn import decomposition
 
 from io import StringIO
 
+#------------------------------------------------------------------------------
+# 5.1
+# Return C#/.NET => ''
+#------------------------------------------------------------------------------
 def checking_relevance_wellness_trips_task1(input_csv):
     sio = StringIO(input_csv) 
     data = pd.read_csv(sio)
