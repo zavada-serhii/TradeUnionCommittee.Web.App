@@ -27,7 +27,19 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Controllers\CheckingController.py" />
+    <Compile Include="Controllers\DeterminingController.py" />
+    <Compile Include="Controllers\ForecastingController.py" />
+    <Compile Include="Controllers\HomeController.py" />
+    <Compile Include="Controllers\OptimizationController.py" />
+    <Compile Include="Controllers\__init__.py" />
+    <Compile Include="Models\UserModel.py" />
     <Compile Include="runserver.py" />
+    <Compile Include="Services\CheckingService.py" />
+    <Compile Include="Services\DeterminingService.py" />
+    <Compile Include="Services\ForecastingService.py" />
+    <Compile Include="Services\HomeService.py" />
+    <Compile Include="Services\OptimizationService.py" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="requirements.txt" />
@@ -42,6 +54,11 @@
       <PathEnvironmentVariable>PYTHONPATH</PathEnvironmentVariable>
       <Architecture>X64</Architecture>
     </Interpreter>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Controllers\" />
+    <Folder Include="Models\" />
+    <Folder Include="Services\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.Web.targets" />
   <!-- Specify pre- and post-build commands in the BeforeBuild and 
