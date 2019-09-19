@@ -1,6 +1,6 @@
-from controllers import app
+from Controllers import app
 from flask import Flask, request, jsonify, json
-import services.OptimizationService as service
+import Services.OptimizationService as service
 
 #------------------------------------------------------------------------------
 # 4.1

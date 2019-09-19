@@ -1,6 +1,6 @@
-from controllers import app
+from Controllers import app
 from flask import Flask, request, jsonify, json
-import services.DeterminingService as service
+import Services.DeterminingService as service
 
 #------------------------------------------------------------------------------
 # 2.1

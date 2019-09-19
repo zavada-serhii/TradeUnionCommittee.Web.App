@@ -4,7 +4,7 @@ import numpy as np
 import pandas as pd
 
 from io import StringIO
-from models.UserModel import User 
+from Models.UserModel import User 
 
 
 def test_json(input_json):

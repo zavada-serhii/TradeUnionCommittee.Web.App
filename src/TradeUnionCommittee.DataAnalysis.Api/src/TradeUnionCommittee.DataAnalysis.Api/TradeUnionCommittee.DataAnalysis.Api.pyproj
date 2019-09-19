@@ -27,51 +27,46 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="controllers\CheckingController.py">
+    <Compile Include="Controllers\CheckingController.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="controllers\DeterminingController.py">
+    <Compile Include="Controllers\DeterminingController.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="controllers\ForecastingController.py">
+    <Compile Include="Controllers\ForecastingController.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="controllers\HomeController.py">
+    <Compile Include="Controllers\HomeController.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="controllers\OptimizationController.py">
+    <Compile Include="Controllers\OptimizationController.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="controllers\__init__.py">
+    <Compile Include="Controllers\__init__.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="models\UserModel.py">
+    <Compile Include="Models\UserModel.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="runserver.py" />
-    <Compile Include="services\CheckingService.py">
+    <Compile Include="Services\CheckingService.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="services\DeterminingService.py">
+    <Compile Include="Services\DeterminingService.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="services\ForecastingService.py">
+    <Compile Include="Services\ForecastingService.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="services\HomeService.py">
+    <Compile Include="Services\HomeService.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="services\OptimizationService.py">
+    <Compile Include="Services\OptimizationService.py">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
   <ItemGroup>
     <Content Include="requirements.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="models\" />
-    <Folder Include="controllers\" />
-    <Folder Include="services\" />
   </ItemGroup>
   <ItemGroup>
     <Interpreter Include="env\">
@@ -83,6 +78,11 @@
       <PathEnvironmentVariable>PYTHONPATH</PathEnvironmentVariable>
       <Architecture>X64</Architecture>
     </Interpreter>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Controllers\" />
+    <Folder Include="Models\" />
+    <Folder Include="Services\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.Web.targets" />
   <!-- Specify pre- and post-build commands in the BeforeBuild and 

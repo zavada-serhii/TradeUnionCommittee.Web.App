@@ -1,6 +1,6 @@
-from controllers import app
+from Controllers import app
 from flask import Flask, request, jsonify, json
-import services.HomeService as service
+import Services.HomeService as service
 
 @app.route('/', methods=['GET'])
 @app.route('/api/Home/HealtCheck', methods=['GET'])

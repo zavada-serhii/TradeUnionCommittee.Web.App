@@ -1,6 +1,6 @@
-from controllers import app
+from Controllers import app
 from flask import Flask, request, jsonify, json
-import services.ForecastingService as service
+import Services.ForecastingService as service
 
 #------------------------------------------------------------------------------
 # 1.1 - 1.2
