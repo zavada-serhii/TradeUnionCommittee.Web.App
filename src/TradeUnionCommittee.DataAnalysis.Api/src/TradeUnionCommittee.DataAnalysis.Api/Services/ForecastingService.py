@@ -17,12 +17,9 @@ def correlation_analysis(input_csv):
 
     sio = StringIO(input_csv) 
     data = pd.read_csv(sio)
-    columns = list(data.head(0))
 
     correlation = data.corr()
-    result = str(np.array(correlation).tolist())
-
-    return result
+    return str(np.array(correlation).tolist())
 
 #------------------------------------------------------------------------------
 # 1.3
