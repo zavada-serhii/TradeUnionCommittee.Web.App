@@ -33,6 +33,9 @@
     <Compile Include="Controllers\HomeController.py" />
     <Compile Include="Controllers\OptimizationController.py" />
     <Compile Include="Controllers\__init__.py" />
+    <Compile Include="Models\ClusterModel.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Models\UserModel.py" />
     <Compile Include="runserver.py" />
     <Compile Include="Services\CheckingService.py" />

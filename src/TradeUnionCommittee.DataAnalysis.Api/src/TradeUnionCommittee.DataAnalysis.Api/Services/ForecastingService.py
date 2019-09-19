@@ -6,8 +6,10 @@ import seaborn as sns
 from scipy import stats
 from sklearn.cluster import KMeans
 from sklearn import decomposition
+from json_tricks import dump, dumps, load, loads, strip_comments
 
 from io import StringIO
+from Models.ClusterModel import Cluster
 
 #------------------------------------------------------------------------------
 # 1.1 - 1.2
@@ -62,22 +64,16 @@ def test_for_paired(c, data):
 # 1.4
 # Return C#/.NET type => 'String'
 #------------------------------------------------------------------------------
-#def cluster_analysis(raw1, raw2, k):
-def cluster_analysis(input_csv):
-    
-    sio = StringIO(input_csv) 
-    data = pd.read_csv(sio)
-    raw1 = data['Age']
-    raw2 = data['Travel_Count']
-    k = 4
+def cluster_analysis(input_json):
 
-    result = ''
+    raw1 = input_json['X']
+    raw2 = input_json['Y']
+    k = input_json['CountCluster']
+
     x = [[] for i in range(k)]
     y = [[] for i in range(k)]
 
-    f1 = raw1.values
-    f2 = raw2.values
-    X = np.array(list(zip(f1, f2)))
+    X = np.array(list(zip(raw1, raw2)))
     kmeans = KMeans(n_clusters=k, random_state=0).fit(X)
 
     centers = kmeans.cluster_centers_
@@ -91,10 +87,7 @@ def cluster_analysis(input_csv):
         x[indx].append(X[i])
         y[indx].append(Y[i])
 
-    for i in range(k):
-        result += f'{centers[i]} | {x[i]} | {y[i]}'
-    
-    return result
+    return dumps(Cluster(x,y,centers), primitives=True)
 
 def dist(x1, x2, y1, y2, ax=1):
     return np.sqrt((x2 - x1)**2 + (y2 - y1)**2)
