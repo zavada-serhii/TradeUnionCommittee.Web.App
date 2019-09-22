@@ -37,7 +37,7 @@ def multi_coeff(input_csv):
     return dumps(result, primitives=True)
 
 #------------------------------------------------------------------------------
-# 2.2 - 2,4
+# 2.2 - 2.4
 # Return C#/.NET type => ''
 #------------------------------------------------------------------------------
 def determining_probable_pastime_task2(input_csv):
@@ -171,6 +171,22 @@ def confidence_interval(beta_st, test):
     low = b - t_kr * np.sqrt(((b - beta_) ** 2) / 5)
     up = b + t_kr * np.sqrt(((b - beta_) ** 2) / 5)
     return [low, up]
+
+#------------------------------------------------------------------------------
+# 2.5
+# Return C#/.NET type => ''
+#------------------------------------------------------------------------------
+def pca(input_json):
+
+    json = loads(input_json, preserve_order=True)
+
+    csv = pd.read_csv(StringIO(json['Csv'])) 
+    countComponents = json['CountComponents']
+
+    pca = decomposition.PCA(n_components=countComponents)
+    csv = pca.fit(csv).transform(csv)
+    
+    return dumps(csv, primitives=True)
 
 #------------------------------------------------------------------------------------------------------------------------------------------------------------
 

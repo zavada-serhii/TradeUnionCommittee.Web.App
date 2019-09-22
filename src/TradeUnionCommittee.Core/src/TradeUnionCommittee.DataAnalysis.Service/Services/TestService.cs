@@ -91,19 +91,20 @@ namespace TradeUnionCommittee.DataAnalysis.Service.Services
 
         public Dictionary<string, bool> TestTask_1()
         {
-            var data = TestTask_11_12_13();
-            var data1 = TestTask_14();
-
             var allData = new Dictionary<string, bool>();
 
-            foreach (var (key, value) in data)
+            var data = new List<Dictionary<string, bool>>
             {
-                allData.Add(key, value);
-            }
+                TestTask_11_12_13(),
+                TestTask_14()
+            };
 
-            foreach (var (key, value) in data1)
+            foreach (var tmp in data)
             {
-                allData.Add(key, value);
+                foreach (var (key, value) in tmp)
+                {
+                    allData.Add(key, value);
+                }
             }
 
             return allData;
@@ -179,12 +180,21 @@ namespace TradeUnionCommittee.DataAnalysis.Service.Services
 
         public Dictionary<string, bool> TestTask_2()
         {
-            var data = TestTask_21_22_23_24();
             var allData = new Dictionary<string, bool>();
 
-            foreach (var (key, value) in data)
+            var data = new List<Dictionary<string, bool>>
             {
-                allData.Add(key, value);
+                TestTask_21_22_23_24(),
+                TestTask_25(),
+                TestTask_26()
+            };
+
+            foreach (var tmp in data)
+            {
+                foreach (var (key, value) in tmp)
+                {
+                    allData.Add(key, value);
+                }
             }
 
             return allData;
@@ -227,6 +237,65 @@ namespace TradeUnionCommittee.DataAnalysis.Service.Services
             }
 
             return result;
+        }
+
+        private Dictionary<string, bool> TestTask_25()
+        {
+            var random = new Random();
+            var csvData = new List<object>();
+            const string resource = "api/Determining/ProbablePastime/Task5";
+
+            for (var i = 0; i < 1000; i++)
+            {
+                csvData.Add(new
+                {
+                    X1 = random.Next(0, 11), //Travel_Count
+                    X2 = random.Next(0, 12), //Wellness_Count
+                    X3 = random.Next(0, 13), //Tour_Count
+                    X4 = random.Next(0, 4), //CountChildren
+                    X5 = random.Next(0, 3), //CountGrandChildren
+                });
+            }
+
+            var json = JsonSerializer.SerializeToString(new
+            {
+                Csv = CsvSerializer.SerializeToString(csvData),
+                CountComponents = 2
+            });
+
+            var request = new RestRequest(resource, Method.POST) { RequestFormat = DataFormat.Json };
+            request.AddBody(json);
+
+            var response = _client.Execute(request);
+            return new Dictionary<string, bool> { { resource, response.StatusCode == HttpStatusCode.OK } };
+        }
+
+        private Dictionary<string, bool> TestTask_26()
+        {
+            var random = new Random();
+            var csvData = new List<object>();
+            const string resource = "api/Determining/ProbablePastime/Task6";
+
+            for (var i = 0; i < 1000; i++)
+            {
+                csvData.Add(new
+                {
+                    X = random.Next(0, 11), //Travel_Count
+                    Y = random.Next(0, 4), // Count_Children
+                });
+            }
+
+            var json = JsonSerializer.SerializeToString(new
+            {
+                Csv = CsvSerializer.SerializeToString(csvData),
+                CountCluster = 3
+            });
+
+            var request = new RestRequest(resource, Method.POST) { RequestFormat = DataFormat.Json };
+            request.AddBody(json);
+
+            var response = _client.Execute(request);
+            return new Dictionary<string, bool> { { resource, response.StatusCode == HttpStatusCode.OK } };
         }
 
         #endregion
