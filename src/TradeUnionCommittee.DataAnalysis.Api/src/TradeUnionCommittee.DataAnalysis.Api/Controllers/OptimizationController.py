@@ -4,7 +4,7 @@ import Services.OptimizationService as service
 
 #------------------------------------------------------------------------------
 # 4.1
-# Return C#/.NET => ''
+# Return C#/.NET type => ''
 #------------------------------------------------------------------------------
 @app.route('/api/Optimization/Premiums/Task1', methods=['POST'])
 def optimization_premiums_task1():

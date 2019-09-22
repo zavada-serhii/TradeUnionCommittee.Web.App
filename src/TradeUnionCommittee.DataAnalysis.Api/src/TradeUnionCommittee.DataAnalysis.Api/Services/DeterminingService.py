@@ -6,23 +6,22 @@ import seaborn as sns
 from scipy import stats
 from sklearn.cluster import KMeans
 from sklearn import decomposition
+from json_tricks import dump, dumps, load, loads, strip_comments
 
 from io import StringIO
-
-def determining_probable_pastime_task1(input_csv):
-    sio = StringIO(input_csv) 
-    data = pd.read_csv(sio)
-    return "service determining_probable_pastime_task1"
+from Models.MultiFactorModel import MultiFactor
 
 #------------------------------------------------------------------------------
 # 2.1
-# Return C#/.NET => ''
+# Return C#/.NET type => ''
 #------------------------------------------------------------------------------
-def multi_coeff(input_json):
+def multi_coeff(input_csv):
 
-    X1 = input_json['X1']
-    X2 = input_json['X2']
-    Y = input_json['Y']
+    csv = pd.read_csv(StringIO(input_csv))
+
+    Y = csv['Y']
+    X1 = csv['X1']
+    X2 = csv['X2']
 
     corr_coef = np.corrcoef(Y, X1)
     corr_Y_X1 = corr_coef[0][1]
@@ -33,21 +32,37 @@ def multi_coeff(input_json):
     corr_coef = np.corrcoef(X1, X2)
     corr_X1_X2 = corr_coef[0][1]
    
-    return np.sqrt((corr_Y_X1**2 + corr_Y_X2**2 - 2 * corr_Y_X1 * corr_Y_X2 * corr_X1_X2)/(1 - corr_X1_X2**2))
+    result = np.sqrt((corr_Y_X1**2 + corr_Y_X2**2 - 2 * corr_Y_X1 * corr_Y_X2 * corr_X1_X2)/(1 - corr_X1_X2**2))
+
+    return dumps(result, primitives=True)
+
+#------------------------------------------------------------------------------
+# 2.2 - 2,4
+# Return C#/.NET type => ''
+#------------------------------------------------------------------------------
+def determining_probable_pastime_task2(input_csv):
+
+    csv = pd.read_csv(StringIO(input_csv))
+
+    Y = csv['Y']   # Travel Count
+    X1 = csv['X1'] # Wellness Count
+    X2 = csv['X2'] # Tour Count
+    X3 = csv['X3'] # MaterialAidONU MaterialAid_ONU
+    X4 = csv['X4'] # AwardONU Award_ONU
+    X5 = csv['X5'] # Children Count
+    X6 = csv['X6'] # GrandChildren Count
+
+    beta = regression_model(Y, X1, X2, X3, X4, X5, X6)
+    beta_st = standartization(beta, Y, X1, X2, X3, X4, X5, X6)
+    test = significance_test(beta_st)
+    interval = confidence_interval(beta_st, test)
+
+    return dumps(MultiFactor(beta, beta_st, test, interval), primitives=True)
 
 #------------------------------------------------------------------------------
 # 2.2
-# Return C#/.NET => ''
 #------------------------------------------------------------------------------
-def regression_model(input_json):
-    
-    X1 = input_json['X1']
-    X2 = input_json['X2']
-    X3 = input_json['X3']
-    X4 = input_json['X4']
-    X5 = input_json['X5']
-    X6 = input_json['X6']
-    Y = input_json['Y']
+def regression_model(Y, X1, X2, X3, X4, X5, X6):
 
     ones = np.ones(len(Y))
     X = np.column_stack((ones, X1, X2, X3, X4, X5, X6))
@@ -90,18 +105,8 @@ def regression_model(input_json):
 
 #------------------------------------------------------------------------------
 # 2.3
-# Return C#/.NET => ''
 #------------------------------------------------------------------------------
-def standartization(input_json):
-    
-    X1 = input_json['X1']
-    X2 = input_json['X2']
-    X3 = input_json['X3']
-    X4 = input_json['X4']
-    X5 = input_json['X5']
-    X6 = input_json['X6']
-    Y = input_json['Y']
-    beta = input_json['beta']
+def standartization(beta, Y, X1, X2, X3, X4, X5, X6):
 
     def sum_T(R):
         i = 0
@@ -133,12 +138,10 @@ def standartization(input_json):
 
 #------------------------------------------------------------------------------
 # 2.4
-# Return C#/.NET => ''
 #------------------------------------------------------------------------------
-def significance_test(input_json):
+def significance_test(beta):
 
-    beta = input_json['Beta']
-    c = input_json['C']
+    c = beta[0]
 
     sum_b = 0
     for i in range(len(beta)):
@@ -159,11 +162,11 @@ def significance_test(input_json):
         #print('Коэффициент регрессии значимо не отличается от ', beta_0, ' с вероятностью 90%')
     return [t_kr, t_st, beta_]
 
-def confidence_interval(b, t_kr, beta_):
+def confidence_interval(beta_st, test):
 
-    t_kr = input_json['TCriterion']
-    c = input_json['C']
-    c = input_json['C']
+    b = beta_st[0]
+    t_kr = test[0]
+    beta_ = test[2]
 
     low = b - t_kr * np.sqrt(((b - beta_) ** 2) / 5)
     up = b + t_kr * np.sqrt(((b - beta_) ** 2) / 5)
@@ -173,9 +176,8 @@ def confidence_interval(b, t_kr, beta_):
 
 #------------------------------------------------------------------------------
 # 3.1
-# Return C#/.NET => ''
+# Return C#/.NET type => ''
 #------------------------------------------------------------------------------
 def determining_unpopular_pastime_task1(input_csv):
-    sio = StringIO(input_csv) 
-    data = pd.read_csv(sio)
+    csv = pd.read_csv(StringIO(input_csv))
     return "service determining_unpopular_pastime_task1"

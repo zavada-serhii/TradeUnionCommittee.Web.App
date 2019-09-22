@@ -11,9 +11,8 @@ from io import StringIO
 
 #------------------------------------------------------------------------------
 # 5.1
-# Return C#/.NET => ''
+# Return C#/.NET type => ''
 #------------------------------------------------------------------------------
 def checking_relevance_wellness_trips_task1(input_csv):
-    sio = StringIO(input_csv) 
-    data = pd.read_csv(sio)
+    csv = pd.read_csv(StringIO(input_csv))
     return "service checking_relevance_wellness_trips_task1"

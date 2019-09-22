@@ -4,7 +4,7 @@ import Services.ForecastingService as service
 
 #------------------------------------------------------------------------------
 # 1.1 - 1.2
-# Return C#/.NET => 'List<List<double>>'
+# Return C#/.NET type => ''
 #------------------------------------------------------------------------------
 @app.route('/api/Forecasting/ActualingTrips/Task1', methods=['POST'])
 def forecasting_actualing_trips_task1():
@@ -13,7 +13,7 @@ def forecasting_actualing_trips_task1():
 
 #------------------------------------------------------------------------------
 # 1.3
-# Return C#/.NET type => 'String'
+# Return C#/.NET type => ''
 #------------------------------------------------------------------------------
 @app.route('/api/Forecasting/ActualingTrips/Task3', methods=['POST'])
 def forecasting_actualing_trips_task3():
@@ -22,7 +22,7 @@ def forecasting_actualing_trips_task3():
 
 #------------------------------------------------------------------------------
 # 1.4
-# Return C#/.NET type => 'String'
+# Return C#/.NET type => ''
 #------------------------------------------------------------------------------
 @app.route('/api/Forecasting/ActualingTrips/Task4', methods=['POST'])
 def forecasting_actualing_trips_task4():

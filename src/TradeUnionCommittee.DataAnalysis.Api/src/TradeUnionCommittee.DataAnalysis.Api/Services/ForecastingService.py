@@ -13,38 +13,36 @@ from Models.ClusterModel import Cluster
 
 #------------------------------------------------------------------------------
 # 1.1 - 1.2
-# Return C#/.NET => 'List<List<double>>'
+# Return C#/.NET type => ''
 #------------------------------------------------------------------------------
 def correlation_analysis(input_csv):
 
-    sio = StringIO(input_csv) 
-    data = pd.read_csv(sio)
+    csv = pd.read_csv(StringIO(input_csv))
 
-    correlation = data.corr()
+    correlation = csv.corr()
     return str(np.array(correlation).tolist())
 
 #------------------------------------------------------------------------------
 # 1.3
-# Return C#/.NET type => 'String'
+# Return C#/.NET type => ''
 #------------------------------------------------------------------------------
 def checking_significance_coefficients(input_csv):
-    
-    sio = StringIO(input_csv) 
-    data = pd.read_csv(sio)
-    columns = list(data.head(0))
+
+    csv = pd.read_csv(StringIO(input_csv))
+    columns = list(csv.head(0))
 
     result = ''
-    corr_matr = data.corr()
+    corr_matr = csv.corr()
     matr = np.zeros((len(corr_matr), len(corr_matr)))
 
-    for i in range(len(data.corr()) - 1):
+    for i in range(len(csv.corr()) - 1):
         j = 0
-        while(j < len(data.corr())):
+        while(j < len(csv.corr())):
             if(j < i or j == i):
                 j = i + 1
             matr[i][j] = corr_matr[columns[i]][columns[j]]
             result += ''
-            result += f'Для парного коэффициента: {columns[i]} - {columns[j]} тест на значимость: {test_for_paired(matr[i][j], data)}\n'
+            result += f'Для парного коэффициента: {columns[i]} - {columns[j]} тест на значимость: {test_for_paired(matr[i][j], csv)}\n'
             j += 1
     return result
 
@@ -62,26 +60,30 @@ def test_for_paired(c, data):
 
 #------------------------------------------------------------------------------
 # 1.4
-# Return C#/.NET type => 'String'
+# Return C#/.NET type => ''
 #------------------------------------------------------------------------------
 def cluster_analysis(input_json):
 
-    raw1 = input_json['X']
-    raw2 = input_json['Y']
-    k = input_json['CountCluster']
+    json = loads(input_json, preserve_order=True)
 
-    x = [[] for i in range(k)]
-    y = [[] for i in range(k)]
+    csv = pd.read_csv(StringIO(json['Csv'])) 
+    countCluster = json['CountCluster']
+
+    raw1 = csv['X']
+    raw2 = csv['Y']
+
+    x = [[] for i in range(countCluster)]
+    y = [[] for i in range(countCluster)]
 
     X = np.array(list(zip(raw1, raw2)))
-    kmeans = KMeans(n_clusters=k, random_state=0).fit(X)
+    kmeans = KMeans(n_clusters=countCluster, random_state=0).fit(X)
 
     centers = kmeans.cluster_centers_
     Y = X[:, 1]
     X = X[:, 0]
     for i in range(len(Y)):
-        distances = np.zeros(k)
-        for j in range(k):
+        distances = np.zeros(countCluster)
+        for j in range(countCluster):
             distances[j] = dist(X[i], centers[j][0], Y[i], centers[j][1])
         indx = np.argmin(distances)
         x[indx].append(X[i])
