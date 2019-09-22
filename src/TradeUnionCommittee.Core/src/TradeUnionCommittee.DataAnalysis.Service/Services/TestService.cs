@@ -152,13 +152,11 @@ namespace TradeUnionCommittee.DataAnalysis.Service.Services
             var csvData = new List<object>();
             const string resource = "api/Forecasting/ActualingTrips/Task4";
 
-            var request = new RestRequest(resource, Method.POST) { RequestFormat = DataFormat.Json };
-
             for (var i = 0; i < 1000; i++)
             {
                 csvData.Add(new
                 {
-                    X = random.Next(0,15),
+                    X = random.Next(0, 15),
                     Y = random.Next(0, 15)
                 });
             }
@@ -168,6 +166,8 @@ namespace TradeUnionCommittee.DataAnalysis.Service.Services
                 Csv = CsvSerializer.SerializeToString(csvData),
                 CountCluster = 4
             });
+
+            var request = new RestRequest(resource, Method.POST) { RequestFormat = DataFormat.Json };
             request.AddBody(json);
 
             var response = _client.Execute(request);
