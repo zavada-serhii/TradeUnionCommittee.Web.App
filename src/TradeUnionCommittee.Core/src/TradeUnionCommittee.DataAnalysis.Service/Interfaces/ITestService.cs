@@ -9,8 +9,6 @@ namespace TradeUnionCommittee.DataAnalysis.Service.Interfaces
         IEnumerable<TestModel> TestPostJson();
         string TestPostCsv();
 
-        Dictionary<string, bool> TestTask_1();
-        Dictionary<string, bool> TestTask_2();
-        Dictionary<string, bool> TestTasks_3_4_5();
+        Dictionary<string, bool> RunAllTasks();
     }
 }

@@ -87,16 +87,22 @@ namespace TradeUnionCommittee.DataAnalysis.Service.Services
 
         //--------------------------------------------------------------------------------
 
-        #region Task 1
+        #region Run tests
 
-        public Dictionary<string, bool> TestTask_1()
+        public Dictionary<string, bool> RunAllTasks()
         {
             var allData = new Dictionary<string, bool>();
 
             var data = new List<Dictionary<string, bool>>
             {
                 TestTask_11_12_13(),
-                TestTask_14()
+                TestTask_14(),
+
+                TestTask_21_22_23_24(),
+                TestTask_25(),
+                TestTask_26(),
+
+                TestTasks_3_4_5()
             };
 
             foreach (var tmp in data)
@@ -109,6 +115,10 @@ namespace TradeUnionCommittee.DataAnalysis.Service.Services
 
             return allData;
         }
+
+        #endregion
+
+        #region Task 1
 
         private Dictionary<string, bool> TestTask_11_12_13()
         {
@@ -140,7 +150,7 @@ namespace TradeUnionCommittee.DataAnalysis.Service.Services
                 request.AddBody(csv);
 
                 var response = _client.Execute(request);
-                result.Add(action, response.StatusCode == HttpStatusCode.OK);
+                result.Add($"Task 1 | {action}", response.StatusCode == HttpStatusCode.OK);
             }
 
             return result;
@@ -171,34 +181,12 @@ namespace TradeUnionCommittee.DataAnalysis.Service.Services
             request.AddBody(json);
 
             var response = _client.Execute(request);
-            return new Dictionary<string, bool> { { resource, response.StatusCode == HttpStatusCode.OK } };
+            return new Dictionary<string, bool> { { $"Task 1 | {resource}", response.StatusCode == HttpStatusCode.OK } };
         }
 
         #endregion
 
         #region Task 2
-
-        public Dictionary<string, bool> TestTask_2()
-        {
-            var allData = new Dictionary<string, bool>();
-
-            var data = new List<Dictionary<string, bool>>
-            {
-                TestTask_21_22_23_24(),
-                TestTask_25(),
-                TestTask_26()
-            };
-
-            foreach (var tmp in data)
-            {
-                foreach (var (key, value) in tmp)
-                {
-                    allData.Add(key, value);
-                }
-            }
-
-            return allData;
-        }
 
         private Dictionary<string, bool> TestTask_21_22_23_24()
         {
@@ -233,7 +221,7 @@ namespace TradeUnionCommittee.DataAnalysis.Service.Services
                 request.AddBody(csv);
 
                 var response = _client.Execute(request);
-                result.Add(action, response.StatusCode == HttpStatusCode.OK);
+                result.Add($"Task 2 | {action}", response.StatusCode == HttpStatusCode.OK);
             }
 
             return result;
@@ -267,7 +255,7 @@ namespace TradeUnionCommittee.DataAnalysis.Service.Services
             request.AddBody(json);
 
             var response = _client.Execute(request);
-            return new Dictionary<string, bool> { { resource, response.StatusCode == HttpStatusCode.OK } };
+            return new Dictionary<string, bool> { { $"Task 2 | {resource}", response.StatusCode == HttpStatusCode.OK } };
         }
 
         private Dictionary<string, bool> TestTask_26()
@@ -295,7 +283,7 @@ namespace TradeUnionCommittee.DataAnalysis.Service.Services
             request.AddBody(json);
 
             var response = _client.Execute(request);
-            return new Dictionary<string, bool> { { resource, response.StatusCode == HttpStatusCode.OK } };
+            return new Dictionary<string, bool> { { $"Task 2 | {resource}", response.StatusCode == HttpStatusCode.OK } };
         }
 
         #endregion
@@ -307,6 +295,7 @@ namespace TradeUnionCommittee.DataAnalysis.Service.Services
             var random = new Random();
             var testData = new List<object>();
             var result = new Dictionary<string, bool>();
+            var taskNumber = 3;
 
             IEnumerable<string> actions = new List<string>
             {
@@ -333,7 +322,9 @@ namespace TradeUnionCommittee.DataAnalysis.Service.Services
                 request.AddBody(csv);
 
                 var response = _client.Execute(request);
-                result.Add(action, response.StatusCode == HttpStatusCode.OK);
+                result.Add($"Task {taskNumber} | {action}", response.StatusCode == HttpStatusCode.OK);
+
+                taskNumber++;
             }
 
             return result;

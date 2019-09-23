@@ -29,9 +29,7 @@ namespace TradeUnionCommittee.BLL.Services.Dashboard
             //var tmp2 = _testService.TestPostJson();
             //var tmp3 = _testService.TestPostCsv();
 
-            //var tmp4 = _testService.TestTask_1();
-            //var tmp5 = _testService.TestTask_2();
-            //var tmp6 = _testService.TestTasks_3_4_5();
+            //var tmp4 = _testService.RunAllTasks();
 
             const int count = 12;
             return new PieResult
