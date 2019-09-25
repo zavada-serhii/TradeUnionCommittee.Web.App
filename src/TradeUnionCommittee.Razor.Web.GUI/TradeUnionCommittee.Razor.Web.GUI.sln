@@ -29,6 +29,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TradeUnionCommittee.ViewMod
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TradeUnionCommittee.Core.UnitTests", "..\TradeUnionCommittee.Core\tests\TradeUnionCommittee.Core.UnitTests\TradeUnionCommittee.Core.UnitTests.csproj", "{91612A61-17CA-41B8-BAD8-9CC071B8A02C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TradeUnionCommittee.Razor.Web.GUI", "src\TradeUnionCommittee.Razor.Web.GUI\TradeUnionCommittee.Razor.Web.GUI.csproj", "{DD4111C7-4E37-4FFC-AFDF-B940D3D5D56C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -79,6 +81,10 @@ Global
 		{91612A61-17CA-41B8-BAD8-9CC071B8A02C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{91612A61-17CA-41B8-BAD8-9CC071B8A02C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{91612A61-17CA-41B8-BAD8-9CC071B8A02C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DD4111C7-4E37-4FFC-AFDF-B940D3D5D56C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DD4111C7-4E37-4FFC-AFDF-B940D3D5D56C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DD4111C7-4E37-4FFC-AFDF-B940D3D5D56C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DD4111C7-4E37-4FFC-AFDF-B940D3D5D56C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -95,6 +101,7 @@ Global
 		{C344021E-7C15-4C18-A74B-9A7D567A5962} = {1446E4EE-1981-4B3D-9482-DACB2C76229B}
 		{971558A5-61D9-4391-B9A3-6FA16A634035} = {1446E4EE-1981-4B3D-9482-DACB2C76229B}
 		{91612A61-17CA-41B8-BAD8-9CC071B8A02C} = {3F65B0E3-AAFE-486C-8ABC-D85F1758D83D}
+		{DD4111C7-4E37-4FFC-AFDF-B940D3D5D56C} = {1446E4EE-1981-4B3D-9482-DACB2C76229B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {2044480E-6D38-45B3-9A7B-56E24CD597CC}
