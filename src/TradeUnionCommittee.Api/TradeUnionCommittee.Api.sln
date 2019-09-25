@@ -7,8 +7,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{F90DF1C8-45A
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{FF227AA7-2A30-4462-9FB2-CBC14ED12833}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TradeUnionCommittee.Api", "src\TradeUnionCommittee.Api\TradeUnionCommittee.Api.csproj", "{6EC41B98-4F14-45C4-97D0-9652809ECABF}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TradeUnionCommittee.BLL", "..\TradeUnionCommittee.Core\src\TradeUnionCommittee.BLL\TradeUnionCommittee.BLL.csproj", "{64FB4C15-5C0D-40CB-BD1E-2C093061491C}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TradeUnionCommittee.CloudStorage.Service", "..\TradeUnionCommittee.Core\src\TradeUnionCommittee.CloudStorage.Service\TradeUnionCommittee.CloudStorage.Service.csproj", "{03B64B5D-9537-46AA-B07E-0AB302526443}"
@@ -37,10 +35,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{6EC41B98-4F14-45C4-97D0-9652809ECABF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6EC41B98-4F14-45C4-97D0-9652809ECABF}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6EC41B98-4F14-45C4-97D0-9652809ECABF}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6EC41B98-4F14-45C4-97D0-9652809ECABF}.Release|Any CPU.Build.0 = Release|Any CPU
 		{64FB4C15-5C0D-40CB-BD1E-2C093061491C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{64FB4C15-5C0D-40CB-BD1E-2C093061491C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{64FB4C15-5C0D-40CB-BD1E-2C093061491C}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -90,7 +84,6 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{6EC41B98-4F14-45C4-97D0-9652809ECABF} = {F90DF1C8-45A8-45E1-AD25-D9893D612B1F}
 		{64FB4C15-5C0D-40CB-BD1E-2C093061491C} = {F90DF1C8-45A8-45E1-AD25-D9893D612B1F}
 		{03B64B5D-9537-46AA-B07E-0AB302526443} = {F90DF1C8-45A8-45E1-AD25-D9893D612B1F}
 		{22C339E4-3DC8-44B3-96AB-075156C49C1B} = {F90DF1C8-45A8-45E1-AD25-D9893D612B1F}
