@@ -1,5 +1,5 @@
 from os import environ
-from controllers import app
+from Controllers import app
 
 if __name__ == '__main__':
     HOST = environ.get('SERVER_HOST', '0.0.0.0')

@@ -11,6 +11,7 @@ using TradeUnionCommittee.BLL.Helpers;
 using TradeUnionCommittee.BLL.Interfaces.Directory;
 using TradeUnionCommittee.DAL.EF;
 using TradeUnionCommittee.DAL.Entities;
+using TradeUnionCommittee.DataAnalysis.Service.Interfaces;
 
 namespace TradeUnionCommittee.BLL.Services.Directory
 {

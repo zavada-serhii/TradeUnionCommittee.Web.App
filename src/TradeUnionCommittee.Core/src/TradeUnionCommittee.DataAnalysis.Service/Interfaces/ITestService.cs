@@ -6,6 +6,9 @@ namespace TradeUnionCommittee.DataAnalysis.Service.Interfaces
     public interface ITestService
     {
         bool HealthCheck();
-        IEnumerable<TestModel> TestPost();
+        IEnumerable<TestModel> TestPostJson();
+        string TestPostCsv();
+
+        Dictionary<string, bool> RunAllTasks();
     }
 }

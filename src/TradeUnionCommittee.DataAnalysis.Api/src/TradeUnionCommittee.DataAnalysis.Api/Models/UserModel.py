@@ -1,4 +1,4 @@
-class Test :
+class User :
     id = 0
     fullName = ""
     email = ""
