@@ -25,12 +25,6 @@ namespace TradeUnionCommittee.BLL.Services.Dashboard
 
         public PieResult PieData_Test()
         {
-            //var tmp1 = _testService.HealthCheck();
-            //var tmp2 = _testService.TestPostJson();
-            //var tmp3 = _testService.TestPostCsv();
-
-            //var tmp4 = _testService.RunAllTasks();
-
             const int count = 12;
             return new PieResult
             {
