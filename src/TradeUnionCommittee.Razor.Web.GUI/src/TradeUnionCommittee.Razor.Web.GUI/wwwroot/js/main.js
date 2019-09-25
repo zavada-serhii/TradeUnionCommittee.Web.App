@@ -1,0 +1,3 @@
+$(function () {
+    $('#errorModal').modal('show');
+});

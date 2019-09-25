@@ -1,0 +1,88 @@
+﻿@model TradeUnionCommittee.ViewModels.ViewModels.Employee.UpdatePositionEmployeesViewModel
+@{
+    ViewData["Title"] = "Update";
+    Layout = "_Layout";
+}
+
+<section class="add-user container-fluid">
+    <div class="row justify-content-center">
+        <div class="col-md-12 add-user_block">
+
+            <div class="row align-items-center mt-3">
+                <div class="col-md-10">
+                    <h1>Основна посада</h1>
+                </div>
+            </div>
+            <hr>
+            @if (TempData["ErrorsList"] == null)
+            {
+                <form asp-action="Update">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                    <input type="hidden" asp-for="HashId" />
+                    <input type="hidden" asp-for="HashIdEmployee" />
+                    <input type="hidden" asp-for="RowVersion" />
+
+                    <div class="row">
+                        <div class="form-group col-lg-4 col-xl-6">
+                            <label asp-for="HashIdPosition" class="control-label required">Посада</label><br>
+                            <select asp-for="HashIdPosition" asp-items="@ViewBag.Position" class="custom-select"></select>
+                            <span asp-validation-for="HashIdPosition" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group col-lg-4 col-xl-6">
+                            <label asp-for="HashIdSubdivision" class="control-label required">Структурниий підрозділ</label><br>
+                            <select asp-for="HashIdSubdivision" asp-items="@ViewBag.Subdivisions" class="custom-select"></select>
+                            <span asp-validation-for="HashIdSubdivision" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group col-lg-4 col-xl-6">
+                            <label asp-for="StartDate" class="control-label required">Дата початку</label>
+                            <input asp-for="StartDate" type="date" class="form-control">
+                            <span asp-validation-for="StartDate" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group col-lg-4 col-xl-6">
+                            <label asp-for="EndDate" class="control-label">Дата закінчення</label>
+                            <input asp-for="EndDate" type="date" class="form-control">
+                            <span asp-validation-for="EndDate" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group col-lg-3">
+                            <label class="custom-control custom-checkbox">
+                                <input type="checkbox" asp-for="CheckPosition" class="custom-control-input dinamic">
+                                <span class="custom-control-indicator"></span>
+                                <span class="custom-control-description">В даний час на посаді?</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="row justify-content-between">
+                        <div class="form-group col-lg-3">
+                            <div>
+                                <a asp-controller="Employee" asp-action="Index" asp-route-id="@Model.HashIdEmployee">Повернутися</a>
+                            </div>
+                        </div>
+                        <div class="col-md-6 text-right">
+                            <input type="submit" value="Зберегти" class="btn btn-success btn-default" />
+                        </div>
+                    </div>
+
+                </form>
+            }
+            else
+            {
+                await Html.RenderPartialAsync("_Errors", TempData["ErrorsList"]);
+            }
+        </div>
+    </div>
+</section>
+
+@if (TempData["ErrorsListConfirmed"] != null)
+{
+    await Html.RenderPartialAsync("_Errors", TempData["ErrorsListConfirmed"]);
+}

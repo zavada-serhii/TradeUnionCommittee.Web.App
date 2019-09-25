@@ -1,0 +1,67 @@
+﻿@model TradeUnionCommittee.ViewModels.ViewModels.Family.CreateFamilyViewModel
+@{
+    ViewData["Title"] = "Create";
+}
+
+<section class="add-user container-fluid">
+    <div class="row justify-content-center">
+        <div class="col-md-12 add-user_block">
+
+            <div class="row align-items-center mt-3">
+                <div class="col-md-10">
+                    <h1>Додати члена сім'ї</h1>
+                </div>
+            </div>
+            <hr>
+            <form asp-action="Create">
+
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                <input type="hidden" asp-for="HashIdEmployee" />
+
+                <div class="row">
+                    <div class="form-group col-lg-4 col-xl-4">
+                        <label asp-for="FirstName">Прізвище</label>
+                        <input asp-for="FirstName" type="text" class="form-control">
+                        <span asp-validation-for="FirstName" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group col-lg-4 col-xl-4">
+                        <label asp-for="SecondName">Ім'я</label>
+                        <input asp-for="SecondName" type="text" class="form-control">
+                        <span asp-validation-for="SecondName" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group col-lg-4 col-xl-4">
+                        <label asp-for="Patronymic">По батькові</label>
+                        <input asp-for="Patronymic" type="text" class="form-control">
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group col-lg-4 col-xl-4">
+                        <label asp-for="BirthDate" class="control-label required">Дата народження</label>
+                        <input asp-for="BirthDate" type="date" class="form-control">
+                    </div>
+                </div>
+
+                <div class="row justify-content-between">
+                    <div class="form-group col-lg-3">
+                        <div>
+                            <a asp-action="Index" asp-route-id="@Model.HashIdEmployee">Повернутися</a>
+                        </div>
+                    </div>
+                    <div class="col-md-6 text-right">
+                        <input type="submit" value="Додати" class="btn btn-success btn-default" />
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</section>
+
+@if (TempData["ErrorsList"] != null)
+{
+    await Html.RenderPartialAsync("_Errors", TempData["ErrorsList"]);
+}
