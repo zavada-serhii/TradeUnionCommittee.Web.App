@@ -70,18 +70,14 @@ namespace TradeUnionCommittee.Razor.Web.GUI
                     Configuration.GetSection("CloudStorageConnection").Get<CloudStorageConnection>(),
                     Configuration.GetSection("RestConnection").Get<RestConnection>(),
                     Configuration.GetSection("HashIdConfigurationSetting").Get<HashIdConfigurationSetting>())
-                .AddTradeUnionCommitteeViewModelsModule()
-                .AddResponseCompression()
-                .AddDistributedMemoryCache()
-                .AddSession()
-                .Configure<GzipCompressionProviderOptions>(options =>
-                {
-                    options.Level = CompressionLevel.Optimal;
-                })
-                .AddResponseCompression(options =>
-                {
-                    options.EnableForHttps = true;
-                });
+                .AddTradeUnionCommitteeViewModelsModule();
+
+            services.AddResponseCompression()
+                    .AddDistributedMemoryCache()
+                    .Configure<GzipCompressionProviderOptions>(options => { options.Level = CompressionLevel.Optimal; })
+                    .AddResponseCompression(options => { options.EnableForHttps = true; });
+
+            services.AddSession();
 
             services.AddControllersWithViews()
                     .AddTradeUnionCommitteeValidationModule();
@@ -103,10 +99,10 @@ namespace TradeUnionCommittee.Razor.Web.GUI
                 app.UseHsts();
             }
 
-            app.UseResponseCompression();
             app.UseHttpsRedirection();
-            app.UseStaticFiles();
             app.UseRouting();
+            app.UseResponseCompression();
+            app.UseStaticFiles();
             app.UseAuthentication();
             app.UseAuthorization();
             app.UseCookiePolicy();
