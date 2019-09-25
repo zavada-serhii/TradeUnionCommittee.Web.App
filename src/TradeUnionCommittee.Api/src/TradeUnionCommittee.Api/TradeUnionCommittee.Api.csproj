@@ -12,4 +12,9 @@
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.9.5" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\TradeUnionCommittee.Core\src\TradeUnionCommittee.BLL\TradeUnionCommittee.BLL.csproj" />
+    <ProjectReference Include="..\..\..\TradeUnionCommittee.Core\src\TradeUnionCommittee.ViewModels\TradeUnionCommittee.ViewModels.csproj" />
+  </ItemGroup>
+
 </Project>
