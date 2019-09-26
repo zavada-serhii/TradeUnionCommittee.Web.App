@@ -63,7 +63,7 @@ namespace TradeUnionCommittee.Api.Controllers.Directory
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(typeof(DirectoryDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(IEnumerable<string>), StatusCodes.Status404NotFound)]
-        [Authorize(Roles = "Admin,Accountant,Deputy", AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        //[Authorize(Roles = "Admin,Accountant,Deputy", AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> Get([Required] string id)
         {
             var result = await _services.GetAsync(id);
@@ -89,7 +89,7 @@ namespace TradeUnionCommittee.Api.Controllers.Directory
             if (result.IsValid)
             {
                 await _systemAuditService.AuditAsync(User.GetEmail(), _accessor.GetIp(), Operations.Insert, Tables.Position);
-                return CreatedAtRoute("GetPosition", new { id = result.Result }, vm);
+                return CreatedAtRoute("GetPosition", new { version = "1.0", controller = "Position", id = result.Result }, vm);
             }
             return UnprocessableEntity(result.ErrorsList);
         }

@@ -110,7 +110,7 @@ namespace TradeUnionCommittee.Api.Controllers.Directory
             if (result.IsValid)
             {
                 await _systemAuditService.AuditAsync(User.GetEmail(), _accessor.GetIp(), Operations.Insert, Tables.Subdivisions);
-                return CreatedAtRoute("GetSubdivision", new { id = result.Result }, vm);
+                return CreatedAtRoute("GetSubdivision", new { version = "1.0", controller = "Subdivision", id = result.Result }, vm);
             }
             return UnprocessableEntity(result.ErrorsList);
         }
@@ -130,7 +130,7 @@ namespace TradeUnionCommittee.Api.Controllers.Directory
             if (result.IsValid)
             {
                 await _systemAuditService.AuditAsync(User.GetEmail(), _accessor.GetIp(), Operations.Insert, Tables.Subdivisions);
-                return CreatedAtRoute("GetSubdivision", new { id = result.Result }, vm);
+                return CreatedAtRoute("GetSubdivision", new { version = "1.0", controller = "Subdivision", id = result.Result }, vm);
             }
             return UnprocessableEntity(result.ErrorsList);
         }
