@@ -5,7 +5,7 @@ CREATE TABLE "Employee"(
         "Patronymic" 		VARCHAR         NULL,
         "Sex" 			VARCHAR         NOT NULL        CHECK ("Sex" ~ '^Male$'::TEXT OR "Sex" ~ '^Female$'::TEXT),
         "BirthDate" 		DATE 		NOT NULL,
-        "IdentificationСode" 	VARCHAR         NULL            CHECK ("IdentificationСode" ~ '^\d{10}$'::TEXT) 			UNIQUE,
+        "IdentificationCode" 	VARCHAR         NULL            CHECK ("IdentificationCode" ~ '^\d{10}$'::TEXT) 			UNIQUE,
         "MechnikovCard" 	VARCHAR         NULL            CHECK ("MechnikovCard" ~ '^\d{1}\-\d{6}\-\d{6}$'::TEXT)			UNIQUE,
         "MobilePhone" 		VARCHAR         NULL            CHECK ("MobilePhone" ~ '^\+38\(\d{3}\)\d{3}\-\d{2}\-\d{2}$'::TEXT),
         "CityPhone" 		VARCHAR         NULL            CHECK ("CityPhone" ~ '^\d{3}\-\d{2}\-\d{1}$'::TEXT OR "CityPhone" ~ '^\d{3}\-\d{2}\-\d{2}$'::TEXT),

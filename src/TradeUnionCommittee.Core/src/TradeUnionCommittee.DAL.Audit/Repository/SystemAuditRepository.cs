@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Data.Common;
 using System.Linq;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using TradeUnionCommittee.DAL.Audit.EF;
 using TradeUnionCommittee.DAL.Audit.Entities;
@@ -39,10 +38,8 @@ namespace TradeUnionCommittee.DAL.Audit.Repository
             var table = new NpgsqlParameter("@5", journal.Table.ToString());
             var ip = new NpgsqlParameter("@6", journal.IpUser);
 
-            using (var dr = await _dbContext.Database.ExecuteSqlQueryAsync(sqlQuery, default(CancellationToken), guid, operation, dateTime, email, table, ip))
-            {
-                dr.DbDataReader.Close();
-            }
+            await using var dr = _dbContext.Database.ExecuteSqlQuery(sqlQuery, guid, operation, dateTime, email, table, ip);
+            dr.Close();
         }
 
         public async Task<IEnumerable<Journal>> FilterAsync(string email, DateTime startDate, DateTime endDate)
@@ -58,12 +55,11 @@ namespace TradeUnionCommittee.DAL.Audit.Repository
                 var par2 = new NpgsqlParameter("@2", startDate);
                 var par3 = new NpgsqlParameter("@3", endDate);
 
-                using (var dr = await _dbContext.Database.ExecuteSqlQueryAsync(SqlGenerator(namesPartitions), default(CancellationToken), par1, par2, par3))
+                using (var dr = _dbContext.Database.ExecuteSqlQuery(SqlGenerator(namesPartitions), par1, par2, par3))
                 {
-                    var reader = dr.DbDataReader;
-                    if (reader.HasRows)
+                    if (dr.HasRows)
                     {
-                        result.AddRange(from DbDataRecord dbDataRecord in reader select new Journal
+                        result.AddRange(from DbDataRecord dbDataRecord in dr select new Journal
                         {
                             Guid = dbDataRecord["Guid"].ToString(),
                             Operation = (Operations)Enum.Parse(typeof(Operations), dbDataRecord["Operation"].ToString()),
@@ -72,7 +68,7 @@ namespace TradeUnionCommittee.DAL.Audit.Repository
                             Table = (Tables)Enum.Parse(typeof(Tables), dbDataRecord["Table"].ToString())
                         });
                     }
-                    dr.DbDataReader.Close();
+                    dr.Close();
                 }
             }
             return result;
@@ -82,11 +78,10 @@ namespace TradeUnionCommittee.DAL.Audit.Repository
         {
             const string sqlQuery = "SELECT tablename FROM pg_tables WHERE schemaname = \'public\' AND tablename != \'Journal\';";
             var result = new List<string>();
-            using (var dr = await _dbContext.Database.ExecuteSqlQueryAsync(sqlQuery))
+            await using (var dr = _dbContext.Database.ExecuteSqlQuery(sqlQuery))
             {
-                var reader = dr.DbDataReader;
-                result.AddRange(from DbDataRecord dbDataRecord in reader select dbDataRecord["tablename"].ToString());
-                dr.DbDataReader.Close();
+                result.AddRange(from DbDataRecord dbDataRecord in dr select dbDataRecord["tablename"].ToString());
+                dr.Close();
             }
             return result;
         }

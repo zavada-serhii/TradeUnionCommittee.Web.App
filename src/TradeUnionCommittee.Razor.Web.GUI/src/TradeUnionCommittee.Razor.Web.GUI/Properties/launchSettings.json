@@ -3,8 +3,8 @@
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
     "iisExpress": {
-      "applicationUrl": "http://localhost:51889",
-      "sslPort": 44315
+      "applicationUrl": "http://localhost:53026",
+      "sslPort": 44372
     }
   },
   "profiles": {
@@ -15,7 +15,7 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
-    "TradeUnionCommittee.Mvc.Web.GUI": {
+    "TradeUnionCommittee.Razor.Web.GUI": {
       "commandName": "Project",
       "launchBrowser": true,
       "environmentVariables": {
@@ -26,7 +26,14 @@
     "Docker": {
       "commandName": "Docker",
       "launchBrowser": true,
-      "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}"
+      "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}",
+      "environmentVariables": {
+        "ASPNETCORE_URLS": "https://+:443;http://+:80",
+        "ASPNETCORE_HTTPS_PORT": "44373"
+      },
+      "httpPort": 53027,
+      "useSSL": true,
+      "sslPort": 44373
     }
   }
 }

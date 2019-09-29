@@ -127,7 +127,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Employee
         {
             try
             {
-                return new ActualResult<bool> { Result = await _context.Employee.AnyAsync(p => p.IdentificationСode == identificationCode) };
+                return new ActualResult<bool> { Result = await _context.Employee.AnyAsync(p => p.IdentificationCode == identificationCode) };
             }
             catch (Exception exception)
             {

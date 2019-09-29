@@ -42,7 +42,7 @@ namespace TradeUnionCommittee.DAL.Identity.EF
 
             using (var dr = Database.ExecuteSqlQuery(sql))
             {
-                dr.DbDataReader.Close();
+                dr.Close();
             }
 
             Clients.Add(new Client

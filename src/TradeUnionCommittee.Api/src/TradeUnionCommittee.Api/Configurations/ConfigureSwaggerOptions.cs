@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
-using Swashbuckle.AspNetCore.Swagger;
+using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
+using System;
+using System.Collections.Generic;
+using System.IO;
 
 namespace TradeUnionCommittee.Api.Configurations
 {
@@ -23,7 +23,7 @@ namespace TradeUnionCommittee.Api.Configurations
         {
             foreach (var description in _provider.ApiVersionDescriptions)
             {
-                options.SwaggerDoc(description.GroupName, new Info
+                options.SwaggerDoc(description.GroupName, new OpenApiInfo
                 {
                     Version = description.ApiVersion.ToString(),
                     Title = $"Trade Union Committee API {description.ApiVersion}",
@@ -31,20 +31,20 @@ namespace TradeUnionCommittee.Api.Configurations
                 });
             }
 
-            options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, "TradeUnionCommittee.Web.Api.xml"));
+            options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, "TradeUnionCommittee.Api.xml"));
 
-            options.AddSecurityDefinition("Bearer", new ApiKeyScheme
+            var openApiSecurityScheme = new OpenApiSecurityScheme
             {
-               In = "header",
-               Description = "Please enter into field the word 'Bearer' following by space and JWT",
-               Name = "Authorization",
-               Type = "apiKey"
-            });
+                In = ParameterLocation.Header,
+                Description = "Please enter into field the word 'Bearer' following by space and JWT",
+                Name = "Authorization",
+                Type = SecuritySchemeType.ApiKey,
+                Scheme = JwtBearerDefaults.AuthenticationScheme,
+                Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = JwtBearerDefaults.AuthenticationScheme }
+            };
 
-            options.AddSecurityRequirement(new Dictionary<string, IEnumerable<string>>
-            {
-                { "Bearer", Enumerable.Empty<string>() }
-            });
+            options.AddSecurityDefinition(JwtBearerDefaults.AuthenticationScheme, openApiSecurityScheme);
+            options.AddSecurityRequirement(new OpenApiSecurityRequirement{ { openApiSecurityScheme, new List<string>()} });
         }
     }
 }

@@ -133,15 +133,15 @@
 
                 </div>
 
-                @if (Model.IdentificationСode != null || Model.MechnikovCard != null)
+                @if (Model.IdentificationCode != null || Model.MechnikovCard != null)
                 {
                     <div class="row">
 
-                        @if (Model.IdentificationСode != null && (User.IsInRole("Admin") || User.IsInRole("Accountant")))
+                        @if (Model.IdentificationCode != null && (User.IsInRole("Admin") || User.IsInRole("Accountant")))
                         {
                             <div class="form-group col-md-4">
                                 <label>Iдентифiкацiйний код</label>
-                                <p class="h4">@Model.IdentificationСode</p>
+                                <p class="h4">@Model.IdentificationCode</p>
                             </div>
                         }
 

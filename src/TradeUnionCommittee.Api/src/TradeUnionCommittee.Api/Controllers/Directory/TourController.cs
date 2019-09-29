@@ -91,7 +91,7 @@ namespace TradeUnionCommittee.Api.Controllers.Directory
             if (result.IsValid)
             {
                 await _systemAuditService.AuditAsync(User.GetEmail(), _accessor.GetIp(), Operations.Insert, Tables.Event);
-                return CreatedAtRoute("GetTour", new { id = result.Result }, vm);
+                return CreatedAtRoute("GetTour", new { version = "1.0", controller = "Tour", id = result.Result }, vm);
             }
             return UnprocessableEntity(result.ErrorsList);
         }

@@ -92,20 +92,25 @@ services:
 
 
 
-  adminer:
-   image: adminer
-   container_name: adminer
+  pgAdmin4:
+   image: dpage/pgadmin4:latest
+   container_name: pgAdmin4
    restart: always
    networks:
             tradeunioncommittee_network:
                 ipv4_address: 172.28.1.10
    ports:
-     - "8080:8080"
+    - "16543:80"
+   depends_on:
+    - postgres
+   environment:
+    PGADMIN_DEFAULT_EMAIL: "stewie.griffin@test.com"
+    PGADMIN_DEFAULT_PASSWORD: "postgres"
 
 
 
   minio-node-1:
-   image: minio/minio:RELEASE.2019-04-18T01-15-57Z
+   image: minio/minio:RELEASE.2019-09-25T18-25-51Z
    container_name: minio-node-1
    restart: always
    networks:
@@ -123,7 +128,7 @@ services:
 
 
   minio-node-2:
-   image: minio/minio:RELEASE.2019-04-18T01-15-57Z
+   image: minio/minio:RELEASE.2019-09-25T18-25-51Z
    container_name: minio-node-2
    restart: always
    networks:
@@ -141,7 +146,7 @@ services:
 
 
   minio-node-3:
-   image: minio/minio:RELEASE.2019-04-18T01-15-57Z
+   image: minio/minio:RELEASE.2019-09-25T18-25-51Z
    container_name: minio-node-3
    restart: always
    networks:
@@ -159,7 +164,7 @@ services:
 
 
   minio-node-4:
-   image: minio/minio:RELEASE.2019-04-18T01-15-57Z
+   image: minio/minio:RELEASE.2019-09-25T18-25-51Z
    container_name: minio-node-4
    restart: always
    networks:

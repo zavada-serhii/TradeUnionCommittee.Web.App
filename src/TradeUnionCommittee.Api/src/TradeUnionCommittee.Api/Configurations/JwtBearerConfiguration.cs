@@ -163,22 +163,18 @@ namespace TradeUnionCommittee.Api.Configurations
 
         private string GetHash(string input)
         {
-            using (HashAlgorithm hashAlgorithm = new SHA512CryptoServiceProvider())
-            {
-                var byteValue = Encoding.UTF8.GetBytes(input + _authOptions.Value.HashRefreshToken);
-                var byteHash = hashAlgorithm.ComputeHash(byteValue);
-                return Convert.ToBase64String(byteHash);
-            }
+            using HashAlgorithm hashAlgorithm = new SHA512CryptoServiceProvider();
+            var byteValue = Encoding.UTF8.GetBytes(input + _authOptions.Value.HashRefreshToken);
+            var byteHash = hashAlgorithm.ComputeHash(byteValue);
+            return Convert.ToBase64String(byteHash);
         }
 
         private string GenerateRandomCryptographicKey(int keyLength)
         {
-            using (var rngCryptoServiceProvider = new RNGCryptoServiceProvider())
-            {
-                var randomBytes = new byte[keyLength];
-                rngCryptoServiceProvider.GetBytes(randomBytes);
-                return Convert.ToBase64String(randomBytes);
-            }
+            using var rngCryptoServiceProvider = new RNGCryptoServiceProvider();
+            var randomBytes = new byte[keyLength];
+            rngCryptoServiceProvider.GetBytes(randomBytes);
+            return Convert.ToBase64String(randomBytes);
         }
     }
 }

@@ -115,7 +115,7 @@ namespace TradeUnionCommittee.BLL.Services.PDF
             var id = _hashIdUtilities.DecryptLong(dto.HashIdEmployee);
             var result = await _context.MaterialAidEmployees
                 .Include(x => x.IdMaterialAidNavigation)
-                .Where(x => x.DateIssue.Between(dto.StartDate, dto.EndDate) && x.IdEmployee == id)
+                .Where(x => (x.DateIssue >= dto.StartDate && x.DateIssue <= dto.EndDate)  && x.IdEmployee == id)
                 .OrderBy(x => x.DateIssue)
                 .ToListAsync();
             return _mapperService.Mapper.Map<IEnumerable<MaterialIncentivesEmployeeEntity>>(result);
@@ -126,7 +126,7 @@ namespace TradeUnionCommittee.BLL.Services.PDF
             var id = _hashIdUtilities.DecryptLong(dto.HashIdEmployee);
             var result = await _context.AwardEmployees
                 .Include(x => x.IdAwardNavigation)
-                .Where(x => x.DateIssue.Between(dto.StartDate, dto.EndDate) && x.IdEmployee == id)
+                .Where(x => (x.DateIssue >= dto.StartDate && x.DateIssue <= dto.EndDate) && x.IdEmployee == id)
                 .OrderBy(x => x.DateIssue)
                 .ToListAsync();
             return _mapperService.Mapper.Map<IEnumerable<MaterialIncentivesEmployeeEntity>>(result);
@@ -137,7 +137,7 @@ namespace TradeUnionCommittee.BLL.Services.PDF
             var id = _hashIdUtilities.DecryptLong(dto.HashIdEmployee);
             var result = await _context.CulturalEmployees
                 .Include(x => x.IdCulturalNavigation)
-                .Where(x => x.DateVisit.Between(dto.StartDate, dto.EndDate) && x.IdEmployee == id)
+                .Where(x => (x.DateVisit >= dto.StartDate && x.DateVisit <= dto.EndDate) && x.IdEmployee == id)
                 .OrderBy(x => x.DateVisit)
                 .ToListAsync();
             return _mapperService.Mapper.Map<IEnumerable<CulturalEmployeeEntity>>(result);
@@ -148,8 +148,8 @@ namespace TradeUnionCommittee.BLL.Services.PDF
             var id = _hashIdUtilities.DecryptLong(dto.HashIdEmployee);
             var result = await _context.EventEmployees
                 .Include(x => x.IdEventNavigation)
-                .Where(x => x.StartDate.Between(dto.StartDate, dto.EndDate) &&
-                            x.EndDate.Between(dto.StartDate, dto.EndDate) &&
+                .Where(x => (x.StartDate >= dto.StartDate && x.StartDate <= dto.EndDate) &&
+                            (x.EndDate >= dto.StartDate && x.EndDate <= dto.EndDate) &&
                             x.IdEventNavigation.Type == typeEvent &&
                             x.IdEmployee == id)
                 .OrderBy(x => x.StartDate)
@@ -161,7 +161,7 @@ namespace TradeUnionCommittee.BLL.Services.PDF
         {
             var id = _hashIdUtilities.DecryptLong(dto.HashIdEmployee);
             var result = await _context.GiftEmployees
-                .Where(x => x.DateGift.Between(dto.StartDate, dto.EndDate) && x.IdEmployee == id)
+                .Where(x => (x.DateGift >= dto.StartDate && x.DateGift <= dto.EndDate) && x.IdEmployee == id)
                 .OrderBy(x => x.DateGift)
                 .ToListAsync();
             return _mapperService.Mapper.Map<IEnumerable<GiftEmployeeEntity>>(result);

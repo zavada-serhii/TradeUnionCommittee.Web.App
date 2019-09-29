@@ -19,7 +19,7 @@
     {
         MobilePhone = 0,
         CityPhone = 1,
-        IdentificationСode = 2,
+        IdentificationCode = 2,
         MechnikovCard = 3
     }
 }

@@ -1,12 +1,12 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
@@ -29,7 +29,9 @@ namespace TradeUnionCommittee.Api
 {
     public class Startup
     {
-        public Startup(IHostingEnvironment hostingEnvironment)
+        public IConfiguration Configuration { get; }
+
+        public Startup(IHostEnvironment hostingEnvironment)
         {
             var builder = new ConfigurationBuilder()
                 .SetBasePath(hostingEnvironment.ContentRootPath)
@@ -48,8 +50,6 @@ namespace TradeUnionCommittee.Api
                 .WriteTo.Console(LogEventLevel.Information)
                 .CreateLogger();
         }
-
-        public IConfiguration Configuration { get; }
 
         public void ConfigureServices(IServiceCollection services)
         {
@@ -78,41 +78,29 @@ namespace TradeUnionCommittee.Api
                     Configuration.GetSection("CloudStorageConnection").Get<CloudStorageConnection>(),
                     Configuration.GetSection("RestConnection").Get<RestConnection>(),
                     Configuration.GetSection("HashIdConfigurationSetting").Get<HashIdConfigurationSetting>())
-                .AddTradeUnionCommitteeViewModelsModule()
-                .AddResponseCompression()
-                .AddMvc()
-                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
-                .AddTradeUnionCommitteeValidationModule();
+                .AddTradeUnionCommitteeViewModelsModule();
 
-            services.AddApiVersioning(options => options.ReportApiVersions = true);
-            services.AddVersionedApiExplorer(options =>
-            {
-                options.GroupNameFormat = "'v'VVV";
-                options.SubstituteApiVersionInUrl = true;
-            });
-            services.AddSwaggerGen();
+            services.AddResponseCompression()
+                    .Configure<GzipCompressionProviderOptions>(options => { options.Level = CompressionLevel.Optimal; })
+                    .AddResponseCompression(options => { options.EnableForHttps = true; });
 
-            services.Configure<GzipCompressionProviderOptions>(options =>
-            {
-                options.Level = CompressionLevel.Optimal;
-            });
+            services.AddApiVersioning(options => options.ReportApiVersions = true)
+                    .AddVersionedApiExplorer(options => { options.GroupNameFormat = "'v'VVV"; options.SubstituteApiVersionInUrl = true; })
+                    .AddSwaggerGen();
 
-            services.AddResponseCompression(options =>
-            {
-                options.EnableForHttps = true;
-            });
+            services.AddControllers()
+                    .AddTradeUnionCommitteeValidationModule();
 
             DependencyInjectionSystem(services);
         }
 
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, IApiVersionDescriptionProvider provider)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory, IApiVersionDescriptionProvider provider)
         {
             loggerFactory.AddSerilog();
 
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseDatabaseErrorPage();
             }
             else
             {
@@ -120,22 +108,26 @@ namespace TradeUnionCommittee.Api
             }
 
             app.UseHttpsRedirection();
-            app.UseDefaultFiles();
-            app.UseStaticFiles();
+            app.UseRouting();
             app.UseResponseCompression();
             app.UseCustomMiddlewares();
-
             app.UseAuthentication();
-            app.UseMvc();
+            app.UseAuthorization();
+
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
                 foreach (var description in provider.ApiVersionDescriptions)
                 {
-                    c.SwaggerEndpoint($"/swagger/{description.GroupName}/swagger.json", description.GroupName.ToUpperInvariant()); 
+                    c.SwaggerEndpoint($"/swagger/{description.GroupName}/swagger.json", description.GroupName.ToUpperInvariant());
                 }
                 c.DocExpansion(DocExpansion.None);
                 c.EnableValidator();
+            });
+
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
             });
         }
 

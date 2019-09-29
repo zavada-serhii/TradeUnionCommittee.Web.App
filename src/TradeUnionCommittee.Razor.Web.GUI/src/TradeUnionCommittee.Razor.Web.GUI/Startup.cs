@@ -1,17 +1,17 @@
-﻿using System;
-using System.IO.Compression;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Serilog;
 using Serilog.Events;
 using Serilog.Sinks.Elasticsearch;
+using System;
+using System.IO.Compression;
 using TradeUnionCommittee.BLL;
 using TradeUnionCommittee.BLL.Configurations;
 using TradeUnionCommittee.BLL.Extensions;
@@ -23,12 +23,14 @@ namespace TradeUnionCommittee.Razor.Web.GUI
 {
     public class Startup
     {
-        public Startup(IHostingEnvironment hostingEnvironment)
+        public IConfiguration Configuration { get; }
+
+        public Startup(IHostEnvironment hostEnvironment)
         {
             var builder = new ConfigurationBuilder()
-                .SetBasePath(hostingEnvironment.ContentRootPath)
+                .SetBasePath(hostEnvironment.ContentRootPath)
                 .AddJsonFile("appsettings.json", true, true)
-                .AddJsonFile($"appsettings.{hostingEnvironment.EnvironmentName}.json", reloadOnChange: true, optional: true)
+                .AddJsonFile($"appsettings.{hostEnvironment.EnvironmentName}.json", reloadOnChange: true, optional: true)
                 .AddEnvironmentVariables();
 
             Configuration = builder.Build();
@@ -42,9 +44,7 @@ namespace TradeUnionCommittee.Razor.Web.GUI
                 .WriteTo.Console(LogEventLevel.Information)
                 .CreateLogger();
         }
-
-        public IConfiguration Configuration { get; }
-
+       
         public void ConfigureServices(IServiceCollection services)
         {
             services.Configure<CookiePolicyOptions>(options =>
@@ -70,39 +70,28 @@ namespace TradeUnionCommittee.Razor.Web.GUI
                     Configuration.GetSection("CloudStorageConnection").Get<CloudStorageConnection>(),
                     Configuration.GetSection("RestConnection").Get<RestConnection>(),
                     Configuration.GetSection("HashIdConfigurationSetting").Get<HashIdConfigurationSetting>())
-                .AddTradeUnionCommitteeViewModelsModule()
-                .AddResponseCompression()
-                .AddMvc()
-                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
-                .AddTradeUnionCommitteeValidationModule();
+                .AddTradeUnionCommitteeViewModelsModule();
 
-            services.AddDistributedMemoryCache();
+            services.AddResponseCompression()
+                    .AddDistributedMemoryCache()
+                    .Configure<GzipCompressionProviderOptions>(options => { options.Level = CompressionLevel.Optimal; })
+                    .AddResponseCompression(options => { options.EnableForHttps = true; });
+
             services.AddSession();
 
-            services.Configure<GzipCompressionProviderOptions>(options =>
-            {
-                options.Level = CompressionLevel.Optimal;
-            });
-
-            services.AddResponseCompression(options =>
-            {
-                options.EnableForHttps = true;
-            });
+            services.AddControllersWithViews()
+                    .AddTradeUnionCommitteeValidationModule();
 
             DependencyInjectionSystem(services);
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
         {
             loggerFactory.AddSerilog();
-
-            //env.EnvironmentName = EnvironmentName.Production;
 
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseDatabaseErrorPage();
             }
             else
             {
@@ -110,17 +99,19 @@ namespace TradeUnionCommittee.Razor.Web.GUI
                 app.UseHsts();
             }
 
-            app.UseResponseCompression();
             app.UseHttpsRedirection();
+            app.UseRouting();
+            app.UseResponseCompression();
             app.UseStaticFiles();
             app.UseAuthentication();
+            app.UseAuthorization();
             app.UseCookiePolicy();
 
-            app.UseMvc(routes =>
+            app.UseEndpoints(endpoints =>
             {
-                routes.MapRoute(
+                endpoints.MapControllerRoute(
                     name: "default",
-                    template: "{controller=Home}/{action=Directory}/{id?}");
+                    pattern: "{controller=Home}/{action=Directory}/{id?}");
             });
         }
 

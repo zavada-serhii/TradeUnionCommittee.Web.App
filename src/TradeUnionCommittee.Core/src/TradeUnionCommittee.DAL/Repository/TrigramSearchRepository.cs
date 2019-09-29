@@ -68,9 +68,8 @@ namespace TradeUnionCommittee.DAL.Repository
 
             var result = new List<ResultFullNameSearch>();
             var parameter = new NpgsqlParameter("@fullName", fullName);
-            using (var dr = await _dbContext.Database.ExecuteSqlQueryAsync(sqlQuery, default(CancellationToken), parameter))
+            await using (var reader = _dbContext.Database.ExecuteSqlQuery(sqlQuery, parameter))
             {
-                var reader = dr.DbDataReader;
                 result.AddRange(from DbDataRecord dbDataRecord in reader select new ResultFullNameSearch
                 {
                     Id = (long)dbDataRecord["Id"],
