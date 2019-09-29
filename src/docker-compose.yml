@@ -92,15 +92,20 @@ services:
 
 
 
-  adminer:
-   image: adminer
-   container_name: adminer
+  pgAdmin4:
+   image: dpage/pgadmin4
+   container_name: pgAdmin4
    restart: always
    networks:
             tradeunioncommittee_network:
                 ipv4_address: 172.28.1.10
    ports:
-     - "8080:8080"
+    - "16543:80"
+   depends_on:
+    - postgres
+   environment:
+    PGADMIN_DEFAULT_EMAIL: "stewie.griffin@test.com"
+    PGADMIN_DEFAULT_PASSWORD: "postgres"
 
 
 
