@@ -2,7 +2,7 @@
 Information system for the primary trade union organization of the Odessa National Mechnikov University. The application is developed using technologies ASP.NET Core 3.0 MVC &amp; Api, Python/Flask, Docker, ELK Stack, Amazon S3 compatible storage and database management system PostgreSQL 11.
 
 # System architecture
-![](https://github.com/zavada-sergey/TradeUnionCommittee.Web.App/tree/master/blob/Architecture.png)
+![](https://github.com/zavada-sergey/TradeUnionCommittee.Web.App/blob/master/blob/Architecture.png)
 
 # Road map
 - [ ] Data Analysis Service
