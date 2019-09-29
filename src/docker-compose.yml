@@ -93,7 +93,7 @@ services:
 
 
   pgAdmin4:
-   image: dpage/pgadmin4
+   image: dpage/pgadmin4:latest
    container_name: pgAdmin4
    restart: always
    networks:
