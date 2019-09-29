@@ -14,8 +14,6 @@ namespace TradeUnionCommittee.DAL.CloudStorage.EF
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.HasAnnotation("ProductVersion", "2.2.0-rtm-35687");
-
             modelBuilder.Entity<ReportPdfBucket>(entity =>
             {
                 entity.Property(e => e.DateFrom).HasColumnType("date");
