@@ -106,9 +106,9 @@ namespace TradeUnionCommittee.Razor.Web.GUI.Controllers.Lists.Employee
 
         [AcceptVerbs("Get", "Post")]
         [Authorize(Roles = "Admin,Accountant")]
-        public async Task<IActionResult> CheckIdentificationСode([Required] string identificationСode)
+        public async Task<IActionResult> CheckIdentificationCode([Required] string identificationCode)
         {
-            var result = await _employeeService.CheckIdentificationCode(identificationСode);
+            var result = await _employeeService.CheckIdentificationCode(identificationCode);
             if (result.IsValid)
             {
                 return Json(!result.Result);

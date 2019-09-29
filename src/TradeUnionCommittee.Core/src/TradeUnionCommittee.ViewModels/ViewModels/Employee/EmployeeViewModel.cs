@@ -19,8 +19,8 @@ namespace TradeUnionCommittee.ViewModels.ViewModels.Employee
         public DateTime? BirthDate { get; set; }
         public int? StartYearWork { get; set; }
         public DateTime? StartDateTradeUnion { get; set; }
-        [Remote("CheckIdentificationСode", "Employee", ErrorMessage = "Цей ІНН вже використовуеться!")]
-        public string IdentificationСode { get; set; }
+        [Remote("CheckIdentificationCode", "Employee", ErrorMessage = "Цей ІНН вже використовуеться!")]
+        public string IdentificationCode { get; set; }
         [Remote("CheckMechnikovCard", "Employee", ErrorMessage = "Цей номер Mechnikov Card вже використовуеться!")]
         public string MechnikovCard { get; set; }
         public string MobilePhone { get; set; }
@@ -87,7 +87,7 @@ namespace TradeUnionCommittee.ViewModels.ViewModels.Employee
         public string Sex { get; set; }
 
         public DateTime BirthDate { get; set; }
-        public string IdentificationСode { get; set; }
+        public string IdentificationCode { get; set; }
         public string MechnikovCard { get; set; }
         public string MobilePhone { get; set; }
         public string CityPhone { get; set; }

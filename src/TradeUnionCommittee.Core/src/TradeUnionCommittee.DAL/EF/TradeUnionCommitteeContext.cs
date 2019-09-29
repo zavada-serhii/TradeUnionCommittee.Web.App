@@ -363,8 +363,8 @@ namespace TradeUnionCommittee.DAL.EF
 
             modelBuilder.Entity<Employee>(entity =>
             {
-                entity.HasIndex(e => e.IdentificationСode)
-                    .HasName("Employee_IdentificationСode_key")
+                entity.HasIndex(e => e.IdentificationCode)
+                    .HasName("Employee_IdentificationCode_key")
                     .IsUnique();
 
                 entity.HasIndex(e => e.MechnikovCard)
@@ -389,7 +389,7 @@ namespace TradeUnionCommittee.DAL.EF
                     .IsRequired()
                     .HasColumnType("character varying");
 
-                entity.Property(e => e.IdentificationСode).HasColumnType("character varying");
+                entity.Property(e => e.IdentificationCode).HasColumnType("character varying");
 
                 entity.Property(e => e.LevelEducation)
                     .IsRequired()

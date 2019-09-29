@@ -34,7 +34,7 @@ INSERT INTO public."AddressPublicHouse"("Id", "City", "Street", "NumberHouse", "
 (21,'Одеса','Єлісаветинська 12','19',NULL,1);
 
 INSERT INTO public."Employee"("Id", "FirstName", "SecondName", "Patronymic", "Sex", "BirthDate", 
-								"IdentificationСode", "MechnikovCard", "MobilePhone", "CityPhone", 
+								"IdentificationCode", "MechnikovCard", "MobilePhone", "CityPhone", 
 								"BasicProfession", "StartYearWork", "EndYearWork", "StartDateTradeUnion", 
 								"EndDateTradeUnion", 
 								"LevelEducation", "NameInstitution", "YearReceiving",

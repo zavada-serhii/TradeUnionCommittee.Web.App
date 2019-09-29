@@ -278,11 +278,11 @@ namespace TradeUnionCommittee.BLL.Services.Search
                             return new ActualResult<string> { Result = _hashIdUtilities.EncryptLong(searchByCityPhone.Id) };
                         }
                         return new ActualResult<string>(Errors.NotFound);
-                    case EmployeeType.IdentificationСode:
-                        var searchByIdentificationСode = await _context.Employee.FirstOrDefaultAsync(x => x.IdentificationСode == value);
-                        if (searchByIdentificationСode != null)
+                    case EmployeeType.IdentificationCode:
+                        var searchByIdentificationCode = await _context.Employee.FirstOrDefaultAsync(x => x.IdentificationCode == value);
+                        if (searchByIdentificationCode != null)
                         {
-                            return new ActualResult<string> { Result = _hashIdUtilities.EncryptLong(searchByIdentificationСode.Id) };
+                            return new ActualResult<string> { Result = _hashIdUtilities.EncryptLong(searchByIdentificationCode.Id) };
                         }
                         return new ActualResult<string>(Errors.NotFound);
                     case EmployeeType.MechnikovCard:

@@ -31,7 +31,7 @@ namespace TradeUnionCommittee.DAL.Entities
         public string Patronymic { get; set; }
         public string Sex { get; set; }
         public DateTime BirthDate { get; set; }
-        public string IdentificationСode { get; set; }
+        public string IdentificationCode { get; set; }
         public string MechnikovCard { get; set; }
         public string MobilePhone { get; set; }
         public string CityPhone { get; set; }

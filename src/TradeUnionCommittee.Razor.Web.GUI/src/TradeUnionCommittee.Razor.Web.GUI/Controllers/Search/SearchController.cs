@@ -149,9 +149,9 @@ namespace TradeUnionCommittee.Razor.Web.GUI.Controllers.Search
         [HttpPost]
         [Authorize(Roles = "Admin,Accountant,Deputy")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> SearchIdentificationСode([Bind("identificationCode")] string identificationCode)
+        public async Task<IActionResult> SearchIdentificationCode([Bind("identificationCode")] string identificationCode)
         {
-            var result = await _searchService.SearchEmployee(EmployeeType.IdentificationСode, identificationCode);
+            var result = await _searchService.SearchEmployee(EmployeeType.IdentificationCode, identificationCode);
 
             if (result.IsValid)
             {
