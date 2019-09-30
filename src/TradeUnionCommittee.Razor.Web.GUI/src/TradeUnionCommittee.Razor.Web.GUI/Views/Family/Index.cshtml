@@ -7,10 +7,10 @@
     <div class="row justify-content-center">
         <div class="col-md-12 add-user_block">
             <div class="row">
-                <a asp-controller="Employee" asp-action="Index" asp-route-id="@ViewData["HashIdEmployee"]" class="back-link">Повернутися</a>
+                <a asp-controller="Employee" asp-action="Index" asp-route-id="@ViewContext.RouteData.Values["id"]" class="back-link">Повернутися</a>
                 <hr />
                 <div class="form-group">
-                    <a asp-action="Create" asp-route-id="@ViewData["HashIdEmployee"]" class="btn btn-success">Додати</a>
+                    <a asp-action="Create" asp-route-id="@ViewContext.RouteData.Values["id"]" class="btn btn-success">Додати</a>
                 </div>
             </div>
             <div class="row main-block">
@@ -64,16 +64,16 @@
                                                        data-body-message="Ви впевнені, що хочете видалити члена сім'ї?">Видалити</a>
                                                 }
 
-                                                <a class="dropdown-item" asp-controller="TravelFamily" asp-action="Index" asp-route-id="@item.HashId">Поїздки</a>
-                                                <a class="dropdown-item" asp-controller="WellnessFamily" asp-action="Index" asp-route-id="@item.HashId">Оздоровлення</a>
+                                                <a class="dropdown-item" asp-controller="TravelFamily" asp-action="Index" asp-route-id="@ViewContext.RouteData.Values["id"]" asp-route-subid="@item.HashId">Поїздки</a>
+                                                <a class="dropdown-item" asp-controller="WellnessFamily" asp-action="Index" asp-route-id="@ViewContext.RouteData.Values["id"]" asp-route-subid="@item.HashId">Оздоровлення</a>
 
                                                 @if (User.IsInRole("Admin") || User.IsInRole("Accountant"))
                                                 {
-                                                    <a class="dropdown-item" asp-controller="TourFamily" asp-action="Index" asp-route-id="@item.HashId">Путівки</a>
+                                                    <a class="dropdown-item" asp-controller="TourFamily" asp-action="Index" asp-route-id="@ViewContext.RouteData.Values["id"]" asp-route-subid="@item.HashId">Путівки</a>
                                                 }
 
-                                                <a class="dropdown-item" asp-controller="ActivityFamily" asp-action="Index" asp-route-id="@item.HashId">Заходи</a>
-                                                <a class="dropdown-item" asp-controller="CulturalFamily" asp-action="Index" asp-route-id="@item.HashId">Культурно-просвітницькі заклади</a>
+                                                <a class="dropdown-item" asp-controller="ActivityFamily" asp-action="Index" asp-route-id="@ViewContext.RouteData.Values["id"]" asp-route-subid="@item.HashId">Заходи</a>
+                                                <a class="dropdown-item" asp-controller="CulturalFamily" asp-action="Index" asp-route-id="@ViewContext.RouteData.Values["id"]" asp-route-subid="@item.HashId">Культурно-просвітницькі заклади</a>
                                             </div>
                                         </div>
                                     </td>
