@@ -7,10 +7,10 @@
     <div class="row justify-content-center">
         <div class="col-md-12 add-user_block">
             <div class="row">
-                <a asp-controller="Children" asp-action="Index" asp-route-id="@ViewData["HashIdEmployee"]" class="back-link">Повернутися</a>
+                <a asp-controller="Children" asp-action="Index" asp-route-id="@ViewContext.RouteData.Values["id"]" class="back-link">Повернутися</a>
                 <hr />
                 <div class="form-group">
-                    <a asp-action="Create" asp-route-id="@ViewData["HashIdChildren"]" class="btn btn-success">Додати заклад</a>
+                    <a asp-action="Create" asp-route-id="@ViewContext.RouteData.Values["id"]" asp-route-subid="@ViewContext.RouteData.Values["subid"]" class="btn btn-success">Додати заклад</a>
                 </div>
             </div>
             <div class="row main-block">
@@ -56,7 +56,7 @@
                                             <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown"></button>
                                             <div class="dropdown-menu">
 
-                                                <a class="dropdown-item" asp-action="Update" asp-route-id="@item.HashId">Редагувати</a>
+                                                <a class="dropdown-item" asp-action="Update" asp-route-id="@ViewContext.RouteData.Values["id"]" asp-route-subid="@item.HashId">Редагувати</a>
 
                                                 @if (User.IsInRole("Admin"))
                                                 {
