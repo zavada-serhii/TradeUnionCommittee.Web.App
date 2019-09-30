@@ -7,10 +7,10 @@
     <div class="row justify-content-center">
         <div class="col-md-12 add-user_block">
             <div class="row">
-                <a asp-controller="Employee" asp-action="Index" asp-route-id="@ViewData["HashIdEmployee"]" class="back-link">Повернутися</a>
+                <a asp-controller="Employee" asp-action="Index" asp-route-id="@ViewContext.RouteData.Values["id"]" class="back-link">Повернутися</a>
                 <hr />
                 <div class="form-group">
-                    <a asp-action="Create" asp-route-id="@ViewData["HashIdEmployee"]" class="btn btn-success">Додати</a>
+                    <a asp-action="Create" asp-route-id="@ViewContext.RouteData.Values["id"]" class="btn btn-success">Додати</a>
                 </div>
             </div>
             <div class="row main-block">
@@ -63,18 +63,18 @@
                                                        data-id="@item.HashId"
                                                        data-body-message="Ви впевнені, що хочете видалити дитину?">Видалити</a>
                                                 }
-                                                <a class="dropdown-item" asp-controller="TravelChildren" asp-action="Index" asp-route-id="@item.HashId">Поїздки</a>
-                                                <a class="dropdown-item" asp-controller="WellnessChildren" asp-action="Index" asp-route-id="@item.HashId">Оздоровлення</a>
+                                                <a class="dropdown-item" asp-controller="TravelChildren" asp-action="Index" asp-route-id="@ViewContext.RouteData.Values["id"]" asp-route-subid="@item.HashId">Поїздки</a>
+                                                <a class="dropdown-item" asp-controller="WellnessChildren" asp-action="Index" asp-route-id="@ViewContext.RouteData.Values["id"]" asp-route-subid="@item.HashId">Оздоровлення</a>
 
                                                 @if (User.IsInRole("Admin") || User.IsInRole("Accountant"))
                                                 {
-                                                    <a class="dropdown-item" asp-controller="TourChildren" asp-action="Index" asp-route-id="@item.HashId">Путівки</a>
+                                                    <a class="dropdown-item" asp-controller="TourChildren" asp-action="Index" asp-route-id="@ViewContext.RouteData.Values["id"]" asp-route-subid="@item.HashId">Путівки</a>
                                                 }
 
-                                                <a class="dropdown-item" asp-controller="ActivityChildren" asp-action="Index" asp-route-id="@item.HashId">Заходи</a>
-                                                <a class="dropdown-item" asp-controller="CulturalChildren" asp-action="Index" asp-route-id="@item.HashId">Культурно-просвітницькі заклади</a>
-                                                <a class="dropdown-item" asp-controller="GiftChildren" asp-action="Index" asp-route-id="@item.HashId">Подарунки</a>
-                                                <a class="dropdown-item" asp-controller="HobbyChildren" asp-action="Index" asp-route-id="@item.HashId">Хобі</a>
+                                                <a class="dropdown-item" asp-controller="ActivityChildren" asp-action="Index" asp-route-id="@ViewContext.RouteData.Values["id"]" asp-route-subid="@item.HashId">Заходи</a>
+                                                <a class="dropdown-item" asp-controller="CulturalChildren" asp-action="Index" asp-route-id="@ViewContext.RouteData.Values["id"]" asp-route-subid="@item.HashId">Культурно-просвітницькі заклади</a>
+                                                <a class="dropdown-item" asp-controller="GiftChildren" asp-action="Index" asp-route-id="@ViewContext.RouteData.Values["id"]" asp-route-subid="@item.HashId">Подарунки</a>
+                                                <a class="dropdown-item" asp-controller="HobbyChildren" asp-action="Index" asp-route-id="@ViewContext.RouteData.Values["id"]" asp-route-subid="@item.HashId">Хобі</a>
                                             </div>
                                         </div>
                                     </td>

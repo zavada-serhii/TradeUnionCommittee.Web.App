@@ -3,7 +3,6 @@ using TradeUnionCommittee.BLL.Configurations;
 using TradeUnionCommittee.BLL.Interfaces.Account;
 using TradeUnionCommittee.BLL.Interfaces.Dashboard;
 using TradeUnionCommittee.BLL.Interfaces.Directory;
-using TradeUnionCommittee.BLL.Interfaces.Helpers;
 using TradeUnionCommittee.BLL.Interfaces.Lists.Children;
 using TradeUnionCommittee.BLL.Interfaces.Lists.Employee;
 using TradeUnionCommittee.BLL.Interfaces.Lists.Family;
@@ -14,7 +13,6 @@ using TradeUnionCommittee.BLL.Interfaces.SystemAudit;
 using TradeUnionCommittee.BLL.Services.Account;
 using TradeUnionCommittee.BLL.Services.Dashboard;
 using TradeUnionCommittee.BLL.Services.Directory;
-using TradeUnionCommittee.BLL.Services.Helpers;
 using TradeUnionCommittee.BLL.Services.Lists.Children;
 using TradeUnionCommittee.BLL.Services.Lists.Employee;
 using TradeUnionCommittee.BLL.Services.Lists.Family;
@@ -123,8 +121,6 @@ namespace TradeUnionCommittee.BLL.Extensions
             services.AddTransient<IActivityGrandChildrenService, ActivityGrandChildrenService>();
             services.AddTransient<ICulturalGrandChildrenService, CulturalGrandChildrenService>();
             services.AddTransient<IGiftGrandChildrenService, GiftGrandChildrenService>();
-
-            services.AddTransient<IReferenceParentService, ReferenceParentService>();
 
             //---------------------------------------------------------------------------------------------
 

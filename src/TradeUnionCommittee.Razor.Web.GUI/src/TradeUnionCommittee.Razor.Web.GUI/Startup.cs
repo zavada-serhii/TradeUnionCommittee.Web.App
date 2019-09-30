@@ -111,7 +111,7 @@ namespace TradeUnionCommittee.Razor.Web.GUI
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Home}/{action=Directory}/{id?}");
+                    pattern: "{controller=Home}/{action=Directory}/{id?}/{subid?}");
             });
         }
 

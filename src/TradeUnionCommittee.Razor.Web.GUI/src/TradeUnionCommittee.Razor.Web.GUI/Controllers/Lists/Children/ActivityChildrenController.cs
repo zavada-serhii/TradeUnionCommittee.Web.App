@@ -1,13 +1,11 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
+using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.DTO.Children;
 using TradeUnionCommittee.BLL.Enums;
-using TradeUnionCommittee.BLL.Interfaces.Helpers;
 using TradeUnionCommittee.BLL.Interfaces.Lists.Children;
 using TradeUnionCommittee.BLL.Interfaces.SystemAudit;
 using TradeUnionCommittee.Razor.Web.GUI.Controllers.Directory;
@@ -23,15 +21,13 @@ namespace TradeUnionCommittee.Razor.Web.GUI.Controllers.Lists.Children
         private readonly IMapper _mapper;
         private readonly ISystemAuditService _systemAuditService;
         private readonly IHttpContextAccessor _accessor;
-        private readonly IReferenceParentService _referenceParent;
 
-        public ActivityChildrenController(IActivityChildrenService services, IDirectories directories, IMapper mapper, ISystemAuditService systemAuditService, IHttpContextAccessor accessor, IReferenceParentService referenceParent)
+        public ActivityChildrenController(IActivityChildrenService services, IDirectories directories, IMapper mapper, ISystemAuditService systemAuditService, IHttpContextAccessor accessor)
         {
             _services = services;
             _mapper = mapper;
             _systemAuditService = systemAuditService;
             _accessor = accessor;
-            _referenceParent = referenceParent;
             _directories = directories;
         }
 
@@ -39,20 +35,14 @@ namespace TradeUnionCommittee.Razor.Web.GUI.Controllers.Lists.Children
 
         [HttpGet]
         [Authorize(Roles = "Admin,Accountant,Deputy")]
-        public async Task<IActionResult> Index([Required] string id)
+        public async Task<IActionResult> Index([Required] string subid)
         {
-            var result = await _services.GetAllAsync(id);
-            var referenceParent = _referenceParent.GetHashIdEmployee(id, ReferenceParentType.Children);
-            if (result.IsValid && referenceParent.IsValid)
+            var result = await _services.GetAllAsync(subid);
+            if (result.IsValid)
             {
-                ViewData["HashIdChildren"] = id;
-                ViewData["HashIdEmployee"] = referenceParent.Result;
                 return View(result.Result);
             }
-            var errorsList = new List<string>();
-            errorsList.AddRange(result.ErrorsList);
-            errorsList.AddRange(referenceParent.ErrorsList);
-            TempData["ErrorsList"] = errorsList;
+            TempData["ErrorsList"] = result.ErrorsList;
             return View();
         }
 
@@ -60,10 +50,10 @@ namespace TradeUnionCommittee.Razor.Web.GUI.Controllers.Lists.Children
 
         [HttpGet]
         [Authorize(Roles = "Admin,Accountant,Deputy")]
-        public async Task<IActionResult> Create([Required] string id)
+        public async Task<IActionResult> Create([Required] string subid)
         {
             ViewBag.Activities = await _directories.GetActivities();
-            return View(new CreateActivityChildrenViewModel { HashIdChildren = id });
+            return View(new CreateActivityChildrenViewModel { HashIdChildren = subid });
         }
 
         [HttpPost]
@@ -77,7 +67,7 @@ namespace TradeUnionCommittee.Razor.Web.GUI.Controllers.Lists.Children
                 if (result.IsValid)
                 {
                     await _systemAuditService.AuditAsync(User.GetEmail(), _accessor.GetIp(), Operations.Insert, Tables.ActivityChildrens);
-                    return RedirectToAction("Index", new { id = vm.HashIdChildren });
+                    return RedirectToAction("Index", new { id = ControllerContext.RouteData.Values["id"], subid = vm.HashIdChildren });
                 }
                 TempData["ErrorsList"] = result.ErrorsList;
             }
@@ -89,9 +79,9 @@ namespace TradeUnionCommittee.Razor.Web.GUI.Controllers.Lists.Children
 
         [HttpGet]
         [Authorize(Roles = "Admin,Accountant,Deputy")]
-        public async Task<IActionResult> Update([Required] string id)
+        public async Task<IActionResult> Update([Required] string subid)
         {
-            var result = await _services.GetAsync(id);
+            var result = await _services.GetAsync(subid);
             if (result.IsValid)
             {
                 ViewBag.Activities = await _directories.GetActivities(result.Result.HashIdActivities);
@@ -112,7 +102,7 @@ namespace TradeUnionCommittee.Razor.Web.GUI.Controllers.Lists.Children
                 if (result.IsValid)
                 {
                     await _systemAuditService.AuditAsync(User.GetEmail(), _accessor.GetIp(), Operations.Update, Tables.ActivityChildrens);
-                    return RedirectToAction("Index", new { id = vm.HashIdChildren });
+                    return RedirectToAction("Index", new { id = ControllerContext.RouteData.Values["id"], subid = vm.HashIdChildren });
                 }
                 TempData["ErrorsListConfirmed"] = result.ErrorsList;
             }
