@@ -1,13 +1,11 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
+using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.DTO.GrandChildren;
 using TradeUnionCommittee.BLL.Enums;
-using TradeUnionCommittee.BLL.Interfaces.Helpers;
 using TradeUnionCommittee.BLL.Interfaces.Lists.GrandChildren;
 using TradeUnionCommittee.BLL.Interfaces.SystemAudit;
 using TradeUnionCommittee.Razor.Web.GUI.Extensions;
@@ -21,35 +19,27 @@ namespace TradeUnionCommittee.Razor.Web.GUI.Controllers.Lists.GrandChildren
         private readonly IMapper _mapper;
         private readonly ISystemAuditService _systemAuditService;
         private readonly IHttpContextAccessor _accessor;
-        private readonly IReferenceParentService _referenceParent;
 
-        public GiftGrandChildrenController(IGiftGrandChildrenService services, IMapper mapper, ISystemAuditService systemAuditService, IHttpContextAccessor accessor, IReferenceParentService referenceParent)
+        public GiftGrandChildrenController(IGiftGrandChildrenService services, IMapper mapper, ISystemAuditService systemAuditService, IHttpContextAccessor accessor)
         {
             _services = services;
             _mapper = mapper;
             _systemAuditService = systemAuditService;
             _accessor = accessor;
-            _referenceParent = referenceParent;
         }
 
         //------------------------------------------------------------------------------------------------------------------------------------------
 
         [HttpGet]
         [Authorize(Roles = "Admin,Accountant,Deputy")]
-        public async Task<IActionResult> Index([Required] string id)
+        public async Task<IActionResult> Index([Required] string subid)
         {
-            var result = await _services.GetAllAsync(id);
-            var referenceParent = _referenceParent.GetHashIdEmployee(id, ReferenceParentType.GrandChildren);
-            if (result.IsValid && referenceParent.IsValid)
+            var result = await _services.GetAllAsync(subid);
+            if (result.IsValid)
             {
-                ViewData["HashIdGrandChildren"] = id;
-                ViewData["HashIdEmployee"] = referenceParent.Result;
                 return View(result.Result);
             }
-            var errorsList = new List<string>();
-            errorsList.AddRange(result.ErrorsList);
-            errorsList.AddRange(referenceParent.ErrorsList);
-            TempData["ErrorsList"] = errorsList;
+            TempData["ErrorsList"] = result.ErrorsList;
             return View();
         }
 
@@ -57,9 +47,9 @@ namespace TradeUnionCommittee.Razor.Web.GUI.Controllers.Lists.GrandChildren
 
         [HttpGet]
         [Authorize(Roles = "Admin,Accountant,Deputy")]
-        public IActionResult Create([Required] string id)
+        public IActionResult Create([Required] string subid)
         {
-            return View(new CreateGiftGrandChildrenViewModel { HashIdGrandChildren = id });
+            return View(new CreateGiftGrandChildrenViewModel { HashIdGrandChildren = subid });
         }
 
         [HttpPost]
@@ -73,7 +63,7 @@ namespace TradeUnionCommittee.Razor.Web.GUI.Controllers.Lists.GrandChildren
                 if (result.IsValid)
                 {
                     await _systemAuditService.AuditAsync(User.GetEmail(), _accessor.GetIp(), Operations.Insert, Tables.GiftGrandChildrens);
-                    return RedirectToAction("Index", new { id = vm.HashIdGrandChildren });
+                    return RedirectToAction("Index", new { id = ControllerContext.RouteData.Values["id"], subid = vm.HashIdGrandChildren });
                 }
                 TempData["ErrorsList"] = result.ErrorsList;
             }
@@ -84,9 +74,9 @@ namespace TradeUnionCommittee.Razor.Web.GUI.Controllers.Lists.GrandChildren
 
         [HttpGet]
         [Authorize(Roles = "Admin,Accountant,Deputy")]
-        public async Task<IActionResult> Update([Required] string id)
+        public async Task<IActionResult> Update([Required] string subid)
         {
-            var result = await _services.GetAsync(id);
+            var result = await _services.GetAsync(subid);
             if (result.IsValid)
             {
                 return View(_mapper.Map<UpdateGiftGrandChildrenViewModel>(result.Result));
@@ -106,7 +96,7 @@ namespace TradeUnionCommittee.Razor.Web.GUI.Controllers.Lists.GrandChildren
                 if (result.IsValid)
                 {
                     await _systemAuditService.AuditAsync(User.GetEmail(), _accessor.GetIp(), Operations.Update, Tables.GiftGrandChildrens);
-                    return RedirectToAction("Index", new { id = vm.HashIdGrandChildren });
+                    return RedirectToAction("Index", new { id = ControllerContext.RouteData.Values["id"], subid = vm.HashIdGrandChildren });
                 }
                 TempData["ErrorsListConfirmed"] = result.ErrorsList;
             }
