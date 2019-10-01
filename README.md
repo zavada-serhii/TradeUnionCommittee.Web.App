@@ -15,21 +15,11 @@ Information system for the primary trade union organization of the Odessa Nation
 2. Go to the folder **src** and start the **PowerShell** or **Terminal** as administrator.
 3. Run the command **docker-compose -f docker-compose.yml up --build** and wait for the end.
 4. After that applications will be available at the following links.
-    - Swagger 
-        - URL - http://localhost:8510/swagger
+    - Swagger API
+        - URL - http://localhost:8510/swagger/index.html
         - Login - stewie.griffin@test.com
         - Password - P@ssw0rd_admin
      - Razor GUI
         - URL - http://localhost:8530
         - Login - stewie.griffin@test.com
         - Password - P@ssw0rd_admin
-    - PostgreSQL
-        - Host name/address - http://localhost:5432
-        - Login - postgres 
-        - Password - postgres
-    - Kibana 
-        - URL - http://localhost:5601
-    - MinIO
-        - URL - http://localhost:9001-9004
-        - Login - minio
-        - Password - minio123
