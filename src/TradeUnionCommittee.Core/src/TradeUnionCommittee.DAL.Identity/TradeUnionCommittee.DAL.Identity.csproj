@@ -3,8 +3,8 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp3.0</TargetFramework>
     <TargetLatestRuntimePatch>True</TargetLatestRuntimePatch>
-    <PublishTrimmed>true</PublishTrimmed>
     <TieredCompilationQuickJit>true</TieredCompilationQuickJit>
+    <PublishReadyToRun>true</PublishReadyToRun>
   </PropertyGroup>
 
   <ItemGroup>
