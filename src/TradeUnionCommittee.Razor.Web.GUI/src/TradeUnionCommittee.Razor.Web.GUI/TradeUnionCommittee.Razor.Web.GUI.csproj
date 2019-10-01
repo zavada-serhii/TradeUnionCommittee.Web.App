@@ -5,7 +5,6 @@
     <TargetLatestRuntimePatch>True</TargetLatestRuntimePatch>
     <PublishTrimmed>true</PublishTrimmed>
     <TieredCompilationQuickJit>true</TieredCompilationQuickJit>
-    <PublishReadyToRun>true</PublishReadyToRun>
     <UserSecretsId>245667da-0865-47aa-9e39-ad5004fec65a</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <DockerfileContext>..\..</DockerfileContext>
