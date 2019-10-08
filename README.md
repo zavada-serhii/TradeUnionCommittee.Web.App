@@ -19,6 +19,8 @@ Information system for the primary trade union organization of the Odessa Nation
         - URL - http://localhost:8510/swagger/index.html
         - Login - stewie.griffin@test.com
         - Password - P@ssw0rd_admin
+    - Data Analysis API
+        - URL - http://localhost:8520
      - Razor GUI
         - URL - http://localhost:8530
         - Login - stewie.griffin@test.com
