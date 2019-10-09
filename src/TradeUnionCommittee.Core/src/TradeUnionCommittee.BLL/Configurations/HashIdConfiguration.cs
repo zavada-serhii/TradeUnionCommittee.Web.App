@@ -5,7 +5,7 @@ using TradeUnionCommittee.BLL.Exceptions;
 
 namespace TradeUnionCommittee.BLL.Configurations
 {
-    public class HashIdConfigurationSetting
+    public class HashIdConfiguration
     {
         public string Salt { get; set; }
         public int MinHashLenght { get; set; }
@@ -13,30 +13,39 @@ namespace TradeUnionCommittee.BLL.Configurations
         public bool UseGuidFormat { get; set; }
     }
 
-    internal sealed class HashIdConfiguration
+    internal sealed class HashId
     {
-        private readonly bool _useGuidFormat;
-        private readonly Hashids _hashId;
+        private static bool _isInitialized;
+        private static bool _useGuidFormat;
+        private static Hashids _hashIds;
 
-        public HashIdConfiguration(HashIdConfigurationSetting setting)
+        public static void Configure(HashIdConfiguration setting)
         {
-            if (setting.UseGuidFormat)
+            if (setting != null && !_isInitialized)
             {
-                setting.MinHashLenght = 32;
-                setting.Alphabet = setting.Alphabet.Replace("-", string.Empty).ToLower();
+                int minHashLenght = setting.UseGuidFormat
+                    ? 32
+                    : setting.MinHashLenght;
+
+                string alphabet = setting.UseGuidFormat
+                    ? setting.Alphabet.Replace("-", string.Empty).ToLower()
+                    : setting.Alphabet;
+
+                _useGuidFormat = setting.UseGuidFormat;
+                _hashIds = new Hashids(setting.Salt, minHashLenght, alphabet);
+
+                _isInitialized = true;
             }
-            _useGuidFormat = setting.UseGuidFormat;
-            _hashId = new Hashids(setting.Salt, setting.MinHashLenght, setting.Alphabet);
         }
 
-        public long DecryptLong(string cipherText)
+        public static long DecryptLong(string cipherText)
         {
             if (string.IsNullOrEmpty(cipherText) || string.IsNullOrWhiteSpace(cipherText))
             {
                 return 0;
             }
 
-            var result = _hashId.DecodeLong(_useGuidFormat ? GuidFormat(cipherText, HashIdOperation.Decrypt) : cipherText);
+            var result = _hashIds.DecodeLong(_useGuidFormat ? GuidFormat(cipherText, HashIdOperation.Decrypt) : cipherText);
 
             if (result.Length == 1)
             {
@@ -45,16 +54,16 @@ namespace TradeUnionCommittee.BLL.Configurations
             throw new DecryptHashIdException();
         }
 
-        public string EncryptLong(long plainLong)
+        public static string EncryptLong(long plainLong)
         {
             if (_useGuidFormat)
             {
-                return GuidFormat(_hashId.EncodeLong(plainLong), HashIdOperation.Encrypt);
+                return GuidFormat(_hashIds.EncodeLong(plainLong), HashIdOperation.Encrypt);
             }
-            return _hashId.EncodeLong(plainLong);
+            return _hashIds.EncodeLong(plainLong);
         }
 
-        private string GuidFormat(string hash, HashIdOperation hashId)
+        private static string GuidFormat(string hash, HashIdOperation hashId)
         {
             var builder = new StringBuilder(hash);
             switch (hashId)

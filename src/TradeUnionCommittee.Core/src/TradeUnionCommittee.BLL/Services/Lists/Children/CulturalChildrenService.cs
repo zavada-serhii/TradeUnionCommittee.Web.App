@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,27 +18,25 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Children
     internal class CulturalChildrenService : ICulturalChildrenService
     {
         private readonly TradeUnionCommitteeContext _context;
-        private readonly AutoMapperConfiguration _mapperService;
-        private readonly HashIdConfiguration _hashIdUtilities;
+        private readonly IMapper _mapper;
 
-        public CulturalChildrenService(TradeUnionCommitteeContext context, AutoMapperConfiguration mapperService, HashIdConfiguration hashIdUtilities)
+        public CulturalChildrenService(TradeUnionCommitteeContext context, IMapper mapper)
         {
             _context = context;
-            _mapperService = mapperService;
-            _hashIdUtilities = hashIdUtilities;
+            _mapper = mapper;
         }
 
         public async Task<ActualResult<IEnumerable<CulturalChildrenDTO>>> GetAllAsync(string hashIdChildren)
         {
             try
             {
-                var id = _hashIdUtilities.DecryptLong(hashIdChildren);
+                var id = HashId.DecryptLong(hashIdChildren);
                 var cultural = await _context.CulturalChildrens
                     .Include(x => x.IdCulturalNavigation)
                     .Where(x => x.IdChildren == id)
                     .OrderByDescending(x => x.DateVisit)
                     .ToListAsync();
-                var result = _mapperService.Mapper.Map<IEnumerable<CulturalChildrenDTO>>(cultural);
+                var result = _mapper.Map<IEnumerable<CulturalChildrenDTO>>(cultural);
                 return new ActualResult<IEnumerable<CulturalChildrenDTO>> { Result = result };
             }
             catch (Exception exception)
@@ -50,7 +49,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Children
         {
             try
             {
-                var id = _hashIdUtilities.DecryptLong(hashId);
+                var id = HashId.DecryptLong(hashId);
                 var cultural = await _context.CulturalChildrens
                     .Include(x => x.IdCulturalNavigation)
                     .FirstOrDefaultAsync(x => x.Id == id);
@@ -58,7 +57,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Children
                 {
                     return new ActualResult<CulturalChildrenDTO>(Errors.TupleDeleted);
                 }
-                var result = _mapperService.Mapper.Map<CulturalChildrenDTO>(cultural);
+                var result = _mapper.Map<CulturalChildrenDTO>(cultural);
                 return new ActualResult<CulturalChildrenDTO> { Result = result };
             }
             catch (Exception exception)
@@ -71,10 +70,10 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Children
         {
             try
             {
-                var culturalChildren = _mapperService.Mapper.Map<CulturalChildrens>(item);
+                var culturalChildren = _mapper.Map<CulturalChildrens>(item);
                 await _context.CulturalChildrens.AddAsync(culturalChildren);
                 await _context.SaveChangesAsync();
-                var hashId = _hashIdUtilities.EncryptLong(culturalChildren.Id);
+                var hashId = HashId.EncryptLong(culturalChildren.Id);
                 return new ActualResult<string> { Result = hashId };
             }
             catch (Exception exception)
@@ -87,7 +86,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Children
         {
             try
             {
-                _context.Entry(_mapperService.Mapper.Map<CulturalChildrens>(item)).State = EntityState.Modified;
+                _context.Entry(_mapper.Map<CulturalChildrens>(item)).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
                 return new ActualResult();
             }
@@ -101,7 +100,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Children
         {
             try
             {
-                var id = _hashIdUtilities.DecryptLong(hashId);
+                var id = HashId.DecryptLong(hashId);
                 var result = await _context.CulturalChildrens.FindAsync(id);
                 if (result != null)
                 {

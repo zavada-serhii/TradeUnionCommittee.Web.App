@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,27 +18,25 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Children
     internal class HobbyChildrenService : IHobbyChildrenService
     {
         private readonly TradeUnionCommitteeContext _context;
-        private readonly AutoMapperConfiguration _mapperService;
-        private readonly HashIdConfiguration _hashIdUtilities;
+        private readonly IMapper _mapper;
 
-        public HobbyChildrenService(TradeUnionCommitteeContext context, AutoMapperConfiguration mapperService, HashIdConfiguration hashIdUtilities)
+        public HobbyChildrenService(TradeUnionCommitteeContext context, IMapper mapper)
         {
             _context = context;
-            _mapperService = mapperService;
-            _hashIdUtilities = hashIdUtilities;
+            _mapper = mapper;
         }
 
         public async Task<ActualResult<IEnumerable<HobbyChildrenDTO>>> GetAllAsync(string hashIdChildren)
         {
             try
             {
-                var id = _hashIdUtilities.DecryptLong(hashIdChildren);
+                var id = HashId.DecryptLong(hashIdChildren);
                 var hobby = await _context.HobbyChildrens
                     .Include(x => x.IdHobbyNavigation)
                     .Where(x => x.IdChildren == id)
                     .OrderBy(x => x.IdHobbyNavigation.Name)
                     .ToListAsync();
-                var result = _mapperService.Mapper.Map<IEnumerable<HobbyChildrenDTO>>(hobby);
+                var result = _mapper.Map<IEnumerable<HobbyChildrenDTO>>(hobby);
                 return new ActualResult<IEnumerable<HobbyChildrenDTO>> { Result = result };
             }
             catch (Exception exception)
@@ -50,7 +49,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Children
         {
             try
             {
-                var id = _hashIdUtilities.DecryptLong(hashId);
+                var id = HashId.DecryptLong(hashId);
                 var hobby = await _context.HobbyChildrens
                     .Include(x => x.IdHobbyNavigation)
                     .FirstOrDefaultAsync(x => x.Id == id);
@@ -58,7 +57,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Children
                 {
                     return new ActualResult<HobbyChildrenDTO>(Errors.TupleDeleted);
                 }
-                var result = _mapperService.Mapper.Map<HobbyChildrenDTO>(hobby);
+                var result = _mapper.Map<HobbyChildrenDTO>(hobby);
                 return new ActualResult<HobbyChildrenDTO> { Result = result };
             }
             catch (Exception exception)
@@ -71,10 +70,10 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Children
         {
             try
             {
-                var hobbyChildren = _mapperService.Mapper.Map<HobbyChildrens>(item);
+                var hobbyChildren = _mapper.Map<HobbyChildrens>(item);
                 await _context.HobbyChildrens.AddAsync(hobbyChildren);
                 await _context.SaveChangesAsync();
-                var hashId = _hashIdUtilities.EncryptLong(hobbyChildren.Id);
+                var hashId = HashId.EncryptLong(hobbyChildren.Id);
                 return new ActualResult<string> { Result = hashId };
             }
             catch (Exception exception)
@@ -87,7 +86,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Children
         {
             try
             {
-                _context.Entry(_mapperService.Mapper.Map<HobbyChildrens>(item)).State = EntityState.Modified;
+                _context.Entry(_mapper.Map<HobbyChildrens>(item)).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
                 return new ActualResult();
             }
@@ -101,7 +100,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Children
         {
             try
             {
-                var id = _hashIdUtilities.DecryptLong(hashId);
+                var id = HashId.DecryptLong(hashId);
                 var result = await _context.HobbyChildrens.FindAsync(id);
                 if (result != null)
                 {

@@ -69,7 +69,7 @@ namespace TradeUnionCommittee.Razor.Web.GUI
                     Configuration.GetSection("ConnectionStrings").Get<ConnectionStrings>(),
                     Configuration.GetSection("CloudStorageConnection").Get<CloudStorageConnection>(),
                     Configuration.GetSection("RestConnection").Get<RestConnection>(),
-                    Configuration.GetSection("HashIdConfigurationSetting").Get<HashIdConfigurationSetting>())
+                    Configuration.GetSection("HashIdConfigurationSetting").Get<HashIdConfiguration>())
                 .AddTradeUnionCommitteeViewModelsModule();
 
             services.AddResponseCompression()

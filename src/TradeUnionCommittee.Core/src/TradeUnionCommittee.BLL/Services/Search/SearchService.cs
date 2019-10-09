@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,15 +20,13 @@ namespace TradeUnionCommittee.BLL.Services.Search
     internal class SearchService : ISearchService
     {
         private readonly TradeUnionCommitteeContext _context;
+        private readonly IMapper _mapper;
         private readonly ITrigramSearchRepository _searchRepository;
-        private readonly HashIdConfiguration _hashIdUtilities;
-        private readonly AutoMapperConfiguration _mapperService;
 
-        public SearchService(TradeUnionCommitteeContext context, HashIdConfiguration hashIdUtilities, AutoMapperConfiguration mapperService, ITrigramSearchRepository searchRepository)
+        public SearchService(TradeUnionCommitteeContext context, IMapper mapper, ITrigramSearchRepository searchRepository)
         {
             _context = context;
-            _hashIdUtilities = hashIdUtilities;
-            _mapperService = mapperService;
+            _mapper = mapper;
             _searchRepository = searchRepository;
         }
 
@@ -38,7 +37,7 @@ namespace TradeUnionCommittee.BLL.Services.Search
             try
             {
                 var result = await _searchRepository.SearchByFullName(fullName, TypeTrigram.Gist);
-                var mapping = _mapperService.Mapper.Map<IEnumerable<ResultSearchDTO>>(result);
+                var mapping = _mapper.Map<IEnumerable<ResultSearchDTO>>(result);
                 return new ActualResult<IEnumerable<ResultSearchDTO>> { Result = mapping };
             }
             catch (Exception exception)
@@ -57,7 +56,7 @@ namespace TradeUnionCommittee.BLL.Services.Search
                 {
                     if (subdivision != null)
                     {
-                        var idSubdivision = _hashIdUtilities.DecryptLong(subdivision);
+                        var idSubdivision = HashId.DecryptLong(subdivision);
                         var searchByGenderAndSubdivision = _context.Employee
                             .Include(x => x.PositionEmployees.IdSubdivisionNavigation.InverseIdSubordinateNavigation)
                             .Where(x => x.Sex == gender &&
@@ -85,10 +84,10 @@ namespace TradeUnionCommittee.BLL.Services.Search
             {
                 return await Task.Run(() =>
                 {
-                    var idPosition = _hashIdUtilities.DecryptLong(position);
+                    var idPosition = HashId.DecryptLong(position);
                     if (subdivision != null)
                     {
-                        var idSubdivision = _hashIdUtilities.DecryptLong(subdivision);
+                        var idSubdivision = HashId.DecryptLong(subdivision);
                         var searchByGenderAndSubdivision = _context.Employee
                             .Include(x => x.PositionEmployees.IdSubdivisionNavigation.InverseIdSubordinateNavigation)
                             .Where(x => x.PositionEmployees.IdPosition == idPosition &&
@@ -116,10 +115,10 @@ namespace TradeUnionCommittee.BLL.Services.Search
             {
                 return await Task.Run(() =>
                 {
-                    var idPrivilege = _hashIdUtilities.DecryptLong(privilege);
+                    var idPrivilege = HashId.DecryptLong(privilege);
                     if (subdivision != null)
                     {
-                        var idSubdivision = _hashIdUtilities.DecryptLong(subdivision);
+                        var idSubdivision = HashId.DecryptLong(subdivision);
                         var searchByGenderAndSubdivision = _context.Employee
                             .Include(p => p.PositionEmployees.IdSubdivisionNavigation.InverseIdSubordinateNavigation)
                             .Include(p => p.PrivilegeEmployees)
@@ -149,7 +148,7 @@ namespace TradeUnionCommittee.BLL.Services.Search
             {
                 return await Task.Run(() =>
                 {
-                    var id = _hashIdUtilities.DecryptLong(hashId);
+                    var id = HashId.DecryptLong(hashId);
                     switch (type)
                     {
                         case AccommodationType.Dormitory:
@@ -222,7 +221,7 @@ namespace TradeUnionCommittee.BLL.Services.Search
             {
                 return await Task.Run(() =>
                 {
-                    var idHobby = _hashIdUtilities.DecryptLong(hobby);
+                    var idHobby = HashId.DecryptLong(hobby);
                     switch (type)
                     {
                         case CoverageType.Employee:
@@ -268,28 +267,28 @@ namespace TradeUnionCommittee.BLL.Services.Search
                         var searchByMobilePhone = await _context.Employee.FirstOrDefaultAsync(x => x.MobilePhone == value);
                         if (searchByMobilePhone != null)
                         {
-                            return new ActualResult<string> { Result = _hashIdUtilities.EncryptLong(searchByMobilePhone.Id) };
+                            return new ActualResult<string> { Result = HashId.EncryptLong(searchByMobilePhone.Id) };
                         }
                         return new ActualResult<string>(Errors.NotFound);
                     case EmployeeType.CityPhone:
                         var searchByCityPhone = await _context.Employee.FirstOrDefaultAsync(x => x.CityPhone == value.AddMaskForCityPhone());
                         if (searchByCityPhone != null)
                         {
-                            return new ActualResult<string> { Result = _hashIdUtilities.EncryptLong(searchByCityPhone.Id) };
+                            return new ActualResult<string> { Result = HashId.EncryptLong(searchByCityPhone.Id) };
                         }
                         return new ActualResult<string>(Errors.NotFound);
                     case EmployeeType.IdentificationCode:
                         var searchByIdentificationCode = await _context.Employee.FirstOrDefaultAsync(x => x.IdentificationCode == value);
                         if (searchByIdentificationCode != null)
                         {
-                            return new ActualResult<string> { Result = _hashIdUtilities.EncryptLong(searchByIdentificationCode.Id) };
+                            return new ActualResult<string> { Result = HashId.EncryptLong(searchByIdentificationCode.Id) };
                         }
                         return new ActualResult<string>(Errors.NotFound);
                     case EmployeeType.MechnikovCard:
                         var searchByMechnikovCard = await _context.Employee.FirstOrDefaultAsync(x => x.MechnikovCard == value);
                         if (searchByMechnikovCard != null)
                         {
-                            return new ActualResult<string> { Result = _hashIdUtilities.EncryptLong(searchByMechnikovCard.Id) };
+                            return new ActualResult<string> { Result = HashId.EncryptLong(searchByMechnikovCard.Id) };
                         }
                         return new ActualResult<string>(Errors.NotFound);
                     default:
@@ -308,7 +307,7 @@ namespace TradeUnionCommittee.BLL.Services.Search
         {
             return employees.OrderBy(x => x.FirstName).Select(employee => new ResultSearchDTO
             {
-                HashIdUser = _hashIdUtilities.EncryptLong(employee.Id),
+                HashIdUser = HashId.EncryptLong(employee.Id),
                 FullName = $"{employee.FirstName} {employee.SecondName} {employee.Patronymic}",
                 SurnameAndInitials = $"{employee.FirstName} {employee.SecondName[0]}. {(!string.IsNullOrEmpty(employee.Patronymic) ? $"{employee.Patronymic[0]}." : string.Empty)}",
                 BirthDate = employee.BirthDate,

@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.ActualResults;
@@ -14,21 +15,19 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Employee
     internal class SocialActivityEmployeesService : ISocialActivityEmployeesService
     {
         private readonly TradeUnionCommitteeContext _context;
-        private readonly AutoMapperConfiguration _mapperService;
-        private readonly HashIdConfiguration _hashIdUtilities;
+        private readonly IMapper _mapper;
 
-        public SocialActivityEmployeesService(TradeUnionCommitteeContext context, AutoMapperConfiguration mapperService, HashIdConfiguration hashIdUtilities)
+        public SocialActivityEmployeesService(TradeUnionCommitteeContext context, IMapper mapper)
         {
             _context = context;
-            _mapperService = mapperService;
-            _hashIdUtilities = hashIdUtilities;
+            _mapper = mapper;
         }
 
         public async Task<ActualResult<SocialActivityEmployeesDTO>> GetAsync(string hashIdEmployee)
         {
             try
             {
-                var id = _hashIdUtilities.DecryptLong(hashIdEmployee);
+                var id = HashId.DecryptLong(hashIdEmployee);
                 var socialActivity = await _context.SocialActivityEmployees
                     .Include(x => x.IdSocialActivityNavigation)
                     .FirstOrDefaultAsync(x => x.IdEmployee == id);
@@ -36,7 +35,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Employee
                 {
                     return new ActualResult<SocialActivityEmployeesDTO>();
                 }
-                var result = _mapperService.Mapper.Map<SocialActivityEmployeesDTO>(socialActivity);
+                var result = _mapper.Map<SocialActivityEmployeesDTO>(socialActivity);
                 return new ActualResult<SocialActivityEmployeesDTO> { Result = result };
             }
             catch (Exception exception)
@@ -50,10 +49,10 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Employee
             try
             {
                 dto.CheckSocialActivity = true;
-                var socialActivityEmployees = _mapperService.Mapper.Map<SocialActivityEmployees>(dto);
+                var socialActivityEmployees = _mapper.Map<SocialActivityEmployees>(dto);
                 await _context.SocialActivityEmployees.AddAsync(socialActivityEmployees);
                 await _context.SaveChangesAsync();
-                var hashId = _hashIdUtilities.EncryptLong(socialActivityEmployees.Id);
+                var hashId = HashId.EncryptLong(socialActivityEmployees.Id);
                 return new ActualResult<string> { Result = hashId };
             }
             catch (Exception exception)
@@ -66,7 +65,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Employee
         {
             try
             {
-                _context.Entry(_mapperService.Mapper.Map<SocialActivityEmployees>(dto)).State = EntityState.Modified;
+                _context.Entry(_mapper.Map<SocialActivityEmployees>(dto)).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
                 return new ActualResult();
             }
@@ -80,7 +79,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Employee
         {
             try
             {
-                var id = _hashIdUtilities.DecryptLong(hashId);
+                var id = HashId.DecryptLong(hashId);
                 var result = await _context.SocialActivityEmployees.FindAsync(id);
                 if (result != null)
                 {

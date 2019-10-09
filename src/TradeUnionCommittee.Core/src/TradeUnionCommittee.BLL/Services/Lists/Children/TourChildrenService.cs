@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,27 +19,25 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Children
     internal class TourChildrenService : ITourChildrenService
     {
         private readonly TradeUnionCommitteeContext _context;
-        private readonly AutoMapperConfiguration _mapperService;
-        private readonly HashIdConfiguration _hashIdUtilities;
+        private readonly IMapper _mapper;
 
-        public TourChildrenService(TradeUnionCommitteeContext context, AutoMapperConfiguration mapperService, HashIdConfiguration hashIdUtilities)
+        public TourChildrenService(TradeUnionCommitteeContext context, IMapper mapper)
         {
             _context = context;
-            _mapperService = mapperService;
-            _hashIdUtilities = hashIdUtilities;
+            _mapper = mapper;
         }
 
         public async Task<ActualResult<IEnumerable<TourChildrenDTO>>> GetAllAsync(string hashIdChildren)
         {
             try
             {
-                var id = _hashIdUtilities.DecryptLong(hashIdChildren);
+                var id = HashId.DecryptLong(hashIdChildren);
                 var tour = await _context.EventChildrens
                     .Include(x => x.IdEventNavigation)
                     .Where(x => x.IdChildren == id && x.IdEventNavigation.Type == TypeEvent.Tour)
                     .OrderByDescending(x => x.StartDate)
                     .ToListAsync();
-                var result = _mapperService.Mapper.Map<IEnumerable<TourChildrenDTO>>(tour);
+                var result = _mapper.Map<IEnumerable<TourChildrenDTO>>(tour);
                 return new ActualResult<IEnumerable<TourChildrenDTO>> { Result = result };
             }
             catch (Exception exception)
@@ -51,7 +50,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Children
         {
             try
             {
-                var id = _hashIdUtilities.DecryptLong(hashId);
+                var id = HashId.DecryptLong(hashId);
                 var tour = await _context.EventChildrens
                     .Include(x => x.IdEventNavigation)
                     .FirstOrDefaultAsync(x => x.Id == id);
@@ -59,7 +58,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Children
                 {
                     return new ActualResult<TourChildrenDTO>(Errors.TupleDeleted);
                 }
-                var result = _mapperService.Mapper.Map<TourChildrenDTO>(tour);
+                var result = _mapper.Map<TourChildrenDTO>(tour);
                 return new ActualResult<TourChildrenDTO> { Result = result };
             }
             catch (Exception exception)
@@ -72,10 +71,10 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Children
         {
             try
             {
-                var tourChildren = _mapperService.Mapper.Map<EventChildrens>(item);
+                var tourChildren = _mapper.Map<EventChildrens>(item);
                 await _context.EventChildrens.AddAsync(tourChildren);
                 await _context.SaveChangesAsync();
-                var hashId = _hashIdUtilities.EncryptLong(tourChildren.Id);
+                var hashId = HashId.EncryptLong(tourChildren.Id);
                 return new ActualResult<string> { Result = hashId };
             }
             catch (Exception exception)
@@ -88,7 +87,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Children
         {
             try
             {
-                _context.Entry(_mapperService.Mapper.Map<EventChildrens>(item)).State = EntityState.Modified;
+                _context.Entry(_mapper.Map<EventChildrens>(item)).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
                 return new ActualResult();
             }
@@ -102,7 +101,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Children
         {
             try
             {
-                var id = _hashIdUtilities.DecryptLong(hashId);
+                var id = HashId.DecryptLong(hashId);
                 var result = await _context.EventChildrens.FindAsync(id);
                 if (result != null)
                 {

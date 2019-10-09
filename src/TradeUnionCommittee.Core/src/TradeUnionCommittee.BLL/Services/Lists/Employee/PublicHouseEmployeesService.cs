@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,26 +19,24 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Employee
     internal class PublicHouseEmployeesService : IPublicHouseEmployeesService
     {
         private readonly TradeUnionCommitteeContext _context;
-        private readonly AutoMapperConfiguration _mapperService;
-        private readonly HashIdConfiguration _hashIdUtilities;
+        private readonly IMapper _mapper;
 
-        public PublicHouseEmployeesService(TradeUnionCommitteeContext context, AutoMapperConfiguration mapperService, HashIdConfiguration hashIdUtilities)
+        public PublicHouseEmployeesService(TradeUnionCommitteeContext context, IMapper mapper)
         {
             _context = context;
-            _mapperService = mapperService;
-            _hashIdUtilities = hashIdUtilities;
+            _mapper = mapper;
         }
 
         public async Task<ActualResult<IEnumerable<PublicHouseEmployeesDTO>>> GetAllAsync(string hashIdEmployee, PublicHouse type)
         {
             try
             {
-                var id = _hashIdUtilities.DecryptLong(hashIdEmployee);
+                var id = HashId.DecryptLong(hashIdEmployee);
                 var publicHouse = await _context.PublicHouseEmployees
                     .Include(x => x.IdAddressPublicHouseNavigation)
                     .Where(x => x.IdEmployee == id && x.IdAddressPublicHouseNavigation.Type == Converter(type))
                     .ToListAsync();
-                var result = _mapperService.Mapper.Map<IEnumerable<PublicHouseEmployeesDTO>>(publicHouse);
+                var result = _mapper.Map<IEnumerable<PublicHouseEmployeesDTO>>(publicHouse);
                 return new ActualResult<IEnumerable<PublicHouseEmployeesDTO>> { Result = result };
             }
             catch (Exception exception)
@@ -50,7 +49,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Employee
         {
             try
             {
-                var id = _hashIdUtilities.DecryptLong(hashId);
+                var id = HashId.DecryptLong(hashId);
                 var publicHouse = await _context.PublicHouseEmployees
                     .Include(x => x.IdAddressPublicHouseNavigation)
                     .FirstOrDefaultAsync(x => x.Id == id);
@@ -58,7 +57,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Employee
                 {
                     return new ActualResult<PublicHouseEmployeesDTO>(Errors.TupleDeleted);
                 }
-                var result = _mapperService.Mapper.Map<PublicHouseEmployeesDTO>(publicHouse);
+                var result = _mapper.Map<PublicHouseEmployeesDTO>(publicHouse);
                 return new ActualResult<PublicHouseEmployeesDTO> { Result = result };
             }
             catch (Exception exception)
@@ -71,10 +70,10 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Employee
         {
             try
             {
-                var publicHouseEmployees = _mapperService.Mapper.Map<PublicHouseEmployees>(item);
+                var publicHouseEmployees = _mapper.Map<PublicHouseEmployees>(item);
                 await _context.PublicHouseEmployees.AddAsync(publicHouseEmployees);
                 await _context.SaveChangesAsync();
-                var hashId = _hashIdUtilities.EncryptLong(publicHouseEmployees.Id);
+                var hashId = HashId.EncryptLong(publicHouseEmployees.Id);
                 return new ActualResult<string> { Result = hashId };
             }
             catch (Exception exception)
@@ -87,7 +86,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Employee
         {
             try
             {
-                _context.Entry(_mapperService.Mapper.Map<PublicHouseEmployees>(item)).State = EntityState.Modified;
+                _context.Entry(_mapper.Map<PublicHouseEmployees>(item)).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
                 return new ActualResult();
             }
@@ -101,7 +100,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Employee
         {
             try
             {
-                var id = _hashIdUtilities.DecryptLong(hashId);
+                var id = HashId.DecryptLong(hashId);
                 var result = await _context.PublicHouseEmployees.FindAsync(id);
                 if (result != null)
                 {

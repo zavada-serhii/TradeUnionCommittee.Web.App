@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,27 +19,25 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Family
     internal class TourFamilyService : ITourFamilyService
     {
         private readonly TradeUnionCommitteeContext _context;
-        private readonly AutoMapperConfiguration _mapperService;
-        private readonly HashIdConfiguration _hashIdUtilities;
+        private readonly IMapper _mapper;
 
-        public TourFamilyService(TradeUnionCommitteeContext context, AutoMapperConfiguration mapperService, HashIdConfiguration hashIdUtilities)
+        public TourFamilyService(TradeUnionCommitteeContext context, IMapper mapper)
         {
             _context = context;
-            _mapperService = mapperService;
-            _hashIdUtilities = hashIdUtilities;
+            _mapper = mapper;
         }
 
         public async Task<ActualResult<IEnumerable<TourFamilyDTO>>> GetAllAsync(string hashIdFamily)
         {
             try
             {
-                var id = _hashIdUtilities.DecryptLong(hashIdFamily);
+                var id = HashId.DecryptLong(hashIdFamily);
                 var tour = await _context.EventFamily
                     .Include(x => x.IdEventNavigation)
                     .Where(x => x.IdFamily == id && x.IdEventNavigation.Type == TypeEvent.Tour)
                     .OrderByDescending(x => x.StartDate)
                     .ToListAsync();
-                var result = _mapperService.Mapper.Map<IEnumerable<TourFamilyDTO>>(tour);
+                var result = _mapper.Map<IEnumerable<TourFamilyDTO>>(tour);
                 return new ActualResult<IEnumerable<TourFamilyDTO>> { Result = result };
             }
             catch (Exception exception)
@@ -51,7 +50,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Family
         {
             try
             {
-                var id = _hashIdUtilities.DecryptLong(hashId);
+                var id = HashId.DecryptLong(hashId);
                 var tour = await _context.EventFamily
                     .Include(x => x.IdEventNavigation)
                     .FirstOrDefaultAsync(x => x.Id == id);
@@ -59,7 +58,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Family
                 {
                     return new ActualResult<TourFamilyDTO>(Errors.TupleDeleted);
                 }
-                var result = _mapperService.Mapper.Map<TourFamilyDTO>(tour);
+                var result = _mapper.Map<TourFamilyDTO>(tour);
                 return new ActualResult<TourFamilyDTO> { Result = result };
             }
             catch (Exception exception)
@@ -72,10 +71,10 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Family
         {
             try
             {
-                var tourFamily = _mapperService.Mapper.Map<EventFamily>(item);
+                var tourFamily = _mapper.Map<EventFamily>(item);
                 await _context.EventFamily.AddAsync(tourFamily);
                 await _context.SaveChangesAsync();
-                var hashId = _hashIdUtilities.EncryptLong(tourFamily.Id);
+                var hashId = HashId.EncryptLong(tourFamily.Id);
                 return new ActualResult<string> { Result = hashId };
             }
             catch (Exception exception)
@@ -88,7 +87,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Family
         {
             try
             {
-                _context.Entry(_mapperService.Mapper.Map<EventFamily>(item)).State = EntityState.Modified;
+                _context.Entry(_mapper.Map<EventFamily>(item)).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
                 return new ActualResult();
             }
@@ -102,7 +101,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Family
         {
             try
             {
-                var id = _hashIdUtilities.DecryptLong(hashId);
+                var id = HashId.DecryptLong(hashId);
                 var result = await _context.EventFamily.FindAsync(id);
                 if (result != null)
                 {

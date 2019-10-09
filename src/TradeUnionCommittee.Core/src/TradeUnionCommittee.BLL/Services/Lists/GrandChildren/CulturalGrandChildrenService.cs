@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,27 +18,25 @@ namespace TradeUnionCommittee.BLL.Services.Lists.GrandChildren
     internal class CulturalGrandChildrenService : ICulturalGrandChildrenService
     {
         private readonly TradeUnionCommitteeContext _context;
-        private readonly AutoMapperConfiguration _mapperService;
-        private readonly HashIdConfiguration _hashIdUtilities;
+        private readonly IMapper _mapper;
 
-        public CulturalGrandChildrenService(TradeUnionCommitteeContext context, AutoMapperConfiguration mapperService, HashIdConfiguration hashIdUtilities)
+        public CulturalGrandChildrenService(TradeUnionCommitteeContext context, IMapper mapper)
         {
             _context = context;
-            _mapperService = mapperService;
-            _hashIdUtilities = hashIdUtilities;
+            _mapper = mapper;
         }
 
         public async Task<ActualResult<IEnumerable<CulturalGrandChildrenDTO>>> GetAllAsync(string hashIdGrandChildren)
         {
             try
             {
-                var id = _hashIdUtilities.DecryptLong(hashIdGrandChildren);
+                var id = HashId.DecryptLong(hashIdGrandChildren);
                 var cultural = await _context.CulturalGrandChildrens
                     .Include(x => x.IdCulturalNavigation)
                     .Where(x => x.IdGrandChildren == id)
                     .OrderByDescending(x => x.DateVisit)
                     .ToListAsync();
-                var result = _mapperService.Mapper.Map<IEnumerable<CulturalGrandChildrenDTO>>(cultural);
+                var result = _mapper.Map<IEnumerable<CulturalGrandChildrenDTO>>(cultural);
                 return new ActualResult<IEnumerable<CulturalGrandChildrenDTO>> { Result = result };
             }
             catch (Exception exception)
@@ -50,7 +49,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists.GrandChildren
         {
             try
             {
-                var id = _hashIdUtilities.DecryptLong(hashId);
+                var id = HashId.DecryptLong(hashId);
                 var cultural = await _context.CulturalGrandChildrens
                     .Include(x => x.IdCulturalNavigation)
                     .FirstOrDefaultAsync(x => x.Id == id);
@@ -58,7 +57,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists.GrandChildren
                 {
                     return new ActualResult<CulturalGrandChildrenDTO>(Errors.TupleDeleted);
                 }
-                var result = _mapperService.Mapper.Map<CulturalGrandChildrenDTO>(cultural);
+                var result = _mapper.Map<CulturalGrandChildrenDTO>(cultural);
                 return new ActualResult<CulturalGrandChildrenDTO> { Result = result };
             }
             catch (Exception exception)
@@ -71,10 +70,10 @@ namespace TradeUnionCommittee.BLL.Services.Lists.GrandChildren
         {
             try
             {
-                var culturalGrandChildren = _mapperService.Mapper.Map<CulturalGrandChildrens>(item);
+                var culturalGrandChildren = _mapper.Map<CulturalGrandChildrens>(item);
                 await _context.CulturalGrandChildrens.AddAsync(culturalGrandChildren);
                 await _context.SaveChangesAsync();
-                var hashId = _hashIdUtilities.EncryptLong(culturalGrandChildren.Id);
+                var hashId = HashId.EncryptLong(culturalGrandChildren.Id);
                 return new ActualResult<string> { Result = hashId };
             }
             catch (Exception exception)
@@ -87,7 +86,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists.GrandChildren
         {
             try
             {
-                _context.Entry(_mapperService.Mapper.Map<CulturalGrandChildrens>(item)).State = EntityState.Modified;
+                _context.Entry(_mapper.Map<CulturalGrandChildrens>(item)).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
                 return new ActualResult();
             }
@@ -101,7 +100,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists.GrandChildren
         {
             try
             {
-                var id = _hashIdUtilities.DecryptLong(hashId);
+                var id = HashId.DecryptLong(hashId);
                 var result = await _context.CulturalGrandChildrens.FindAsync(id);
                 if (result != null)
                 {

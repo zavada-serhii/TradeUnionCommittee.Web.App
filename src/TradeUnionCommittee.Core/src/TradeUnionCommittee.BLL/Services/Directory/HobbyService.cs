@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,14 +18,12 @@ namespace TradeUnionCommittee.BLL.Services.Directory
     internal class HobbyService : IHobbyService
     {
         private readonly TradeUnionCommitteeContext _context;
-        private readonly AutoMapperConfiguration _mapperService;
-        private readonly HashIdConfiguration _hashIdUtilities;
+        private readonly IMapper _mapper;
 
-        public HobbyService(TradeUnionCommitteeContext context, AutoMapperConfiguration mapperService, HashIdConfiguration hashIdUtilities)
+        public HobbyService(TradeUnionCommitteeContext context, IMapper mapper)
         {
             _context = context;
-            _mapperService = mapperService;
-            _hashIdUtilities = hashIdUtilities;
+            _mapper = mapper;
         }
 
         public async Task<ActualResult<IEnumerable<DirectoryDTO>>> GetAllAsync()
@@ -32,7 +31,7 @@ namespace TradeUnionCommittee.BLL.Services.Directory
             try
             {
                 var hobby = await _context.Hobby.OrderBy(x => x.Name).ToListAsync();
-                var result = _mapperService.Mapper.Map<IEnumerable<DirectoryDTO>>(hobby);
+                var result = _mapper.Map<IEnumerable<DirectoryDTO>>(hobby);
                 return new ActualResult<IEnumerable<DirectoryDTO>> { Result = result };
             }
             catch (Exception exception)
@@ -45,13 +44,13 @@ namespace TradeUnionCommittee.BLL.Services.Directory
         {
             try
             {
-                var id = _hashIdUtilities.DecryptLong(hashId);
+                var id = HashId.DecryptLong(hashId);
                 var hobby = await _context.Hobby.FindAsync(id);
                 if (hobby == null)
                 {
                     return new ActualResult<DirectoryDTO>(Errors.TupleDeleted);
                 }
-                var result = _mapperService.Mapper.Map<DirectoryDTO>(hobby);
+                var result = _mapper.Map<DirectoryDTO>(hobby);
                 return new ActualResult<DirectoryDTO> { Result = result };
             }
             catch (Exception exception)
@@ -64,10 +63,10 @@ namespace TradeUnionCommittee.BLL.Services.Directory
         {
             try
             {
-                var hobby = _mapperService.Mapper.Map<Hobby>(dto);
+                var hobby = _mapper.Map<Hobby>(dto);
                 await _context.Hobby.AddAsync(hobby);
                 await _context.SaveChangesAsync();
-                var hashId = _hashIdUtilities.EncryptLong(hobby.Id);
+                var hashId = HashId.EncryptLong(hobby.Id);
                 return new ActualResult<string> { Result = hashId };
             }
             catch (Exception exception)
@@ -80,7 +79,7 @@ namespace TradeUnionCommittee.BLL.Services.Directory
         {
             try
             {
-                _context.Entry(_mapperService.Mapper.Map<Hobby>(dto)).State = EntityState.Modified;
+                _context.Entry(_mapper.Map<Hobby>(dto)).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
                 return new ActualResult();
             }
@@ -94,7 +93,7 @@ namespace TradeUnionCommittee.BLL.Services.Directory
         {
             try
             {
-                var id = _hashIdUtilities.DecryptLong(hashId);
+                var id = HashId.DecryptLong(hashId);
                 var result = await _context.Hobby.FindAsync(id);
                 if (result != null)
                 {

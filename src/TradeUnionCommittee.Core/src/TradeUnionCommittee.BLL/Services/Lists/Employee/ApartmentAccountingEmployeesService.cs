@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,26 +18,24 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Employee
     internal class ApartmentAccountingEmployeesService : IApartmentAccountingEmployeesService
     {
         private readonly TradeUnionCommitteeContext _context;
-        private readonly AutoMapperConfiguration _mapperService;
-        private readonly HashIdConfiguration _hashIdUtilities;
+        private readonly IMapper _mapper;
 
-        public ApartmentAccountingEmployeesService(TradeUnionCommitteeContext context, AutoMapperConfiguration mapperService, HashIdConfiguration hashIdUtilities)
+        public ApartmentAccountingEmployeesService(TradeUnionCommitteeContext context, IMapper mapper)
         {
             _context = context;
-            _mapperService = mapperService;
-            _hashIdUtilities = hashIdUtilities;
+            _mapper = mapper;
         }
 
         public async Task<ActualResult<IEnumerable<ApartmentAccountingEmployeesDTO>>> GetAllAsync(string hashIdEmployee)
         {
             try
             {
-                var id = _hashIdUtilities.DecryptLong(hashIdEmployee);
+                var id = HashId.DecryptLong(hashIdEmployee);
                 var apartmentAccounting = await _context.ApartmentAccountingEmployees
                     .Where(x => x.IdEmployee == id)
                     .OrderByDescending(x => x.DateAdoption)
                     .ToListAsync();
-                var result = _mapperService.Mapper.Map<IEnumerable<ApartmentAccountingEmployeesDTO>>(apartmentAccounting);
+                var result = _mapper.Map<IEnumerable<ApartmentAccountingEmployeesDTO>>(apartmentAccounting);
                 return new ActualResult<IEnumerable<ApartmentAccountingEmployeesDTO>> { Result = result };
             }
             catch (Exception exception)
@@ -49,13 +48,13 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Employee
         {
             try
             {
-                var id = _hashIdUtilities.DecryptLong(hashId);
+                var id = HashId.DecryptLong(hashId);
                 var apartmentAccounting = await _context.ApartmentAccountingEmployees.FindAsync(id);
                 if (apartmentAccounting == null)
                 {
                     return new ActualResult<ApartmentAccountingEmployeesDTO>(Errors.TupleDeleted);
                 }
-                var result = _mapperService.Mapper.Map<ApartmentAccountingEmployeesDTO>(apartmentAccounting);
+                var result = _mapper.Map<ApartmentAccountingEmployeesDTO>(apartmentAccounting);
                 return new ActualResult<ApartmentAccountingEmployeesDTO> { Result = result };
             }
             catch (Exception exception)
@@ -68,10 +67,10 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Employee
         {
             try
             {
-                var mapping = _mapperService.Mapper.Map<ApartmentAccountingEmployees>(item);
+                var mapping = _mapper.Map<ApartmentAccountingEmployees>(item);
                 await _context.ApartmentAccountingEmployees.AddAsync(mapping);
                 await _context.SaveChangesAsync();
-                var hashId = _hashIdUtilities.EncryptLong(mapping.Id);
+                var hashId = HashId.EncryptLong(mapping.Id);
                 return new ActualResult<string> { Result = hashId };
             }
             catch (Exception exception)
@@ -84,7 +83,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Employee
         {
             try
             {
-                var mapping = _mapperService.Mapper.Map<ApartmentAccountingEmployees>(item);
+                var mapping = _mapper.Map<ApartmentAccountingEmployees>(item);
                 _context.Entry(mapping).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
                 return new ActualResult();
@@ -99,7 +98,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Employee
         {
             try
             {
-                var id = _hashIdUtilities.DecryptLong(hashId);
+                var id = HashId.DecryptLong(hashId);
                 var result = await _context.ApartmentAccountingEmployees.FindAsync(id);
                 if (result != null)
                 {

@@ -1,8 +1,8 @@
-﻿using System;
+﻿using AutoMapper;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using TradeUnionCommittee.BLL.Configurations;
 using TradeUnionCommittee.BLL.DTO;
 using TradeUnionCommittee.BLL.Interfaces.Dashboard;
 using TradeUnionCommittee.DAL.EF;
@@ -13,13 +13,13 @@ namespace TradeUnionCommittee.BLL.Services.Dashboard
     internal class DashboardService : IDashboardService
     {
         private readonly TradeUnionCommitteeContext _context;
-        private readonly AutoMapperConfiguration _mapperService;
+        private readonly IMapper _mapper;
         private readonly ITestService _testService;
 
-        public DashboardService(TradeUnionCommitteeContext context, AutoMapperConfiguration mapperService, ITestService testService)
+        public DashboardService(TradeUnionCommitteeContext context, IMapper mapper, ITestService testService)
         {
             _context = context;
-            _mapperService = mapperService;
+            _mapper = mapper;
             _testService = testService;
         }
 

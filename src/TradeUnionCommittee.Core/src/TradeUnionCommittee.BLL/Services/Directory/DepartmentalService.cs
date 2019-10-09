@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,14 +19,12 @@ namespace TradeUnionCommittee.BLL.Services.Directory
     internal class DepartmentalService : IDepartmentalService
     {
         private readonly TradeUnionCommitteeContext _context;
-        private readonly AutoMapperConfiguration _mapperService;
-        private readonly HashIdConfiguration _hashIdUtilities;
+        private readonly IMapper _mapper;
 
-        public DepartmentalService(TradeUnionCommitteeContext context, AutoMapperConfiguration mapperService, HashIdConfiguration hashIdUtilities)
+        public DepartmentalService(TradeUnionCommitteeContext context, IMapper mapper)
         {
             _context = context;
-            _mapperService = mapperService;
-            _hashIdUtilities = hashIdUtilities;
+            _mapper = mapper;
         }
 
         public async Task<ActualResult<IEnumerable<DepartmentalDTO>>> GetAllAsync()
@@ -36,7 +35,7 @@ namespace TradeUnionCommittee.BLL.Services.Directory
                                                  .Where(x => x.Type == TypeHouse.Departmental)
                                                  .OrderBy(x => x.Street)
                                                  .ToListAsync();
-                var result = _mapperService.Mapper.Map<IEnumerable<DepartmentalDTO>>(departmental);
+                var result = _mapper.Map<IEnumerable<DepartmentalDTO>>(departmental);
                 return new ActualResult<IEnumerable<DepartmentalDTO>> { Result = result };
             }
             catch (Exception exception)
@@ -53,7 +52,7 @@ namespace TradeUnionCommittee.BLL.Services.Directory
                 var departmental = await _context.AddressPublicHouse
                                                  .Where(x => x.Type == TypeHouse.Departmental)
                                                  .OrderBy(x => x.Street)
-                                                 .ToDictionaryAsync(result => _hashIdUtilities.EncryptLong(result.Id),
+                                                 .ToDictionaryAsync(result => HashId.EncryptLong(result.Id),
                                                                     result => $"{result.City}, {result.Street}, {result.NumberHouse}");
                 return new ActualResult<Dictionary<string, string>> { Result = departmental };
             }
@@ -67,13 +66,13 @@ namespace TradeUnionCommittee.BLL.Services.Directory
         {
             try
             {
-                var id = _hashIdUtilities.DecryptLong(hashId);
+                var id = HashId.DecryptLong(hashId);
                 var departmental = await _context.AddressPublicHouse.FindAsync(id);
                 if (departmental == null)
                 {
                     return new ActualResult<DepartmentalDTO>(Errors.TupleDeleted);
                 }
-                var result = _mapperService.Mapper.Map<DepartmentalDTO>(departmental);
+                var result = _mapper.Map<DepartmentalDTO>(departmental);
                 return new ActualResult<DepartmentalDTO> { Result = result };
             }
             catch (Exception exception)
@@ -86,10 +85,10 @@ namespace TradeUnionCommittee.BLL.Services.Directory
         {
             try
             {
-                var departmental = _mapperService.Mapper.Map<AddressPublicHouse>(dto);
+                var departmental = _mapper.Map<AddressPublicHouse>(dto);
                 await _context.AddressPublicHouse.AddAsync(departmental);
                 await _context.SaveChangesAsync();
-                var hashId = _hashIdUtilities.EncryptLong(departmental.Id);
+                var hashId = HashId.EncryptLong(departmental.Id);
                 return new ActualResult<string> { Result = hashId };
             }
             catch (Exception exception)
@@ -102,7 +101,7 @@ namespace TradeUnionCommittee.BLL.Services.Directory
         {
             try
             {
-                _context.Entry(_mapperService.Mapper.Map<AddressPublicHouse>(dto)).State = EntityState.Modified;
+                _context.Entry(_mapper.Map<AddressPublicHouse>(dto)).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
                 return new ActualResult();
             }
@@ -116,7 +115,7 @@ namespace TradeUnionCommittee.BLL.Services.Directory
         {
             try
             {
-                var id = _hashIdUtilities.DecryptLong(hashId);
+                var id = HashId.DecryptLong(hashId);
                 var result = await _context.AddressPublicHouse.FindAsync(id);
                 if (result != null)
                 {

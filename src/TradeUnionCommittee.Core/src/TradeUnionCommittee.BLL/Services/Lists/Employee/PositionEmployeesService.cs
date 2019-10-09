@@ -1,8 +1,9 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
+using AutoMapper;
 using TradeUnionCommittee.BLL.ActualResults;
 using TradeUnionCommittee.BLL.Configurations;
 using TradeUnionCommittee.BLL.DTO.Employee;
@@ -17,27 +18,25 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Employee
     internal class PositionEmployeesService : IPositionEmployeesService
     {
         private readonly TradeUnionCommitteeContext _context;
-        private readonly AutoMapperConfiguration _mapperService;
-        private readonly HashIdConfiguration _hashIdUtilities;
+        private readonly IMapper _mapper;
 
-        public PositionEmployeesService(TradeUnionCommitteeContext context, AutoMapperConfiguration mapperService, HashIdConfiguration hashIdUtilities)
+        public PositionEmployeesService(TradeUnionCommitteeContext context, IMapper mapper)
         {
             _context = context;
-            _mapperService = mapperService;
-            _hashIdUtilities = hashIdUtilities;
+            _mapper = mapper;
         }
 
         public async Task<ActualResult<PositionEmployeesDTO>> GetAsync(string hashIdEmployee)
         {
             try
             {
-                var id = _hashIdUtilities.DecryptLong(hashIdEmployee);
+                var id = HashId.DecryptLong(hashIdEmployee);
                 var position = await _context.PositionEmployees.FirstOrDefaultAsync(x => x.IdEmployee == id);
                 if (position == null)
                 {
                     return new ActualResult<PositionEmployeesDTO>(Errors.TupleDeleted);
                 }
-                var result = _mapperService.Mapper.Map<PositionEmployeesDTO>(position);
+                var result = _mapper.Map<PositionEmployeesDTO>(position);
                 return new ActualResult<PositionEmployeesDTO> { Result = result };
             }
             catch (Exception exception)
@@ -53,7 +52,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Employee
                 var validation = await CheckDate(dto);
                 if (validation.IsValid)
                 {
-                    _context.Entry(_mapperService.Mapper.Map<PositionEmployees>(dto)).State = EntityState.Modified;
+                    _context.Entry(_mapper.Map<PositionEmployees>(dto)).State = EntityState.Modified;
                     await _context.SaveChangesAsync();
                     return new ActualResult();
                 }
@@ -76,7 +75,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Employee
         {
             try
             {
-                var id = _hashIdUtilities.DecryptLong(dto.HashIdEmployee);
+                var id = HashId.DecryptLong(dto.HashIdEmployee);
                 var employee = await _context.Employee.FindAsync(id);
                 if (employee != null)
                 {

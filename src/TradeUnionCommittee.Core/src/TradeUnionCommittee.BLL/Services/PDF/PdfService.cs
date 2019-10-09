@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +8,6 @@ using TradeUnionCommittee.BLL.ActualResults;
 using TradeUnionCommittee.BLL.Configurations;
 using TradeUnionCommittee.BLL.DTO;
 using TradeUnionCommittee.BLL.Enums;
-using TradeUnionCommittee.BLL.Extensions;
 using TradeUnionCommittee.BLL.Helpers;
 using TradeUnionCommittee.BLL.Interfaces.PDF;
 using TradeUnionCommittee.CloudStorage.Service.Interfaces;
@@ -23,16 +23,14 @@ namespace TradeUnionCommittee.BLL.Services.PDF
     internal class PdfService : IPdfService
     {
         private readonly TradeUnionCommitteeContext _context;
-        private readonly AutoMapperConfiguration _mapperService;
-        private readonly HashIdConfiguration _hashIdUtilities;
+        private readonly IMapper _mapper;
         private readonly IReportGeneratorService _reportGeneratorService;
         private readonly IReportPdfBucketService _pdfBucketService;
 
-        public PdfService(TradeUnionCommitteeContext context, AutoMapperConfiguration mapperService, HashIdConfiguration hashIdUtilities, IReportPdfBucketService pdfBucketService, IReportGeneratorService reportGeneratorService)
+        public PdfService(TradeUnionCommitteeContext context, IMapper mapper, IReportPdfBucketService pdfBucketService, IReportGeneratorService reportGeneratorService)
         {
             _context = context;
-            _mapperService = mapperService;
-            _hashIdUtilities = hashIdUtilities;
+            _mapper = mapper;
             _pdfBucketService = pdfBucketService;
             _reportGeneratorService = reportGeneratorService;
         }
@@ -46,7 +44,7 @@ namespace TradeUnionCommittee.BLL.Services.PDF
                 var model = await FillModelReport(dto);
                 var pdf = _reportGeneratorService.Generate(model);
 
-                var reportBucketModel = _mapperService.Mapper.Map<ReportPdfBucketModel>(dto);
+                var reportBucketModel = _mapper.Map<ReportPdfBucketModel>(dto);
                 reportBucketModel.Pdf = pdf;
                 await _pdfBucketService.PutPdfObject(reportBucketModel);
 
@@ -62,7 +60,7 @@ namespace TradeUnionCommittee.BLL.Services.PDF
 
         private async Task<ReportModel> FillModelReport(ReportPdfDTO dto)
         {
-            var model = _mapperService.Mapper.Map<ReportModel>(dto);
+            var model = _mapper.Map<ReportModel>(dto);
             model.FullNameEmployee = await GetFullNameEmployee(dto);
 
             switch (dto.TypeReport)
@@ -105,47 +103,47 @@ namespace TradeUnionCommittee.BLL.Services.PDF
 
         private async Task<string> GetFullNameEmployee(ReportPdfDTO dto)
         {
-            var id = _hashIdUtilities.DecryptLong(dto.HashIdEmployee);
+            var id = HashId.DecryptLong(dto.HashIdEmployee);
             var employee = await _context.Employee.FindAsync(id);
             return $"{employee.FirstName} {employee.SecondName} {employee.Patronymic}";
         }
 
         private async Task<IEnumerable<MaterialIncentivesEmployeeEntity>> GetMaterialAid(ReportPdfDTO dto)
         {
-            var id = _hashIdUtilities.DecryptLong(dto.HashIdEmployee);
+            var id = HashId.DecryptLong(dto.HashIdEmployee);
             var result = await _context.MaterialAidEmployees
                 .Include(x => x.IdMaterialAidNavigation)
                 .Where(x => (x.DateIssue >= dto.StartDate && x.DateIssue <= dto.EndDate)  && x.IdEmployee == id)
                 .OrderBy(x => x.DateIssue)
                 .ToListAsync();
-            return _mapperService.Mapper.Map<IEnumerable<MaterialIncentivesEmployeeEntity>>(result);
+            return _mapper.Map<IEnumerable<MaterialIncentivesEmployeeEntity>>(result);
         }
 
         private async Task<IEnumerable<MaterialIncentivesEmployeeEntity>> GetAward(ReportPdfDTO dto)
         {
-            var id = _hashIdUtilities.DecryptLong(dto.HashIdEmployee);
+            var id = HashId.DecryptLong(dto.HashIdEmployee);
             var result = await _context.AwardEmployees
                 .Include(x => x.IdAwardNavigation)
                 .Where(x => (x.DateIssue >= dto.StartDate && x.DateIssue <= dto.EndDate) && x.IdEmployee == id)
                 .OrderBy(x => x.DateIssue)
                 .ToListAsync();
-            return _mapperService.Mapper.Map<IEnumerable<MaterialIncentivesEmployeeEntity>>(result);
+            return _mapper.Map<IEnumerable<MaterialIncentivesEmployeeEntity>>(result);
         }
 
         private async Task<IEnumerable<CulturalEmployeeEntity>> GetCultural(ReportPdfDTO dto)
         {
-            var id = _hashIdUtilities.DecryptLong(dto.HashIdEmployee);
+            var id = HashId.DecryptLong(dto.HashIdEmployee);
             var result = await _context.CulturalEmployees
                 .Include(x => x.IdCulturalNavigation)
                 .Where(x => (x.DateVisit >= dto.StartDate && x.DateVisit <= dto.EndDate) && x.IdEmployee == id)
                 .OrderBy(x => x.DateVisit)
                 .ToListAsync();
-            return _mapperService.Mapper.Map<IEnumerable<CulturalEmployeeEntity>>(result);
+            return _mapper.Map<IEnumerable<CulturalEmployeeEntity>>(result);
         }
 
         private async Task<IEnumerable<EventEmployeeEntity>> GetEvent(ReportPdfDTO dto, TypeEvent typeEvent)
         {
-            var id = _hashIdUtilities.DecryptLong(dto.HashIdEmployee);
+            var id = HashId.DecryptLong(dto.HashIdEmployee);
             var result = await _context.EventEmployees
                 .Include(x => x.IdEventNavigation)
                 .Where(x => (x.StartDate >= dto.StartDate && x.StartDate <= dto.EndDate) &&
@@ -154,17 +152,17 @@ namespace TradeUnionCommittee.BLL.Services.PDF
                             x.IdEmployee == id)
                 .OrderBy(x => x.StartDate)
                 .ToListAsync();
-            return _mapperService.Mapper.Map<IEnumerable<EventEmployeeEntity>>(result);
+            return _mapper.Map<IEnumerable<EventEmployeeEntity>>(result);
         }
 
         private async Task<IEnumerable<GiftEmployeeEntity>> GetGift(ReportPdfDTO dto)
         {
-            var id = _hashIdUtilities.DecryptLong(dto.HashIdEmployee);
+            var id = HashId.DecryptLong(dto.HashIdEmployee);
             var result = await _context.GiftEmployees
                 .Where(x => (x.DateGift >= dto.StartDate && x.DateGift <= dto.EndDate) && x.IdEmployee == id)
                 .OrderBy(x => x.DateGift)
                 .ToListAsync();
-            return _mapperService.Mapper.Map<IEnumerable<GiftEmployeeEntity>>(result);
+            return _mapper.Map<IEnumerable<GiftEmployeeEntity>>(result);
         }
 
         private async Task<IEnumerable<EventEmployeeEntity>> AddAllEvent(ReportPdfDTO dto)

@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,26 +18,24 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Children
     internal class GiftChildrenService : IGiftChildrenService
     {
         private readonly TradeUnionCommitteeContext _context;
-        private readonly AutoMapperConfiguration _mapperService;
-        private readonly HashIdConfiguration _hashIdUtilities;
+        private readonly IMapper _mapper;
 
-        public GiftChildrenService(TradeUnionCommitteeContext context, AutoMapperConfiguration mapperService, HashIdConfiguration hashIdUtilities)
+        public GiftChildrenService(TradeUnionCommitteeContext context, IMapper mapper)
         {
             _context = context;
-            _mapperService = mapperService;
-            _hashIdUtilities = hashIdUtilities;
+            _mapper = mapper;
         }
 
         public async Task<ActualResult<IEnumerable<GiftChildrenDTO>>> GetAllAsync(string hashIdChildren)
         {
             try
             {
-                var id = _hashIdUtilities.DecryptLong(hashIdChildren);
+                var id = HashId.DecryptLong(hashIdChildren);
                 var gift = await _context.GiftChildrens
                     .Where(x => x.IdChildren == id)
                     .OrderByDescending(x => x.DateGift)
                     .ToListAsync();
-                var result = _mapperService.Mapper.Map<IEnumerable<GiftChildrenDTO>>(gift);
+                var result = _mapper.Map<IEnumerable<GiftChildrenDTO>>(gift);
                 return new ActualResult<IEnumerable<GiftChildrenDTO>> { Result = result };
             }
             catch (Exception exception)
@@ -49,13 +48,13 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Children
         {
             try
             {
-                var id = _hashIdUtilities.DecryptLong(hashId);
+                var id = HashId.DecryptLong(hashId);
                 var gift = await _context.GiftChildrens.FindAsync(id);
                 if (gift == null)
                 {
                     return new ActualResult<GiftChildrenDTO>(Errors.TupleDeleted);
                 }
-                var result = _mapperService.Mapper.Map<GiftChildrenDTO>(gift);
+                var result = _mapper.Map<GiftChildrenDTO>(gift);
                 return new ActualResult<GiftChildrenDTO> { Result = result };
             }
             catch (Exception exception)
@@ -68,10 +67,10 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Children
         {
             try
             {
-                var giftChildren = _mapperService.Mapper.Map<GiftChildrens>(item);
+                var giftChildren = _mapper.Map<GiftChildrens>(item);
                 await _context.GiftChildrens.AddAsync(giftChildren);
                 await _context.SaveChangesAsync();
-                var hashId = _hashIdUtilities.EncryptLong(giftChildren.Id);
+                var hashId = HashId.EncryptLong(giftChildren.Id);
                 return new ActualResult<string> { Result = hashId };
             }
             catch (Exception exception)
@@ -84,7 +83,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Children
         {
             try
             {
-                _context.Entry(_mapperService.Mapper.Map<GiftChildrens>(item)).State = EntityState.Modified;
+                _context.Entry(_mapper.Map<GiftChildrens>(item)).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
                 return new ActualResult();
             }
@@ -98,7 +97,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Children
         {
             try
             {
-                var id = _hashIdUtilities.DecryptLong(hashId);
+                var id = HashId.DecryptLong(hashId);
                 var result = await _context.GiftChildrens.FindAsync(id);
                 if (result != null)
                 {

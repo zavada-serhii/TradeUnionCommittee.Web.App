@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,27 +18,25 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Family
     internal class ActivityFamilyService : IActivityFamilyService
     {
         private readonly TradeUnionCommitteeContext _context;
-        private readonly AutoMapperConfiguration _mapperService;
-        private readonly HashIdConfiguration _hashIdUtilities;
+        private readonly IMapper _mapper;
 
-        public ActivityFamilyService(TradeUnionCommitteeContext context, AutoMapperConfiguration mapperService, HashIdConfiguration hashIdUtilities)
+        public ActivityFamilyService(TradeUnionCommitteeContext context, IMapper mapper)
         {
             _context = context;
-            _mapperService = mapperService;
-            _hashIdUtilities = hashIdUtilities;
+            _mapper = mapper;
         }
 
         public async Task<ActualResult<IEnumerable<ActivityFamilyDTO>>> GetAllAsync(string hashIdFamily)
         {
             try
             {
-                var id = _hashIdUtilities.DecryptLong(hashIdFamily);
+                var id = HashId.DecryptLong(hashIdFamily);
                 var activity = await _context.ActivityFamily
                     .Include(x => x.IdActivitiesNavigation)
                     .Where(x => x.IdFamily == id)
                     .OrderByDescending(x => x.DateEvent)
                     .ToListAsync();
-                var result = _mapperService.Mapper.Map<IEnumerable<ActivityFamilyDTO>>(activity);
+                var result = _mapper.Map<IEnumerable<ActivityFamilyDTO>>(activity);
                 return new ActualResult<IEnumerable<ActivityFamilyDTO>> { Result = result };
             }
             catch (Exception exception)
@@ -50,7 +49,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Family
         {
             try
             {
-                var id = _hashIdUtilities.DecryptLong(hashId);
+                var id = HashId.DecryptLong(hashId);
                 var activity = await _context.ActivityFamily
                     .Include(x => x.IdActivitiesNavigation)
                     .FirstOrDefaultAsync(x => x.Id == id);
@@ -58,7 +57,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Family
                 {
                     return new ActualResult<ActivityFamilyDTO>(Errors.TupleDeleted);
                 }
-                var result = _mapperService.Mapper.Map<ActivityFamilyDTO>(activity);
+                var result = _mapper.Map<ActivityFamilyDTO>(activity);
                 return new ActualResult<ActivityFamilyDTO> { Result = result };
             }
             catch (Exception exception)
@@ -71,10 +70,10 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Family
         {
             try
             {
-                var activityFamily = _mapperService.Mapper.Map<ActivityFamily>(item);
+                var activityFamily = _mapper.Map<ActivityFamily>(item);
                 await _context.ActivityFamily.AddAsync(activityFamily);
                 await _context.SaveChangesAsync();
-                var hashId = _hashIdUtilities.EncryptLong(activityFamily.Id);
+                var hashId = HashId.EncryptLong(activityFamily.Id);
                 return new ActualResult<string> { Result = hashId };
             }
             catch (Exception exception)
@@ -87,7 +86,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Family
         {
             try
             {
-                _context.Entry(_mapperService.Mapper.Map<ActivityFamily>(item)).State = EntityState.Modified;
+                _context.Entry(_mapper.Map<ActivityFamily>(item)).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
                 return new ActualResult();
             }
@@ -101,7 +100,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Family
         {
             try
             {
-                var id = _hashIdUtilities.DecryptLong(hashId);
+                var id = HashId.DecryptLong(hashId);
                 var result = await _context.ActivityFamily.FindAsync(id);
                 if (result != null)
                 {

@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,14 +19,12 @@ namespace TradeUnionCommittee.BLL.Services.Directory
     internal class TravelService : ITravelService
     {
         private readonly TradeUnionCommitteeContext _context;
-        private readonly AutoMapperConfiguration _mapperService;
-        private readonly HashIdConfiguration _hashIdUtilities;
+        private readonly IMapper _mapper;
 
-        public TravelService(TradeUnionCommitteeContext context, AutoMapperConfiguration mapperService, HashIdConfiguration hashIdUtilities)
+        public TravelService(TradeUnionCommitteeContext context, IMapper mapper)
         {
             _context = context;
-            _mapperService = mapperService;
-            _hashIdUtilities = hashIdUtilities;
+            _mapper = mapper;
         }
 
         public async Task<ActualResult<IEnumerable<TravelDTO>>> GetAllAsync()
@@ -33,7 +32,7 @@ namespace TradeUnionCommittee.BLL.Services.Directory
             try
             {
                 var travel = await _context.Event.Where(x => x.Type == TypeEvent.Travel).OrderBy(x => x.Name).ToListAsync();
-                var result = _mapperService.Mapper.Map<IEnumerable<TravelDTO>>(travel);
+                var result = _mapper.Map<IEnumerable<TravelDTO>>(travel);
                 return new ActualResult<IEnumerable<TravelDTO>> { Result = result };
             }
             catch (Exception exception)
@@ -46,13 +45,13 @@ namespace TradeUnionCommittee.BLL.Services.Directory
         {
             try
             {
-                var id = _hashIdUtilities.DecryptLong(hashId);
+                var id = HashId.DecryptLong(hashId);
                 var travel = await _context.Event.FindAsync(id);
                 if (travel == null)
                 {
                     return new ActualResult<TravelDTO>(Errors.TupleDeleted);
                 }
-                var result = _mapperService.Mapper.Map<TravelDTO>(travel);
+                var result = _mapper.Map<TravelDTO>(travel);
                 return new ActualResult<TravelDTO> { Result = result };
             }
             catch (Exception exception)
@@ -65,10 +64,10 @@ namespace TradeUnionCommittee.BLL.Services.Directory
         {
             try
             {
-                var travel = _mapperService.Mapper.Map<Event>(dto);
+                var travel = _mapper.Map<Event>(dto);
                 await _context.Event.AddAsync(travel);
                 await _context.SaveChangesAsync();
-                var hashId = _hashIdUtilities.EncryptLong(travel.Id);
+                var hashId = HashId.EncryptLong(travel.Id);
                 return new ActualResult<string> { Result = hashId };
             }
             catch (Exception exception)
@@ -81,7 +80,7 @@ namespace TradeUnionCommittee.BLL.Services.Directory
         {
             try
             {
-                _context.Entry(_mapperService.Mapper.Map<Event>(dto)).State = EntityState.Modified;
+                _context.Entry(_mapper.Map<Event>(dto)).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
                 return new ActualResult();
             }
@@ -95,7 +94,7 @@ namespace TradeUnionCommittee.BLL.Services.Directory
         {
             try
             {
-                var id = _hashIdUtilities.DecryptLong(hashId);
+                var id = HashId.DecryptLong(hashId);
                 var result = await _context.Event.FindAsync(id);
                 if (result != null)
                 {

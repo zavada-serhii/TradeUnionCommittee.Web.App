@@ -35,7 +35,7 @@ namespace TradeUnionCommittee.BLL.Extensions
                                                                                   ConnectionStrings connectionStrings,
                                                                                   CloudStorageConnection cloudStorageConnection,
                                                                                   RestConnection restConnection,
-                                                                                  HashIdConfigurationSetting setting)
+                                                                                  HashIdConfiguration setting)
         {
             // Injection Main, Identity, Audit, Cloud Storage, Context, HashIdConfiguration, AutoMapperConfiguration
 
@@ -51,8 +51,8 @@ namespace TradeUnionCommittee.BLL.Extensions
             }, connectionStrings.CloudStorageConnection);
             services.AddDataAnalysisService(restConnection.DataAnalysisUrl);
             services.AddPdfService();
-            services.AddSingleton(x => new HashIdConfiguration(setting));
-            services.AddSingleton<AutoMapperConfiguration>();
+
+            HashId.Configure(setting);
 
             // Injection All Service
             //---------------------------------------------------------------------------------------------
