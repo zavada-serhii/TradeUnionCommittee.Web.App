@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.ActualResults;
-using TradeUnionCommittee.BLL.Configurations;
 using TradeUnionCommittee.BLL.DTO;
 using TradeUnionCommittee.BLL.Enums;
 using TradeUnionCommittee.BLL.Helpers;
@@ -45,7 +44,7 @@ namespace TradeUnionCommittee.BLL.Services.Directory
         {
             try
             {
-                var id = HashId.DecryptLong(hashId);
+                var id = HashHelper.DecryptLong(hashId);
                 var position = await _context.Position.FindAsync(id);
                 if (position == null)
                 {
@@ -67,7 +66,7 @@ namespace TradeUnionCommittee.BLL.Services.Directory
                 var position = _mapper.Map<Position>(dto);
                 await _context.Position.AddAsync(position);
                 await _context.SaveChangesAsync();
-                var hashId = HashId.EncryptLong(position.Id);
+                var hashId = HashHelper.EncryptLong(position.Id);
                 return new ActualResult<string> { Result = hashId };
             }
             catch (Exception exception)
@@ -94,7 +93,7 @@ namespace TradeUnionCommittee.BLL.Services.Directory
         {
             try
             {
-                var id = HashId.DecryptLong(hashId);
+                var id = HashHelper.DecryptLong(hashId);
                 var result = await _context.Position.FindAsync(id);
                 if (result != null)
                 {

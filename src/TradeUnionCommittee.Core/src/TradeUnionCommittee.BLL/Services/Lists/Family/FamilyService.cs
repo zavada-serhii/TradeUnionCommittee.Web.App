@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.ActualResults;
-using TradeUnionCommittee.BLL.Configurations;
 using TradeUnionCommittee.BLL.DTO.Family;
 using TradeUnionCommittee.BLL.Enums;
 using TradeUnionCommittee.BLL.Helpers;
@@ -29,7 +28,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Family
         {
             try
             {
-                var id = HashId.DecryptLong(hashIdEmployee);
+                var id = HashHelper.DecryptLong(hashIdEmployee);
                 var family = await _context.Family
                     .Where(x => x.IdEmployee == id)
                     .ToListAsync();
@@ -46,7 +45,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Family
         {
             try
             {
-                var id = HashId.DecryptLong(hashId);
+                var id = HashHelper.DecryptLong(hashId);
                 var family = await _context.Family.FindAsync(id);
                 if (family == null)
                 {
@@ -68,7 +67,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Family
                 var family = _mapper.Map<DAL.Entities.Family>(item);
                 await _context.Family.AddAsync(family);
                 await _context.SaveChangesAsync();
-                var hashId = HashId.EncryptLong(family.Id);
+                var hashId = HashHelper.EncryptLong(family.Id);
                 return new ActualResult<string> { Result = hashId };
             }
             catch (Exception exception)
@@ -95,7 +94,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Family
         {
             try
             {
-                var id = HashId.DecryptLong(hashId);
+                var id = HashHelper.DecryptLong(hashId);
                 var result = await _context.Family.FindAsync(id);
                 if (result != null)
                 {

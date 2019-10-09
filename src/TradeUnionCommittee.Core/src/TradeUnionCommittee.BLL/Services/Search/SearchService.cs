@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.ActualResults;
-using TradeUnionCommittee.BLL.Configurations;
 using TradeUnionCommittee.BLL.DTO;
 using TradeUnionCommittee.BLL.Enums;
 using TradeUnionCommittee.BLL.Extensions;
@@ -56,7 +55,7 @@ namespace TradeUnionCommittee.BLL.Services.Search
                 {
                     if (subdivision != null)
                     {
-                        var idSubdivision = HashId.DecryptLong(subdivision);
+                        var idSubdivision = HashHelper.DecryptLong(subdivision);
                         var searchByGenderAndSubdivision = _context.Employee
                             .Include(x => x.PositionEmployees.IdSubdivisionNavigation.InverseIdSubordinateNavigation)
                             .Where(x => x.Sex == gender &&
@@ -84,10 +83,10 @@ namespace TradeUnionCommittee.BLL.Services.Search
             {
                 return await Task.Run(() =>
                 {
-                    var idPosition = HashId.DecryptLong(position);
+                    var idPosition = HashHelper.DecryptLong(position);
                     if (subdivision != null)
                     {
-                        var idSubdivision = HashId.DecryptLong(subdivision);
+                        var idSubdivision = HashHelper.DecryptLong(subdivision);
                         var searchByGenderAndSubdivision = _context.Employee
                             .Include(x => x.PositionEmployees.IdSubdivisionNavigation.InverseIdSubordinateNavigation)
                             .Where(x => x.PositionEmployees.IdPosition == idPosition &&
@@ -115,10 +114,10 @@ namespace TradeUnionCommittee.BLL.Services.Search
             {
                 return await Task.Run(() =>
                 {
-                    var idPrivilege = HashId.DecryptLong(privilege);
+                    var idPrivilege = HashHelper.DecryptLong(privilege);
                     if (subdivision != null)
                     {
-                        var idSubdivision = HashId.DecryptLong(subdivision);
+                        var idSubdivision = HashHelper.DecryptLong(subdivision);
                         var searchByGenderAndSubdivision = _context.Employee
                             .Include(p => p.PositionEmployees.IdSubdivisionNavigation.InverseIdSubordinateNavigation)
                             .Include(p => p.PrivilegeEmployees)
@@ -148,7 +147,7 @@ namespace TradeUnionCommittee.BLL.Services.Search
             {
                 return await Task.Run(() =>
                 {
-                    var id = HashId.DecryptLong(hashId);
+                    var id = HashHelper.DecryptLong(hashId);
                     switch (type)
                     {
                         case AccommodationType.Dormitory:
@@ -221,7 +220,7 @@ namespace TradeUnionCommittee.BLL.Services.Search
             {
                 return await Task.Run(() =>
                 {
-                    var idHobby = HashId.DecryptLong(hobby);
+                    var idHobby = HashHelper.DecryptLong(hobby);
                     switch (type)
                     {
                         case CoverageType.Employee:
@@ -267,28 +266,28 @@ namespace TradeUnionCommittee.BLL.Services.Search
                         var searchByMobilePhone = await _context.Employee.FirstOrDefaultAsync(x => x.MobilePhone == value);
                         if (searchByMobilePhone != null)
                         {
-                            return new ActualResult<string> { Result = HashId.EncryptLong(searchByMobilePhone.Id) };
+                            return new ActualResult<string> { Result = HashHelper.EncryptLong(searchByMobilePhone.Id) };
                         }
                         return new ActualResult<string>(Errors.NotFound);
                     case EmployeeType.CityPhone:
                         var searchByCityPhone = await _context.Employee.FirstOrDefaultAsync(x => x.CityPhone == value.AddMaskForCityPhone());
                         if (searchByCityPhone != null)
                         {
-                            return new ActualResult<string> { Result = HashId.EncryptLong(searchByCityPhone.Id) };
+                            return new ActualResult<string> { Result = HashHelper.EncryptLong(searchByCityPhone.Id) };
                         }
                         return new ActualResult<string>(Errors.NotFound);
                     case EmployeeType.IdentificationCode:
                         var searchByIdentificationCode = await _context.Employee.FirstOrDefaultAsync(x => x.IdentificationCode == value);
                         if (searchByIdentificationCode != null)
                         {
-                            return new ActualResult<string> { Result = HashId.EncryptLong(searchByIdentificationCode.Id) };
+                            return new ActualResult<string> { Result = HashHelper.EncryptLong(searchByIdentificationCode.Id) };
                         }
                         return new ActualResult<string>(Errors.NotFound);
                     case EmployeeType.MechnikovCard:
                         var searchByMechnikovCard = await _context.Employee.FirstOrDefaultAsync(x => x.MechnikovCard == value);
                         if (searchByMechnikovCard != null)
                         {
-                            return new ActualResult<string> { Result = HashId.EncryptLong(searchByMechnikovCard.Id) };
+                            return new ActualResult<string> { Result = HashHelper.EncryptLong(searchByMechnikovCard.Id) };
                         }
                         return new ActualResult<string>(Errors.NotFound);
                     default:
@@ -307,7 +306,7 @@ namespace TradeUnionCommittee.BLL.Services.Search
         {
             return employees.OrderBy(x => x.FirstName).Select(employee => new ResultSearchDTO
             {
-                HashIdUser = HashId.EncryptLong(employee.Id),
+                HashIdUser = HashHelper.EncryptLong(employee.Id),
                 FullName = $"{employee.FirstName} {employee.SecondName} {employee.Patronymic}",
                 SurnameAndInitials = $"{employee.FirstName} {employee.SecondName[0]}. {(!string.IsNullOrEmpty(employee.Patronymic) ? $"{employee.Patronymic[0]}." : string.Empty)}",
                 BirthDate = employee.BirthDate,

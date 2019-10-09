@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.ActualResults;
-using TradeUnionCommittee.BLL.Configurations;
 using TradeUnionCommittee.BLL.DTO.Employee;
 using TradeUnionCommittee.BLL.Enums;
 using TradeUnionCommittee.BLL.Helpers;
@@ -31,7 +30,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Employee
             try
             {
                 IEnumerable<PrivateHouseEmployees> result;
-                var idEmployee = HashId.DecryptLong(hashIdEmployee);
+                var idEmployee = HashHelper.DecryptLong(hashIdEmployee);
                 switch (type)
                 {
                     case PrivateHouse.PrivateHouse:
@@ -56,7 +55,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Employee
         {
             try
             {
-                var id = HashId.DecryptLong(hashId);
+                var id = HashHelper.DecryptLong(hashId);
                 var privateHouse = await _context.PrivateHouseEmployees.FindAsync(id);
                 if (privateHouse == null)
                 {
@@ -82,7 +81,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Employee
                         var privateHouse = _mapper.Map<PrivateHouseEmployees>(item);
                         await _context.PrivateHouseEmployees.AddAsync(privateHouse);
                         await _context.SaveChangesAsync();
-                        var hashId = HashId.EncryptLong(privateHouse.Id);
+                        var hashId = HashHelper.EncryptLong(privateHouse.Id);
                         return new ActualResult<string> { Result = hashId };
                     }
                     case PrivateHouse.UniversityHouse:
@@ -93,7 +92,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Employee
                             var universityHouse = _mapper.Map<PrivateHouseEmployees>(item);
                             await _context.PrivateHouseEmployees.AddAsync(universityHouse);
                             await _context.SaveChangesAsync();
-                            var hashId = HashId.EncryptLong(universityHouse.Id);
+                            var hashId = HashHelper.EncryptLong(universityHouse.Id);
                             return new ActualResult<string> { Result = hashId };
                         }
                         return check;
@@ -141,7 +140,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Employee
         {
             try
             {
-                var id = HashId.DecryptLong(hashId);
+                var id = HashHelper.DecryptLong(hashId);
                 var result = await _context.PrivateHouseEmployees.FindAsync(id);
                 if (result != null)
                 {
@@ -167,7 +166,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Employee
         {
             try
             {
-                var id = HashId.DecryptLong(dto.HashIdEmployee);
+                var id = HashHelper.DecryptLong(dto.HashIdEmployee);
                 var employee = await _context.Employee.FindAsync(id);
                 if (employee != null)
                 {

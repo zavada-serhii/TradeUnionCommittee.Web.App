@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.ActualResults;
-using TradeUnionCommittee.BLL.Configurations;
 using TradeUnionCommittee.BLL.DTO.GrandChildren;
 using TradeUnionCommittee.BLL.Enums;
 using TradeUnionCommittee.BLL.Helpers;
@@ -30,7 +29,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists.GrandChildren
         {
             try
             {
-                var id = HashId.DecryptLong(hashIdGrandChildren);
+                var id = HashHelper.DecryptLong(hashIdGrandChildren);
                 var activity = await _context.ActivityGrandChildrens
                     .Include(x => x.IdActivitiesNavigation)
                     .Where(x => x.IdGrandChildren == id)
@@ -49,7 +48,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists.GrandChildren
         {
             try
             {
-                var id = HashId.DecryptLong(hashId);
+                var id = HashHelper.DecryptLong(hashId);
                 var activity = await _context.ActivityGrandChildrens
                     .Include(x => x.IdActivitiesNavigation)
                     .FirstOrDefaultAsync(x => x.Id == id);
@@ -73,7 +72,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists.GrandChildren
                 var activityGrandChildren = _mapper.Map<ActivityGrandChildrens>(item);
                 await _context.ActivityGrandChildrens.AddAsync(activityGrandChildren);
                 await _context.SaveChangesAsync();
-                var hashId = HashId.EncryptLong(activityGrandChildren.Id);
+                var hashId = HashHelper.EncryptLong(activityGrandChildren.Id);
                 return new ActualResult<string> { Result = hashId };
             }
             catch (Exception exception)
@@ -100,7 +99,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists.GrandChildren
         {
             try
             {
-                var id = HashId.DecryptLong(hashId);
+                var id = HashHelper.DecryptLong(hashId);
                 var result = await _context.ActivityGrandChildrens.FindAsync(id);
                 if (result != null)
                 {

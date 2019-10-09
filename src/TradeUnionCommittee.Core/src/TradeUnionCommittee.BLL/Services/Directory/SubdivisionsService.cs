@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.ActualResults;
-using TradeUnionCommittee.BLL.Configurations;
 using TradeUnionCommittee.BLL.DTO;
 using TradeUnionCommittee.BLL.Enums;
 using TradeUnionCommittee.BLL.Helpers;
@@ -44,7 +43,7 @@ namespace TradeUnionCommittee.BLL.Services.Directory
         {
             try
             {
-                var id = HashId.DecryptLong(hashId);
+                var id = HashHelper.DecryptLong(hashId);
                 var subdivision = await _context.Subdivisions.FindAsync(id);
                 if (subdivision == null)
                 {
@@ -63,7 +62,7 @@ namespace TradeUnionCommittee.BLL.Services.Directory
         {
             try
             {
-                var id = HashId.DecryptLong(hashId);
+                var id = HashHelper.DecryptLong(hashId);
                 var subdivision = await _context.Subdivisions.Where(x => x.IdSubordinate == id).OrderBy(x => x.Name).ToListAsync();
                 var result = _mapper.Map<IEnumerable<SubdivisionDTO>>(subdivision);
                 return new ActualResult<IEnumerable<SubdivisionDTO>> { Result = result };
@@ -102,13 +101,13 @@ namespace TradeUnionCommittee.BLL.Services.Directory
             {
                 new SubdivisionDTO
                 {
-                    HashIdMain = HashId.EncryptLong(subdivisions.Id),
+                    HashIdMain = HashHelper.EncryptLong(subdivisions.Id),
                     Name = subdivisions.Name
                 }
             };
             list.AddRange(subdivisions.InverseIdSubordinateNavigation.Select(subdivision => new SubdivisionDTO
             {
-                HashIdMain = HashId.EncryptLong(subdivision.Id),
+                HashIdMain = HashHelper.EncryptLong(subdivision.Id),
                 Name = subdivision.Name
             }));
             return list;
@@ -123,7 +122,7 @@ namespace TradeUnionCommittee.BLL.Services.Directory
                 var subdivision = _mapper.Map<Subdivisions>(dto);
                 await _context.Subdivisions.AddAsync(subdivision);
                 await _context.SaveChangesAsync();
-                var hashId = HashId.EncryptLong(subdivision.Id);
+                var hashId = HashHelper.EncryptLong(subdivision.Id);
                 return new ActualResult<string> { Result = hashId };
             }
             catch (Exception exception)
@@ -139,7 +138,7 @@ namespace TradeUnionCommittee.BLL.Services.Directory
                 var subdivision = _mapper.Map<Subdivisions>(dto);
                 await _context.Subdivisions.AddAsync(subdivision);
                 await _context.SaveChangesAsync();
-                var hashId = HashId.EncryptLong(subdivision.Id);
+                var hashId = HashHelper.EncryptLong(subdivision.Id);
                 return new ActualResult<string> { Result = hashId };
             }
             catch (Exception exception)
@@ -207,7 +206,7 @@ namespace TradeUnionCommittee.BLL.Services.Directory
         {
             try
             {
-                var id = HashId.DecryptLong(hashId);
+                var id = HashHelper.DecryptLong(hashId);
                 var result = await _context.Subdivisions.FindAsync(id);
                 if (result != null)
                 {

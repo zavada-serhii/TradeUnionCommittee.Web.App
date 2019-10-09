@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.ActualResults;
-using TradeUnionCommittee.BLL.Configurations;
 using TradeUnionCommittee.BLL.DTO.Children;
 using TradeUnionCommittee.BLL.Enums;
 using TradeUnionCommittee.BLL.Helpers;
@@ -30,7 +29,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Children
         {
             try
             {
-                var id = HashId.DecryptLong(hashIdChildren);
+                var id = HashHelper.DecryptLong(hashIdChildren);
                 var hobby = await _context.HobbyChildrens
                     .Include(x => x.IdHobbyNavigation)
                     .Where(x => x.IdChildren == id)
@@ -49,7 +48,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Children
         {
             try
             {
-                var id = HashId.DecryptLong(hashId);
+                var id = HashHelper.DecryptLong(hashId);
                 var hobby = await _context.HobbyChildrens
                     .Include(x => x.IdHobbyNavigation)
                     .FirstOrDefaultAsync(x => x.Id == id);
@@ -73,7 +72,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Children
                 var hobbyChildren = _mapper.Map<HobbyChildrens>(item);
                 await _context.HobbyChildrens.AddAsync(hobbyChildren);
                 await _context.SaveChangesAsync();
-                var hashId = HashId.EncryptLong(hobbyChildren.Id);
+                var hashId = HashHelper.EncryptLong(hobbyChildren.Id);
                 return new ActualResult<string> { Result = hashId };
             }
             catch (Exception exception)
@@ -100,7 +99,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Children
         {
             try
             {
-                var id = HashId.DecryptLong(hashId);
+                var id = HashHelper.DecryptLong(hashId);
                 var result = await _context.HobbyChildrens.FindAsync(id);
                 if (result != null)
                 {

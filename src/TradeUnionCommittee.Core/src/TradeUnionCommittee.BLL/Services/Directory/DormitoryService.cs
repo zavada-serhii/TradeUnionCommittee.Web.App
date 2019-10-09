@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.ActualResults;
-using TradeUnionCommittee.BLL.Configurations;
 using TradeUnionCommittee.BLL.DTO;
 using TradeUnionCommittee.BLL.Enums;
 using TradeUnionCommittee.BLL.Helpers;
@@ -48,7 +47,7 @@ namespace TradeUnionCommittee.BLL.Services.Directory
         {
             try
             {
-                var id = HashId.DecryptLong(hashId);
+                var id = HashHelper.DecryptLong(hashId);
                 var dormitory = await _context.AddressPublicHouse.FindAsync(id);
                 if (dormitory == null)
                 {
@@ -70,7 +69,7 @@ namespace TradeUnionCommittee.BLL.Services.Directory
                 var dormitory = _mapper.Map<AddressPublicHouse>(dto);
                 await _context.AddressPublicHouse.AddAsync(dormitory);
                 await _context.SaveChangesAsync();
-                var hashId = HashId.EncryptLong(dormitory.Id);
+                var hashId = HashHelper.EncryptLong(dormitory.Id);
                 return new ActualResult<string> { Result = hashId };
             }
             catch (Exception exception)
@@ -97,7 +96,7 @@ namespace TradeUnionCommittee.BLL.Services.Directory
         {
             try
             {
-                var id = HashId.DecryptLong(hashId);
+                var id = HashHelper.DecryptLong(hashId);
                 var result = await _context.AddressPublicHouse.FindAsync(id);
                 if (result != null)
                 {

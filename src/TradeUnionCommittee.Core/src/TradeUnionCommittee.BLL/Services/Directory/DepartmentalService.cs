@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.ActualResults;
-using TradeUnionCommittee.BLL.Configurations;
 using TradeUnionCommittee.BLL.DTO;
 using TradeUnionCommittee.BLL.Enums;
 using TradeUnionCommittee.BLL.Helpers;
@@ -52,7 +51,7 @@ namespace TradeUnionCommittee.BLL.Services.Directory
                 var departmental = await _context.AddressPublicHouse
                                                  .Where(x => x.Type == TypeHouse.Departmental)
                                                  .OrderBy(x => x.Street)
-                                                 .ToDictionaryAsync(result => HashId.EncryptLong(result.Id),
+                                                 .ToDictionaryAsync(result => HashHelper.EncryptLong(result.Id),
                                                                     result => $"{result.City}, {result.Street}, {result.NumberHouse}");
                 return new ActualResult<Dictionary<string, string>> { Result = departmental };
             }
@@ -66,7 +65,7 @@ namespace TradeUnionCommittee.BLL.Services.Directory
         {
             try
             {
-                var id = HashId.DecryptLong(hashId);
+                var id = HashHelper.DecryptLong(hashId);
                 var departmental = await _context.AddressPublicHouse.FindAsync(id);
                 if (departmental == null)
                 {
@@ -88,7 +87,7 @@ namespace TradeUnionCommittee.BLL.Services.Directory
                 var departmental = _mapper.Map<AddressPublicHouse>(dto);
                 await _context.AddressPublicHouse.AddAsync(departmental);
                 await _context.SaveChangesAsync();
-                var hashId = HashId.EncryptLong(departmental.Id);
+                var hashId = HashHelper.EncryptLong(departmental.Id);
                 return new ActualResult<string> { Result = hashId };
             }
             catch (Exception exception)
@@ -115,7 +114,7 @@ namespace TradeUnionCommittee.BLL.Services.Directory
         {
             try
             {
-                var id = HashId.DecryptLong(hashId);
+                var id = HashHelper.DecryptLong(hashId);
                 var result = await _context.AddressPublicHouse.FindAsync(id);
                 if (result != null)
                 {

@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.ActualResults;
-using TradeUnionCommittee.BLL.Configurations;
 using TradeUnionCommittee.BLL.DTO.Employee;
 using TradeUnionCommittee.BLL.Enums;
 using TradeUnionCommittee.BLL.Helpers;
@@ -30,7 +29,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Employee
         {
             try
             {
-                var id = HashId.DecryptLong(hashIdEmployee);
+                var id = HashHelper.DecryptLong(hashIdEmployee);
                 var apartmentAccounting = await _context.ApartmentAccountingEmployees
                     .Where(x => x.IdEmployee == id)
                     .OrderByDescending(x => x.DateAdoption)
@@ -48,7 +47,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Employee
         {
             try
             {
-                var id = HashId.DecryptLong(hashId);
+                var id = HashHelper.DecryptLong(hashId);
                 var apartmentAccounting = await _context.ApartmentAccountingEmployees.FindAsync(id);
                 if (apartmentAccounting == null)
                 {
@@ -70,7 +69,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Employee
                 var mapping = _mapper.Map<ApartmentAccountingEmployees>(item);
                 await _context.ApartmentAccountingEmployees.AddAsync(mapping);
                 await _context.SaveChangesAsync();
-                var hashId = HashId.EncryptLong(mapping.Id);
+                var hashId = HashHelper.EncryptLong(mapping.Id);
                 return new ActualResult<string> { Result = hashId };
             }
             catch (Exception exception)
@@ -98,7 +97,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Employee
         {
             try
             {
-                var id = HashId.DecryptLong(hashId);
+                var id = HashHelper.DecryptLong(hashId);
                 var result = await _context.ApartmentAccountingEmployees.FindAsync(id);
                 if (result != null)
                 {

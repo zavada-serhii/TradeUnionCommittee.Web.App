@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.ActualResults;
-using TradeUnionCommittee.BLL.Configurations;
 using TradeUnionCommittee.BLL.DTO.GrandChildren;
 using TradeUnionCommittee.BLL.Enums;
 using TradeUnionCommittee.BLL.Helpers;
@@ -30,7 +29,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists.GrandChildren
         {
             try
             {
-                var id = HashId.DecryptLong(hashIdGrandChildren);
+                var id = HashHelper.DecryptLong(hashIdGrandChildren);
                 var gift = await _context.GiftGrandChildrens
                     .Where(x => x.IdGrandChildren == id)
                     .OrderByDescending(x => x.DateGift)
@@ -48,7 +47,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists.GrandChildren
         {
             try
             {
-                var id = HashId.DecryptLong(hashId);
+                var id = HashHelper.DecryptLong(hashId);
                 var gift = await _context.GiftGrandChildrens.FindAsync(id);
                 if (gift == null)
                 {
@@ -70,7 +69,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists.GrandChildren
                 var giftGrandChildren = _mapper.Map<GiftGrandChildrens>(item);
                 await _context.GiftGrandChildrens.AddAsync(giftGrandChildren);
                 await _context.SaveChangesAsync();
-                var hashId = HashId.EncryptLong(giftGrandChildren.Id);
+                var hashId = HashHelper.EncryptLong(giftGrandChildren.Id);
                 return new ActualResult<string> { Result = hashId };
             }
             catch (Exception exception)
@@ -97,7 +96,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists.GrandChildren
         {
             try
             {
-                var id = HashId.DecryptLong(hashId);
+                var id = HashHelper.DecryptLong(hashId);
                 var result = await _context.GiftGrandChildrens.FindAsync(id);
                 if (result != null)
                 {

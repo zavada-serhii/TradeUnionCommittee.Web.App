@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.ActualResults;
-using TradeUnionCommittee.BLL.Configurations;
 using TradeUnionCommittee.BLL.DTO.Employee;
 using TradeUnionCommittee.BLL.Enums;
 using TradeUnionCommittee.BLL.Helpers;
@@ -31,7 +30,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Employee
         {
             try
             {
-                var id = HashId.DecryptLong(hashIdEmployee);
+                var id = HashHelper.DecryptLong(hashIdEmployee);
                 var publicHouse = await _context.PublicHouseEmployees
                     .Include(x => x.IdAddressPublicHouseNavigation)
                     .Where(x => x.IdEmployee == id && x.IdAddressPublicHouseNavigation.Type == Converter(type))
@@ -49,7 +48,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Employee
         {
             try
             {
-                var id = HashId.DecryptLong(hashId);
+                var id = HashHelper.DecryptLong(hashId);
                 var publicHouse = await _context.PublicHouseEmployees
                     .Include(x => x.IdAddressPublicHouseNavigation)
                     .FirstOrDefaultAsync(x => x.Id == id);
@@ -73,7 +72,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Employee
                 var publicHouseEmployees = _mapper.Map<PublicHouseEmployees>(item);
                 await _context.PublicHouseEmployees.AddAsync(publicHouseEmployees);
                 await _context.SaveChangesAsync();
-                var hashId = HashId.EncryptLong(publicHouseEmployees.Id);
+                var hashId = HashHelper.EncryptLong(publicHouseEmployees.Id);
                 return new ActualResult<string> { Result = hashId };
             }
             catch (Exception exception)
@@ -100,7 +99,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Employee
         {
             try
             {
-                var id = HashId.DecryptLong(hashId);
+                var id = HashHelper.DecryptLong(hashId);
                 var result = await _context.PublicHouseEmployees.FindAsync(id);
                 if (result != null)
                 {

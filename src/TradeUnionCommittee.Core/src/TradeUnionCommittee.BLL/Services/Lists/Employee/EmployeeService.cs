@@ -3,7 +3,6 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.ActualResults;
-using TradeUnionCommittee.BLL.Configurations;
 using TradeUnionCommittee.BLL.DTO.Employee;
 using TradeUnionCommittee.BLL.Enums;
 using TradeUnionCommittee.BLL.Helpers;
@@ -53,7 +52,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Employee
 
                 await _context.Employee.AddAsync(employee);
                 await _context.SaveChangesAsync();
-                var hashId = HashId.EncryptLong(employee.Id);
+                var hashId = HashHelper.EncryptLong(employee.Id);
                 return new ActualResult<string> { Result = hashId };
             }
             catch (Exception exception)
@@ -68,7 +67,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Employee
         {
             try
             {
-                var id = HashId.DecryptLong(hashId);
+                var id = HashHelper.DecryptLong(hashId);
                 var employee = await _context.Employee.FindAsync(id);
                 if (employee == null)
                 {
@@ -105,7 +104,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Employee
         {
             try
             {
-                var id = HashId.DecryptLong(hashId);
+                var id = HashHelper.DecryptLong(hashId);
                 var result = await _context.Employee.FindAsync(id);
                 if (result != null)
                 {

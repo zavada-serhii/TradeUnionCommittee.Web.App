@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using TradeUnionCommittee.BLL.Configurations;
+using TradeUnionCommittee.BLL.Helpers;
 using TradeUnionCommittee.BLL.Interfaces.Account;
 using TradeUnionCommittee.BLL.Interfaces.Dashboard;
 using TradeUnionCommittee.BLL.Interfaces.Directory;
@@ -52,7 +53,7 @@ namespace TradeUnionCommittee.BLL.Extensions
             services.AddDataAnalysisService(restConnection.DataAnalysisUrl);
             services.AddPdfService();
 
-            HashId.Configure(setting);
+            HashHelper.Configure(setting);
 
             // Injection All Service
             //---------------------------------------------------------------------------------------------

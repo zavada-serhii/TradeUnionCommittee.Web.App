@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.ActualResults;
-using TradeUnionCommittee.BLL.Configurations;
 using TradeUnionCommittee.BLL.DTO.Children;
 using TradeUnionCommittee.BLL.Enums;
 using TradeUnionCommittee.BLL.Helpers;
@@ -30,7 +29,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Children
         {
             try
             {
-                var id = HashId.DecryptLong(hashIdChildren);
+                var id = HashHelper.DecryptLong(hashIdChildren);
                 var activity = await _context.ActivityChildrens
                     .Include(x => x.IdActivitiesNavigation)
                     .Where(x => x.IdChildren == id)
@@ -49,7 +48,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Children
         {
             try
             {
-                var id = HashId.DecryptLong(hashId);
+                var id = HashHelper.DecryptLong(hashId);
                 var activity = await _context.ActivityChildrens
                     .Include(x => x.IdActivitiesNavigation)
                     .FirstOrDefaultAsync(x => x.Id == id);
@@ -73,7 +72,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Children
                 var activityChildren = _mapper.Map<ActivityChildrens>(item);
                 await _context.ActivityChildrens.AddAsync(activityChildren);
                 await _context.SaveChangesAsync();
-                var hashId = HashId.EncryptLong(activityChildren.Id);
+                var hashId = HashHelper.EncryptLong(activityChildren.Id);
                 return new ActualResult<string> { Result = hashId };
             }
             catch (Exception exception)
@@ -100,7 +99,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Children
         {
             try
             {
-                var id = HashId.DecryptLong(hashId);
+                var id = HashHelper.DecryptLong(hashId);
                 var result = await _context.ActivityChildrens.FindAsync(id);
                 if (result != null)
                 {

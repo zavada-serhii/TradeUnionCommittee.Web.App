@@ -3,7 +3,6 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.ActualResults;
-using TradeUnionCommittee.BLL.Configurations;
 using TradeUnionCommittee.BLL.DTO.Employee;
 using TradeUnionCommittee.BLL.Helpers;
 using TradeUnionCommittee.BLL.Interfaces.Lists.Employee;
@@ -27,7 +26,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Employee
         {
             try
             {
-                var id = HashId.DecryptLong(hashIdEmployee);
+                var id = HashHelper.DecryptLong(hashIdEmployee);
                 var privilege = await _context.PrivilegeEmployees
                     .Include(x => x.IdPrivilegesNavigation)
                     .FirstOrDefaultAsync(x => x.IdEmployee == id);
@@ -52,7 +51,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Employee
                 var privilegeEmployees = _mapper.Map<PrivilegeEmployees>(dto);
                 await _context.PrivilegeEmployees.AddAsync(privilegeEmployees);
                 await _context.SaveChangesAsync();
-                var hashId = HashId.EncryptLong(privilegeEmployees.Id);
+                var hashId = HashHelper.EncryptLong(privilegeEmployees.Id);
                 return new ActualResult<string> { Result = hashId };
             }
             catch (Exception exception)
@@ -79,7 +78,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Employee
         {
             try
             {
-                var id = HashId.DecryptLong(hashId);
+                var id = HashHelper.DecryptLong(hashId);
                 var result = await _context.PrivilegeEmployees.FindAsync(id);
                 if (result != null)
                 {

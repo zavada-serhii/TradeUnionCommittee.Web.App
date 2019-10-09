@@ -1,19 +1,12 @@
 ﻿using HashidsNet;
 using System;
 using System.Text;
+using TradeUnionCommittee.BLL.Configurations;
 using TradeUnionCommittee.BLL.Exceptions;
 
-namespace TradeUnionCommittee.BLL.Configurations
+namespace TradeUnionCommittee.BLL.Helpers
 {
-    public class HashIdConfiguration
-    {
-        public string Salt { get; set; }
-        public int MinHashLenght { get; set; }
-        public string Alphabet { get; set; }
-        public bool UseGuidFormat { get; set; }
-    }
-
-    internal sealed class HashId
+    internal sealed class HashHelper
     {
         private static bool _isInitialized;
         private static bool _useGuidFormat;

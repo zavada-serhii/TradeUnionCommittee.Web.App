@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.ActualResults;
-using TradeUnionCommittee.BLL.Configurations;
 using TradeUnionCommittee.BLL.DTO.Family;
 using TradeUnionCommittee.BLL.Enums;
 using TradeUnionCommittee.BLL.Helpers;
@@ -31,7 +30,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Family
         {
             try
             {
-                var id = HashId.DecryptLong(hashIdFamily);
+                var id = HashHelper.DecryptLong(hashIdFamily);
                 var travel = await _context.EventFamily
                     .Include(x => x.IdEventNavigation)
                     .Where(x => x.IdFamily == id && x.IdEventNavigation.Type == TypeEvent.Travel)
@@ -50,7 +49,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Family
         {
             try
             {
-                var id = HashId.DecryptLong(hashId);
+                var id = HashHelper.DecryptLong(hashId);
                 var travel = await _context.EventFamily
                     .Include(x => x.IdEventNavigation)
                     .FirstOrDefaultAsync(x => x.Id == id);
@@ -74,7 +73,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Family
                 var travelFamily = _mapper.Map<EventFamily>(item);
                 await _context.EventFamily.AddAsync(travelFamily);
                 await _context.SaveChangesAsync();
-                var hashId = HashId.EncryptLong(travelFamily.Id);
+                var hashId = HashHelper.EncryptLong(travelFamily.Id);
                 return new ActualResult<string> { Result = hashId };
             }
             catch (Exception exception)
@@ -101,7 +100,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Family
         {
             try
             {
-                var id = HashId.DecryptLong(hashId);
+                var id = HashHelper.DecryptLong(hashId);
                 var result = await _context.EventFamily.FindAsync(id);
                 if (result != null)
                 {

@@ -1,4 +1,4 @@
-﻿namespace TradeUnionCommittee.BLL
+﻿namespace TradeUnionCommittee.BLL.Configurations
 {
     public class ConnectionStrings
     {
@@ -20,5 +20,13 @@
     {
         public string DataAnalysisUrl { get; set; }
         public string ElasticUrl { get; set; }
+    }
+
+    public class HashIdConfiguration
+    {
+        public string Salt { get; set; }
+        public int MinHashLenght { get; set; }
+        public string Alphabet { get; set; }
+        public bool UseGuidFormat { get; set; }
     }
 }

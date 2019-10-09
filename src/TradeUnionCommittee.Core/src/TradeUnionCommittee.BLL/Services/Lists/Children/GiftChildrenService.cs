@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.ActualResults;
-using TradeUnionCommittee.BLL.Configurations;
 using TradeUnionCommittee.BLL.DTO.Children;
 using TradeUnionCommittee.BLL.Enums;
 using TradeUnionCommittee.BLL.Helpers;
@@ -30,7 +29,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Children
         {
             try
             {
-                var id = HashId.DecryptLong(hashIdChildren);
+                var id = HashHelper.DecryptLong(hashIdChildren);
                 var gift = await _context.GiftChildrens
                     .Where(x => x.IdChildren == id)
                     .OrderByDescending(x => x.DateGift)
@@ -48,7 +47,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Children
         {
             try
             {
-                var id = HashId.DecryptLong(hashId);
+                var id = HashHelper.DecryptLong(hashId);
                 var gift = await _context.GiftChildrens.FindAsync(id);
                 if (gift == null)
                 {
@@ -70,7 +69,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Children
                 var giftChildren = _mapper.Map<GiftChildrens>(item);
                 await _context.GiftChildrens.AddAsync(giftChildren);
                 await _context.SaveChangesAsync();
-                var hashId = HashId.EncryptLong(giftChildren.Id);
+                var hashId = HashHelper.EncryptLong(giftChildren.Id);
                 return new ActualResult<string> { Result = hashId };
             }
             catch (Exception exception)
@@ -97,7 +96,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Children
         {
             try
             {
-                var id = HashId.DecryptLong(hashId);
+                var id = HashHelper.DecryptLong(hashId);
                 var result = await _context.GiftChildrens.FindAsync(id);
                 if (result != null)
                 {
