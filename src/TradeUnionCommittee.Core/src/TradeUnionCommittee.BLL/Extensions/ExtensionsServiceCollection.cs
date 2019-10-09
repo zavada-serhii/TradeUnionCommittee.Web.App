@@ -38,7 +38,8 @@ namespace TradeUnionCommittee.BLL.Extensions
                                                                                   RestConnection restConnection,
                                                                                   HashIdConfiguration setting)
         {
-            // Injection Main, Identity, Audit, Cloud Storage, Context, HashIdConfiguration, AutoMapperConfiguration
+            // Injection => Main, Identity, Audit contexts,
+            //              Cloud Storage, Data Analysis, PDF services
 
             services.AddDbContext(connectionStrings.DefaultConnection);
             services.AddIdentityContext(connectionStrings.IdentityConnection);
