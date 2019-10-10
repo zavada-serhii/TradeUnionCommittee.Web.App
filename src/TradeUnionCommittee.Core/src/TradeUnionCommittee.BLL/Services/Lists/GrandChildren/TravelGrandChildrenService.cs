@@ -1,10 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.ActualResults;
-using TradeUnionCommittee.BLL.Configurations;
 using TradeUnionCommittee.BLL.DTO.GrandChildren;
 using TradeUnionCommittee.BLL.Enums;
 using TradeUnionCommittee.BLL.Helpers;
@@ -18,27 +18,25 @@ namespace TradeUnionCommittee.BLL.Services.Lists.GrandChildren
     internal class TravelGrandChildrenService : ITravelGrandChildrenService
     {
         private readonly TradeUnionCommitteeContext _context;
-        private readonly AutoMapperConfiguration _mapperService;
-        private readonly HashIdConfiguration _hashIdUtilities;
+        private readonly IMapper _mapper;
 
-        public TravelGrandChildrenService(TradeUnionCommitteeContext context, AutoMapperConfiguration mapperService, HashIdConfiguration hashIdUtilities)
+        public TravelGrandChildrenService(TradeUnionCommitteeContext context, IMapper mapper)
         {
             _context = context;
-            _mapperService = mapperService;
-            _hashIdUtilities = hashIdUtilities;
+            _mapper = mapper;
         }
 
         public async Task<ActualResult<IEnumerable<TravelGrandChildrenDTO>>> GetAllAsync(string hashIdGrandChildren)
         {
             try
             {
-                var id = _hashIdUtilities.DecryptLong(hashIdGrandChildren);
+                var id = HashHelper.DecryptLong(hashIdGrandChildren);
                 var travel = await _context.EventGrandChildrens
                     .Include(x => x.IdEventNavigation)
                     .Where(x => x.IdGrandChildren == id && x.IdEventNavigation.Type == TypeEvent.Travel)
                     .OrderByDescending(x => x.StartDate)
                     .ToListAsync();
-                var result = _mapperService.Mapper.Map<IEnumerable<TravelGrandChildrenDTO>>(travel);
+                var result = _mapper.Map<IEnumerable<TravelGrandChildrenDTO>>(travel);
                 return new ActualResult<IEnumerable<TravelGrandChildrenDTO>> { Result = result };
             }
             catch (Exception exception)
@@ -51,7 +49,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists.GrandChildren
         {
             try
             {
-                var id = _hashIdUtilities.DecryptLong(hashId);
+                var id = HashHelper.DecryptLong(hashId);
                 var travel = await _context.EventGrandChildrens
                     .Include(x => x.IdEventNavigation)
                     .FirstOrDefaultAsync(x => x.Id == id);
@@ -59,7 +57,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists.GrandChildren
                 {
                     return new ActualResult<TravelGrandChildrenDTO>(Errors.TupleDeleted);
                 }
-                var result = _mapperService.Mapper.Map<TravelGrandChildrenDTO>(travel);
+                var result = _mapper.Map<TravelGrandChildrenDTO>(travel);
                 return new ActualResult<TravelGrandChildrenDTO> { Result = result };
             }
             catch (Exception exception)
@@ -72,10 +70,10 @@ namespace TradeUnionCommittee.BLL.Services.Lists.GrandChildren
         {
             try
             {
-                var travelGrandChildren = _mapperService.Mapper.Map<EventGrandChildrens>(item);
+                var travelGrandChildren = _mapper.Map<EventGrandChildrens>(item);
                 await _context.EventGrandChildrens.AddAsync(travelGrandChildren);
                 await _context.SaveChangesAsync();
-                var hashId = _hashIdUtilities.EncryptLong(travelGrandChildren.Id);
+                var hashId = HashHelper.EncryptLong(travelGrandChildren.Id);
                 return new ActualResult<string> { Result = hashId };
             }
             catch (Exception exception)
@@ -88,7 +86,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists.GrandChildren
         {
             try
             {
-                _context.Entry(_mapperService.Mapper.Map<EventGrandChildrens>(item)).State = EntityState.Modified;
+                _context.Entry(_mapper.Map<EventGrandChildrens>(item)).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
                 return new ActualResult();
             }
@@ -102,7 +100,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists.GrandChildren
         {
             try
             {
-                var id = _hashIdUtilities.DecryptLong(hashId);
+                var id = HashHelper.DecryptLong(hashId);
                 var result = await _context.EventGrandChildrens.FindAsync(id);
                 if (result != null)
                 {

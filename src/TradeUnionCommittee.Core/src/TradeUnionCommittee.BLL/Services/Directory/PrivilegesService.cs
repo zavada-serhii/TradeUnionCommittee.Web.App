@@ -1,10 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.ActualResults;
-using TradeUnionCommittee.BLL.Configurations;
 using TradeUnionCommittee.BLL.DTO;
 using TradeUnionCommittee.BLL.Enums;
 using TradeUnionCommittee.BLL.Helpers;
@@ -17,14 +17,12 @@ namespace TradeUnionCommittee.BLL.Services.Directory
     internal class PrivilegesService : IPrivilegesService
     {
         private readonly TradeUnionCommitteeContext _context;
-        private readonly AutoMapperConfiguration _mapperService;
-        private readonly HashIdConfiguration _hashIdUtilities;
+        private readonly IMapper _mapper;
 
-        public PrivilegesService(TradeUnionCommitteeContext context, AutoMapperConfiguration mapperService, HashIdConfiguration hashIdUtilities)
+        public PrivilegesService(TradeUnionCommitteeContext context, IMapper mapper)
         {
             _context = context;
-            _mapperService = mapperService;
-            _hashIdUtilities = hashIdUtilities;
+            _mapper = mapper;
         }
 
         public async Task<ActualResult<IEnumerable<DirectoryDTO>>> GetAllAsync()
@@ -32,7 +30,7 @@ namespace TradeUnionCommittee.BLL.Services.Directory
             try
             {
                 var privilege = await _context.Privileges.OrderBy(x => x.Name).ToListAsync();
-                var result = _mapperService.Mapper.Map<IEnumerable<DirectoryDTO>>(privilege);
+                var result = _mapper.Map<IEnumerable<DirectoryDTO>>(privilege);
                 return new ActualResult<IEnumerable<DirectoryDTO>> { Result = result };
             }
             catch (Exception exception)
@@ -45,13 +43,13 @@ namespace TradeUnionCommittee.BLL.Services.Directory
         {
             try
             {
-                var id = _hashIdUtilities.DecryptLong(hashId);
+                var id = HashHelper.DecryptLong(hashId);
                 var privilege = await _context.Privileges.FindAsync(id);
                 if (privilege == null)
                 {
                     return new ActualResult<DirectoryDTO>(Errors.TupleDeleted);
                 }
-                var result = _mapperService.Mapper.Map<DirectoryDTO>(privilege);
+                var result = _mapper.Map<DirectoryDTO>(privilege);
                 return new ActualResult<DirectoryDTO> { Result = result };
             }
             catch (Exception exception)
@@ -64,10 +62,10 @@ namespace TradeUnionCommittee.BLL.Services.Directory
         {
             try
             {
-                var privileges = _mapperService.Mapper.Map<Privileges>(dto);
+                var privileges = _mapper.Map<Privileges>(dto);
                 await _context.Privileges.AddAsync(privileges);
                 await _context.SaveChangesAsync();
-                var hashId = _hashIdUtilities.EncryptLong(privileges.Id);
+                var hashId = HashHelper.EncryptLong(privileges.Id);
                 return new ActualResult<string> { Result = hashId };
             }
             catch (Exception exception)
@@ -80,7 +78,7 @@ namespace TradeUnionCommittee.BLL.Services.Directory
         {
             try
             {
-                _context.Entry(_mapperService.Mapper.Map<Privileges>(dto)).State = EntityState.Modified;
+                _context.Entry(_mapper.Map<Privileges>(dto)).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
                 return new ActualResult();
             }
@@ -94,7 +92,7 @@ namespace TradeUnionCommittee.BLL.Services.Directory
         {
             try
             {
-                var id = _hashIdUtilities.DecryptLong(hashId);
+                var id = HashHelper.DecryptLong(hashId);
                 var result = await _context.Privileges.FindAsync(id);
                 if (result != null)
                 {

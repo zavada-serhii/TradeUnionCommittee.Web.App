@@ -1,10 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.ActualResults;
-using TradeUnionCommittee.BLL.Configurations;
 using TradeUnionCommittee.BLL.DTO.Employee;
 using TradeUnionCommittee.BLL.Enums;
 using TradeUnionCommittee.BLL.Helpers;
@@ -17,27 +17,25 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Employee
     internal class HobbyEmployeesService : IHobbyEmployeesService
     {
         private readonly TradeUnionCommitteeContext _context;
-        private readonly AutoMapperConfiguration _mapperService;
-        private readonly HashIdConfiguration _hashIdUtilities;
+        private readonly IMapper _mapper;
 
-        public HobbyEmployeesService(TradeUnionCommitteeContext context, AutoMapperConfiguration mapperService, HashIdConfiguration hashIdUtilities)
+        public HobbyEmployeesService(TradeUnionCommitteeContext context, IMapper mapper)
         {
             _context = context;
-            _mapperService = mapperService;
-            _hashIdUtilities = hashIdUtilities;
+            _mapper = mapper;
         }
 
         public async Task<ActualResult<IEnumerable<HobbyEmployeesDTO>>> GetAllAsync(string hashIdEmployee)
         {
             try
             {
-                var id = _hashIdUtilities.DecryptLong(hashIdEmployee);
+                var id = HashHelper.DecryptLong(hashIdEmployee);
                 var hobby = await _context.HobbyEmployees
                     .Include(x => x.IdHobbyNavigation)
                     .Where(x => x.IdEmployee == id)
                     .OrderBy(x => x.IdHobbyNavigation.Name)
                     .ToListAsync();
-                var result = _mapperService.Mapper.Map<IEnumerable<HobbyEmployeesDTO>>(hobby);
+                var result = _mapper.Map<IEnumerable<HobbyEmployeesDTO>>(hobby);
                 return new ActualResult<IEnumerable<HobbyEmployeesDTO>> { Result = result };
             }
             catch (Exception exception)
@@ -50,7 +48,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Employee
         {
             try
             {
-                var id = _hashIdUtilities.DecryptLong(hashId);
+                var id = HashHelper.DecryptLong(hashId);
                 var hobby = await _context.HobbyEmployees
                     .Include(x => x.IdHobbyNavigation)
                     .FirstOrDefaultAsync(x => x.Id == id);
@@ -58,7 +56,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Employee
                 {
                     return new ActualResult<HobbyEmployeesDTO>(Errors.TupleDeleted);
                 }
-                var result = _mapperService.Mapper.Map<HobbyEmployeesDTO>(hobby);
+                var result = _mapper.Map<HobbyEmployeesDTO>(hobby);
                 return new ActualResult<HobbyEmployeesDTO> { Result = result };
             }
             catch (Exception exception)
@@ -71,10 +69,10 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Employee
         {
             try
             {
-                var hobbyEmployees = _mapperService.Mapper.Map<HobbyEmployees>(item);
+                var hobbyEmployees = _mapper.Map<HobbyEmployees>(item);
                 await _context.HobbyEmployees.AddAsync(hobbyEmployees);
                 await _context.SaveChangesAsync();
-                var hashId = _hashIdUtilities.EncryptLong(hobbyEmployees.Id);
+                var hashId = HashHelper.EncryptLong(hobbyEmployees.Id);
                 return new ActualResult<string> { Result = hashId };
             }
             catch (Exception exception)
@@ -87,7 +85,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Employee
         {
             try
             {
-                _context.Entry(_mapperService.Mapper.Map<HobbyEmployees>(item)).State = EntityState.Modified;
+                _context.Entry(_mapper.Map<HobbyEmployees>(item)).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
                 return new ActualResult();
             }
@@ -101,7 +99,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Employee
         {
             try
             {
-                var id = _hashIdUtilities.DecryptLong(hashId);
+                var id = HashHelper.DecryptLong(hashId);
                 var result = await _context.HobbyEmployees.FindAsync(id);
                 if (result != null)
                 {

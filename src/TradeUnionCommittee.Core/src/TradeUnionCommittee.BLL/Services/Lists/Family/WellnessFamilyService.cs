@@ -1,10 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.ActualResults;
-using TradeUnionCommittee.BLL.Configurations;
 using TradeUnionCommittee.BLL.DTO.Family;
 using TradeUnionCommittee.BLL.Enums;
 using TradeUnionCommittee.BLL.Helpers;
@@ -18,27 +18,25 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Family
     internal class WellnessFamilyService : IWellnessFamilyService
     {
         private readonly TradeUnionCommitteeContext _context;
-        private readonly AutoMapperConfiguration _mapperService;
-        private readonly HashIdConfiguration _hashIdUtilities;
+        private readonly IMapper _mapper;
 
-        public WellnessFamilyService(TradeUnionCommitteeContext context, AutoMapperConfiguration mapperService, HashIdConfiguration hashIdUtilities)
+        public WellnessFamilyService(TradeUnionCommitteeContext context, IMapper mapper)
         {
             _context = context;
-            _mapperService = mapperService;
-            _hashIdUtilities = hashIdUtilities;
+            _mapper = mapper;
         }
 
         public async Task<ActualResult<IEnumerable<WellnessFamilyDTO>>> GetAllAsync(string hashIdFamily)
         {
             try
             {
-                var id = _hashIdUtilities.DecryptLong(hashIdFamily);
+                var id = HashHelper.DecryptLong(hashIdFamily);
                 var wellness = await _context.EventFamily
                     .Include(x => x.IdEventNavigation)
                     .Where(x => x.IdFamily == id && x.IdEventNavigation.Type == TypeEvent.Wellness)
                     .OrderByDescending(x => x.StartDate)
                     .ToListAsync();
-                var result = _mapperService.Mapper.Map<IEnumerable<WellnessFamilyDTO>>(wellness);
+                var result = _mapper.Map<IEnumerable<WellnessFamilyDTO>>(wellness);
                 return new ActualResult<IEnumerable<WellnessFamilyDTO>> { Result = result };
             }
             catch (Exception exception)
@@ -51,7 +49,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Family
         {
             try
             {
-                var id = _hashIdUtilities.DecryptLong(hashId);
+                var id = HashHelper.DecryptLong(hashId);
                 var wellness = await _context.EventFamily
                     .Include(x => x.IdEventNavigation)
                     .FirstOrDefaultAsync(x => x.Id == id);
@@ -59,7 +57,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Family
                 {
                     return new ActualResult<WellnessFamilyDTO>(Errors.TupleDeleted);
                 }
-                var result = _mapperService.Mapper.Map<WellnessFamilyDTO>(wellness);
+                var result = _mapper.Map<WellnessFamilyDTO>(wellness);
                 return new ActualResult<WellnessFamilyDTO> { Result = result };
             }
             catch (Exception exception)
@@ -72,10 +70,10 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Family
         {
             try
             {
-                var wellnessFamily = _mapperService.Mapper.Map<EventFamily>(item);
+                var wellnessFamily = _mapper.Map<EventFamily>(item);
                 await _context.EventFamily.AddAsync(wellnessFamily);
                 await _context.SaveChangesAsync();
-                var hashId = _hashIdUtilities.EncryptLong(wellnessFamily.Id);
+                var hashId = HashHelper.EncryptLong(wellnessFamily.Id);
                 return new ActualResult<string> { Result = hashId };
             }
             catch (Exception exception)
@@ -88,7 +86,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Family
         {
             try
             {
-                _context.Entry(_mapperService.Mapper.Map<EventFamily>(item)).State = EntityState.Modified;
+                _context.Entry(_mapper.Map<EventFamily>(item)).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
                 return new ActualResult();
             }
@@ -102,7 +100,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Family
         {
             try
             {
-                var id = _hashIdUtilities.DecryptLong(hashId);
+                var id = HashHelper.DecryptLong(hashId);
                 var result = await _context.EventFamily.FindAsync(id);
                 if (result != null)
                 {

@@ -1,10 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.ActualResults;
-using TradeUnionCommittee.BLL.Configurations;
 using TradeUnionCommittee.BLL.DTO.Children;
 using TradeUnionCommittee.BLL.Enums;
 using TradeUnionCommittee.BLL.Helpers;
@@ -16,26 +16,24 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Children
     internal class ChildrenService : IChildrenService
     {
         private readonly TradeUnionCommitteeContext _context;
-        private readonly AutoMapperConfiguration _mapperService;
-        private readonly HashIdConfiguration _hashIdUtilities;
+        private readonly IMapper _mapper;
 
-        public ChildrenService(TradeUnionCommitteeContext context, AutoMapperConfiguration mapperService, HashIdConfiguration hashIdUtilities)
+        public ChildrenService(TradeUnionCommitteeContext context, IMapper mapper)
         {
             _context = context;
-            _mapperService = mapperService;
-            _hashIdUtilities = hashIdUtilities;
+            _mapper = mapper;
         }
 
         public async Task<ActualResult<IEnumerable<ChildrenDTO>>> GetAllAsync(string hashIdEmployee)
         {
             try
             {
-                var id = _hashIdUtilities.DecryptLong(hashIdEmployee);
+                var id = HashHelper.DecryptLong(hashIdEmployee);
                 var children = await _context.Children
                     .Where(x => x.IdEmployee == id)
                     .OrderByDescending(x => x.BirthDate)
                     .ToListAsync();
-                var result = _mapperService.Mapper.Map<IEnumerable<ChildrenDTO>>(children);
+                var result = _mapper.Map<IEnumerable<ChildrenDTO>>(children);
                 return new ActualResult<IEnumerable<ChildrenDTO>> { Result = result };
             }
             catch (Exception exception)
@@ -48,13 +46,13 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Children
         {
             try
             {
-                var id = _hashIdUtilities.DecryptLong(hashId);
+                var id = HashHelper.DecryptLong(hashId);
                 var children = await _context.Children.FindAsync(id);
                 if (children == null)
                 {
                     return new ActualResult<ChildrenDTO>(Errors.TupleDeleted);
                 }
-                var result = _mapperService.Mapper.Map<ChildrenDTO>(children);
+                var result = _mapper.Map<ChildrenDTO>(children);
                 return new ActualResult<ChildrenDTO> { Result = result };
             }
             catch (Exception exception)
@@ -67,10 +65,10 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Children
         {
             try
             {
-                var children = _mapperService.Mapper.Map<DAL.Entities.Children>(item);
+                var children = _mapper.Map<DAL.Entities.Children>(item);
                 await _context.Children.AddAsync(children);
                 await _context.SaveChangesAsync();
-                var hashId = _hashIdUtilities.EncryptLong(children.Id);
+                var hashId = HashHelper.EncryptLong(children.Id);
                 return new ActualResult<string> { Result = hashId };
             }
             catch (Exception exception)
@@ -83,7 +81,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Children
         {
             try
             {
-                _context.Entry(_mapperService.Mapper.Map<DAL.Entities.Children>(item)).State = EntityState.Modified;
+                _context.Entry(_mapper.Map<DAL.Entities.Children>(item)).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
                 return new ActualResult();
             }
@@ -97,7 +95,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Children
         {
             try
             {
-                var id = _hashIdUtilities.DecryptLong(hashId);
+                var id = HashHelper.DecryptLong(hashId);
                 var result = await _context.Children.FindAsync(id);
                 if (result != null)
                 {

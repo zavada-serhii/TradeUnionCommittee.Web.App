@@ -1,10 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.ActualResults;
-using TradeUnionCommittee.BLL.Configurations;
 using TradeUnionCommittee.BLL.DTO.Employee;
 using TradeUnionCommittee.BLL.Enums;
 using TradeUnionCommittee.BLL.Helpers;
@@ -18,27 +18,25 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Employee
     internal class TravelEmployeesService : ITravelEmployeesService
     {
         private readonly TradeUnionCommitteeContext _context;
-        private readonly AutoMapperConfiguration _mapperService;
-        private readonly HashIdConfiguration _hashIdUtilities;
+        private readonly IMapper _mapper;
 
-        public TravelEmployeesService(TradeUnionCommitteeContext context, AutoMapperConfiguration mapperService, HashIdConfiguration hashIdUtilities)
+        public TravelEmployeesService(TradeUnionCommitteeContext context, IMapper mapper)
         {
             _context = context;
-            _mapperService = mapperService;
-            _hashIdUtilities = hashIdUtilities;
+            _mapper = mapper;
         }
 
         public async Task<ActualResult<IEnumerable<TravelEmployeesDTO>>> GetAllAsync(string hashIdEmployee)
         {
             try
             {
-                var id = _hashIdUtilities.DecryptLong(hashIdEmployee);
+                var id = HashHelper.DecryptLong(hashIdEmployee);
                 var travel = await _context.EventEmployees
                     .Include(x => x.IdEventNavigation)
                     .Where(x => x.IdEmployee == id && x.IdEventNavigation.Type == TypeEvent.Travel)
                     .OrderByDescending(x => x.StartDate)
                     .ToListAsync();
-                var result = _mapperService.Mapper.Map<IEnumerable<TravelEmployeesDTO>>(travel);
+                var result = _mapper.Map<IEnumerable<TravelEmployeesDTO>>(travel);
                 return new ActualResult<IEnumerable<TravelEmployeesDTO>> { Result = result };
             }
             catch (Exception exception)
@@ -51,7 +49,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Employee
         {
             try
             {
-                var id = _hashIdUtilities.DecryptLong(hashId);
+                var id = HashHelper.DecryptLong(hashId);
                 var travel = await _context.EventEmployees
                     .Include(x => x.IdEventNavigation)
                     .FirstOrDefaultAsync(x => x.Id == id);
@@ -59,7 +57,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Employee
                 {
                     return new ActualResult<TravelEmployeesDTO>(Errors.TupleDeleted);
                 }
-                var result = _mapperService.Mapper.Map<TravelEmployeesDTO>(travel);
+                var result = _mapper.Map<TravelEmployeesDTO>(travel);
                 return new ActualResult<TravelEmployeesDTO> { Result = result };
             }
             catch (Exception exception)
@@ -72,10 +70,10 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Employee
         {
             try
             {
-                var travelEmployees = _mapperService.Mapper.Map<EventEmployees>(item);
+                var travelEmployees = _mapper.Map<EventEmployees>(item);
                 await _context.EventEmployees.AddAsync(travelEmployees);
                 await _context.SaveChangesAsync();
-                var hashId = _hashIdUtilities.EncryptLong(travelEmployees.Id);
+                var hashId = HashHelper.EncryptLong(travelEmployees.Id);
                 return new ActualResult<string> { Result = hashId };
             }
             catch (Exception exception)
@@ -88,7 +86,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Employee
         {
             try
             {
-                _context.Entry(_mapperService.Mapper.Map<EventEmployees>(item)).State = EntityState.Modified;
+                _context.Entry(_mapper.Map<EventEmployees>(item)).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
                 return new ActualResult();
             }
@@ -102,7 +100,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Employee
         {
             try
             {
-                var id = _hashIdUtilities.DecryptLong(hashId);
+                var id = HashHelper.DecryptLong(hashId);
                 var result = await _context.EventEmployees.FindAsync(id);
                 if (result != null)
                 {

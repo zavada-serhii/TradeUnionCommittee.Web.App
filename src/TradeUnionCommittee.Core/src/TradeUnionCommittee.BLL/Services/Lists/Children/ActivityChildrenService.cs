@@ -1,10 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.ActualResults;
-using TradeUnionCommittee.BLL.Configurations;
 using TradeUnionCommittee.BLL.DTO.Children;
 using TradeUnionCommittee.BLL.Enums;
 using TradeUnionCommittee.BLL.Helpers;
@@ -17,27 +17,25 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Children
     internal class ActivityChildrenService : IActivityChildrenService
     {
         private readonly TradeUnionCommitteeContext _context;
-        private readonly AutoMapperConfiguration _mapperService;
-        private readonly HashIdConfiguration _hashIdUtilities;
+        private readonly IMapper _mapper;
 
-        public ActivityChildrenService(TradeUnionCommitteeContext context, AutoMapperConfiguration mapperService, HashIdConfiguration hashIdUtilities)
+        public ActivityChildrenService(TradeUnionCommitteeContext context, IMapper mapper)
         {
             _context = context;
-            _mapperService = mapperService;
-            _hashIdUtilities = hashIdUtilities;
+            _mapper = mapper;
         }
 
         public async Task<ActualResult<IEnumerable<ActivityChildrenDTO>>> GetAllAsync(string hashIdChildren)
         {
             try
             {
-                var id = _hashIdUtilities.DecryptLong(hashIdChildren);
+                var id = HashHelper.DecryptLong(hashIdChildren);
                 var activity = await _context.ActivityChildrens
                     .Include(x => x.IdActivitiesNavigation)
                     .Where(x => x.IdChildren == id)
                     .OrderByDescending(x => x.DateEvent)
                     .ToListAsync();
-                var result = _mapperService.Mapper.Map<IEnumerable<ActivityChildrenDTO>>(activity);
+                var result = _mapper.Map<IEnumerable<ActivityChildrenDTO>>(activity);
                 return new ActualResult<IEnumerable<ActivityChildrenDTO>> { Result = result };
             }
             catch (Exception exception)
@@ -50,7 +48,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Children
         {
             try
             {
-                var id = _hashIdUtilities.DecryptLong(hashId);
+                var id = HashHelper.DecryptLong(hashId);
                 var activity = await _context.ActivityChildrens
                     .Include(x => x.IdActivitiesNavigation)
                     .FirstOrDefaultAsync(x => x.Id == id);
@@ -58,7 +56,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Children
                 {
                     return new ActualResult<ActivityChildrenDTO>(Errors.TupleDeleted);
                 }
-                var result = _mapperService.Mapper.Map<ActivityChildrenDTO>(activity);
+                var result = _mapper.Map<ActivityChildrenDTO>(activity);
                 return new ActualResult<ActivityChildrenDTO> { Result = result };
             }
             catch (Exception exception)
@@ -71,10 +69,10 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Children
         {
             try
             {
-                var activityChildren = _mapperService.Mapper.Map<ActivityChildrens>(item);
+                var activityChildren = _mapper.Map<ActivityChildrens>(item);
                 await _context.ActivityChildrens.AddAsync(activityChildren);
                 await _context.SaveChangesAsync();
-                var hashId = _hashIdUtilities.EncryptLong(activityChildren.Id);
+                var hashId = HashHelper.EncryptLong(activityChildren.Id);
                 return new ActualResult<string> { Result = hashId };
             }
             catch (Exception exception)
@@ -87,7 +85,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Children
         {
             try
             {
-                _context.Entry(_mapperService.Mapper.Map<ActivityChildrens>(item)).State = EntityState.Modified;
+                _context.Entry(_mapper.Map<ActivityChildrens>(item)).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
                 return new ActualResult();
             }
@@ -101,7 +99,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Children
         {
             try
             {
-                var id = _hashIdUtilities.DecryptLong(hashId);
+                var id = HashHelper.DecryptLong(hashId);
                 var result = await _context.ActivityChildrens.FindAsync(id);
                 if (result != null)
                 {

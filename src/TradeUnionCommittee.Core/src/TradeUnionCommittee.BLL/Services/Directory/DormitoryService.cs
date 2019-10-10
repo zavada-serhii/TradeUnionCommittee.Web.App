@@ -1,10 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.ActualResults;
-using TradeUnionCommittee.BLL.Configurations;
 using TradeUnionCommittee.BLL.DTO;
 using TradeUnionCommittee.BLL.Enums;
 using TradeUnionCommittee.BLL.Helpers;
@@ -18,14 +18,12 @@ namespace TradeUnionCommittee.BLL.Services.Directory
     internal class DormitoryService : IDormitoryService
     {
         private readonly TradeUnionCommitteeContext _context;
-        private readonly AutoMapperConfiguration _mapperService;
-        private readonly HashIdConfiguration _hashIdUtilities;
+        private readonly IMapper _mapper;
 
-        public DormitoryService(TradeUnionCommitteeContext context, AutoMapperConfiguration mapperService, HashIdConfiguration hashIdUtilities)
+        public DormitoryService(TradeUnionCommitteeContext context, IMapper mapper)
         {
             _context = context;
-            _mapperService = mapperService;
-            _hashIdUtilities = hashIdUtilities;
+            _mapper = mapper;
         }
 
         public async Task<ActualResult<IEnumerable<DormitoryDTO>>> GetAllAsync()
@@ -36,7 +34,7 @@ namespace TradeUnionCommittee.BLL.Services.Directory
                                               .Where(x => x.Type == TypeHouse.Dormitory)
                                               .OrderBy(x => x.NumberDormitory)
                                               .ToListAsync();
-                var result = _mapperService.Mapper.Map<IEnumerable<DormitoryDTO>>(dormitory);
+                var result = _mapper.Map<IEnumerable<DormitoryDTO>>(dormitory);
                 return new ActualResult<IEnumerable<DormitoryDTO>> { Result = result };
             }
             catch (Exception exception)
@@ -49,13 +47,13 @@ namespace TradeUnionCommittee.BLL.Services.Directory
         {
             try
             {
-                var id = _hashIdUtilities.DecryptLong(hashId);
+                var id = HashHelper.DecryptLong(hashId);
                 var dormitory = await _context.AddressPublicHouse.FindAsync(id);
                 if (dormitory == null)
                 {
                     return new ActualResult<DormitoryDTO>(Errors.TupleDeleted);
                 }
-                var result = _mapperService.Mapper.Map<DormitoryDTO>(dormitory);
+                var result = _mapper.Map<DormitoryDTO>(dormitory);
                 return new ActualResult<DormitoryDTO> { Result = result };
             }
             catch (Exception exception)
@@ -68,10 +66,10 @@ namespace TradeUnionCommittee.BLL.Services.Directory
         {
             try
             {
-                var dormitory = _mapperService.Mapper.Map<AddressPublicHouse>(dto);
+                var dormitory = _mapper.Map<AddressPublicHouse>(dto);
                 await _context.AddressPublicHouse.AddAsync(dormitory);
                 await _context.SaveChangesAsync();
-                var hashId = _hashIdUtilities.EncryptLong(dormitory.Id);
+                var hashId = HashHelper.EncryptLong(dormitory.Id);
                 return new ActualResult<string> { Result = hashId };
             }
             catch (Exception exception)
@@ -84,7 +82,7 @@ namespace TradeUnionCommittee.BLL.Services.Directory
         {
             try
             {
-                _context.Entry(_mapperService.Mapper.Map<AddressPublicHouse>(dto)).State = EntityState.Modified;
+                _context.Entry(_mapper.Map<AddressPublicHouse>(dto)).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
                 return new ActualResult();
             }
@@ -98,7 +96,7 @@ namespace TradeUnionCommittee.BLL.Services.Directory
         {
             try
             {
-                var id = _hashIdUtilities.DecryptLong(hashId);
+                var id = HashHelper.DecryptLong(hashId);
                 var result = await _context.AddressPublicHouse.FindAsync(id);
                 if (result != null)
                 {

@@ -1,10 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.ActualResults;
-using TradeUnionCommittee.BLL.Configurations;
 using TradeUnionCommittee.BLL.DTO.Employee;
 using TradeUnionCommittee.BLL.Enums;
 using TradeUnionCommittee.BLL.Helpers;
@@ -17,26 +17,24 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Employee
     internal class FluorographyEmployeesService : IFluorographyEmployeesService
     {
         private readonly TradeUnionCommitteeContext _context;
-        private readonly AutoMapperConfiguration _mapperService;
-        private readonly HashIdConfiguration _hashIdUtilities;
+        private readonly IMapper _mapper;
 
-        public FluorographyEmployeesService(TradeUnionCommitteeContext context, AutoMapperConfiguration mapperService, HashIdConfiguration hashIdUtilities)
+        public FluorographyEmployeesService(TradeUnionCommitteeContext context, IMapper mapper)
         {
             _context = context;
-            _mapperService = mapperService;
-            _hashIdUtilities = hashIdUtilities;
+            _mapper = mapper;
         }
 
         public async Task<ActualResult<IEnumerable<FluorographyEmployeesDTO>>> GetAllAsync(string hashIdEmployee)
         {
             try
             {
-                var id = _hashIdUtilities.DecryptLong(hashIdEmployee);
+                var id = HashHelper.DecryptLong(hashIdEmployee);
                 var fluorography = await _context.FluorographyEmployees
                     .Where(x => x.IdEmployee == id)
                     .OrderByDescending(x => x.DatePassage)
                     .ToListAsync();
-                var result = _mapperService.Mapper.Map<IEnumerable<FluorographyEmployeesDTO>>(fluorography);
+                var result = _mapper.Map<IEnumerable<FluorographyEmployeesDTO>>(fluorography);
                 return new ActualResult<IEnumerable<FluorographyEmployeesDTO>> { Result = result };
             }
             catch (Exception exception)
@@ -49,13 +47,13 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Employee
         {
             try
             {
-                var id = _hashIdUtilities.DecryptLong(hashId);
+                var id = HashHelper.DecryptLong(hashId);
                 var fluorography = await _context.FluorographyEmployees.FindAsync(id);
                 if (fluorography == null)
                 {
                     return new ActualResult<FluorographyEmployeesDTO>(Errors.TupleDeleted);
                 }
-                var result = _mapperService.Mapper.Map<FluorographyEmployeesDTO>(fluorography);
+                var result = _mapper.Map<FluorographyEmployeesDTO>(fluorography);
                 return new ActualResult<FluorographyEmployeesDTO> { Result = result };
             }
             catch (Exception exception)
@@ -68,10 +66,10 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Employee
         {
             try
             {
-                var fluorographyEmployees = _mapperService.Mapper.Map<FluorographyEmployees>(item);
+                var fluorographyEmployees = _mapper.Map<FluorographyEmployees>(item);
                 await _context.FluorographyEmployees.AddAsync(fluorographyEmployees);
                 await _context.SaveChangesAsync();
-                var hashId = _hashIdUtilities.EncryptLong(fluorographyEmployees.Id);
+                var hashId = HashHelper.EncryptLong(fluorographyEmployees.Id);
                 return new ActualResult<string> { Result = hashId };
             }
             catch (Exception exception)
@@ -84,7 +82,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Employee
         {
             try
             {
-                _context.Entry(_mapperService.Mapper.Map<FluorographyEmployees>(item)).State = EntityState.Modified;
+                _context.Entry(_mapper.Map<FluorographyEmployees>(item)).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
                 return new ActualResult();
             }
@@ -98,7 +96,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Employee
         {
             try
             {
-                var id = _hashIdUtilities.DecryptLong(hashId);
+                var id = HashHelper.DecryptLong(hashId);
                 var result = await _context.FluorographyEmployees.FindAsync(id);
                 if (result != null)
                 {

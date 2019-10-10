@@ -1,10 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.ActualResults;
-using TradeUnionCommittee.BLL.Configurations;
 using TradeUnionCommittee.BLL.DTO.Family;
 using TradeUnionCommittee.BLL.Enums;
 using TradeUnionCommittee.BLL.Helpers;
@@ -16,25 +16,23 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Family
     internal class FamilyService : IFamilyService
     {
         private readonly TradeUnionCommitteeContext _context;
-        private readonly AutoMapperConfiguration _mapperService;
-        private readonly HashIdConfiguration _hashIdUtilities;
+        private readonly IMapper _mapper;
 
-        public FamilyService(TradeUnionCommitteeContext context, AutoMapperConfiguration mapperService, HashIdConfiguration hashIdUtilities)
+        public FamilyService(TradeUnionCommitteeContext context, IMapper mapper)
         {
             _context = context;
-            _mapperService = mapperService;
-            _hashIdUtilities = hashIdUtilities;
+            _mapper = mapper;
         }
 
         public async Task<ActualResult<IEnumerable<FamilyDTO>>> GetAllAsync(string hashIdEmployee)
         {
             try
             {
-                var id = _hashIdUtilities.DecryptLong(hashIdEmployee);
+                var id = HashHelper.DecryptLong(hashIdEmployee);
                 var family = await _context.Family
                     .Where(x => x.IdEmployee == id)
                     .ToListAsync();
-                var result = _mapperService.Mapper.Map<IEnumerable<FamilyDTO>>(family);
+                var result = _mapper.Map<IEnumerable<FamilyDTO>>(family);
                 return new ActualResult<IEnumerable<FamilyDTO>> { Result = result };
             }
             catch (Exception exception)
@@ -47,13 +45,13 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Family
         {
             try
             {
-                var id = _hashIdUtilities.DecryptLong(hashId);
+                var id = HashHelper.DecryptLong(hashId);
                 var family = await _context.Family.FindAsync(id);
                 if (family == null)
                 {
                     return new ActualResult<FamilyDTO>(Errors.TupleDeleted);
                 }
-                var result = _mapperService.Mapper.Map<FamilyDTO>(family);
+                var result = _mapper.Map<FamilyDTO>(family);
                 return new ActualResult<FamilyDTO> { Result = result };
             }
             catch (Exception exception)
@@ -66,10 +64,10 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Family
         {
             try
             {
-                var family = _mapperService.Mapper.Map<DAL.Entities.Family>(item);
+                var family = _mapper.Map<DAL.Entities.Family>(item);
                 await _context.Family.AddAsync(family);
                 await _context.SaveChangesAsync();
-                var hashId = _hashIdUtilities.EncryptLong(family.Id);
+                var hashId = HashHelper.EncryptLong(family.Id);
                 return new ActualResult<string> { Result = hashId };
             }
             catch (Exception exception)
@@ -82,7 +80,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Family
         {
             try
             {
-                _context.Entry(_mapperService.Mapper.Map<DAL.Entities.Family>(item)).State = EntityState.Modified;
+                _context.Entry(_mapper.Map<DAL.Entities.Family>(item)).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
                 return new ActualResult();
             }
@@ -96,7 +94,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Family
         {
             try
             {
-                var id = _hashIdUtilities.DecryptLong(hashId);
+                var id = HashHelper.DecryptLong(hashId);
                 var result = await _context.Family.FindAsync(id);
                 if (result != null)
                 {

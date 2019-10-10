@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using TradeUnionCommittee.BLL.Configurations;
+using TradeUnionCommittee.BLL.Helpers;
 using TradeUnionCommittee.BLL.Interfaces.Account;
 using TradeUnionCommittee.BLL.Interfaces.Dashboard;
 using TradeUnionCommittee.BLL.Interfaces.Directory;
@@ -35,9 +36,10 @@ namespace TradeUnionCommittee.BLL.Extensions
                                                                                   ConnectionStrings connectionStrings,
                                                                                   CloudStorageConnection cloudStorageConnection,
                                                                                   RestConnection restConnection,
-                                                                                  HashIdConfigurationSetting setting)
+                                                                                  HashIdConfiguration setting)
         {
-            // Injection Main, Identity, Audit, Cloud Storage, Context, HashIdConfiguration, AutoMapperConfiguration
+            // Injection => Main, Identity, Audit contexts,
+            //              Cloud Storage, Data Analysis, PDF services
 
             services.AddDbContext(connectionStrings.DefaultConnection);
             services.AddIdentityContext(connectionStrings.IdentityConnection);
@@ -51,8 +53,8 @@ namespace TradeUnionCommittee.BLL.Extensions
             }, connectionStrings.CloudStorageConnection);
             services.AddDataAnalysisService(restConnection.DataAnalysisUrl);
             services.AddPdfService();
-            services.AddSingleton(x => new HashIdConfiguration(setting));
-            services.AddSingleton<AutoMapperConfiguration>();
+
+            HashHelper.Initialize(setting);
 
             // Injection All Service
             //---------------------------------------------------------------------------------------------

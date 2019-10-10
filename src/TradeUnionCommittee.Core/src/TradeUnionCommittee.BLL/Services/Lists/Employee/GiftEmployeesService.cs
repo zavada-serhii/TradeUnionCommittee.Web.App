@@ -1,10 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.ActualResults;
-using TradeUnionCommittee.BLL.Configurations;
 using TradeUnionCommittee.BLL.DTO.Employee;
 using TradeUnionCommittee.BLL.Enums;
 using TradeUnionCommittee.BLL.Helpers;
@@ -17,26 +17,24 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Employee
     internal class GiftEmployeesService : IGiftEmployeesService
     {
         private readonly TradeUnionCommitteeContext _context;
-        private readonly AutoMapperConfiguration _mapperService;
-        private readonly HashIdConfiguration _hashIdUtilities;
+        private readonly IMapper _mapper;
 
-        public GiftEmployeesService(TradeUnionCommitteeContext context, AutoMapperConfiguration mapperService, HashIdConfiguration hashIdUtilities)
+        public GiftEmployeesService(TradeUnionCommitteeContext context, IMapper mapper)
         {
             _context = context;
-            _mapperService = mapperService;
-            _hashIdUtilities = hashIdUtilities;
+            _mapper = mapper;
         }
 
         public async Task<ActualResult<IEnumerable<GiftEmployeesDTO>>> GetAllAsync(string hashIdEmployee)
         {
             try
             {
-                var id = _hashIdUtilities.DecryptLong(hashIdEmployee);
+                var id = HashHelper.DecryptLong(hashIdEmployee);
                 var gift = await _context.GiftEmployees
                     .Where(x => x.IdEmployee == id)
                     .OrderByDescending(x => x.DateGift)
                     .ToListAsync();
-                var result = _mapperService.Mapper.Map<IEnumerable<GiftEmployeesDTO>>(gift);
+                var result = _mapper.Map<IEnumerable<GiftEmployeesDTO>>(gift);
                 return new ActualResult<IEnumerable<GiftEmployeesDTO>> { Result = result };
             }
             catch (Exception exception)
@@ -49,13 +47,13 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Employee
         {
             try
             {
-                var id = _hashIdUtilities.DecryptLong(hashId);
+                var id = HashHelper.DecryptLong(hashId);
                 var gift = await _context.GiftEmployees.FindAsync(id);
                 if (gift == null)
                 {
                     return new ActualResult<GiftEmployeesDTO>(Errors.TupleDeleted);
                 }
-                var result = _mapperService.Mapper.Map<GiftEmployeesDTO>(gift);
+                var result = _mapper.Map<GiftEmployeesDTO>(gift);
                 return new ActualResult<GiftEmployeesDTO> { Result = result };
             }
             catch (Exception exception)
@@ -68,10 +66,10 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Employee
         {
             try
             {
-                var giftEmployees = _mapperService.Mapper.Map<GiftEmployees>(item);
+                var giftEmployees = _mapper.Map<GiftEmployees>(item);
                 await _context.GiftEmployees.AddAsync(giftEmployees);
                 await _context.SaveChangesAsync();
-                var hashId = _hashIdUtilities.EncryptLong(giftEmployees.Id);
+                var hashId = HashHelper.EncryptLong(giftEmployees.Id);
                 return new ActualResult<string> { Result = hashId };
             }
             catch (Exception exception)
@@ -84,7 +82,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Employee
         {
             try
             {
-                _context.Entry(_mapperService.Mapper.Map<GiftEmployees>(item)).State = EntityState.Modified;
+                _context.Entry(_mapper.Map<GiftEmployees>(item)).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
                 return new ActualResult();
             }
@@ -98,7 +96,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Employee
         {
             try
             {
-                var id = _hashIdUtilities.DecryptLong(hashId);
+                var id = HashHelper.DecryptLong(hashId);
                 var result = await _context.GiftEmployees.FindAsync(id);
                 if (result != null)
                 {

@@ -1,10 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.ActualResults;
-using TradeUnionCommittee.BLL.Configurations;
 using TradeUnionCommittee.BLL.DTO.GrandChildren;
 using TradeUnionCommittee.BLL.Enums;
 using TradeUnionCommittee.BLL.Helpers;
@@ -16,26 +16,24 @@ namespace TradeUnionCommittee.BLL.Services.Lists.GrandChildren
     internal class GrandChildrenService : IGrandChildrenService
     {
         private readonly TradeUnionCommitteeContext _context;
-        private readonly AutoMapperConfiguration _mapperService;
-        private readonly HashIdConfiguration _hashIdUtilities;
+        private readonly IMapper _mapper;
 
-        public GrandChildrenService(TradeUnionCommitteeContext context, AutoMapperConfiguration mapperService, HashIdConfiguration hashIdUtilities)
+        public GrandChildrenService(TradeUnionCommitteeContext context, IMapper mapper)
         {
             _context = context;
-            _mapperService = mapperService;
-            _hashIdUtilities = hashIdUtilities;
+            _mapper = mapper;
         }
 
         public async Task<ActualResult<IEnumerable<GrandChildrenDTO>>> GetAllAsync(string hashIdEmployee)
         {
             try
             {
-                var id = _hashIdUtilities.DecryptLong(hashIdEmployee);
+                var id = HashHelper.DecryptLong(hashIdEmployee);
                 var grandChildren = await _context.GrandChildren
                     .Where(x => x.IdEmployee == id)
                     .OrderByDescending(x => x.BirthDate)
                     .ToListAsync();
-                var result = _mapperService.Mapper.Map<IEnumerable<GrandChildrenDTO>>(grandChildren);
+                var result = _mapper.Map<IEnumerable<GrandChildrenDTO>>(grandChildren);
                 return new ActualResult<IEnumerable<GrandChildrenDTO>> { Result = result };
             }
             catch (Exception exception)
@@ -48,13 +46,13 @@ namespace TradeUnionCommittee.BLL.Services.Lists.GrandChildren
         {
             try
             {
-                var id = _hashIdUtilities.DecryptLong(hashId);
+                var id = HashHelper.DecryptLong(hashId);
                 var grandChildren = await _context.GrandChildren.FindAsync(id);
                 if (grandChildren == null)
                 {
                     return new ActualResult<GrandChildrenDTO>(Errors.TupleDeleted);
                 }
-                var result = _mapperService.Mapper.Map<GrandChildrenDTO>(grandChildren);
+                var result = _mapper.Map<GrandChildrenDTO>(grandChildren);
                 return new ActualResult<GrandChildrenDTO> { Result = result };
             }
             catch (Exception exception)
@@ -67,10 +65,10 @@ namespace TradeUnionCommittee.BLL.Services.Lists.GrandChildren
         {
             try
             {
-                var grandChildren = _mapperService.Mapper.Map<DAL.Entities.GrandChildren>(item);
+                var grandChildren = _mapper.Map<DAL.Entities.GrandChildren>(item);
                 await _context.GrandChildren.AddAsync(grandChildren);
                 await _context.SaveChangesAsync();
-                var hashId = _hashIdUtilities.EncryptLong(grandChildren.Id);
+                var hashId = HashHelper.EncryptLong(grandChildren.Id);
                 return new ActualResult<string> { Result = hashId };
             }
             catch (Exception exception)
@@ -83,7 +81,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists.GrandChildren
         {
             try
             {
-                _context.Entry(_mapperService.Mapper.Map<DAL.Entities.GrandChildren>(item)).State = EntityState.Modified;
+                _context.Entry(_mapper.Map<DAL.Entities.GrandChildren>(item)).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
                 return new ActualResult();
             }
@@ -97,7 +95,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists.GrandChildren
         {
             try
             {
-                var id = _hashIdUtilities.DecryptLong(hashId);
+                var id = HashHelper.DecryptLong(hashId);
                 var result = await _context.GrandChildren.FindAsync(id);
                 if (result != null)
                 {

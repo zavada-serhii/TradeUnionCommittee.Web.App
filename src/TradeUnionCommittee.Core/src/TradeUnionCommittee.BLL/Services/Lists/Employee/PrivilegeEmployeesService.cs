@@ -1,8 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.ActualResults;
-using TradeUnionCommittee.BLL.Configurations;
 using TradeUnionCommittee.BLL.DTO.Employee;
 using TradeUnionCommittee.BLL.Helpers;
 using TradeUnionCommittee.BLL.Interfaces.Lists.Employee;
@@ -14,21 +14,19 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Employee
     internal class PrivilegeEmployeesService : IPrivilegeEmployeesService
     {
         private readonly TradeUnionCommitteeContext _context;
-        private readonly AutoMapperConfiguration _mapperService;
-        private readonly HashIdConfiguration _hashIdUtilities;
+        private readonly IMapper _mapper;
 
-        public PrivilegeEmployeesService(TradeUnionCommitteeContext context, AutoMapperConfiguration mapperService, HashIdConfiguration hashIdUtilities)
+        public PrivilegeEmployeesService(TradeUnionCommitteeContext context, IMapper mapper)
         {
             _context = context;
-            _mapperService = mapperService;
-            _hashIdUtilities = hashIdUtilities;
+            _mapper = mapper;
         }
 
         public async Task<ActualResult<PrivilegeEmployeesDTO>> GetAsync(string hashIdEmployee)
         {
             try
             {
-                var id = _hashIdUtilities.DecryptLong(hashIdEmployee);
+                var id = HashHelper.DecryptLong(hashIdEmployee);
                 var privilege = await _context.PrivilegeEmployees
                     .Include(x => x.IdPrivilegesNavigation)
                     .FirstOrDefaultAsync(x => x.IdEmployee == id);
@@ -36,7 +34,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Employee
                 {
                     return new ActualResult<PrivilegeEmployeesDTO>();
                 }
-                var result = _mapperService.Mapper.Map<PrivilegeEmployeesDTO>(privilege);
+                var result = _mapper.Map<PrivilegeEmployeesDTO>(privilege);
                 return new ActualResult<PrivilegeEmployeesDTO> { Result = result };
             }
             catch (Exception exception)
@@ -50,10 +48,10 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Employee
             try
             {
                 dto.CheckPrivileges = true;
-                var privilegeEmployees = _mapperService.Mapper.Map<PrivilegeEmployees>(dto);
+                var privilegeEmployees = _mapper.Map<PrivilegeEmployees>(dto);
                 await _context.PrivilegeEmployees.AddAsync(privilegeEmployees);
                 await _context.SaveChangesAsync();
-                var hashId = _hashIdUtilities.EncryptLong(privilegeEmployees.Id);
+                var hashId = HashHelper.EncryptLong(privilegeEmployees.Id);
                 return new ActualResult<string> { Result = hashId };
             }
             catch (Exception exception)
@@ -66,7 +64,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Employee
         {
             try
             {
-                _context.Entry(_mapperService.Mapper.Map<PrivilegeEmployees>(dto)).State = EntityState.Modified;
+                _context.Entry(_mapper.Map<PrivilegeEmployees>(dto)).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
                 return new ActualResult();
             }
@@ -80,7 +78,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Employee
         {
             try
             {
-                var id = _hashIdUtilities.DecryptLong(hashId);
+                var id = HashHelper.DecryptLong(hashId);
                 var result = await _context.PrivilegeEmployees.FindAsync(id);
                 if (result != null)
                 {

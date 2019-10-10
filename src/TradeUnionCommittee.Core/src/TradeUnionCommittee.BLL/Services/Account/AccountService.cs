@@ -1,11 +1,11 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.ActualResults;
-using TradeUnionCommittee.BLL.Configurations;
 using TradeUnionCommittee.BLL.DTO;
 using TradeUnionCommittee.BLL.Enums;
 using TradeUnionCommittee.BLL.Helpers;
@@ -21,19 +21,19 @@ namespace TradeUnionCommittee.BLL.Services.Account
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly SignInManager<User> _signInManager;
         private readonly TradeUnionCommitteeIdentityContext _context;
-        private readonly AutoMapperConfiguration _mapperService;
+        private readonly IMapper _mapper;
 
         public AccountService(UserManager<User> userManager, 
                               RoleManager<IdentityRole> roleManager, 
                               SignInManager<User> signInManager,
                               TradeUnionCommitteeIdentityContext context,
-                              AutoMapperConfiguration mapperService)
+                              IMapper mapper)
         {
             _userManager = userManager;
             _roleManager = roleManager;
             _signInManager = signInManager;
             _context = context;
-            _mapperService = mapperService;
+            _mapper = mapper;
         }
 
         //------------------------------------------------------------------------------------------------------------------------------------------
@@ -95,7 +95,7 @@ namespace TradeUnionCommittee.BLL.Services.Account
             try
             {
                 var users = await _userManager.Users.ToListAsync();
-                var mapping = _mapperService.Mapper.Map<IEnumerable<AccountDTO>>(users);
+                var mapping = _mapper.Map<IEnumerable<AccountDTO>>(users);
                 return new ActualResult<IEnumerable<AccountDTO>> { Result = mapping };
             }
             catch (Exception exception)
@@ -111,7 +111,7 @@ namespace TradeUnionCommittee.BLL.Services.Account
                 var user = await _userManager.FindByIdAsync(hashId);
                 if (user != null)
                 {
-                    var mapping = _mapperService.Mapper.Map<AccountDTO>(user);
+                    var mapping = _mapper.Map<AccountDTO>(user);
                     return new ActualResult<AccountDTO> { Result = mapping };
                 }
                 return new ActualResult<AccountDTO>(Errors.UserNotFound);
@@ -146,7 +146,7 @@ namespace TradeUnionCommittee.BLL.Services.Account
             try
             {
                 var roles = await _roleManager.Roles.ToListAsync();
-                var result = _mapperService.Mapper.Map<IEnumerable<RolesDTO>>(roles);
+                var result = _mapper.Map<IEnumerable<RolesDTO>>(roles);
                 return new ActualResult<IEnumerable<RolesDTO>> { Result = result };
             }
             catch (Exception exception)
@@ -235,7 +235,7 @@ namespace TradeUnionCommittee.BLL.Services.Account
                     _context.RefreshTokens.Remove(existingToken);
                     await _context.SaveChangesAsync();
                 }
-                await _context.RefreshTokens.AddAsync(_mapperService.Mapper.Map<RefreshToken>(dto));
+                await _context.RefreshTokens.AddAsync(_mapper.Map<RefreshToken>(dto));
                 await _context.SaveChangesAsync();
             }
             catch (Exception)

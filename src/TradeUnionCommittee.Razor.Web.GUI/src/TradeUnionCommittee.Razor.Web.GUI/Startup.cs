@@ -1,3 +1,4 @@
+using AutoMapper;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -12,12 +13,12 @@ using Serilog.Events;
 using Serilog.Sinks.Elasticsearch;
 using System;
 using System.IO.Compression;
-using TradeUnionCommittee.BLL;
 using TradeUnionCommittee.BLL.Configurations;
 using TradeUnionCommittee.BLL.Extensions;
-using TradeUnionCommittee.Razor.Web.GUI.Configurations;
 using TradeUnionCommittee.Razor.Web.GUI.Controllers.Directory;
 using TradeUnionCommittee.ViewModels.Extensions;
+using BllAutoMapperProfile = TradeUnionCommittee.BLL.Configurations.AutoMapperProfile;
+using MainAutoMapperProfile = TradeUnionCommittee.Razor.Web.GUI.Configurations.AutoMapperProfile;
 
 namespace TradeUnionCommittee.Razor.Web.GUI
 {
@@ -69,7 +70,7 @@ namespace TradeUnionCommittee.Razor.Web.GUI
                     Configuration.GetSection("ConnectionStrings").Get<ConnectionStrings>(),
                     Configuration.GetSection("CloudStorageConnection").Get<CloudStorageConnection>(),
                     Configuration.GetSection("RestConnection").Get<RestConnection>(),
-                    Configuration.GetSection("HashIdConfigurationSetting").Get<HashIdConfigurationSetting>())
+                    Configuration.GetSection("HashIdConfiguration").Get<HashIdConfiguration>())
                 .AddTradeUnionCommitteeViewModelsModule();
 
             services.AddResponseCompression()
@@ -118,7 +119,7 @@ namespace TradeUnionCommittee.Razor.Web.GUI
         private void DependencyInjectionSystem(IServiceCollection services)
         {
             services.AddTransient<IDirectories, Directories>();
-            services.AddSingleton(cm => AutoMapperConfiguration.ConfigureAutoMapper());
+            services.AddAutoMapper(typeof(MainAutoMapperProfile), typeof(BllAutoMapperProfile));
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
         }
     }

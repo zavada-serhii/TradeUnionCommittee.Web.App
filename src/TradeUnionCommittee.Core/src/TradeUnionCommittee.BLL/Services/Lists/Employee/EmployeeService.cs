@@ -1,8 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.ActualResults;
-using TradeUnionCommittee.BLL.Configurations;
 using TradeUnionCommittee.BLL.DTO.Employee;
 using TradeUnionCommittee.BLL.Enums;
 using TradeUnionCommittee.BLL.Helpers;
@@ -15,46 +15,44 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Employee
     internal class EmployeeService : IEmployeeService
     {
         private readonly TradeUnionCommitteeContext _context;
-        private readonly AutoMapperConfiguration _mapperService;
-        private readonly HashIdConfiguration _hashIdUtilities;
+        private readonly IMapper _mapper;
 
-        public EmployeeService(TradeUnionCommitteeContext context, AutoMapperConfiguration mapperService, HashIdConfiguration hashIdUtilities)
+        public EmployeeService(TradeUnionCommitteeContext context, IMapper mapper)
         {
             _context = context;
-            _mapperService = mapperService;
-            _hashIdUtilities = hashIdUtilities;
+            _mapper = mapper;
         }
 
         public async Task<ActualResult<string>> AddEmployeeAsync(CreateEmployeeDTO dto)
         {
             try
             {
-                var employee = _mapperService.Mapper.Map<DAL.Entities.Employee>(dto);
-                employee.PositionEmployees = _mapperService.Mapper.Map<PositionEmployees>(dto);
+                var employee = _mapper.Map<DAL.Entities.Employee>(dto);
+                employee.PositionEmployees = _mapper.Map<PositionEmployees>(dto);
 
                 if (dto.TypeAccommodation == AccommodationType.PrivateHouse || dto.TypeAccommodation == AccommodationType.FromUniversity)
                 {
-                    employee.PrivateHouseEmployees.Add(_mapperService.Mapper.Map<PrivateHouseEmployees>(dto));
+                    employee.PrivateHouseEmployees.Add(_mapper.Map<PrivateHouseEmployees>(dto));
                 }
 
                 if (dto.TypeAccommodation == AccommodationType.Dormitory || dto.TypeAccommodation == AccommodationType.Departmental)
                 {
-                    employee.PublicHouseEmployees.Add(_mapperService.Mapper.Map<PublicHouseEmployees>(dto));
+                    employee.PublicHouseEmployees.Add(_mapper.Map<PublicHouseEmployees>(dto));
                 }
 
                 if (dto.SocialActivity)
                 {
-                    employee.SocialActivityEmployees = _mapperService.Mapper.Map<SocialActivityEmployees>(dto);
+                    employee.SocialActivityEmployees = _mapper.Map<SocialActivityEmployees>(dto);
                 }
 
                 if (dto.Privileges)
                 {
-                    employee.PrivilegeEmployees = _mapperService.Mapper.Map<PrivilegeEmployees>(dto);
+                    employee.PrivilegeEmployees = _mapper.Map<PrivilegeEmployees>(dto);
                 }
 
                 await _context.Employee.AddAsync(employee);
                 await _context.SaveChangesAsync();
-                var hashId = _hashIdUtilities.EncryptLong(employee.Id);
+                var hashId = HashHelper.EncryptLong(employee.Id);
                 return new ActualResult<string> { Result = hashId };
             }
             catch (Exception exception)
@@ -69,13 +67,13 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Employee
         {
             try
             {
-                var id = _hashIdUtilities.DecryptLong(hashId);
+                var id = HashHelper.DecryptLong(hashId);
                 var employee = await _context.Employee.FindAsync(id);
                 if (employee == null)
                 {
                     return new ActualResult<GeneralInfoEmployeeDTO>(Errors.TupleDeleted);
                 }
-                var mapping = _mapperService.Mapper.Map<GeneralInfoEmployeeDTO>(employee);
+                var mapping = _mapper.Map<GeneralInfoEmployeeDTO>(employee);
                 return new ActualResult<GeneralInfoEmployeeDTO> { Result = mapping };
             }
             catch (Exception exception)
@@ -90,7 +88,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Employee
         {
             try
             {
-                _context.Entry(_mapperService.Mapper.Map<DAL.Entities.Employee>(dto)).State = EntityState.Modified;
+                _context.Entry(_mapper.Map<DAL.Entities.Employee>(dto)).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
                 return new ActualResult();
             }
@@ -106,7 +104,7 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Employee
         {
             try
             {
-                var id = _hashIdUtilities.DecryptLong(hashId);
+                var id = HashHelper.DecryptLong(hashId);
                 var result = await _context.Employee.FindAsync(id);
                 if (result != null)
                 {
