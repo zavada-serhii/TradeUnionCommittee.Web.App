@@ -54,7 +54,7 @@ namespace TradeUnionCommittee.BLL.Extensions
             services.AddDataAnalysisService(restConnection.DataAnalysisUrl);
             services.AddPdfService();
 
-            HashHelper.Configure(setting);
+            HashHelper.Initialize(setting);
 
             // Injection All Service
             //---------------------------------------------------------------------------------------------

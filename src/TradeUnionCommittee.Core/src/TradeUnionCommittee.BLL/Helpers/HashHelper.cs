@@ -12,7 +12,7 @@ namespace TradeUnionCommittee.BLL.Helpers
         private static bool _useGuidFormat;
         private static Hashids _hashIds;
 
-        public static void Configure(HashIdConfiguration setting)
+        public static void Initialize(HashIdConfiguration setting)
         {
             if (setting != null && !_isInitialized)
             {
