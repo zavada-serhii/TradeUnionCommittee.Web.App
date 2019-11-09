@@ -7,7 +7,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{F90DF1C8-45A
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{FF227AA7-2A30-4462-9FB2-CBC14ED12833}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TradeUnionCommittee.Api", "src\TradeUnionCommittee.Api\TradeUnionCommittee.Api.csproj", "{540551F6-5600-409B-A6B7-36E305BBAA19}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TradeUnionCommittee.Api", "src\TradeUnionCommittee.Api\TradeUnionCommittee.Api.csproj", "{540551F6-5600-409B-A6B7-36E305BBAA19}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TradeUnionCommittee.BLL", "..\TradeUnionCommittee.Core\src\TradeUnionCommittee.BLL\TradeUnionCommittee.BLL.csproj", "{64FB4C15-5C0D-40CB-BD1E-2C093061491C}"
 EndProject

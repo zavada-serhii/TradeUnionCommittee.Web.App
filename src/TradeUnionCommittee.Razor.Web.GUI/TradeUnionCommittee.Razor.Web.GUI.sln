@@ -7,7 +7,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{1446E4EE-198
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{3F65B0E3-AAFE-486C-8ABC-D85F1758D83D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TradeUnionCommittee.Razor.Web.GUI", "src\TradeUnionCommittee.Razor.Web.GUI\TradeUnionCommittee.Razor.Web.GUI.csproj", "{DD4111C7-4E37-4FFC-AFDF-B940D3D5D56C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TradeUnionCommittee.Razor.Web.GUI", "src\TradeUnionCommittee.Razor.Web.GUI\TradeUnionCommittee.Razor.Web.GUI.csproj", "{DD4111C7-4E37-4FFC-AFDF-B940D3D5D56C}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TradeUnionCommittee.Razor.Web.GUI.UnitTests", "tests\TradeUnionCommittee.Razor.Web.GUI.UnitTests\TradeUnionCommittee.Razor.Web.GUI.UnitTests.csproj", "{66D31EA8-D758-445F-8CDE-1DD9E5113B49}"
 EndProject
