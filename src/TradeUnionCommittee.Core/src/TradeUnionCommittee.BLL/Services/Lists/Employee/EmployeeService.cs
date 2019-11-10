@@ -30,14 +30,18 @@ namespace TradeUnionCommittee.BLL.Services.Lists.Employee
                 var employee = _mapper.Map<DAL.Entities.Employee>(dto);
                 employee.PositionEmployees = _mapper.Map<PositionEmployees>(dto);
 
-                if (dto.TypeAccommodation == AccommodationType.PrivateHouse || dto.TypeAccommodation == AccommodationType.FromUniversity)
+                switch (dto.TypeAccommodation)
                 {
-                    employee.PrivateHouseEmployees.Add(_mapper.Map<PrivateHouseEmployees>(dto));
-                }
-
-                if (dto.TypeAccommodation == AccommodationType.Dormitory || dto.TypeAccommodation == AccommodationType.Departmental)
-                {
-                    employee.PublicHouseEmployees.Add(_mapper.Map<PublicHouseEmployees>(dto));
+                    case AccommodationType.PrivateHouse:
+                    case AccommodationType.FromUniversity:
+                        employee.PrivateHouseEmployees.Add(_mapper.Map<PrivateHouseEmployees>(dto));
+                        break;
+                    case AccommodationType.Dormitory:
+                    case AccommodationType.Departmental:
+                        employee.PublicHouseEmployees.Add(_mapper.Map<PublicHouseEmployees>(dto));
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
                 }
 
                 if (dto.SocialActivity)
