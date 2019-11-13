@@ -6,7 +6,6 @@ using System.Linq;
 using TradeUnionCommittee.BLL.DTO;
 using TradeUnionCommittee.BLL.Interfaces.Dashboard;
 using TradeUnionCommittee.DAL.EF;
-using TradeUnionCommittee.DataAnalysis.Service.Interfaces;
 
 namespace TradeUnionCommittee.BLL.Services.Dashboard
 {
@@ -14,13 +13,11 @@ namespace TradeUnionCommittee.BLL.Services.Dashboard
     {
         private readonly TradeUnionCommitteeContext _context;
         private readonly IMapper _mapper;
-        private readonly ITestService _testService;
 
-        public DashboardService(TradeUnionCommitteeContext context, IMapper mapper, ITestService testService)
+        public DashboardService(TradeUnionCommitteeContext context, IMapper mapper)
         {
             _context = context;
             _mapper = mapper;
-            _testService = testService;
         }
 
         public PieResult PieData_Test()
