@@ -10,6 +10,7 @@ from json_tricks import dump, dumps, load, loads, strip_comments
 
 from io import StringIO
 from Models.ClusterModel import Cluster
+from Models.SignificanceModel import Significance
 
 #------------------------------------------------------------------------------
 # 1.1 - 1.2
@@ -31,7 +32,7 @@ def checking_significance_coefficients(input_csv):
     csv = pd.read_csv(StringIO(input_csv))
     columns = list(csv.head(0))
 
-    result = ''
+    result = [];
     corr_matr = csv.corr()
     matr = np.zeros((len(corr_matr), len(corr_matr)))
 
@@ -41,22 +42,17 @@ def checking_significance_coefficients(input_csv):
             if(j < i or j == i):
                 j = i + 1
             matr[i][j] = corr_matr[columns[i]][columns[j]]
-            result += ''
-            result += f'Для парного коэффициента: {columns[i]} - {columns[j]} тест на значимость: {test_for_paired(matr[i][j], csv)}\n'
+            tuple = test_for_paired(matr[i][j], csv)
+            result.append(Significance(columns[i],columns[j],tuple[0],tuple[1],tuple[2]))
             j += 1
-    return result
+    return dumps(result, primitives=True)
 
 def test_for_paired(c, data):
-    result = ''
     n = len(data)
     t_st = np.abs(c)*np.sqrt((n-2)/(1-c*c))
     # Пусть альфа = 0.2, тогда t_kr = t(0.1, 50)
     t_kr = 1.6759
-    if(t_st > t_kr):
-        result += f't_st = {t_st}; t_kr = {t_kr} t_st > t_k => Парный коэффициент корреляции значимо отличается от 0 с вероятностью 80%'
-    else:
-        result += f't_st = {t_st}; t_kr = {t_kr} t_st < t_k => Парный коэффициент корреляции значимо не отличается от 0 с вероятностью 80%'
-    return result
+    return (t_kr, t_st, t_st > t_kr)
 
 #------------------------------------------------------------------------------
 # 1.4

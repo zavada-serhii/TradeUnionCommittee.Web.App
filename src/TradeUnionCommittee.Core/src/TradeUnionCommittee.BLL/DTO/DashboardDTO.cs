@@ -40,4 +40,18 @@ namespace TradeUnionCommittee.BLL.DTO
         public double Y { get; set; }
         public double R { get; set; }
     }
+
+    //------------------------------------------------------------------------------------------------------------------------------------------
+
+    public class BasicColumn
+    {
+        public IEnumerable<string> Categories { get; set; }
+        public IEnumerable<SeriesBasicColumn> Series { get; set; }
+    }
+
+    public class SeriesBasicColumn
+    {
+        public string Name { get; set; }
+        public IEnumerable<double> Data { get; set; }
+    }
 }

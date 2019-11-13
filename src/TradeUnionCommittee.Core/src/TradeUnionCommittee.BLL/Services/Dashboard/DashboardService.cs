@@ -1,11 +1,17 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.DTO;
+using TradeUnionCommittee.BLL.Extensions;
 using TradeUnionCommittee.BLL.Interfaces.Dashboard;
 using TradeUnionCommittee.DAL.EF;
+using TradeUnionCommittee.DAL.Enums;
+using TradeUnionCommittee.DataAnalysis.Service.Interfaces;
+using TradeUnionCommittee.DataAnalysis.Service.Services;
 
 namespace TradeUnionCommittee.BLL.Services.Dashboard
 {
@@ -13,12 +19,128 @@ namespace TradeUnionCommittee.BLL.Services.Dashboard
     {
         private readonly TradeUnionCommitteeContext _context;
         private readonly IMapper _mapper;
+        private readonly IForecastingService _forecastingService;
 
-        public DashboardService(TradeUnionCommitteeContext context, IMapper mapper)
+        public DashboardService(TradeUnionCommitteeContext context, IMapper mapper, IForecastingService forecastingService)
         {
             _context = context;
             _mapper = mapper;
+            _forecastingService = forecastingService;
         }
+
+        public async Task<IEnumerable<IEnumerable<double>>> CorrelationAnalysis()
+        {
+            try
+            {
+                var resultData = new List<Task11Model>();
+                var dataBaseData = await _context
+                    .Employee
+                    .Include(x => x.EventEmployees)
+                    .ThenInclude(x => x.IdEventNavigation)
+                    .Select(x => new 
+                    {
+                        x.BirthDate,
+                        TravelCount = x.EventEmployees.Count(c => c.IdEventNavigation.Type == TypeEvent.Travel),
+                        WellnessCount = x.EventEmployees.Count(c => c.IdEventNavigation.Type == TypeEvent.Wellness),
+                        TourCount = x.EventEmployees.Count(c => c.IdEventNavigation.Type == TypeEvent.Tour)
+                    })
+                    .ToListAsync();
+
+                foreach (var data in dataBaseData)
+                {
+                    resultData.Add(new Task11Model
+                    {
+                        Age = data.BirthDate.CalculateAge(),
+                        TravelCount = data.TravelCount,
+                        WellnessCount = data.WellnessCount,
+                        TourCount = data.TourCount,
+                    });
+                }
+
+                var apiData = _forecastingService.CorrelationAnalysis(resultData).ToList();
+
+                var result = new List<List<double>>();
+
+                for (var i = 0; i < apiData.Count; i++)
+                {
+                    for (var j = 0; j < apiData.ElementAt(i).Count(); j++)
+                    {
+                        result.Add(new List<double> { i, j, apiData.ElementAt(i).ElementAt(j) });
+                    }
+                }
+
+                return result;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+        }
+
+        public async Task<BasicColumn> CheckingSignificanceCoefficients()
+        {
+            try
+            {
+                var resultData = new List<Task11Model>();
+                var dataBaseData = await _context
+                    .Employee
+                    .Include(x => x.EventEmployees)
+                    .ThenInclude(x => x.IdEventNavigation)
+                    .Select(x => new
+                    {
+                        x.BirthDate,
+                        TravelCount = x.EventEmployees.Count(c => c.IdEventNavigation.Type == TypeEvent.Travel),
+                        WellnessCount = x.EventEmployees.Count(c => c.IdEventNavigation.Type == TypeEvent.Wellness),
+                        TourCount = x.EventEmployees.Count(c => c.IdEventNavigation.Type == TypeEvent.Tour)
+                    })
+                    .ToListAsync();
+
+                foreach (var data in dataBaseData)
+                {
+                    resultData.Add(new Task11Model
+                    {
+                        Age = data.BirthDate.CalculateAge(),
+                        TravelCount = data.TravelCount,
+                        WellnessCount = data.WellnessCount,
+                        TourCount = data.TourCount,
+                    });
+                }
+
+                var apiData = _forecastingService.CheckingSignificanceCoefficients(resultData).ToList();
+
+                return new BasicColumn
+                {
+                    Categories = apiData.Select(x => $"{x.FirstCriterion} - {x.SecondCriterion}"),
+                    Series = new List<SeriesBasicColumn>
+                    {
+                        new SeriesBasicColumn
+                        {
+                            Name = "TCriteria",
+                            Data = apiData.Select(x => x.TCriteria)
+                        },
+
+                        new SeriesBasicColumn
+                        {
+                            Name = "TStatistics",
+                            Data = apiData.Select(x => x.TStatistics)
+                        }
+                    }
+                };
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+        }
+
+        public void Dispose()
+        {
+            _context.Dispose();
+        }
+
+        #region Test Services
 
         public PieResult PieData_Test()
         {
@@ -183,9 +305,6 @@ namespace TradeUnionCommittee.BLL.Services.Dashboard
 
         //------------------------------------------------------------------------------------------------------------------------------------------
 
-        public void Dispose()
-        {
-            _context.Dispose();
-        }
+        #endregion
     }
 }

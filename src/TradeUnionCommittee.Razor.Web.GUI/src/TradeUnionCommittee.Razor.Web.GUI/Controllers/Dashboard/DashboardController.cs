@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.Interfaces.Dashboard;
 
 namespace TradeUnionCommittee.Razor.Web.GUI.Controllers.Dashboard
@@ -23,6 +24,22 @@ namespace TradeUnionCommittee.Razor.Web.GUI.Controllers.Dashboard
         public IActionResult Index()
         {
             return View();
+        }
+
+        //------------------------------------------------------------------------------------------------------------------------------------------
+
+        [HttpGet]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> HeatMapData()
+        {
+            return Json(await _services.CorrelationAnalysis());
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> BasicColumn()
+        {
+            return Json(await _services.CheckingSignificanceCoefficients());
         }
 
         //------------------------------------------------------------------------------------------------------------------------------------------

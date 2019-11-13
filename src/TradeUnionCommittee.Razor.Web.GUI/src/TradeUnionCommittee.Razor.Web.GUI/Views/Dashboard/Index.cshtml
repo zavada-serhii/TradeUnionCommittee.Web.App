@@ -27,6 +27,12 @@
                 <li class="nav-item">
                     <a class="nav-link" id="pills-profile-tab6" data-toggle="pill" href="#pills-profile6" role="tab" aria-controls="pills-profile" aria-selected="false">Tab #6</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="pills-profile-tab7" data-toggle="pill" href="#pills-profile7" role="tab" aria-controls="pills-profile" aria-selected="false">Tab #7</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="pills-profile-tab8" data-toggle="pill" href="#pills-profile8" role="tab" aria-controls="pills-profile" aria-selected="false">Tab #8</a>
+                </li>
             </ul>
             <hr>
             <div class="tab-content" id="pills-tabContent">
@@ -147,8 +153,44 @@
                     </div>
                 </div>
                 <!--Tab 6 end-->
+                <!--Tab 7 start-->
+                <div class="tab-pane fade" id="pills-profile7" role="tabpanel" aria-labelledby="pills-profile-tab7">
+                    <div class="row">
 
+                        <div class="col-lg-12">
+                            <div class="card mb-3">
+                                <div class="card-header">
+                                    Task 1.1
+                                </div>
+                                <div class="card-body">
+                                    <div id="heatmapChart"></div>
+                                </div>
+                                <div class="card-footer small text-muted">Оновлено щойно - @DateTime.Now.ToString("dd.MM.yyyy hh:mm:ss")</div>
+                            </div>
+                        </div>
 
+                    </div>
+                </div>
+                <!--Tab 7 end-->
+                <!--Tab 8 start-->
+                <div class="tab-pane fade" id="pills-profile8" role="tabpanel" aria-labelledby="pills-profile-tab8">
+                    <div class="row">
+
+                        <div class="col-lg-12">
+                            <div class="card mb-3">
+                                <div class="card-header">
+                                    Task 1.3
+                                </div>
+                                <div class="card-body">
+                                    <div id="basicColumnChart"></div>
+                                </div>
+                                <div class="card-footer small text-muted">Оновлено щойно - @DateTime.Now.ToString("dd.MM.yyyy hh:mm:ss")</div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <!--Tab 8 end-->
             </div>
         </div>
     </div>
@@ -165,6 +207,18 @@
         <script src="~/js/dashboard/chart-radar-demo.js"></script>
         <script src="~/js/dashboard/chart-line-demo.js"></script>
         <script src="~/js/dashboard/chart-bubble-demo.js"></script>
+
+
+
+        <script src="~/js/dashboard/highcharts/highcharts.min.js"></script>
+        <script src="~/js/dashboard/highcharts/exporting.min.js"></script>
+        <script src="~/js/dashboard/highcharts/export-data.min.js"></script>
+        <script src="~/js/dashboard/highcharts/accessibility.min.js"></script>
+        <script src="~/js/dashboard/highcharts/heatmap.min.js"></script>
+
+        <script src="~/js/dashboard/highcharts/heatmap/chart-heatmap-demo.js"></script>
+        <script src="~/js/dashboard/highcharts/basicColumn/chart-basic-column-demo.js"></script>
+
     </environment>
 
     <environment exclude="Development">
