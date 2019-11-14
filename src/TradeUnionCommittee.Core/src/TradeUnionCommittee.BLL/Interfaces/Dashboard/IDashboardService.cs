@@ -8,10 +8,10 @@ namespace TradeUnionCommittee.BLL.Interfaces.Dashboard
 {
     public interface IDashboardService : IDisposable
     {
-        Task<IEnumerable<IEnumerable<double>>> CorrelationAnalysis();
-        Task<BasicColumn> CheckingSignificanceCoefficients();
-        Task<IEnumerable<BubbleResult>> ClusterAnalysis(TypeEvents type);
-        Task<BarResult> GetEmployeeAgeGroup();
+        Task<ChartResult<IEnumerable<IEnumerable<double>>>> CorrelationAnalysis();
+        Task<ChartResult<BasicColumn>> CheckingSignificanceCoefficients();
+        Task<ChartResult<IEnumerable<BubbleResult>>> ClusterAnalysis(TypeEvents type);
+        Task<ChartResult<BarResult>> GetEmployeeAgeGroup();
 
         PieResult PieData_Test();
         AreaResult AreaData_Test();

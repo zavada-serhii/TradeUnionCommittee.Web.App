@@ -1,6 +1,7 @@
-
+﻿
 $('#basicColumnChart').ready(function () {
 
+    $('#basic-column-time').empty();
     $('#basic-column-container').empty();
     $('#basic-column-container').append('<div class="sbl-circ-dual"></div>');
 
@@ -8,6 +9,7 @@ $('#basicColumnChart').ready(function () {
 
         $('#basic-column-container').empty();
         $('#basic-column-container').append('<div id="basicColumnChart"></div>');
+        $('#basic-column-time').append(`Оновлено щойно - ${result.dateTime}`);
 
         Highcharts.chart('basicColumnChart', {
             chart: {
@@ -17,7 +19,7 @@ $('#basicColumnChart').ready(function () {
                 text: 'Task 1.2'
             },
             xAxis: {
-                categories: result.categories,
+                categories: result.chart.categories,
                 crosshair: true
             },
             yAxis: {
@@ -40,7 +42,7 @@ $('#basicColumnChart').ready(function () {
                     borderWidth: 0
                 }
             },
-            series: result.series
+            series: result.chart.series
         });
     });
 });

@@ -29,7 +29,7 @@ namespace TradeUnionCommittee.BLL.Services.Dashboard
             _forecastingService = forecastingService;
         }
 
-        public async Task<IEnumerable<IEnumerable<double>>> CorrelationAnalysis()
+        public async Task<ChartResult<IEnumerable<IEnumerable<double>>>> CorrelationAnalysis()
         {
             try
             {
@@ -69,7 +69,7 @@ namespace TradeUnionCommittee.BLL.Services.Dashboard
                     }
                 }
 
-                return result;
+                return new ChartResult<IEnumerable<IEnumerable<double>>> { Chart = result };
             }
             catch (Exception exception)
             {
@@ -78,7 +78,7 @@ namespace TradeUnionCommittee.BLL.Services.Dashboard
             }
         }
 
-        public async Task<BasicColumn> CheckingSignificanceCoefficients()
+        public async Task<ChartResult<BasicColumn>> CheckingSignificanceCoefficients()
         {
             try
             {
@@ -109,7 +109,7 @@ namespace TradeUnionCommittee.BLL.Services.Dashboard
 
                 var apiData = _forecastingService.CheckingSignificanceCoefficients(resultData).ToList();
 
-                return new BasicColumn
+                var result = new BasicColumn
                 {
                     Categories = apiData.Select(x => $"{x.FirstCriterion} - {x.SecondCriterion}"),
                     Series = new List<SeriesBasicColumn>
@@ -127,6 +127,8 @@ namespace TradeUnionCommittee.BLL.Services.Dashboard
                         }
                     }
                 };
+
+                return new ChartResult<BasicColumn> { Chart = result };
             }
             catch (Exception exception)
             {
@@ -135,7 +137,7 @@ namespace TradeUnionCommittee.BLL.Services.Dashboard
             }
         }
 
-        public async Task<IEnumerable<BubbleResult>> ClusterAnalysis(TypeEvents type)
+        public async Task<ChartResult<IEnumerable<BubbleResult>>> ClusterAnalysis(TypeEvents type)
         {
             try
             {
@@ -175,7 +177,7 @@ namespace TradeUnionCommittee.BLL.Services.Dashboard
                     });
                 }
 
-                return result;
+                return new ChartResult<IEnumerable<BubbleResult>> { Chart = result };
             }
             catch (Exception exception)
             {
@@ -184,7 +186,7 @@ namespace TradeUnionCommittee.BLL.Services.Dashboard
             }
         }
 
-        public async Task<BarResult> GetEmployeeAgeGroup()
+        public async Task<ChartResult<BarResult>> GetEmployeeAgeGroup()
         {
             try
             {
@@ -197,7 +199,7 @@ namespace TradeUnionCommittee.BLL.Services.Dashboard
                     .Select(x => x.CalculateAge())
                     .ToList();
 
-                return new BarResult
+                var result = new BarResult
                 {
                     Data = new List<int>
                     {
@@ -240,6 +242,8 @@ namespace TradeUnionCommittee.BLL.Services.Dashboard
                         "More than 90"
                     }
                 };
+
+                return new ChartResult<BarResult> { Chart = result };
             }
             catch (Exception exception)
             {

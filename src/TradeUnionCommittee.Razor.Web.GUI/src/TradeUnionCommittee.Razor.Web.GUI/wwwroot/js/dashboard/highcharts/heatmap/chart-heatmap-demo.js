@@ -1,6 +1,7 @@
-
+﻿
 $('#heatmapChart').ready(function () {
 
+    $('#heat-map-time').empty();
     $('#heat-map-container').empty();
     $('#heat-map-container').append('<div class="sbl-circ-dual"></div>');
 
@@ -8,6 +9,7 @@ $('#heatmapChart').ready(function () {
 
         $('#heat-map-container').empty();
         $('#heat-map-container').append('<div id="heatmapChart"></div>');
+        $('#heat-map-time').append(`Оновлено щойно - ${result.dateTime}`);
 
         Highcharts.chart('heatmapChart', {
 
@@ -58,7 +60,7 @@ $('#heatmapChart').ready(function () {
             series: [{
                 name: 'Sales per employee',
                 borderWidth: 1,
-                data: result,
+                data: result.chart,
                 dataLabels: {
                     enabled: true,
                     color: '#000000'

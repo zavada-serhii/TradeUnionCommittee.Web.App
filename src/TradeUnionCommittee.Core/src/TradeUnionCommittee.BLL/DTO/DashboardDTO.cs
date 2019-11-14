@@ -2,6 +2,14 @@
 
 namespace TradeUnionCommittee.BLL.DTO
 {
+    public class ChartResult<T>
+    {
+        public T Chart { get; set; }
+        public string DateTime { get; set; } = System.DateTime.Now.ToString("dd.MM.yyyy hh:mm:ss");
+    }
+
+    //------------------------------------------------------------------------------------------------------------------------------------------
+
     public abstract class BaseDashboardResult<T>
     {
         public IEnumerable<T> Data { get; set; }
