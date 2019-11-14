@@ -10,5 +10,6 @@ namespace TradeUnionCommittee.DataAnalysis.Service.Interfaces
     {
         IEnumerable<IEnumerable<double>> CorrelationAnalysis(IEnumerable<Task11Model> data);
         IEnumerable<Task13Model> CheckingSignificanceCoefficients(IEnumerable<Task11Model> data);
+        ClusterModel ClusterAnalysis(IEnumerable<Task14Model> data, int countClusters);
     }
 }

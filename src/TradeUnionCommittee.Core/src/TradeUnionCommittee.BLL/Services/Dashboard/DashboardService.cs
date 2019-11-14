@@ -71,9 +71,9 @@ namespace TradeUnionCommittee.BLL.Services.Dashboard
 
                 return result;
             }
-            catch (Exception e)
+            catch (Exception exception)
             {
-                Console.WriteLine(e);
+                Console.WriteLine(exception);
                 throw;
             }
         }
@@ -128,9 +128,53 @@ namespace TradeUnionCommittee.BLL.Services.Dashboard
                     }
                 };
             }
-            catch (Exception e)
+            catch (Exception exception)
             {
-                Console.WriteLine(e);
+                Console.WriteLine(exception);
+                throw;
+            }
+        }
+
+        public IEnumerable<BubbleResult> ClusterAnalysis()
+        {
+            try
+            {
+                var random = new Random();
+                var csvData = new List<Task14Model>();
+
+                for (var i = 0; i < 2000; i++)
+                {
+                    csvData.Add(new Task14Model
+                    {
+                        X = random.Next(0, 5000),
+                        Y = random.Next(0, 5000)
+                    });
+                }
+
+                var countClusters = 6;
+                var apiData = _forecastingService.ClusterAnalysis(csvData, countClusters);
+                var clusterColors = GetRandomBubbleColors(countClusters * 2).ToList();
+
+                var result = new List<BubbleResult>();
+                for (var i = 0; i < countClusters; i++)
+                {
+                    var x = apiData.X.ElementAt(i);
+                    var y = apiData.Y.ElementAt(i);
+
+                    result.Add(new BubbleResult
+                    {
+                        Label = RandomString(),
+                        BackgroundColor = clusterColors.ElementAt(i),
+                        BorderColor = clusterColors.ElementAt(i + 2),
+                        Data = x.Zip(y, (a, b) => new Bubble { X = a, Y = b, R = 4 })
+                    });
+                }
+
+                return result;
+            }
+            catch (Exception exception)
+            {
+                Console.WriteLine(exception);
                 throw;
             }
         }
@@ -215,24 +259,6 @@ namespace TradeUnionCommittee.BLL.Services.Dashboard
             };
         }
 
-        public IEnumerable<BubbleResult> BubbleData_Test()
-        {
-            var result = new List<BubbleResult>();
-
-            for (var i = 0; i < 5; i++)
-            {
-                result.Add(new BubbleResult
-                {
-                    Label = RandomString(),
-                    BackgroundColor = HexConverter(RandomColor()),
-                    BorderColor = HexConverter(RandomColor()),
-                    Data = RandomBubble()
-                });
-            }
-
-            return result;
-        }
-
         //------------------------------------------------------------------------------------------------------------------------------------------
 
         private IEnumerable<double> RandomDoubleNumbers(double minimum, double maximum, int count)
@@ -274,34 +300,23 @@ namespace TradeUnionCommittee.BLL.Services.Dashboard
             return new string(Enumerable.Repeat(chars, 5).Select(s => s[random.Next(s.Length)]).ToArray());
         }
 
-        private Color RandomColor()
+        private IEnumerable<string> GetRandomBubbleColors(int count)
         {
             var random = new Random();
-            return Color.FromArgb(random.Next(256), random.Next(256), random.Next(256));
-        }
+            var result = new HashSet<string>(StringComparer.InvariantCultureIgnoreCase);
 
-        private IEnumerable<Bubble> RandomBubble()
-        {
-            var bubbles = new List<Bubble>();
-            var randomNumber = new Random().Next(0, 150);
-            for (var j = 0; j < randomNumber; j++)
+            while (count > result.Count)
             {
-                bubbles.Add(new Bubble
-                {
-                    X = RandomNumber(0.0, 300.0),
-                    Y = RandomNumber(0.0, 300.0),
-                    R = 4
-                });
+                var color = Color.FromArgb(random.Next(256), random.Next(256), random.Next(256));
+                result.Add(HexConverter(color));
             }
-            return bubbles;
+
+            return result;
         }
 
         //------------------------------------------------------------------------------------------------------------------------------------------
 
-        private string HexConverter(Color c)
-        {
-            return "#" + c.R.ToString("X2") + c.G.ToString("X2") + c.B.ToString("X2");
-        }
+        private string HexConverter(Color c) => "#" + c.R.ToString("X2") + c.G.ToString("X2") + c.B.ToString("X2");
 
         //------------------------------------------------------------------------------------------------------------------------------------------
 

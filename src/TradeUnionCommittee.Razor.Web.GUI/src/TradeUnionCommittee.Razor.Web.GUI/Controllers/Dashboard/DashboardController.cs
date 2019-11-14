@@ -42,6 +42,13 @@ namespace TradeUnionCommittee.Razor.Web.GUI.Controllers.Dashboard
             return Json(await _services.CheckingSignificanceCoefficients());
         }
 
+        [HttpGet]
+        [Authorize(Roles = "Admin")]
+        public IActionResult BubbleData()
+        {
+            return Json(_services.ClusterAnalysis());
+        }
+
         //------------------------------------------------------------------------------------------------------------------------------------------
 
         [HttpGet]
@@ -77,13 +84,6 @@ namespace TradeUnionCommittee.Razor.Web.GUI.Controllers.Dashboard
         public IActionResult LineData()
         {
             return Json(_services.LineData_Test());
-        }
-
-        [HttpGet]
-        [Authorize(Roles = "Admin")]
-        public IActionResult BubbleData()
-        {
-            return Json(_services.BubbleData_Test());
         }
 
         //------------------------------------------------------------------------------------------------------------------------------------------
