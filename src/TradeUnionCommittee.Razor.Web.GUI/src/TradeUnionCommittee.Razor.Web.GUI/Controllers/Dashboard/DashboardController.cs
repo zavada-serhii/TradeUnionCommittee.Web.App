@@ -37,7 +37,7 @@ namespace TradeUnionCommittee.Razor.Web.GUI.Controllers.Dashboard
 
         [HttpGet]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> BasicColumn()
+        public async Task<IActionResult> BasicColumnData()
         {
             return Json(await _services.CheckingSignificanceCoefficients());
         }
@@ -49,6 +49,13 @@ namespace TradeUnionCommittee.Razor.Web.GUI.Controllers.Dashboard
             return Json(_services.ClusterAnalysis());
         }
 
+        [HttpGet]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> BarData()
+        {
+            return Json(await _services.GetEmployeeAgeGroup());
+        }
+
         //------------------------------------------------------------------------------------------------------------------------------------------
 
         [HttpGet]
@@ -56,13 +63,6 @@ namespace TradeUnionCommittee.Razor.Web.GUI.Controllers.Dashboard
         public IActionResult PieData()
         {
             return Json(_services.PieData_Test());
-        }
-
-        [HttpGet]
-        [Authorize(Roles = "Admin")]
-        public IActionResult BarData()
-        {
-            return Json(_services.BarData_Test());
         }
 
         [HttpGet]

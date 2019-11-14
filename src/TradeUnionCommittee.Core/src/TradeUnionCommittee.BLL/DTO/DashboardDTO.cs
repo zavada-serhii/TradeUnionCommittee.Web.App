@@ -18,7 +18,7 @@ namespace TradeUnionCommittee.BLL.DTO
 
     public class PieResult : BaseDashboardResult<double> { }
 
-    public class BarResult : BaseDashboardResult<double> { }
+    public class BarResult : BaseDashboardResult<int> { }
 
     public class AreaResult : BaseDashboardResult<double> { }
 

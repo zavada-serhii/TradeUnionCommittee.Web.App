@@ -33,7 +33,7 @@ $('#myBarChart').ready(function() {
                     yAxes: [{
                         ticks: {
                             min: 0,
-                            max: Math.max.apply(Math, result.data),
+                            max: Math.max.apply(Math, result.data) + 50,
                             maxTicksLimit: result.data.length
                         },
                         gridLines: {

@@ -20,7 +20,7 @@ namespace TradeUnionCommittee.DataAnalysis.Service.Services
         }
 
         /// <summary>
-        /// Task 1.1 and 1.2
+        /// Task 1.1
         /// </summary>
         /// <param name="data"></param>
         /// <returns></returns>
@@ -41,7 +41,7 @@ namespace TradeUnionCommittee.DataAnalysis.Service.Services
         }
 
         /// <summary>
-        /// Task 1.3
+        /// Task 1.2
         /// </summary>
         /// <param name="data"></param>
         /// <returns></returns>
@@ -62,7 +62,7 @@ namespace TradeUnionCommittee.DataAnalysis.Service.Services
         }
 
         /// <summary>
-        /// Task 1.4
+        /// Task 1.3
         /// </summary>
         /// <param name="data"></param>
         /// <param name="countClusters"></param>

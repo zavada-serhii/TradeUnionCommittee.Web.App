@@ -60,7 +60,6 @@ namespace TradeUnionCommittee.BLL.Services.Dashboard
                 var apiData = _forecastingService.CorrelationAnalysis(resultData).ToList();
 
                 var result = new List<List<double>>();
-
                 for (var i = 0; i < apiData.Count; i++)
                 {
                     for (var j = 0; j < apiData.ElementAt(i).Count(); j++)
@@ -146,12 +145,12 @@ namespace TradeUnionCommittee.BLL.Services.Dashboard
                 {
                     csvData.Add(new Task14Model
                     {
-                        X = random.Next(0, 5000),
-                        Y = random.Next(0, 5000)
+                        X = random.Next(0, 5000), // Age
+                        Y = random.Next(0, 5000) // Travel_Count, Wellness_Count, Tour_Count
                     });
                 }
 
-                var countClusters = 6;
+                var countClusters = 3;
                 var apiData = _forecastingService.ClusterAnalysis(csvData, countClusters);
                 var clusterColors = GetRandomBubbleColors(countClusters * 2).ToList();
 
@@ -179,6 +178,70 @@ namespace TradeUnionCommittee.BLL.Services.Dashboard
             }
         }
 
+        public async Task<BarResult> GetEmployeeAgeGroup()
+        {
+            try
+            {
+                var birthDates = await _context
+                    .Employee
+                    .Select(x => x.BirthDate)
+                    .ToListAsync();
+
+                var ages = birthDates
+                    .Select(x => x.CalculateAge())
+                    .ToList();
+
+                return new BarResult
+                {
+                    Data = new List<int>
+                    {
+                        ages.Count(x => x < 18),
+                        ages.Count(x => x >= 18 && x <= 21),
+                        ages.Count(x => x >= 22 && x <= 25),
+                        ages.Count(x => x >= 26 && x <= 30),
+                        ages.Count(x => x >= 31 && x <= 35),
+                        ages.Count(x => x >= 36 && x <= 40),
+                        ages.Count(x => x >= 41 && x <= 45),
+                        ages.Count(x => x >= 46 && x <= 50),
+                        ages.Count(x => x >= 51 && x <= 55),
+                        ages.Count(x => x >= 56 && x <= 60),
+                        ages.Count(x => x >= 61 && x <= 65),
+                        ages.Count(x => x >= 66 && x <= 70),
+                        ages.Count(x => x >= 71 && x <= 75),
+                        ages.Count(x => x >= 76 && x <= 80),
+                        ages.Count(x => x >= 81 && x <= 85),
+                        ages.Count(x => x >= 86 && x <= 89),
+                        ages.Count(x => x >= 90),
+                    },
+                    Labels = new List<string>
+                    {
+                        "Less than 18",
+                        "18-21",
+                        "22-25",
+                        "26-30",
+                        "31-35",
+                        "36-40",
+                        "41-45",
+                        "46-50",
+                        "51-55",
+                        "56-60",
+                        "61-65",
+                        "66-70",
+                        "71-75",
+                        "76-80",
+                        "81-85",
+                        "86-89",
+                        "More than 90"
+                    }
+                };
+            }
+            catch (Exception exception)
+            {
+                Console.WriteLine(exception);
+                throw;
+            }
+        }
+
         public void Dispose()
         {
             _context.Dispose();
@@ -192,16 +255,6 @@ namespace TradeUnionCommittee.BLL.Services.Dashboard
             return new PieResult
             {
                 Data = RandomDoubleNumbers(1, 20, count),
-                Labels = RandomStrings(count)
-            };
-        }
-
-        public BarResult BarData_Test()
-        {
-            const int count = 20;
-            return new BarResult
-            {
-                Data = RandomDoubleNumbers(1, 20000, count),
                 Labels = RandomStrings(count)
             };
         }

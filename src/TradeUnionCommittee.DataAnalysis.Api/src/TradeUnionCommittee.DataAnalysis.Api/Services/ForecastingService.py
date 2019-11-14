@@ -13,8 +13,7 @@ from Models.ClusterModel import Cluster
 from Models.SignificanceModel import Significance
 
 #------------------------------------------------------------------------------
-# 1.1 - 1.2
-# Return C#/.NET type => ''
+# 1.1
 #------------------------------------------------------------------------------
 def correlation_analysis(input_csv):
 
@@ -24,8 +23,7 @@ def correlation_analysis(input_csv):
     return str(np.array(correlation).tolist())
 
 #------------------------------------------------------------------------------
-# 1.3
-# Return C#/.NET type => ''
+# 1.2
 #------------------------------------------------------------------------------
 def checking_significance_coefficients(input_csv):
 
@@ -55,8 +53,7 @@ def test_for_paired(c, data):
     return (t_kr, t_st, t_st > t_kr)
 
 #------------------------------------------------------------------------------
-# 1.4
-# Return C#/.NET type => ''
+# 1.3
 #------------------------------------------------------------------------------
 def cluster_analysis(input_json):
 

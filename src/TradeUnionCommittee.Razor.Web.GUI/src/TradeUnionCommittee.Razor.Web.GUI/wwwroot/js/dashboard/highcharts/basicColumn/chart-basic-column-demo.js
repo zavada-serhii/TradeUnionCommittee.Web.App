@@ -1,6 +1,6 @@
 
 $('#basicColumnChart').ready(function() {
-    $.get("/Dashboard/BasicColumn", function(result) {
+    $.get("/Dashboard/BasicColumnData", function(result) {
         Highcharts.chart('basicColumnChart', {
             chart: {
                 type: 'column'
