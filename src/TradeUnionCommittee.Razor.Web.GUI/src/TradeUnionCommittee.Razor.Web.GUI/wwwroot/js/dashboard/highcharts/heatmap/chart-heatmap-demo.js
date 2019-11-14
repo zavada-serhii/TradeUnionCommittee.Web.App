@@ -1,6 +1,14 @@
 
-$('#heatmapChart').ready(function() {
-    $.get("/Dashboard/HeatMapData", function(result) {
+$('#heatmapChart').ready(function () {
+
+    $('#heat-map-container').empty();
+    $('#heat-map-container').append('<div class="sbl-circ-dual"></div>');
+
+    $.get("/Dashboard/HeatMapData", function (result) {
+
+        $('#heat-map-container').empty();
+        $('#heat-map-container').append('<div id="heatmapChart"></div>');
+
         Highcharts.chart('heatmapChart', {
 
             chart: {

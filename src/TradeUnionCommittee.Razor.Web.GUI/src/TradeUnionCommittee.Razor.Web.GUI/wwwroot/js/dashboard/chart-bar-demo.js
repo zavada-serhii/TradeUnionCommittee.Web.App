@@ -3,9 +3,16 @@ Chart.defaults.global.defaultFontFamily = '-apple-system,system-ui,BlinkMacSyste
 Chart.defaults.global.defaultFontColor = '#292b2c';
 
 
-$('#myBarChart').ready(function() {
+$('#myBarChart').ready(function () {
+
+    $('#bar-container').empty();
+    $('#bar-container').append('<div class="sbl-circ-dual"></div>');
 
     $.get("/Dashboard/BarData", function (result) {
+
+        $('#bar-container').empty();
+        $('#bar-container').append('<canvas id="myBarChart" width="100%" height="50"></canvas>');
+
         var myLineChart = new Chart(document.getElementById("myBarChart"), {
             type: 'bar',
             data: {

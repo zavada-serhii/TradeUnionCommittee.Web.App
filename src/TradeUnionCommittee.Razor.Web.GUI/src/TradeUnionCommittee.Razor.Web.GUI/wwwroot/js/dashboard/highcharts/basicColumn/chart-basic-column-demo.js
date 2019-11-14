@@ -1,6 +1,14 @@
 
-$('#basicColumnChart').ready(function() {
-    $.get("/Dashboard/BasicColumnData", function(result) {
+$('#basicColumnChart').ready(function () {
+
+    $('#basic-column-container').empty();
+    $('#basic-column-container').append('<div class="sbl-circ-dual"></div>');
+
+    $.get("/Dashboard/BasicColumnData", function (result) {
+
+        $('#basic-column-container').empty();
+        $('#basic-column-container').append('<div id="basicColumnChart"></div>');
+
         Highcharts.chart('basicColumnChart', {
             chart: {
                 type: 'column'

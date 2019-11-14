@@ -48,9 +48,7 @@
                                 <div class="card-header">
                                     Task 1.1
                                 </div>
-                                <div class="card-body">
-                                    <div id="heatmapChart"></div>
-                                </div>
+                                <div class="card-body text-center" id="heat-map-container"></div>
                                 <div class="card-footer small text-muted">Оновлено щойно - @DateTime.Now.ToString("dd.MM.yyyy hh:mm:ss")</div>
                             </div>
                         </div>
@@ -67,9 +65,7 @@
                                 <div class="card-header">
                                     Task 1.2
                                 </div>
-                                <div class="card-body">
-                                    <div id="basicColumnChart"></div>
-                                </div>
+                                <div class="card-body text-center" id="basic-column-container"></div>
                                 <div class="card-footer small text-muted">Оновлено щойно - @DateTime.Now.ToString("dd.MM.yyyy hh:mm:ss")</div>
                             </div>
                         </div>
@@ -94,11 +90,11 @@
                                             <option value="2">Путівки</option>
                                         </select>
                                         <div class="input-group-append" style="margin-left: 10px ">
-                                            <input id="clusterAnalysisClick" type="submit" value="Знайти" class="btn btn-success btn-block" />
+                                            <input id="clusterAnalysisClick" type="submit" value="Аналізувати" class="btn btn-success btn-block" />
                                         </div>
                                     </div>
                                 </div>
-                                <div id="bubble-chart-container" class="card-body"></div>
+                                <div class="card-body text-center" id="bubble-container" style="padding: 0"></div>
                                 <div class="card-footer small text-muted">Оновлено щойно - @DateTime.Now.ToString("dd.MM.yyyy hh:mm:ss")</div>
                             </div>
                         </div>
@@ -115,9 +111,7 @@
                                 <div class="card-header">
                                     Task 1.4
                                 </div>
-                                <div class="card-body">
-                                    <canvas id="myBarChart" width="100%" height="50"></canvas>
-                                </div>
+                                <div class="card-body text-center" id="bar-container"></div>
                                 <div class="card-footer small text-muted">Оновлено щойно - @DateTime.Now.ToString("dd.MM.yyyy hh:mm:ss")</div>
                             </div>
                         </div>
