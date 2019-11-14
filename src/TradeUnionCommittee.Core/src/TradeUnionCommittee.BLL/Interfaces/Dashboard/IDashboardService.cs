@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.DTO;
+using TradeUnionCommittee.BLL.Enums;
 
 namespace TradeUnionCommittee.BLL.Interfaces.Dashboard
 {
@@ -9,7 +10,7 @@ namespace TradeUnionCommittee.BLL.Interfaces.Dashboard
     {
         Task<IEnumerable<IEnumerable<double>>> CorrelationAnalysis();
         Task<BasicColumn> CheckingSignificanceCoefficients();
-        IEnumerable<BubbleResult> ClusterAnalysis();
+        Task<IEnumerable<BubbleResult>> ClusterAnalysis(TypeEvents type);
         Task<BarResult> GetEmployeeAgeGroup();
 
         PieResult PieData_Test();

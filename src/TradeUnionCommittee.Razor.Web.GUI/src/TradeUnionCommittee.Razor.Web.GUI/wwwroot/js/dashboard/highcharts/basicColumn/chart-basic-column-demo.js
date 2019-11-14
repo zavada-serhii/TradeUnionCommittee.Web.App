@@ -5,6 +5,9 @@ $('#basicColumnChart').ready(function() {
             chart: {
                 type: 'column'
             },
+            title: {
+                text: 'Task 1.2'
+            },
             xAxis: {
                 categories: result.categories,
                 crosshair: true

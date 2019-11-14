@@ -1,10 +1,15 @@
 ﻿// For a bubble chart
 
-$('#bubbleChart').ready(() =>
+$('#clusterAnalysisClick').click(() =>
 {
-    $.get("/Dashboard/BubbleData", (result) =>
+    $('#bubble-chart-container').empty();
+    $('#bubble-chart-container').append('<canvas id="bubbleChart"></canvas>');
+
+    var typeId = $("select#clusterAnalysisEvents option:checked").val();
+
+    $.get(`/Dashboard/BubbleData/${typeId}`, (result) =>
     {
-        var myBubbleChart = new Chart(document.getElementById("bubbleChart"), 
+        var myBubbleChart = new Chart(document.getElementById('bubbleChart'), 
         {
             type: 'bubble',
             data:
@@ -25,7 +30,7 @@ $('#bubbleChart').ready(() =>
                         scaleLabel:
                         {
                            display: true,
-                           labelString: "Happiness"
+                           labelString: "Count event"
                         }
                     }],
                     xAxes:
@@ -33,7 +38,7 @@ $('#bubbleChart').ready(() =>
                         scaleLabel:
                         {
                            display: true,
-                           labelString: "GDP (PPP)"
+                           labelString: "Age"
                         }
                     }]
                 }

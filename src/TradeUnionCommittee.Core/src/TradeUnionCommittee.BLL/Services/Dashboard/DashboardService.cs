@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Linq;
 using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.DTO;
+using TradeUnionCommittee.BLL.Enums;
 using TradeUnionCommittee.BLL.Extensions;
 using TradeUnionCommittee.BLL.Interfaces.Dashboard;
 using TradeUnionCommittee.DAL.EF;
@@ -33,7 +34,7 @@ namespace TradeUnionCommittee.BLL.Services.Dashboard
             try
             {
                 var resultData = new List<Task11Model>();
-                var dataBaseData = await _context
+                var dbData = await _context
                     .Employee
                     .Include(x => x.EventEmployees)
                     .ThenInclude(x => x.IdEventNavigation)
@@ -46,7 +47,7 @@ namespace TradeUnionCommittee.BLL.Services.Dashboard
                     })
                     .ToListAsync();
 
-                foreach (var data in dataBaseData)
+                foreach (var data in dbData)
                 {
                     resultData.Add(new Task11Model
                     {
@@ -82,7 +83,7 @@ namespace TradeUnionCommittee.BLL.Services.Dashboard
             try
             {
                 var resultData = new List<Task11Model>();
-                var dataBaseData = await _context
+                var dbData = await _context
                     .Employee
                     .Include(x => x.EventEmployees)
                     .ThenInclude(x => x.IdEventNavigation)
@@ -95,7 +96,7 @@ namespace TradeUnionCommittee.BLL.Services.Dashboard
                     })
                     .ToListAsync();
 
-                foreach (var data in dataBaseData)
+                foreach (var data in dbData)
                 {
                     resultData.Add(new Task11Model
                     {
@@ -134,35 +135,40 @@ namespace TradeUnionCommittee.BLL.Services.Dashboard
             }
         }
 
-        public IEnumerable<BubbleResult> ClusterAnalysis()
+        public async Task<IEnumerable<BubbleResult>> ClusterAnalysis(TypeEvents type)
         {
             try
             {
-                var random = new Random();
-                var csvData = new List<Task14Model>();
-
-                for (var i = 0; i < 2000; i++)
-                {
-                    csvData.Add(new Task14Model
+                var dbData = await _context
+                    .Employee
+                    .Include(x => x.EventEmployees)
+                    .ThenInclude(x => x.IdEventNavigation)
+                    .Select(x => new 
                     {
-                        X = random.Next(0, 5000), // Age
-                        Y = random.Next(0, 5000) // Travel_Count, Wellness_Count, Tour_Count
-                    });
-                }
+                        x.BirthDate,
+                        EventCount = x.EventEmployees.Count(c => c.IdEventNavigation.Type == (TypeEvent)type),
+                    })
+                    .ToListAsync();
 
-                var countClusters = 3;
-                var apiData = _forecastingService.ClusterAnalysis(csvData, countClusters);
+                var data = dbData.Select(x => new Task14Model
+                {
+                    X = x.BirthDate.CalculateAge(),
+                    Y = x.EventCount
+                });
+
+                var countClusters = 6;
+                var apiData = _forecastingService.ClusterAnalysis(data, countClusters);
                 var clusterColors = GetRandomBubbleColors(countClusters * 2).ToList();
 
                 var result = new List<BubbleResult>();
                 for (var i = 0; i < countClusters; i++)
                 {
-                    var x = apiData.X.ElementAt(i);
+                    var x = apiData.X.ElementAt(i).ToList();
                     var y = apiData.Y.ElementAt(i);
 
                     result.Add(new BubbleResult
                     {
-                        Label = RandomString(),
+                        Label = $"{x.Min()}-{x.Max()}",
                         BackgroundColor = clusterColors.ElementAt(i),
                         BorderColor = clusterColors.ElementAt(i + 2),
                         Data = x.Zip(y, (a, b) => new Bubble { X = a, Y = b, R = 4 })
@@ -182,12 +188,12 @@ namespace TradeUnionCommittee.BLL.Services.Dashboard
         {
             try
             {
-                var birthDates = await _context
+                var dbData = await _context
                     .Employee
                     .Select(x => x.BirthDate)
                     .ToListAsync();
 
-                var ages = birthDates
+                var ages = dbData
                     .Select(x => x.CalculateAge())
                     .ToList();
 

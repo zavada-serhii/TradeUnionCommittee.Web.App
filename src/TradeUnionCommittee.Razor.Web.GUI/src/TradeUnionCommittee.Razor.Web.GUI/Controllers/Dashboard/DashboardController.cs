@@ -1,7 +1,9 @@
-﻿using AutoMapper;
+﻿using System.ComponentModel.DataAnnotations;
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
+using TradeUnionCommittee.BLL.Enums;
 using TradeUnionCommittee.BLL.Interfaces.Dashboard;
 
 namespace TradeUnionCommittee.Razor.Web.GUI.Controllers.Dashboard
@@ -44,9 +46,9 @@ namespace TradeUnionCommittee.Razor.Web.GUI.Controllers.Dashboard
 
         [HttpGet]
         [Authorize(Roles = "Admin")]
-        public IActionResult BubbleData()
+        public async Task<IActionResult> BubbleData([Required] int id)
         {
-            return Json(_services.ClusterAnalysis());
+            return Json(await _services.ClusterAnalysis((TypeEvents)id));
         }
 
         [HttpGet]
