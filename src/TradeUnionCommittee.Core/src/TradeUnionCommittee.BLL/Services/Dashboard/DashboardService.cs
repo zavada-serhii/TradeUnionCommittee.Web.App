@@ -29,6 +29,8 @@ namespace TradeUnionCommittee.BLL.Services.Dashboard
             _forecastingService = forecastingService;
         }
 
+        #region Task 1
+
         public async Task<ChartResult<IEnumerable<IEnumerable<double>>>> CorrelationAnalysis()
         {
             try
@@ -251,6 +253,120 @@ namespace TradeUnionCommittee.BLL.Services.Dashboard
                 throw;
             }
         }
+
+        #endregion
+
+        #region Task 2
+
+        public async Task Task21(TypeEvents type)
+        {
+            var dbData = await _context
+                .Employee
+                .Include(x => x.EventEmployees)
+                .ThenInclude(x => x.IdEventNavigation)
+                .Include(x => x.Children)
+                .Include(x => x.GrandChildren)
+                .Select(x => new
+                {
+                    EventCount = x.EventEmployees.Count(c => c.IdEventNavigation.Type == (TypeEvent)type),
+                    CountChildren = x.Children.Count,
+                    CountGrandChildren = x.GrandChildren.Count
+                })
+                .ToListAsync();
+        }
+
+        public async Task Task22(TypeEvents type)
+        {
+            var firstTypeEvent = (TypeEvent)type;
+
+            var typeEventValues = Enum.GetValues(typeof(TypeEvent))
+                .Cast<TypeEvent>()
+                .Where(x => x != firstTypeEvent);
+
+            var dbData = await _context
+                .Employee
+                .Include(x => x.EventEmployees)
+                .ThenInclude(x => x.IdEventNavigation)
+                .Include(x => x.AwardEmployees)
+                .Include(x => x.MaterialAidEmployees)
+                .Include(x => x.Children)
+                .Include(x => x.GrandChildren)
+                .Select(x => new
+                {
+                    FirstEventCount = x.EventEmployees.Count(c => c.IdEventNavigation.Type == firstTypeEvent),
+                    SecondEventCount = x.EventEmployees.Count(c => c.IdEventNavigation.Type == typeEventValues.ElementAt(0)),
+                    ThirdEventCount = x.EventEmployees.Count(c => c.IdEventNavigation.Type == typeEventValues.ElementAt(1)),
+                    AwardCount = x.AwardEmployees.Count,
+                    MaterialAidCount = x.MaterialAidEmployees.Count,
+                    CountChildren = x.Children.Count,
+                    CountGrandChildren = x.GrandChildren.Count
+                })
+                .ToListAsync();
+        }
+
+        public async Task Task25(TypeEvents type)
+        {
+            var firstTypeEvent = (TypeEvent)type;
+
+            var typeEventValues = Enum.GetValues(typeof(TypeEvent))
+                .Cast<TypeEvent>()
+                .Where(x => x != firstTypeEvent);
+
+            var dbData = await _context
+                .Employee
+                .Include(x => x.EventEmployees)
+                .ThenInclude(x => x.IdEventNavigation)
+                .Include(x => x.Children)
+                .Include(x => x.GrandChildren)
+                .Select(x => new
+                {
+                    FirstEventCount = x.EventEmployees.Count(c => c.IdEventNavigation.Type == firstTypeEvent),
+                    SecondEventCount = x.EventEmployees.Count(c => c.IdEventNavigation.Type == typeEventValues.ElementAt(0)),
+                    ThirdEventCount = x.EventEmployees.Count(c => c.IdEventNavigation.Type == typeEventValues.ElementAt(1)),
+                    CountChildren = x.Children.Count,
+                    CountGrandChildren = x.GrandChildren.Count
+                })
+                .ToListAsync();
+        }
+
+        public async Task Task26(TypeEvents type)
+        {
+            var dbData = await _context
+                .Employee
+                .Include(x => x.EventEmployees)
+                .ThenInclude(x => x.IdEventNavigation)
+                .Include(x => x.Children)
+                .Select(x => new
+                {
+                    EventCount = x.EventEmployees.Count(c => c.IdEventNavigation.Type == (TypeEvent)type),
+                    CountChildren = x.Children.Count
+                })
+                .ToListAsync();
+        }
+
+        public async Task Task27()
+        {
+            var dbData = await _context
+                .Employee
+                .Include(x => x.Children)
+                .Include(x => x.GrandChildren)
+                .Select(x => new
+                {
+                    WithChildren = x.Children.Any() ? 1 : 0,
+                    WithChildrenAndGrandChildren = x.GrandChildren.Any() ? 1 : 0,
+                    WithoutChildrenAndGrandChildren = !x.Children.Any() && !x.GrandChildren.Any() ? 1 : 0
+                })
+                .GroupBy(x => 1)
+                .Select(x => new
+                {
+                    WithChildren = x.Sum(e => e.WithChildren),
+                    WithChildrenAndGrandChildren = x.Sum(e => e.WithChildrenAndGrandChildren),
+                    WithoutChildrenAndGrandChildren = x.Sum(e => e.WithoutChildrenAndGrandChildren)
+                })
+                .ToListAsync();
+        }
+
+        #endregion
 
         public void Dispose()
         {
