@@ -34,21 +34,21 @@ namespace TradeUnionCommittee.Razor.Web.GUI.Controllers.Dashboard
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> HeatMapData()
         {
-            return Json(await _services.CorrelationAnalysis());
+            return Json(await _services.CorrelationAnalysisBetweenTeacherAgeAndTypeOfEvent());
         }
 
         [HttpGet]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> BasicColumnData()
         {
-            return Json(await _services.CheckingSignificanceCoefficients());
+            return Json(await _services.CheckingSignificanceAgeTeacherAndTypeOfEvent());
         }
 
         [HttpGet]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> BubbleData([Required] int id)
         {
-            return Json(await _services.ClusterAnalysis((TypeEvents)id));
+            return Json(await _services.ClusterAnalysisAgeTeacherAndTypeOfEvent((TypeEvents)id));
         }
 
         [HttpGet]

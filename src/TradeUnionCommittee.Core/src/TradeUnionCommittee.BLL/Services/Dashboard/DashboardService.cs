@@ -21,21 +21,28 @@ namespace TradeUnionCommittee.BLL.Services.Dashboard
         private readonly TradeUnionCommitteeContext _context;
         private readonly IMapper _mapper;
         private readonly IForecastingService _forecastingService;
+        private readonly IDeterminingService _determiningService;
 
-        public DashboardService(TradeUnionCommitteeContext context, IMapper mapper, IForecastingService forecastingService)
+        public DashboardService(TradeUnionCommitteeContext context, IMapper mapper, 
+            IForecastingService forecastingService, 
+            IDeterminingService determiningService)
         {
             _context = context;
             _mapper = mapper;
             _forecastingService = forecastingService;
+            _determiningService = determiningService;
         }
 
         #region Task 1
 
-        public async Task<ChartResult<IEnumerable<IEnumerable<double>>>> CorrelationAnalysis()
+        /// <summary>
+        /// Task 1.1
+        /// </summary>
+        /// <returns></returns>
+        public async Task<ChartResult<IEnumerable<IEnumerable<double>>>> CorrelationAnalysisBetweenTeacherAgeAndTypeOfEvent()
         {
             try
             {
-                var resultData = new List<Task11Model>();
                 var dbData = await _context
                     .Employee
                     .Include(x => x.EventEmployees)
@@ -49,16 +56,13 @@ namespace TradeUnionCommittee.BLL.Services.Dashboard
                     })
                     .ToListAsync();
 
-                foreach (var data in dbData)
+                var resultData = dbData.Select(x => new Task11Model
                 {
-                    resultData.Add(new Task11Model
-                    {
-                        Age = data.BirthDate.CalculateAge(),
-                        TravelCount = data.TravelCount,
-                        WellnessCount = data.WellnessCount,
-                        TourCount = data.TourCount,
-                    });
-                }
+                    Age = x.BirthDate.CalculateAge(),
+                    TravelCount = x.TravelCount,
+                    WellnessCount = x.WellnessCount,
+                    TourCount = x.TourCount,
+                });
 
                 var apiData = _forecastingService.CorrelationAnalysis(resultData).ToList();
 
@@ -80,11 +84,14 @@ namespace TradeUnionCommittee.BLL.Services.Dashboard
             }
         }
 
-        public async Task<ChartResult<BasicColumn>> CheckingSignificanceCoefficients()
+        /// <summary>
+        /// Task 1.2
+        /// </summary>
+        /// <returns></returns>
+        public async Task<ChartResult<BasicColumn>> CheckingSignificanceAgeTeacherAndTypeOfEvent()
         {
             try
             {
-                var resultData = new List<Task11Model>();
                 var dbData = await _context
                     .Employee
                     .Include(x => x.EventEmployees)
@@ -98,16 +105,13 @@ namespace TradeUnionCommittee.BLL.Services.Dashboard
                     })
                     .ToListAsync();
 
-                foreach (var data in dbData)
+                var resultData = dbData.Select(x => new Task11Model
                 {
-                    resultData.Add(new Task11Model
-                    {
-                        Age = data.BirthDate.CalculateAge(),
-                        TravelCount = data.TravelCount,
-                        WellnessCount = data.WellnessCount,
-                        TourCount = data.TourCount,
-                    });
-                }
+                    Age = x.BirthDate.CalculateAge(),
+                    TravelCount = x.TravelCount,
+                    WellnessCount = x.WellnessCount,
+                    TourCount = x.TourCount,
+                });
 
                 var apiData = _forecastingService.CheckingSignificanceCoefficients(resultData).ToList();
 
@@ -139,7 +143,12 @@ namespace TradeUnionCommittee.BLL.Services.Dashboard
             }
         }
 
-        public async Task<ChartResult<IEnumerable<BubbleResult>>> ClusterAnalysis(TypeEvents type)
+        /// <summary>
+        /// Task 1.3
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public async Task<ChartResult<IEnumerable<BubbleResult>>> ClusterAnalysisAgeTeacherAndTypeOfEvent(TypeEvents type)
         {
             try
             {
@@ -154,14 +163,14 @@ namespace TradeUnionCommittee.BLL.Services.Dashboard
                     })
                     .ToListAsync();
 
-                var data = dbData.Select(x => new Task14Model
+                var resultData = dbData.Select(x => new Task14Model
                 {
                     X = x.BirthDate.CalculateAge(),
                     Y = x.EventCount
                 });
 
                 var countClusters = 6;
-                var apiData = _forecastingService.ClusterAnalysis(data, countClusters);
+                var apiData = _forecastingService.ClusterAnalysis(resultData, countClusters);
                 var clusterColors = GetRandomBubbleColors(countClusters * 2).ToList();
 
                 var result = new List<BubbleResult>();
@@ -188,6 +197,10 @@ namespace TradeUnionCommittee.BLL.Services.Dashboard
             }
         }
 
+        /// <summary>
+        /// Task 1.4
+        /// </summary>
+        /// <returns></returns>
         public async Task<ChartResult<BarResult>> GetEmployeeAgeGroup()
         {
             try
@@ -258,7 +271,12 @@ namespace TradeUnionCommittee.BLL.Services.Dashboard
 
         #region Task 2
 
-        public async Task Task21(TypeEvents type)
+        /// <summary>
+        /// Task 2.1
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public async Task MultiCorrelationBetweenTypeOfEventAndDependents(TypeEvents type)
         {
             var dbData = await _context
                 .Employee
@@ -266,16 +284,23 @@ namespace TradeUnionCommittee.BLL.Services.Dashboard
                 .ThenInclude(x => x.IdEventNavigation)
                 .Include(x => x.Children)
                 .Include(x => x.GrandChildren)
-                .Select(x => new
+                .Select(x => new Task21Model
                 {
-                    EventCount = x.EventEmployees.Count(c => c.IdEventNavigation.Type == (TypeEvent)type),
-                    CountChildren = x.Children.Count,
-                    CountGrandChildren = x.GrandChildren.Count
+                    Y = x.EventEmployees.Count(c => c.IdEventNavigation.Type == (TypeEvent)type),
+                    X1 = x.Children.Count,
+                    X2 = x.GrandChildren.Count
                 })
                 .ToListAsync();
+
+            var apiData = _determiningService.MultiCorrelationCoefficient(dbData);
         }
 
-        public async Task Task22(TypeEvents type)
+        /// <summary>
+        /// Task 2.2 - 2.4
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public async Task RegressionModelInfluenceDependentsAndTypeOfEvent(TypeEvents type)
         {
             var firstTypeEvent = (TypeEvent)type;
 
@@ -291,20 +316,27 @@ namespace TradeUnionCommittee.BLL.Services.Dashboard
                 .Include(x => x.MaterialAidEmployees)
                 .Include(x => x.Children)
                 .Include(x => x.GrandChildren)
-                .Select(x => new
+                .Select(x => new Task22Model
                 {
-                    FirstEventCount = x.EventEmployees.Count(c => c.IdEventNavigation.Type == firstTypeEvent),
-                    SecondEventCount = x.EventEmployees.Count(c => c.IdEventNavigation.Type == typeEventValues.ElementAt(0)),
-                    ThirdEventCount = x.EventEmployees.Count(c => c.IdEventNavigation.Type == typeEventValues.ElementAt(1)),
-                    AwardCount = x.AwardEmployees.Count,
-                    MaterialAidCount = x.MaterialAidEmployees.Count,
-                    CountChildren = x.Children.Count,
-                    CountGrandChildren = x.GrandChildren.Count
+                    Y = x.EventEmployees.Count(c => c.IdEventNavigation.Type == firstTypeEvent),
+                    X1 = x.EventEmployees.Count(c => c.IdEventNavigation.Type == typeEventValues.ElementAt(0)),
+                    X2 = x.EventEmployees.Count(c => c.IdEventNavigation.Type == typeEventValues.ElementAt(1)),
+                    X3 = x.AwardEmployees.Count,
+                    X4 = x.MaterialAidEmployees.Count,
+                    X5 = x.Children.Count,
+                    X6 = x.GrandChildren.Count
                 })
                 .ToListAsync();
+
+            var apiData = _determiningService.MultiFactorModel(dbData);
         }
 
-        public async Task Task25(TypeEvents type)
+        /// <summary>
+        /// Task 2.5
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public async Task ReducedAnalysisDataDependentsAndTypeOfEvent(TypeEvents type)
         {
             var firstTypeEvent = (TypeEvent)type;
 
@@ -318,33 +350,46 @@ namespace TradeUnionCommittee.BLL.Services.Dashboard
                 .ThenInclude(x => x.IdEventNavigation)
                 .Include(x => x.Children)
                 .Include(x => x.GrandChildren)
-                .Select(x => new
+                .Select(x => new Task25Model
                 {
-                    FirstEventCount = x.EventEmployees.Count(c => c.IdEventNavigation.Type == firstTypeEvent),
-                    SecondEventCount = x.EventEmployees.Count(c => c.IdEventNavigation.Type == typeEventValues.ElementAt(0)),
-                    ThirdEventCount = x.EventEmployees.Count(c => c.IdEventNavigation.Type == typeEventValues.ElementAt(1)),
-                    CountChildren = x.Children.Count,
-                    CountGrandChildren = x.GrandChildren.Count
+                    X1 = x.EventEmployees.Count(c => c.IdEventNavigation.Type == firstTypeEvent),
+                    X2 = x.EventEmployees.Count(c => c.IdEventNavigation.Type == typeEventValues.ElementAt(0)),
+                    X3 = x.EventEmployees.Count(c => c.IdEventNavigation.Type == typeEventValues.ElementAt(1)),
+                    X4 = x.Children.Count,
+                    X5 = x.GrandChildren.Count
                 })
                 .ToListAsync();
+
+            var apiData = _determiningService.PrincipalComponentAnalysis(dbData, 2);
         }
 
-        public async Task Task26(TypeEvents type)
+        /// <summary>
+        /// Task 2.6
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public async Task ClusterAnalysisSignHavingChildrenAndTypeOfEvent(TypeEvents type)
         {
             var dbData = await _context
                 .Employee
                 .Include(x => x.EventEmployees)
                 .ThenInclude(x => x.IdEventNavigation)
                 .Include(x => x.Children)
-                .Select(x => new
+                .Select(x => new Task14Model
                 {
-                    EventCount = x.EventEmployees.Count(c => c.IdEventNavigation.Type == (TypeEvent)type),
-                    CountChildren = x.Children.Count
+                    X = x.EventEmployees.Count(c => c.IdEventNavigation.Type == (TypeEvent)type),
+                    Y = x.Children.Count
                 })
                 .ToListAsync();
+
+            var apiData = _forecastingService.ClusterAnalysis(dbData, 3);
         }
 
-        public async Task Task27()
+        /// <summary>
+        /// Task 2.7
+        /// </summary>
+        /// <returns></returns>
+        public async Task GetPercentageRatioHavingDependents()
         {
             var dbData = await _context
                 .Employee

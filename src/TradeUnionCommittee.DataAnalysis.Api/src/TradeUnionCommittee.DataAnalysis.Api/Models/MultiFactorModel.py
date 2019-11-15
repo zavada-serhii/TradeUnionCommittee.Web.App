@@ -1,11 +1,11 @@
 class MultiFactor:
     RegressionModel = []
-    Standartization = []
+    Standardization = []
     SignificanceTest = []
     ConfidenceInterval = []
 
-    def __init__(self,RegressionModel,Standartization,SignificanceTest,ConfidenceInterval):
+    def __init__(self,RegressionModel,Standardization,SignificanceTest,ConfidenceInterval):
         self.RegressionModel = RegressionModel
-        self.Standartization = Standartization
+        self.Standardization = Standardization
         self.SignificanceTest = SignificanceTest
         self.ConfidenceInterval = ConfidenceInterval
