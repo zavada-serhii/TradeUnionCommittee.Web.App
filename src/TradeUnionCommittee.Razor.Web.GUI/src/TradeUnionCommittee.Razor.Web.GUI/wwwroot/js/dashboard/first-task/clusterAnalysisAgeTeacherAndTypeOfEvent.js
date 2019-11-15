@@ -1,19 +1,20 @@
 ﻿// Task 1.3
 
-$('#clusterAnalysisClick').click(() => {
-    $('#bubble-time').empty();
-    $('#bubble-container').empty();
-    $("#bubble-container").css("padding", "1.25rem");
-    $('#bubble-container').append('<div class="sbl-circ-dual"></div>');
+$('#clusterAnalysisClick-1-3').click(() => {
 
-    var typeId = $("select#clusterAnalysisEvents option:checked").val();
+    $('#bubble-time-1-3').empty();
+    $('#bubble-container-1-3').empty();
+    $("#bubble-container-1-3").css("padding", "1.25rem");
+    $('#bubble-container-1-3').append('<div class="sbl-circ-dual"></div>');
+
+    var typeId = $("select#clusterAnalysisEvents-1-3 option:checked").val();
 
     $.get(`/Dashboard/ClusterAnalysisAgeTeacherAndTypeOfEvent/${typeId}`, (result) => {
-        $('#bubble-container').empty();
-        $('#bubble-container').append('<canvas id="bubbleChart"></canvas>');
-        $('#bubble-time').append(`Оновлено щойно - ${result.dateTime}`);
+        $('#bubble-container-1-3').empty();
+        $('#bubble-container-1-3').append('<canvas id="bubbleChart-1-3"></canvas>');
+        $('#bubble-time-1-3').append(`Оновлено щойно - ${result.dateTime}`);
 
-        var myBubbleChart = new Chart(document.getElementById('bubbleChart'),
+        var mybubbleChart = new Chart(document.getElementById('bubbleChart-1-3'),
             {
                 type: 'bubble',
                 data:

@@ -4,19 +4,19 @@ Chart.defaults.global.defaultFontColor = '#292b2c';
 
 // Task 1.4
 
-$('#myBarChart').ready(function () {
+$('#myBarChart-1-4').ready(function () {
 
-    $('#bar-time').empty();
-    $('#bar-container').empty();
-    $('#bar-container').append('<div class="sbl-circ-dual"></div>');
+    $('#bar-time-1-4').empty();
+    $('#bar-container-1-4').empty();
+    $('#bar-container-1-4').append('<div class="sbl-circ-dual"></div>');
 
     $.get("/Dashboard/EmployeeAgeGroup", function (result) {
 
-        $('#bar-container').empty();
-        $('#bar-container').append('<canvas id="myBarChart" width="100%" height="50"></canvas>');
-        $('#bar-time').append(`Оновлено щойно - ${result.dateTime}`);
+        $('#bar-container-1-4').empty();
+        $('#bar-container-1-4').append('<canvas id="myBarChart-1-4" width="100%" height="50"></canvas>');
+        $('#bar-time-1-4').append(`Оновлено щойно - ${result.dateTime}`);
 
-        var myLineChart = new Chart(document.getElementById("myBarChart"), {
+        var myLineChart = new Chart(document.getElementById("myBarChart-1-4"), {
             type: 'bar',
             data: {
                 labels: result.chart.labels,

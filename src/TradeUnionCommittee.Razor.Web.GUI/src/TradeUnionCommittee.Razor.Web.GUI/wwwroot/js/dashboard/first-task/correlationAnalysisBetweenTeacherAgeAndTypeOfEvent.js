@@ -1,19 +1,19 @@
 ﻿
 // Task 1.1
 
-$('#heatmapChart').ready(function () {
+$('#heatmapChart-1-1').ready(function () {
 
-    $('#heat-map-time').empty();
-    $('#heat-map-container').empty();
-    $('#heat-map-container').append('<div class="sbl-circ-dual"></div>');
+    $('#heat-map-time-1-1').empty();
+    $('#heat-map-container-1-1').empty();
+    $('#heat-map-container-1-1').append('<div class="sbl-circ-dual"></div>');
 
     $.get("/Dashboard/CorrelationAnalysisBetweenTeacherAgeAndTypeOfEvent", function (result) {
 
-        $('#heat-map-container').empty();
-        $('#heat-map-container').append('<div id="heatmapChart"></div>');
-        $('#heat-map-time').append(`Оновлено щойно - ${result.dateTime}`);
+        $('#heat-map-container-1-1').empty();
+        $('#heat-map-container-1-1').append('<div id="heatmapChart-1-1"></div>');
+        $('#heat-map-time-1-1').append(`Оновлено щойно - ${result.dateTime}`);
 
-        Highcharts.chart('heatmapChart', {
+        Highcharts.chart('heatmapChart-1-1', {
 
             chart: {
                 type: 'heatmap',

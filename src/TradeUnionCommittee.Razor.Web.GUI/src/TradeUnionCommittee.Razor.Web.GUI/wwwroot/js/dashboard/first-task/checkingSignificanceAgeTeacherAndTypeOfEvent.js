@@ -1,19 +1,19 @@
 ﻿
 // Task 1.2
 
-$('#basicColumnChart').ready(function () {
+$('#basicColumnChart-1-2').ready(function () {
 
-    $('#basic-column-time').empty();
-    $('#basic-column-container').empty();
-    $('#basic-column-container').append('<div class="sbl-circ-dual"></div>');
+    $('#basic-column-time-1-2').empty();
+    $('#basic-column-container-1-2').empty();
+    $('#basic-column-container-1-2').append('<div class="sbl-circ-dual"></div>');
 
     $.get("/Dashboard/CheckingSignificanceAgeTeacherAndTypeOfEvent", function (result) {
 
-        $('#basic-column-container').empty();
-        $('#basic-column-container').append('<div id="basicColumnChart"></div>');
-        $('#basic-column-time').append(`Оновлено щойно - ${result.dateTime}`);
+        $('#basic-column-container-1-2').empty();
+        $('#basic-column-container-1-2').append('<div id="basicColumnChart-1-2"></div>');
+        $('#basic-column-time-1-2').append(`Оновлено щойно - ${result.dateTime}`);
 
-        Highcharts.chart('basicColumnChart', {
+        Highcharts.chart('basicColumnChart-1-2', {
             chart: {
                 type: 'column'
             },
