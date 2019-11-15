@@ -352,14 +352,16 @@ namespace TradeUnionCommittee.BLL.Services.Dashboard
                 .Include(x => x.GrandChildren)
                 .Select(x => new
                 {
-                    WithChildren = x.Children.Any() ? 1 : 0,
-                    WithChildrenAndGrandChildren = x.GrandChildren.Any() ? 1 : 0,
+                    WithChildren = x.Children.Any() && !x.GrandChildren.Any() ? 1 : 0,
+                    WithGrandChildren = !x.Children.Any() && x.GrandChildren.Any() ? 1 : 0,
+                    WithChildrenAndGrandChildren = x.Children.Any() && x.GrandChildren.Any() ? 1 : 0,
                     WithoutChildrenAndGrandChildren = !x.Children.Any() && !x.GrandChildren.Any() ? 1 : 0
                 })
                 .GroupBy(x => 1)
                 .Select(x => new
                 {
                     WithChildren = x.Sum(e => e.WithChildren),
+                    WithGrandChildren = x.Sum(e => e.WithGrandChildren),
                     WithChildrenAndGrandChildren = x.Sum(e => e.WithChildrenAndGrandChildren),
                     WithoutChildrenAndGrandChildren = x.Sum(e => e.WithoutChildrenAndGrandChildren)
                 })
