@@ -71,20 +71,6 @@ namespace TradeUnionCommittee.Razor.Web.GUI.Controllers.Dashboard
 
         [HttpGet]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> RegressionModelInfluenceDependentsAndTypeOfEvent([Required] int id)
-        {
-            return Json(await _services.RegressionModelInfluenceDependentsAndTypeOfEvent((TypeEvents)id));
-        }
-
-        [HttpGet]
-        [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> ReducedAnalysisDataDependentsAndTypeOfEvent([Required] int id)
-        {
-            return Json(await _services.ReducedAnalysisDataDependentsAndTypeOfEvent((TypeEvents)id));
-        }
-
-        [HttpGet]
-        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> ClusterAnalysisSignHavingChildrenAndTypeOfEvent([Required] int id)
         {
             return Json(await _services.ClusterAnalysisSignHavingChildrenAndTypeOfEvent((TypeEvents)id));

@@ -41,11 +41,11 @@ namespace TradeUnionCommittee.DataAnalysis.Service.Services
         }
 
         /// <summary>
-        /// Task 2.2 - 2.4
+        /// Task 2.4 - 2.6
         /// </summary>
         /// <param name="data"></param>
         /// <returns></returns>
-        public MultiFactorModel MultiFactorModel(IEnumerable<Task22Model> data)
+        public MultiFactorModel MultiFactorModel(IEnumerable<Task24Model> data)
         {
             var request = new RestRequest("/api/Determining/ProbablePastime/MultiFactorModel", Method.POST) { RequestFormat = DataFormat.Json };
             var csv = CsvSerializer.SerializeToString(data);
@@ -62,12 +62,12 @@ namespace TradeUnionCommittee.DataAnalysis.Service.Services
         }
 
         /// <summary>
-        /// Task 2.5
+        /// Task 2.7
         /// </summary>
         /// <param name="data"></param>
         /// <param name="countComponents"></param>
         /// <returns></returns>
-        public IEnumerable<IEnumerable<double>> PrincipalComponentAnalysis(IEnumerable<Task25Model> data, int countComponents)
+        public IEnumerable<IEnumerable<double>> PrincipalComponentAnalysis(IEnumerable<Task27Model> data, int countComponents)
         {
             var request = new RestRequest("/api/Determining/ProbablePastime/PrincipalComponentAnalysis", Method.POST) { RequestFormat = DataFormat.Json };
             var json = JsonSerializer.SerializeToString(new
@@ -97,7 +97,7 @@ namespace TradeUnionCommittee.DataAnalysis.Service.Services
 
     //------------------------------------------------------
 
-    public class Task22Model : Task21Model
+    public class Task24Model : Task21Model
     {
         public int X3 { get; set; }
         public int X4 { get; set; }
@@ -115,7 +115,7 @@ namespace TradeUnionCommittee.DataAnalysis.Service.Services
 
     //------------------------------------------------------
 
-    public class Task25Model
+    public class Task27Model
     {
         public int X1 { get; set; }
         public int X2 { get; set; }

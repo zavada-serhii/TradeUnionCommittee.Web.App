@@ -12,7 +12,7 @@ def determining_probable_pastime_task1():
     return determiningService.multi_coeff(input_json)
 
 #------------------------------------------------------------------------------
-# 2.2 - 2.4
+# 2.4 - 2.6
 #------------------------------------------------------------------------------
 @app.route('/api/Determining/ProbablePastime/MultiFactorModel', methods=['POST'])
 def determining_probable_pastime_task2():
@@ -20,7 +20,7 @@ def determining_probable_pastime_task2():
     return determiningService.determining_probable_pastime_task2(input_json)
 
 #------------------------------------------------------------------------------
-# 2.5
+# 2.7
 #------------------------------------------------------------------------------
 @app.route('/api/Determining/ProbablePastime/PrincipalComponentAnalysis', methods=['POST'])
 def determining_probable_pastime_task5():

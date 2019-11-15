@@ -305,88 +305,7 @@ namespace TradeUnionCommittee.BLL.Services.Dashboard
         }
 
         /// <summary>
-        /// Task 2.2 - 2.4
-        /// </summary>
-        /// <param name="type"></param>
-        /// <returns></returns>
-        public async Task<double> RegressionModelInfluenceDependentsAndTypeOfEvent(TypeEvents type)
-        {
-            var firstTypeEvent = (TypeEvent)type;
-
-            var typeEventValues = Enum.GetValues(typeof(TypeEvent))
-                .Cast<TypeEvent>()
-                .Where(x => x != firstTypeEvent);
-
-            var dbData = await _context
-                .Employee
-                .Include(x => x.EventEmployees)
-                .ThenInclude(x => x.IdEventNavigation)
-                .Include(x => x.AwardEmployees)
-                .Include(x => x.MaterialAidEmployees)
-                .Include(x => x.Children)
-                .Include(x => x.GrandChildren)
-                .Select(x => new Task22Model
-                {
-                    Y = x.EventEmployees.Count(c => c.IdEventNavigation.Type == firstTypeEvent),
-                    X1 = x.EventEmployees.Count(c => c.IdEventNavigation.Type == typeEventValues.ElementAt(0)),
-                    X2 = x.EventEmployees.Count(c => c.IdEventNavigation.Type == typeEventValues.ElementAt(1)),
-                    X3 = x.AwardEmployees.Count,
-                    X4 = x.MaterialAidEmployees.Count,
-                    X5 = x.Children.Count,
-                    X6 = x.GrandChildren.Count
-                })
-                .ToListAsync();
-
-            var apiData = _determiningService.MultiFactorModel(dbData);
-
-            return Math.PI;
-        }
-
-        /// <summary>
-        /// Task 2.5
-        /// </summary>
-        /// <param name="type"></param>
-        /// <returns></returns>
-        public async Task<ChartResult<IEnumerable<IEnumerable<double>>>> ReducedAnalysisDataDependentsAndTypeOfEvent(TypeEvents type)
-        {
-            var firstTypeEvent = (TypeEvent)type;
-
-            var typeEventValues = Enum.GetValues(typeof(TypeEvent))
-                .Cast<TypeEvent>()
-                .Where(x => x != firstTypeEvent);
-
-            var dbData = await _context
-                .Employee
-                .Include(x => x.EventEmployees)
-                .ThenInclude(x => x.IdEventNavigation)
-                .Include(x => x.Children)
-                .Include(x => x.GrandChildren)
-                .Select(x => new Task25Model
-                {
-                    X1 = x.EventEmployees.Count(c => c.IdEventNavigation.Type == firstTypeEvent),
-                    X2 = x.EventEmployees.Count(c => c.IdEventNavigation.Type == typeEventValues.ElementAt(0)),
-                    X3 = x.EventEmployees.Count(c => c.IdEventNavigation.Type == typeEventValues.ElementAt(1)),
-                    X4 = x.Children.Count,
-                    X5 = x.GrandChildren.Count
-                })
-                .ToListAsync();
-
-            var apiData = _determiningService.PrincipalComponentAnalysis(dbData, 2).ToList();
-
-            var result = new List<List<double>>();
-            for (var i = 0; i < apiData.Count; i++)
-            {
-                for (var j = 0; j < apiData.ElementAt(i).Count(); j++)
-                {
-                    result.Add(new List<double> { i, j, apiData.ElementAt(i).ElementAt(j) });
-                }
-            }
-
-            return new ChartResult<IEnumerable<IEnumerable<double>>> { Chart = result };
-        }
-
-        /// <summary>
-        /// Task 2.6
+        /// Task 2.2
         /// </summary>
         /// <param name="type"></param>
         /// <returns></returns>
@@ -427,7 +346,7 @@ namespace TradeUnionCommittee.BLL.Services.Dashboard
         }
 
         /// <summary>
-        /// Task 2.7
+        /// Task 2.3
         /// </summary>
         /// <returns></returns>
         public async Task<ChartResult<PieResultInt>> GetPercentageRatioHavingDependents()
@@ -473,6 +392,74 @@ namespace TradeUnionCommittee.BLL.Services.Dashboard
                     }
                 }
             };
+        }
+
+        /// <summary>
+        /// Task 2.4 - 2.6
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public async Task RegressionModelInfluenceDependentsAndTypeOfEvent(TypeEvents type)
+        {
+            var firstTypeEvent = (TypeEvent)type;
+
+            var typeEventValues = Enum.GetValues(typeof(TypeEvent))
+                .Cast<TypeEvent>()
+                .Where(x => x != firstTypeEvent);
+
+            var dbData = await _context
+                .Employee
+                .Include(x => x.EventEmployees)
+                .ThenInclude(x => x.IdEventNavigation)
+                .Include(x => x.AwardEmployees)
+                .Include(x => x.MaterialAidEmployees)
+                .Include(x => x.Children)
+                .Include(x => x.GrandChildren)
+                .Select(x => new Task24Model
+                {
+                    Y = x.EventEmployees.Count(c => c.IdEventNavigation.Type == firstTypeEvent),
+                    X1 = x.EventEmployees.Count(c => c.IdEventNavigation.Type == typeEventValues.ElementAt(0)),
+                    X2 = x.EventEmployees.Count(c => c.IdEventNavigation.Type == typeEventValues.ElementAt(1)),
+                    X3 = x.AwardEmployees.Count,
+                    X4 = x.MaterialAidEmployees.Count,
+                    X5 = x.Children.Count,
+                    X6 = x.GrandChildren.Count
+                })
+                .ToListAsync();
+
+            var apiData = _determiningService.MultiFactorModel(dbData);
+        }
+
+        /// <summary>
+        /// Task 2.7
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public async Task ReducedAnalysisDataDependentsAndTypeOfEvent(TypeEvents type)
+        {
+            var firstTypeEvent = (TypeEvent)type;
+
+            var typeEventValues = Enum.GetValues(typeof(TypeEvent))
+                .Cast<TypeEvent>()
+                .Where(x => x != firstTypeEvent);
+
+            var dbData = await _context
+                .Employee
+                .Include(x => x.EventEmployees)
+                .ThenInclude(x => x.IdEventNavigation)
+                .Include(x => x.Children)
+                .Include(x => x.GrandChildren)
+                .Select(x => new Task27Model
+                {
+                    X1 = x.EventEmployees.Count(c => c.IdEventNavigation.Type == firstTypeEvent),
+                    X2 = x.EventEmployees.Count(c => c.IdEventNavigation.Type == typeEventValues.ElementAt(0)),
+                    X3 = x.EventEmployees.Count(c => c.IdEventNavigation.Type == typeEventValues.ElementAt(1)),
+                    X4 = x.Children.Count,
+                    X5 = x.GrandChildren.Count
+                })
+                .ToListAsync();
+
+            var apiData = _determiningService.PrincipalComponentAnalysis(dbData, 2).ToList();
         }
 
         #endregion

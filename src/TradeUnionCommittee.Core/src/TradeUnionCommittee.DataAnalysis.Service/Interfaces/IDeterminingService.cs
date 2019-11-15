@@ -9,7 +9,7 @@ namespace TradeUnionCommittee.DataAnalysis.Service.Interfaces
     public interface IDeterminingService
     {
         double MultiCorrelationCoefficient(IEnumerable<Task21Model> data);
-        MultiFactorModel MultiFactorModel(IEnumerable<Task22Model> data);
-        IEnumerable<IEnumerable<double>> PrincipalComponentAnalysis(IEnumerable<Task25Model> data, int countComponents);
+        MultiFactorModel MultiFactorModel(IEnumerable<Task24Model> data);
+        IEnumerable<IEnumerable<double>> PrincipalComponentAnalysis(IEnumerable<Task27Model> data, int countComponents);
     }
 }

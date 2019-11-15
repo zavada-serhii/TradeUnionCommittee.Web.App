@@ -14,8 +14,6 @@ namespace TradeUnionCommittee.BLL.Interfaces.Dashboard
         Task<ChartResult<BarResultInt>> GetEmployeeAgeGroup();
 
         Task<ChartResult<BarResultDouble>> MultiCorrelationBetweenTypeOfEventAndDependents(TypeEvents type);
-        Task<double> RegressionModelInfluenceDependentsAndTypeOfEvent(TypeEvents type);
-        Task<ChartResult<IEnumerable<IEnumerable<double>>>> ReducedAnalysisDataDependentsAndTypeOfEvent(TypeEvents type);
         Task<ChartResult<IEnumerable<BubbleResult>>> ClusterAnalysisSignHavingChildrenAndTypeOfEvent(TypeEvents type);
         Task<ChartResult<PieResultInt>> GetPercentageRatioHavingDependents();
 
