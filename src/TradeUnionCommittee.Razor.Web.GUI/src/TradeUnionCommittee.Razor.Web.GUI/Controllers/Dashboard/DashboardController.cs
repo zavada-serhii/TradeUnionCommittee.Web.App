@@ -32,28 +32,28 @@ namespace TradeUnionCommittee.Razor.Web.GUI.Controllers.Dashboard
 
         [HttpGet]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> HeatMapData()
+        public async Task<IActionResult> CorrelationAnalysisBetweenTeacherAgeAndTypeOfEvent()
         {
             return Json(await _services.CorrelationAnalysisBetweenTeacherAgeAndTypeOfEvent());
         }
 
         [HttpGet]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> BasicColumnData()
+        public async Task<IActionResult> CheckingSignificanceAgeTeacherAndTypeOfEvent()
         {
             return Json(await _services.CheckingSignificanceAgeTeacherAndTypeOfEvent());
         }
 
         [HttpGet]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> BubbleData([Required] int id)
+        public async Task<IActionResult> ClusterAnalysisAgeTeacherAndTypeOfEvent([Required] int id)
         {
             return Json(await _services.ClusterAnalysisAgeTeacherAndTypeOfEvent((TypeEvents)id));
         }
 
         [HttpGet]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> BarData()
+        public async Task<IActionResult> EmployeeAgeGroup()
         {
             return Json(await _services.GetEmployeeAgeGroup());
         }
@@ -65,6 +65,13 @@ namespace TradeUnionCommittee.Razor.Web.GUI.Controllers.Dashboard
         public IActionResult PieData()
         {
             return Json(_services.PieData_Test());
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "Admin")]
+        public IActionResult BarData()
+        {
+            return Json(_services.BarData_Test());
         }
 
         [HttpGet]
@@ -86,6 +93,13 @@ namespace TradeUnionCommittee.Razor.Web.GUI.Controllers.Dashboard
         public IActionResult LineData()
         {
             return Json(_services.LineData_Test());
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "Admin")]
+        public IActionResult BubbleData()
+        {
+            return Json(_services.BubbleData_Test());
         }
 
         //------------------------------------------------------------------------------------------------------------------------------------------

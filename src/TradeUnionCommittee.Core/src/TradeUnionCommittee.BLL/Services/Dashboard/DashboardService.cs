@@ -432,6 +432,16 @@ namespace TradeUnionCommittee.BLL.Services.Dashboard
             };
         }
 
+        public BarResult BarData_Test()
+        {
+            const int count = 20;
+            return new BarResult
+            {
+                Data = RandomIntNumbers(1, 20000, count),
+                Labels = RandomStrings(count)
+            };
+        }
+
         public AreaResult AreaData_Test()
         {
             const int count = 40;
@@ -485,6 +495,24 @@ namespace TradeUnionCommittee.BLL.Services.Dashboard
             };
         }
 
+        public IEnumerable<BubbleResult> BubbleData_Test()
+        {
+            var result = new List<BubbleResult>();
+
+            for (var i = 0; i < 5; i++)
+            {
+                result.Add(new BubbleResult
+                {
+                    Label = RandomString(),
+                    BackgroundColor = HexConverter(RandomColor()),
+                    BorderColor = HexConverter(RandomColor()),
+                    Data = RandomBubble()
+                });
+            }
+
+            return result;
+        }
+
         //------------------------------------------------------------------------------------------------------------------------------------------
 
         private IEnumerable<double> RandomDoubleNumbers(double minimum, double maximum, int count)
@@ -495,6 +523,19 @@ namespace TradeUnionCommittee.BLL.Services.Dashboard
             for (var i = 0; i < count; i++)
             {
                 result.Add(Math.Round(random.NextDouble() * (maximum - minimum) + minimum, 2));
+            }
+
+            return result;
+        }
+
+        private IEnumerable<int> RandomIntNumbers(int minimum, int maximum, int count)
+        {
+            var random = new Random();
+            var result = new List<int>();
+
+            for (var i = 0; i < count; i++)
+            {
+                result.Add(random.Next(minimum, maximum));
             }
 
             return result;
@@ -526,6 +567,12 @@ namespace TradeUnionCommittee.BLL.Services.Dashboard
             return new string(Enumerable.Repeat(chars, 5).Select(s => s[random.Next(s.Length)]).ToArray());
         }
 
+        private Color RandomColor()
+        {
+            var random = new Random();
+            return Color.FromArgb(random.Next(256), random.Next(256), random.Next(256));
+        }
+
         private IEnumerable<string> GetRandomBubbleColors(int count)
         {
             var random = new Random();
@@ -538,6 +585,22 @@ namespace TradeUnionCommittee.BLL.Services.Dashboard
             }
 
             return result;
+        }
+
+        private IEnumerable<Bubble> RandomBubble()
+        {
+            var bubbles = new List<Bubble>();
+            var randomNumber = new Random().Next(0, 150);
+            for (var j = 0; j < randomNumber; j++)
+            {
+                bubbles.Add(new Bubble
+                {
+                    X = RandomNumber(0.0, 300.0),
+                    Y = RandomNumber(0.0, 300.0),
+                    R = 4
+                });
+            }
+            return bubbles;
         }
 
         //------------------------------------------------------------------------------------------------------------------------------------------

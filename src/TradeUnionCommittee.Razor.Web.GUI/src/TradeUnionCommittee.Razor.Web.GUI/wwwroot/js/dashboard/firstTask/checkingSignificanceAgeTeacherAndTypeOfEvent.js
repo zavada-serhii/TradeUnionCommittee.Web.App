@@ -1,11 +1,13 @@
 ﻿
+// Task 1.2
+
 $('#basicColumnChart').ready(function () {
 
     $('#basic-column-time').empty();
     $('#basic-column-container').empty();
     $('#basic-column-container').append('<div class="sbl-circ-dual"></div>');
 
-    $.get("/Dashboard/BasicColumnData", function (result) {
+    $.get("/Dashboard/CheckingSignificanceAgeTeacherAndTypeOfEvent", function (result) {
 
         $('#basic-column-container').empty();
         $('#basic-column-container').append('<div id="basicColumnChart"></div>');

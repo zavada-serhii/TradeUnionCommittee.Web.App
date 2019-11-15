@@ -1,11 +1,13 @@
 ﻿
+// Task 1.1
+
 $('#heatmapChart').ready(function () {
 
     $('#heat-map-time').empty();
     $('#heat-map-container').empty();
     $('#heat-map-container').append('<div class="sbl-circ-dual"></div>');
 
-    $.get("/Dashboard/HeatMapData", function (result) {
+    $.get("/Dashboard/CorrelationAnalysisBetweenTeacherAgeAndTypeOfEvent", function (result) {
 
         $('#heat-map-container').empty();
         $('#heat-map-container').append('<div id="heatmapChart"></div>');

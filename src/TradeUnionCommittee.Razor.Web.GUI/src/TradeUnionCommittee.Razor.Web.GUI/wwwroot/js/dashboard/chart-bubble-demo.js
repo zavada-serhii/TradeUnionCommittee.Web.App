@@ -1,27 +1,16 @@
 ﻿// For a bubble chart
 
-$('#clusterAnalysisClick').click(() =>
+$('#bubbleChart').ready(() =>
 {
-    $('#bubble-time').empty();
-    $('#bubble-container').empty();
-    $("#bubble-container").css("padding", "1.25rem");
-    $('#bubble-container').append('<div class="sbl-circ-dual"></div>');
-
-    var typeId = $("select#clusterAnalysisEvents option:checked").val();
-
-    $.get(`/Dashboard/BubbleData/${typeId}`, (result) =>
+    $.get("/Dashboard/BubbleData", (result) =>
     {
-        $('#bubble-container').empty();
-        $('#bubble-container').append('<canvas id="bubbleChart"></canvas>');
-        $('#bubble-time').append(`Оновлено щойно - ${result.dateTime}`);
-
-        var myBubbleChart = new Chart(document.getElementById('bubbleChart'), 
+        var myBubbleChart = new Chart(document.getElementById("bubbleChart"), 
         {
             type: 'bubble',
             data:
             {
                 labels: "Africa",
-                datasets: result.chart
+                datasets: result
             },
             options:
             {
@@ -36,7 +25,7 @@ $('#clusterAnalysisClick').click(() =>
                         scaleLabel:
                         {
                            display: true,
-                           labelString: "Count event"
+                           labelString: "Happiness"
                         }
                     }],
                     xAxes:
@@ -44,7 +33,7 @@ $('#clusterAnalysisClick').click(() =>
                         scaleLabel:
                         {
                            display: true,
-                           labelString: "Age"
+                           labelString: "GDP (PPP)"
                         }
                     }]
                 }
