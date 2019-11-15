@@ -5,7 +5,6 @@ import Services.DeterminingService as determiningService
 
 #------------------------------------------------------------------------------
 # 2.1
-# Return C#/.NET type => ''
 #------------------------------------------------------------------------------
 @app.route('/api/Determining/ProbablePastime/MultiCorrelationCoefficient', methods=['POST'])
 def determining_probable_pastime_task1():
@@ -14,7 +13,6 @@ def determining_probable_pastime_task1():
 
 #------------------------------------------------------------------------------
 # 2.2 - 2.4
-# Return C#/.NET type => ''
 #------------------------------------------------------------------------------
 @app.route('/api/Determining/ProbablePastime/MultiFactorModel', methods=['POST'])
 def determining_probable_pastime_task2():
@@ -23,7 +21,6 @@ def determining_probable_pastime_task2():
 
 #------------------------------------------------------------------------------
 # 2.5
-# Return C#/.NET type => ''
 #------------------------------------------------------------------------------
 @app.route('/api/Determining/ProbablePastime/PrincipalComponentAnalysis', methods=['POST'])
 def determining_probable_pastime_task5():
@@ -34,7 +31,6 @@ def determining_probable_pastime_task5():
 
 #------------------------------------------------------------------------------
 # 3.1
-# Return C#/.NET type => ''
 #------------------------------------------------------------------------------
 @app.route('/api/Determining/UnpopularPastime/Task1', methods=['POST'])
 def determining_unpopular_pastime_task1():
