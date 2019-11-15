@@ -1,7 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
-using AutoMapper;
+﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.Enums;
 using TradeUnionCommittee.BLL.Interfaces.Dashboard;
@@ -28,7 +28,7 @@ namespace TradeUnionCommittee.Razor.Web.GUI.Controllers.Dashboard
             return View();
         }
 
-        //------------------------------------------------------------------------------------------------------------------------------------------
+        #region Task 1
 
         [HttpGet]
         [Authorize(Roles = "Admin")]
@@ -58,7 +58,48 @@ namespace TradeUnionCommittee.Razor.Web.GUI.Controllers.Dashboard
             return Json(await _services.GetEmployeeAgeGroup());
         }
 
-        //------------------------------------------------------------------------------------------------------------------------------------------
+        #endregion
+
+        #region Task 2
+
+        [HttpGet]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> MultiCorrelationBetweenTypeOfEventAndDependents([Required] int id)
+        {
+            return Json(await _services.MultiCorrelationBetweenTypeOfEventAndDependents((TypeEvents)id));
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> RegressionModelInfluenceDependentsAndTypeOfEvent([Required] int id)
+        {
+            return Json(await _services.RegressionModelInfluenceDependentsAndTypeOfEvent((TypeEvents)id));
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> ReducedAnalysisDataDependentsAndTypeOfEvent([Required] int id)
+        {
+            return Json(await _services.ReducedAnalysisDataDependentsAndTypeOfEvent((TypeEvents)id));
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> ClusterAnalysisSignHavingChildrenAndTypeOfEvent([Required] int id)
+        {
+            return Json(await _services.ClusterAnalysisSignHavingChildrenAndTypeOfEvent((TypeEvents)id));
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> PercentageRatioHavingDependents([Required] int id)
+        {
+            return Json(await _services.GetPercentageRatioHavingDependents());
+        }
+
+        #endregion
+
+        #region Test
 
         [HttpGet]
         [Authorize(Roles = "Admin")]
@@ -102,7 +143,7 @@ namespace TradeUnionCommittee.Razor.Web.GUI.Controllers.Dashboard
             return Json(_services.BubbleData_Test());
         }
 
-        //------------------------------------------------------------------------------------------------------------------------------------------
+        #endregion
 
         protected override void Dispose(bool disposing)
         {

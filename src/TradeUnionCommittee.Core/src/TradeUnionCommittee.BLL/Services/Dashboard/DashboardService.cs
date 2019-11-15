@@ -169,7 +169,7 @@ namespace TradeUnionCommittee.BLL.Services.Dashboard
                     Y = x.EventCount
                 });
 
-                var countClusters = 6;
+                const int countClusters = 6;
                 var apiData = _forecastingService.ClusterAnalysis(resultData, countClusters);
                 var clusterColors = GetRandomBubbleColors(countClusters * 2).ToList();
 
@@ -201,7 +201,7 @@ namespace TradeUnionCommittee.BLL.Services.Dashboard
         /// Task 1.4
         /// </summary>
         /// <returns></returns>
-        public async Task<ChartResult<BarResult>> GetEmployeeAgeGroup()
+        public async Task<ChartResult<BarResultInt>> GetEmployeeAgeGroup()
         {
             try
             {
@@ -214,7 +214,7 @@ namespace TradeUnionCommittee.BLL.Services.Dashboard
                     .Select(x => x.CalculateAge())
                     .ToList();
 
-                var result = new BarResult
+                var result = new BarResultInt
                 {
                     Data = new List<int>
                     {
@@ -258,7 +258,7 @@ namespace TradeUnionCommittee.BLL.Services.Dashboard
                     }
                 };
 
-                return new ChartResult<BarResult> { Chart = result };
+                return new ChartResult<BarResultInt> { Chart = result };
             }
             catch (Exception exception)
             {
@@ -276,7 +276,7 @@ namespace TradeUnionCommittee.BLL.Services.Dashboard
         /// </summary>
         /// <param name="type"></param>
         /// <returns></returns>
-        public async Task MultiCorrelationBetweenTypeOfEventAndDependents(TypeEvents type)
+        public async Task<ChartResult<BarResultDouble>> MultiCorrelationBetweenTypeOfEventAndDependents(TypeEvents type)
         {
             var dbData = await _context
                 .Employee
@@ -293,6 +293,15 @@ namespace TradeUnionCommittee.BLL.Services.Dashboard
                 .ToListAsync();
 
             var apiData = _determiningService.MultiCorrelationCoefficient(dbData);
+
+            return new ChartResult<BarResultDouble>
+            {
+                Chart = new BarResultDouble
+                {
+                    Data = new List<double> { apiData },
+                    Labels = new List<string> { "Multi correlation coefficient" }
+                }
+            };
         }
 
         /// <summary>
@@ -300,7 +309,7 @@ namespace TradeUnionCommittee.BLL.Services.Dashboard
         /// </summary>
         /// <param name="type"></param>
         /// <returns></returns>
-        public async Task RegressionModelInfluenceDependentsAndTypeOfEvent(TypeEvents type)
+        public async Task<double> RegressionModelInfluenceDependentsAndTypeOfEvent(TypeEvents type)
         {
             var firstTypeEvent = (TypeEvent)type;
 
@@ -329,6 +338,8 @@ namespace TradeUnionCommittee.BLL.Services.Dashboard
                 .ToListAsync();
 
             var apiData = _determiningService.MultiFactorModel(dbData);
+
+            return Math.PI;
         }
 
         /// <summary>
@@ -336,7 +347,7 @@ namespace TradeUnionCommittee.BLL.Services.Dashboard
         /// </summary>
         /// <param name="type"></param>
         /// <returns></returns>
-        public async Task ReducedAnalysisDataDependentsAndTypeOfEvent(TypeEvents type)
+        public async Task<ChartResult<IEnumerable<IEnumerable<double>>>> ReducedAnalysisDataDependentsAndTypeOfEvent(TypeEvents type)
         {
             var firstTypeEvent = (TypeEvent)type;
 
@@ -360,7 +371,18 @@ namespace TradeUnionCommittee.BLL.Services.Dashboard
                 })
                 .ToListAsync();
 
-            var apiData = _determiningService.PrincipalComponentAnalysis(dbData, 2);
+            var apiData = _determiningService.PrincipalComponentAnalysis(dbData, 2).ToList();
+
+            var result = new List<List<double>>();
+            for (var i = 0; i < apiData.Count; i++)
+            {
+                for (var j = 0; j < apiData.ElementAt(i).Count(); j++)
+                {
+                    result.Add(new List<double> { i, j, apiData.ElementAt(i).ElementAt(j) });
+                }
+            }
+
+            return new ChartResult<IEnumerable<IEnumerable<double>>> { Chart = result };
         }
 
         /// <summary>
@@ -368,7 +390,7 @@ namespace TradeUnionCommittee.BLL.Services.Dashboard
         /// </summary>
         /// <param name="type"></param>
         /// <returns></returns>
-        public async Task ClusterAnalysisSignHavingChildrenAndTypeOfEvent(TypeEvents type)
+        public async Task<ChartResult<IEnumerable<BubbleResult>>> ClusterAnalysisSignHavingChildrenAndTypeOfEvent(TypeEvents type)
         {
             var dbData = await _context
                 .Employee
@@ -382,14 +404,33 @@ namespace TradeUnionCommittee.BLL.Services.Dashboard
                 })
                 .ToListAsync();
 
-            var apiData = _forecastingService.ClusterAnalysis(dbData, 3);
+            const int countClusters = 3;
+            var apiData = _forecastingService.ClusterAnalysis(dbData, countClusters);
+            var clusterColors = GetRandomBubbleColors(countClusters * 2).ToList();
+
+            var result = new List<BubbleResult>();
+            for (var i = 0; i < countClusters; i++)
+            {
+                var x = apiData.X.ElementAt(i).ToList();
+                var y = apiData.Y.ElementAt(i);
+
+                result.Add(new BubbleResult
+                {
+                    Label = $"{x.Min()}-{x.Max()}",
+                    BackgroundColor = clusterColors.ElementAt(i),
+                    BorderColor = clusterColors.ElementAt(i + 2),
+                    Data = x.Zip(y, (a, b) => new Bubble { X = a, Y = b, R = 4 })
+                });
+            }
+
+            return new ChartResult<IEnumerable<BubbleResult>> { Chart = result };
         }
 
         /// <summary>
         /// Task 2.7
         /// </summary>
         /// <returns></returns>
-        public async Task GetPercentageRatioHavingDependents()
+        public async Task<ChartResult<PieResultInt>> GetPercentageRatioHavingDependents()
         {
             var dbData = await _context
                 .Employee
@@ -411,6 +452,27 @@ namespace TradeUnionCommittee.BLL.Services.Dashboard
                     WithoutChildrenAndGrandChildren = x.Sum(e => e.WithoutChildrenAndGrandChildren)
                 })
                 .ToListAsync();
+
+            return new ChartResult<PieResultInt>
+            {
+                Chart = new PieResultInt
+                {
+                    Data = new List<int>
+                    {
+                        dbData.Single().WithChildren,
+                        dbData.Single().WithGrandChildren,
+                        dbData.Single().WithChildrenAndGrandChildren,
+                        dbData.Single().WithoutChildrenAndGrandChildren,
+                    },
+                    Labels = new List<string>
+                    {
+                        "WithChildren",
+                        "WithGrandChildren",
+                        "WithChildrenAndGrandChildren",
+                        "WithoutChildrenAndGrandChildren"
+                    }
+                }
+            };
         }
 
         #endregion
@@ -422,20 +484,20 @@ namespace TradeUnionCommittee.BLL.Services.Dashboard
 
         #region Test Services
 
-        public PieResult PieData_Test()
+        public PieResultDouble PieData_Test()
         {
             const int count = 12;
-            return new PieResult
+            return new PieResultDouble
             {
                 Data = RandomDoubleNumbers(1, 20, count),
                 Labels = RandomStrings(count)
             };
         }
 
-        public BarResult BarData_Test()
+        public BarResultInt BarData_Test()
         {
             const int count = 20;
-            return new BarResult
+            return new BarResultInt
             {
                 Data = RandomIntNumbers(1, 20000, count),
                 Labels = RandomStrings(count)

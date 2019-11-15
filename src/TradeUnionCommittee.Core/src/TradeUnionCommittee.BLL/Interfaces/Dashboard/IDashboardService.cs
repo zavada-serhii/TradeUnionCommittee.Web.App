@@ -11,16 +11,16 @@ namespace TradeUnionCommittee.BLL.Interfaces.Dashboard
         Task<ChartResult<IEnumerable<IEnumerable<double>>>> CorrelationAnalysisBetweenTeacherAgeAndTypeOfEvent();
         Task<ChartResult<BasicColumn>> CheckingSignificanceAgeTeacherAndTypeOfEvent();
         Task<ChartResult<IEnumerable<BubbleResult>>> ClusterAnalysisAgeTeacherAndTypeOfEvent(TypeEvents type);
-        Task<ChartResult<BarResult>> GetEmployeeAgeGroup();
+        Task<ChartResult<BarResultInt>> GetEmployeeAgeGroup();
 
-        Task MultiCorrelationBetweenTypeOfEventAndDependents(TypeEvents type);
-        Task RegressionModelInfluenceDependentsAndTypeOfEvent(TypeEvents type);
-        Task ReducedAnalysisDataDependentsAndTypeOfEvent(TypeEvents type);
-        Task ClusterAnalysisSignHavingChildrenAndTypeOfEvent(TypeEvents type);
-        Task GetPercentageRatioHavingDependents();
+        Task<ChartResult<BarResultDouble>> MultiCorrelationBetweenTypeOfEventAndDependents(TypeEvents type);
+        Task<double> RegressionModelInfluenceDependentsAndTypeOfEvent(TypeEvents type);
+        Task<ChartResult<IEnumerable<IEnumerable<double>>>> ReducedAnalysisDataDependentsAndTypeOfEvent(TypeEvents type);
+        Task<ChartResult<IEnumerable<BubbleResult>>> ClusterAnalysisSignHavingChildrenAndTypeOfEvent(TypeEvents type);
+        Task<ChartResult<PieResultInt>> GetPercentageRatioHavingDependents();
 
-        PieResult PieData_Test();
-        BarResult BarData_Test();
+        PieResultDouble PieData_Test();
+        BarResultInt BarData_Test();
         AreaResult AreaData_Test();
         RadarResult RadarData_Test();
         LineResult LineData_Test();

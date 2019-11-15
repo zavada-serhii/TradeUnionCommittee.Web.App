@@ -5,7 +5,7 @@ namespace TradeUnionCommittee.BLL.DTO
     public class ChartResult<T>
     {
         public T Chart { get; set; }
-        public string DateTime { get; set; } = System.DateTime.Now.ToString("dd.MM.yyyy hh:mm:ss");
+        public string DateTime { get; } = System.DateTime.Now.ToString("dd.MM.yyyy hh:mm:ss");
     }
 
     //------------------------------------------------------------------------------------------------------------------------------------------
@@ -24,9 +24,12 @@ namespace TradeUnionCommittee.BLL.DTO
 
     //------------------------------------------------------------------------------------------------------------------------------------------
 
-    public class PieResult : BaseDashboardResult<double> { }
+    public class PieResultInt : BaseDashboardResult<int> { }
+    public class PieResultDouble : BaseDashboardResult<double> { }
 
-    public class BarResult : BaseDashboardResult<int> { }
+    public class BarResultInt : BaseDashboardResult<int> { }
+
+    public class BarResultDouble : BaseDashboardResult<double> { }
 
     public class AreaResult : BaseDashboardResult<double> { }
 
