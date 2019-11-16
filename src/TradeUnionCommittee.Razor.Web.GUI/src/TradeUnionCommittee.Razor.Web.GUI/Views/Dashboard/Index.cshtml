@@ -25,6 +25,18 @@
                 @*-------------------------------------------------------------------------------------------------------------*@
 
                 <li class="nav-item">
+                    <a class="nav-link" id="pills-profile-tab5" data-toggle="pill" href="#pills-profile5" role="tab" aria-controls="pills-profile" aria-selected="false">Task #2.1</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="pills-profile-tab6" data-toggle="pill" href="#pills-profile6" role="tab" aria-controls="pills-profile" aria-selected="false">Task #2.2</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="pills-profile-tab7" data-toggle="pill" href="#pills-profile7" role="tab" aria-controls="pills-profile" aria-selected="false">Task #2.3</a>
+                </li>
+
+                @*-------------------------------------------------------------------------------------------------------------*@
+
+                <li class="nav-item">
                     <a class="nav-link" id="pills-profile-tab-pie" data-toggle="pill" href="#pills-profile-pie" role="tab" aria-controls="pills-profile" aria-selected="false">Pie</a>
                 </li>
                 <li class="nav-item">
@@ -129,7 +141,83 @@
                     </div>
                 </div>
                 <!--Tab Task 1.4 end-->
-            
+                @*-------------------------------------------------------------------------------------------------------------*@
+
+                <!--Tab Task 2.1 start-->
+                <div class="tab-pane fade" id="pills-profile5" role="tabpanel" aria-labelledby="pills-profile-tab5">
+                    <div class="row">
+
+                        <div class="col-lg-12">
+                            <div class="card mb-3">
+                                <div class="card-header">
+                                    Task 2.1
+                                </div>
+                                <div class="card-header">
+                                    <div class="input-group col-md-12 pb-4 pt-4">
+                                        <select id="task-events-2-1" type="text" class="form-control">
+                                            <option value="0" selected>Поїздки</option>
+                                            <option value="1">Оздоровлення</option>
+                                            <option value="2">Путівки</option>
+                                        </select>
+                                        <div class="input-group-append" style="margin-left: 10px ">
+                                            <input id="task-click-2-1" type="submit" value="Аналізувати" class="btn btn-success btn-block" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-body text-center" id="bar-container-2-1" style="padding: 0"></div>
+                                <div class="card-footer small text-muted" id="bar-time-2-1"></div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <!--Tab Task 2.1 end-->
+                <!--Tab Task 2.2 start-->
+                <div class="tab-pane fade" id="pills-profile6" role="tabpanel" aria-labelledby="pills-profile-tab3">
+                    <div class="row">
+
+                        <div class="col-lg-12">
+                            <div class="card mb-3">
+                                <div class="card-header">
+                                    Task 2.2
+                                </div>
+                                <div class="card-header">
+                                    <div class="input-group col-md-12 pb-4 pt-4">
+                                        <select id="clusterAnalysisEvents-2-2" type="text" class="form-control">
+                                            <option value="0" selected>Поїздки</option>
+                                            <option value="1">Оздоровлення</option>
+                                            <option value="2">Путівки</option>
+                                        </select>
+                                        <div class="input-group-append" style="margin-left: 10px ">
+                                            <input id="clusterAnalysisClick-2-2" type="submit" value="Аналізувати" class="btn btn-success btn-block" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-body text-center" id="bubble-container-2-2" style="padding: 0"></div>
+                                <div class="card-footer small text-muted" id="bubble-time-2-2"></div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <!--Tab Task 2.2 end-->
+                <!--Tab Task 2.3 start-->
+                <div class="tab-pane fade" id="pills-profile7" role="tabpanel" aria-labelledby="pills-profile-tab7">
+                    <div class="row">
+
+                        <div class="col-lg-12">
+                            <div class="card mb-3">
+                                <div class="card-header">
+                                    Task 2.3
+                                </div>
+                                <div class="card-body text-center" id="pie-container-2-3"></div>
+                                <div class="card-footer small text-muted" id="pie-time-2-3"></div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <!--Tab Task 2.3 end-->
                 @*-------------------------------------------------------------------------------------------------------------*@
 
                 <!--Tab Pie Chart start-->
@@ -151,7 +239,6 @@
                     </div>
                 </div>
                 <!--Tab Pie Chart end-->
-
                 <!--Tab Bar Chart start-->
                 <div class="tab-pane fade" id="pills-profile-bar" role="tabpanel" aria-labelledby="pills-profile-tab-bar">
                     <div class="row">
@@ -171,7 +258,6 @@
                     </div>
                 </div>
                 <!--Tab Bar Chart end-->
-
                 <!--Tab Area Chart start-->
                 <div class="tab-pane fade" id="pills-profile-area" role="tabpanel" aria-labelledby="pills-profile-tab-area">
                     <div class="row">
@@ -191,7 +277,6 @@
                     </div>
                 </div>
                 <!--Tab Area Chart end-->
-
                 <!--Tab Radar chart start-->
                 <div class="tab-pane fade" id="pills-profile-radar" role="tabpanel" aria-labelledby="pills-profile-tab-radar">
                     <div class="row">
@@ -211,7 +296,6 @@
                     </div>
                 </div>
                 <!--Tab Radar chart end-->
-
                 <!--Tab Line chart start-->
                 <div class="tab-pane fade" id="pills-profile-line" role="tabpanel" aria-labelledby="pills-profile-tab-line">
                     <div class="row">
@@ -231,7 +315,6 @@
                     </div>
                 </div>
                 <!--Tab Line chart end-->
-
                 <!--Tab Bubble chart start-->
                 <div class="tab-pane fade" id="pills-profile-bubble" role="tabpanel" aria-labelledby="pills-profile-tab-bubble">
                     <div class="row">
@@ -267,7 +350,7 @@
         <script src="~/lib/high-charts.js/accessibility.min.js"></script>
         <script src="~/lib/high-charts.js/heatmap.min.js"></script>
         <script src="~/lib/codepen/colour.palette.generator.js"></script>
-        
+
         <script src="~/js/dashboard/chart-pie-demo.js"></script>
         <script src="~/js/dashboard/chart-bar-demo.js"></script>
         <script src="~/js/dashboard/chart-area-demo.js"></script>
@@ -279,6 +362,11 @@
         <script src="~/js/dashboard/first-task/checkingSignificanceAgeTeacherAndTypeOfEvent.js"></script>
         <script src="~/js/dashboard/first-task/clusterAnalysisAgeTeacherAndTypeOfEvent.js"></script>
         <script src="~/js/dashboard/first-task/employeeAgeGroup.js"></script>
+
+        <script src="~/js/dashboard/second-task/multiCorrelationBetweenTypeOfEventAndDependents.js"></script>
+        <script src="~/js/dashboard/second-task/clusterAnalysisSignHavingChildrenAndTypeOfEvent.js"></script>
+        <script src="~/js/dashboard/second-task/percentageRatioHavingDependents.js"></script>
+
     </environment>
 
     <environment exclude="Development">

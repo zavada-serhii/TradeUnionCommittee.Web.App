@@ -78,7 +78,7 @@ namespace TradeUnionCommittee.Razor.Web.GUI.Controllers.Dashboard
 
         [HttpGet]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> PercentageRatioHavingDependents([Required] int id)
+        public async Task<IActionResult> PercentageRatioHavingDependents()
         {
             return Json(await _services.GetPercentageRatioHavingDependents());
         }
