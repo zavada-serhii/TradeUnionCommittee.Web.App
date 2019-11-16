@@ -363,12 +363,12 @@ namespace TradeUnionCommittee.BLL.Services.Dashboard
                     WithoutChildrenAndGrandChildren = !x.Children.Any() && !x.GrandChildren.Any() ? 1 : 0
                 })
                 .GroupBy(x => 1)
-                .Select(x => new
+                .Select(x => new List<int>
                 {
-                    WithChildren = x.Sum(e => e.WithChildren),
-                    WithGrandChildren = x.Sum(e => e.WithGrandChildren),
-                    WithChildrenAndGrandChildren = x.Sum(e => e.WithChildrenAndGrandChildren),
-                    WithoutChildrenAndGrandChildren = x.Sum(e => e.WithoutChildrenAndGrandChildren)
+                    x.Sum(e => e.WithChildren),
+                    x.Sum(e => e.WithGrandChildren),
+                    x.Sum(e => e.WithChildrenAndGrandChildren),
+                    x.Sum(e => e.WithoutChildrenAndGrandChildren)
                 })
                 .ToListAsync();
 
@@ -376,19 +376,13 @@ namespace TradeUnionCommittee.BLL.Services.Dashboard
             {
                 Chart = new PieResultInt
                 {
-                    Data = new List<int>
-                    {
-                        dbData.Single().WithChildren,
-                        dbData.Single().WithGrandChildren,
-                        dbData.Single().WithChildrenAndGrandChildren,
-                        dbData.Single().WithoutChildrenAndGrandChildren,
-                    },
+                    Data = dbData.First(),
                     Labels = new List<string>
                     {
-                        "WithChildren",
-                        "WithGrandChildren",
-                        "WithChildrenAndGrandChildren",
-                        "WithoutChildrenAndGrandChildren"
+                        "Employees only with children",
+                        "Employees only with grandchildren",
+                        "Employees only with children and grandchildren",
+                        "Employees without children and grandchildren"
                     }
                 }
             };
