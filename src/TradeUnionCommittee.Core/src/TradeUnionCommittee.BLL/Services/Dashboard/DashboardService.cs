@@ -47,24 +47,16 @@ namespace TradeUnionCommittee.BLL.Services.Dashboard
                     .Employee
                     .Include(x => x.EventEmployees)
                     .ThenInclude(x => x.IdEventNavigation)
-                    .Select(x => new 
+                    .Select(x => new Task11Model
                     {
-                        x.BirthDate,
+                        Age = x.BirthDate.CalculateAge(),
                         TravelCount = x.EventEmployees.Count(c => c.IdEventNavigation.Type == TypeEvent.Travel),
                         WellnessCount = x.EventEmployees.Count(c => c.IdEventNavigation.Type == TypeEvent.Wellness),
                         TourCount = x.EventEmployees.Count(c => c.IdEventNavigation.Type == TypeEvent.Tour)
                     })
                     .ToListAsync();
 
-                var resultData = dbData.Select(x => new Task11Model
-                {
-                    Age = x.BirthDate.CalculateAge(),
-                    TravelCount = x.TravelCount,
-                    WellnessCount = x.WellnessCount,
-                    TourCount = x.TourCount,
-                });
-
-                var apiData = _forecastingService.CorrelationAnalysis(resultData).ToList();
+                var apiData = _forecastingService.CorrelationAnalysis(dbData).ToList();
 
                 var result = new List<List<double>>();
                 for (var i = 0; i < apiData.Count; i++)
@@ -96,24 +88,16 @@ namespace TradeUnionCommittee.BLL.Services.Dashboard
                     .Employee
                     .Include(x => x.EventEmployees)
                     .ThenInclude(x => x.IdEventNavigation)
-                    .Select(x => new
+                    .Select(x => new Task11Model
                     {
-                        x.BirthDate,
+                        Age = x.BirthDate.CalculateAge(),
                         TravelCount = x.EventEmployees.Count(c => c.IdEventNavigation.Type == TypeEvent.Travel),
                         WellnessCount = x.EventEmployees.Count(c => c.IdEventNavigation.Type == TypeEvent.Wellness),
                         TourCount = x.EventEmployees.Count(c => c.IdEventNavigation.Type == TypeEvent.Tour)
                     })
                     .ToListAsync();
 
-                var resultData = dbData.Select(x => new Task11Model
-                {
-                    Age = x.BirthDate.CalculateAge(),
-                    TravelCount = x.TravelCount,
-                    WellnessCount = x.WellnessCount,
-                    TourCount = x.TourCount,
-                });
-
-                var apiData = _forecastingService.CheckingSignificanceCoefficients(resultData).ToList();
+                var apiData = _forecastingService.CheckingSignificanceCoefficients(dbData).ToList();
 
                 var result = new BasicColumn
                 {
@@ -156,21 +140,15 @@ namespace TradeUnionCommittee.BLL.Services.Dashboard
                     .Employee
                     .Include(x => x.EventEmployees)
                     .ThenInclude(x => x.IdEventNavigation)
-                    .Select(x => new 
+                    .Select(x => new Task14Model
                     {
-                        x.BirthDate,
-                        EventCount = x.EventEmployees.Count(c => c.IdEventNavigation.Type == (TypeEvent)type),
+                        X = x.BirthDate.CalculateAge(),
+                        Y = x.EventEmployees.Count(c => c.IdEventNavigation.Type == (TypeEvent)type),
                     })
                     .ToListAsync();
 
-                var resultData = dbData.Select(x => new Task14Model
-                {
-                    X = x.BirthDate.CalculateAge(),
-                    Y = x.EventCount
-                });
-
                 const int countClusters = 6;
-                var apiData = _forecastingService.ClusterAnalysis(resultData, countClusters);
+                var apiData = _forecastingService.ClusterAnalysis(dbData, countClusters);
                 var clusterColors = GetRandomBubbleColors(countClusters * 2).ToList();
 
                 var result = new List<BubbleResult>();
@@ -207,34 +185,30 @@ namespace TradeUnionCommittee.BLL.Services.Dashboard
             {
                 var dbData = await _context
                     .Employee
-                    .Select(x => x.BirthDate)
+                    .Select(x => x.BirthDate.CalculateAge())
                     .ToListAsync();
-
-                var ages = dbData
-                    .Select(x => x.CalculateAge())
-                    .ToList();
 
                 var result = new BarResultInt
                 {
                     Data = new List<int>
                     {
-                        ages.Count(x => x < 18),
-                        ages.Count(x => x >= 18 && x <= 21),
-                        ages.Count(x => x >= 22 && x <= 25),
-                        ages.Count(x => x >= 26 && x <= 30),
-                        ages.Count(x => x >= 31 && x <= 35),
-                        ages.Count(x => x >= 36 && x <= 40),
-                        ages.Count(x => x >= 41 && x <= 45),
-                        ages.Count(x => x >= 46 && x <= 50),
-                        ages.Count(x => x >= 51 && x <= 55),
-                        ages.Count(x => x >= 56 && x <= 60),
-                        ages.Count(x => x >= 61 && x <= 65),
-                        ages.Count(x => x >= 66 && x <= 70),
-                        ages.Count(x => x >= 71 && x <= 75),
-                        ages.Count(x => x >= 76 && x <= 80),
-                        ages.Count(x => x >= 81 && x <= 85),
-                        ages.Count(x => x >= 86 && x <= 89),
-                        ages.Count(x => x >= 90),
+                        dbData.Count(x => x < 18),
+                        dbData.Count(x => x >= 18 && x <= 21),
+                        dbData.Count(x => x >= 22 && x <= 25),
+                        dbData.Count(x => x >= 26 && x <= 30),
+                        dbData.Count(x => x >= 31 && x <= 35),
+                        dbData.Count(x => x >= 36 && x <= 40),
+                        dbData.Count(x => x >= 41 && x <= 45),
+                        dbData.Count(x => x >= 46 && x <= 50),
+                        dbData.Count(x => x >= 51 && x <= 55),
+                        dbData.Count(x => x >= 56 && x <= 60),
+                        dbData.Count(x => x >= 61 && x <= 65),
+                        dbData.Count(x => x >= 66 && x <= 70),
+                        dbData.Count(x => x >= 71 && x <= 75),
+                        dbData.Count(x => x >= 76 && x <= 80),
+                        dbData.Count(x => x >= 81 && x <= 85),
+                        dbData.Count(x => x >= 86 && x <= 89),
+                        dbData.Count(x => x >= 90),
                     },
                     Labels = new List<string>
                     {
