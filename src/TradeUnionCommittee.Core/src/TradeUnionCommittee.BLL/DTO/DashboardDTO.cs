@@ -10,34 +10,33 @@ namespace TradeUnionCommittee.BLL.DTO
 
     //------------------------------------------------------------------------------------------------------------------------------------------
 
-    public abstract class BaseDashboardResult<T>
+    public abstract class BaseChart<T>
     {
         public IEnumerable<T> Data { get; set; }
         public IEnumerable<string> Labels { get; set; }
     }
 
-    public class DataSet
+    public class DataSetChart<T>
     {
         public string Label { get; set; }
-        public IEnumerable<double> Data { get; set; }
+        public IEnumerable<T> Data { get; set; }
     }
 
     //------------------------------------------------------------------------------------------------------------------------------------------
 
-    public class PieResultInt : BaseDashboardResult<int> { }
-    public class PieResultDouble : BaseDashboardResult<double> { }
+    public class PieChart<T> : BaseChart<T> { }
 
-    public class BarResultInt : BaseDashboardResult<int> { }
+    public class BarChart<T> : BaseChart<T> { }
 
-    public class BarResultDouble : BaseDashboardResult<double> { }
+    public class AreaChart<T> : BaseChart<T> { }
 
-    public class AreaResult : BaseDashboardResult<double> { }
+    public class RadarChart<T> : BaseChart<DataSetChart<T>> { }
 
-    public class RadarResult : BaseDashboardResult<DataSet> { }
+    public class LineChart<T> : BaseChart<DataSetChart<T>> { }
 
-    public class LineResult : BaseDashboardResult<DataSet> { }
+    //------------------------------------------------------------------------------------------------------------------------------------------
 
-    public class BubbleResult
+    public class BubbleChart
     {
         public string Label { get; set; }
         public string BackgroundColor { get; set; }
@@ -54,13 +53,13 @@ namespace TradeUnionCommittee.BLL.DTO
 
     //------------------------------------------------------------------------------------------------------------------------------------------
 
-    public class BasicColumn
+    public class BasicColumnChart
     {
         public IEnumerable<string> Categories { get; set; }
-        public IEnumerable<SeriesBasicColumn> Series { get; set; }
+        public IEnumerable<Series> Series { get; set; }
     }
 
-    public class SeriesBasicColumn
+    public class Series
     {
         public string Name { get; set; }
         public IEnumerable<double> Data { get; set; }
