@@ -19,7 +19,7 @@ namespace TradeUnionCommittee.Razor.Web.GUI.Controllers.Dashboard
             _mapper = mapper;
         }
 
-        //------------------------------------------------------------------------------------------------------------------------------------------
+        //----------------------------------------------------------------------------------------------------
 
         [HttpGet]
         [Authorize(Roles = "Admin")]
@@ -28,7 +28,7 @@ namespace TradeUnionCommittee.Razor.Web.GUI.Controllers.Dashboard
             return View();
         }
 
-        #region Task 1
+        //----------------------------------------------------------------------------------------------------
 
         [HttpGet]
         [Authorize(Roles = "Admin")]
@@ -58,9 +58,7 @@ namespace TradeUnionCommittee.Razor.Web.GUI.Controllers.Dashboard
             return Json(await _services.GetEmployeeAgeGroup());
         }
 
-        #endregion
-
-        #region Task 2
+        //----------------------------------------------------------------------------------------------------
 
         [HttpGet]
         [Authorize(Roles = "Admin")]
@@ -83,9 +81,7 @@ namespace TradeUnionCommittee.Razor.Web.GUI.Controllers.Dashboard
             return Json(await _services.GetPercentageRatioHavingDependents());
         }
 
-        #endregion
-
-        #region Test
+        //----------------------------------------------------------------------------------------------------
 
         [HttpGet]
         [Authorize(Roles = "Admin")]
@@ -129,7 +125,7 @@ namespace TradeUnionCommittee.Razor.Web.GUI.Controllers.Dashboard
             return Json(_services.BubbleData_Test());
         }
 
-        #endregion
+        //----------------------------------------------------------------------------------------------------
 
         protected override void Dispose(bool disposing)
         {

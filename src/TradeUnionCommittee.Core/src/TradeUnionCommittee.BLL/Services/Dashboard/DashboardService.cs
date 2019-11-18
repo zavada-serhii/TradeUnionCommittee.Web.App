@@ -33,8 +33,6 @@ namespace TradeUnionCommittee.BLL.Services.Dashboard
             _determiningService = determiningService;
         }
 
-        #region Task 1
-
         /// <summary>
         /// Task 1.1
         /// </summary>
@@ -241,10 +239,6 @@ namespace TradeUnionCommittee.BLL.Services.Dashboard
             }
         }
 
-        #endregion
-
-        #region Task 2
-
         /// <summary>
         /// Task 2.1
         /// </summary>
@@ -430,15 +424,6 @@ namespace TradeUnionCommittee.BLL.Services.Dashboard
             var apiData = _determiningService.PrincipalComponentAnalysis(dbData, 2).ToList();
         }
 
-        #endregion
-
-        public void Dispose()
-        {
-            _context.Dispose();
-        }
-
-        #region Test Services
-
         public PieChart<double> PieData_Test()
         {
             const int count = 12;
@@ -620,12 +605,11 @@ namespace TradeUnionCommittee.BLL.Services.Dashboard
             return bubbles;
         }
 
-        //------------------------------------------------------------------------------------------------------------------------------------------
-
         private string HexConverter(Color c) => "#" + c.R.ToString("X2") + c.G.ToString("X2") + c.B.ToString("X2");
 
-        //------------------------------------------------------------------------------------------------------------------------------------------
-
-        #endregion
+        public void Dispose()
+        {
+            _context.Dispose();
+        }
     }
 }
