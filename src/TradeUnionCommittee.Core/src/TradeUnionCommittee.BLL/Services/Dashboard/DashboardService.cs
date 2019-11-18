@@ -80,7 +80,7 @@ namespace TradeUnionCommittee.BLL.Services.Dashboard
         /// Task 1.2
         /// </summary>
         /// <returns></returns>
-        public async Task<ChartResult<BasicColumnChart>> CheckingSignificanceAgeTeacherAndTypeOfEvent()
+        public async Task<ChartResult<BarChart<Series>>> CheckingSignificanceAgeTeacherAndTypeOfEvent()
         {
             try
             {
@@ -99,10 +99,10 @@ namespace TradeUnionCommittee.BLL.Services.Dashboard
 
                 var apiData = _forecastingService.CheckingSignificanceCoefficients(dbData).ToList();
 
-                var result = new BasicColumnChart
+                var result = new BarChart<Series>
                 {
-                    Categories = apiData.Select(x => $"{x.FirstCriterion} - {x.SecondCriterion}"),
-                    Series = new List<Series>
+                    Labels = apiData.Select(x => $"{x.FirstCriterion} - {x.SecondCriterion}"),
+                    Data = new List<Series>
                     {
                         new Series
                         {
@@ -118,7 +118,7 @@ namespace TradeUnionCommittee.BLL.Services.Dashboard
                     }
                 };
 
-                return new ChartResult<BasicColumnChart> { Chart = result };
+                return new ChartResult<BarChart<Series>> { Chart = result };
             }
             catch (Exception exception)
             {
@@ -132,7 +132,7 @@ namespace TradeUnionCommittee.BLL.Services.Dashboard
         /// </summary>
         /// <param name="type"></param>
         /// <returns></returns>
-        public async Task<ChartResult<IEnumerable<BubbleChart>>> ClusterAnalysisAgeTeacherAndTypeOfEvent(TypeEvents type)
+        public async Task<ChartResult<IEnumerable<BubbleChart<Bubble>>>> ClusterAnalysisAgeTeacherAndTypeOfEvent(TypeEvents type)
         {
             try
             {
@@ -151,13 +151,13 @@ namespace TradeUnionCommittee.BLL.Services.Dashboard
                 var apiData = _forecastingService.ClusterAnalysis(dbData, countClusters);
                 var clusterColors = GetRandomBubbleColors(countClusters * 2).ToList();
 
-                var result = new List<BubbleChart>();
+                var result = new List<BubbleChart<Bubble>>();
                 for (var i = 0; i < countClusters; i++)
                 {
                     var x = apiData.X.ElementAt(i).ToList();
                     var y = apiData.Y.ElementAt(i);
 
-                    result.Add(new BubbleChart
+                    result.Add(new BubbleChart<Bubble>
                     {
                         Label = $"{x.Min()}-{x.Max()}",
                         BackgroundColor = clusterColors.ElementAt(i),
@@ -166,7 +166,7 @@ namespace TradeUnionCommittee.BLL.Services.Dashboard
                     });
                 }
 
-                return new ChartResult<IEnumerable<BubbleChart>> { Chart = result };
+                return new ChartResult<IEnumerable<BubbleChart<Bubble>>> { Chart = result };
             }
             catch (Exception exception)
             {
@@ -283,7 +283,7 @@ namespace TradeUnionCommittee.BLL.Services.Dashboard
         /// </summary>
         /// <param name="type"></param>
         /// <returns></returns>
-        public async Task<ChartResult<IEnumerable<BubbleChart>>> ClusterAnalysisSignHavingChildrenAndTypeOfEvent(TypeEvents type)
+        public async Task<ChartResult<IEnumerable<BubbleChart<Bubble>>>> ClusterAnalysisSignHavingChildrenAndTypeOfEvent(TypeEvents type)
         {
             var dbData = await _context
                 .Employee
@@ -301,13 +301,13 @@ namespace TradeUnionCommittee.BLL.Services.Dashboard
             var apiData = _forecastingService.ClusterAnalysis(dbData, countClusters);
             var clusterColors = GetRandomBubbleColors(countClusters * 2).ToList();
 
-            var result = new List<BubbleChart>();
+            var result = new List<BubbleChart<Bubble>>();
             for (var i = 0; i < countClusters; i++)
             {
                 var x = apiData.X.ElementAt(i).ToList();
                 var y = apiData.Y.ElementAt(i);
 
-                result.Add(new BubbleChart
+                result.Add(new BubbleChart<Bubble>
                 {
                     Label = $"{x.Min()}-{x.Max()}",
                     BackgroundColor = clusterColors.ElementAt(i),
@@ -316,7 +316,7 @@ namespace TradeUnionCommittee.BLL.Services.Dashboard
                 });
             }
 
-            return new ChartResult<IEnumerable<BubbleChart>> { Chart = result };
+            return new ChartResult<IEnumerable<BubbleChart<Bubble>>> { Chart = result };
         }
 
         /// <summary>
@@ -473,11 +473,11 @@ namespace TradeUnionCommittee.BLL.Services.Dashboard
         {
             const int count = 10;
 
-            var radar = new List<DataSetChart<double>>();
+            var radar = new List<DataSet<double>>();
 
             for (var i = 0; i < 3; i++)
             {
-                radar.Add(new DataSetChart<double>
+                radar.Add(new DataSet<double>
                 {
                     Label = RandomStrings(1).FirstOrDefault(),
                     Data = RandomDoubleNumbers(1, 20, count)
@@ -494,11 +494,11 @@ namespace TradeUnionCommittee.BLL.Services.Dashboard
         public LineChart<double> LineData_Test()
         {
             const int count = 10;
-            var line = new List<DataSetChart<double>>();
+            var line = new List<DataSet<double>>();
 
             for (var i = 0; i < 3; i++)
             {
-                line.Add(new DataSetChart<double>
+                line.Add(new DataSet<double>
                 {
                     Label = RandomStrings(1).FirstOrDefault(),
                     Data = RandomDoubleNumbers(1, 20, count)
@@ -512,13 +512,13 @@ namespace TradeUnionCommittee.BLL.Services.Dashboard
             };
         }
 
-        public IEnumerable<BubbleChart> BubbleData_Test()
+        public IEnumerable<BubbleChart<Bubble>> BubbleData_Test()
         {
-            var result = new List<BubbleChart>();
+            var result = new List<BubbleChart<Bubble>>();
 
             for (var i = 0; i < 5; i++)
             {
-                result.Add(new BubbleChart
+                result.Add(new BubbleChart<Bubble>
                 {
                     Label = RandomString(),
                     BackgroundColor = HexConverter(RandomColor()),

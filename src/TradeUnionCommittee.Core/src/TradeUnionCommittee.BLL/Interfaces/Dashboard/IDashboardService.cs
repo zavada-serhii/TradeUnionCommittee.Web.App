@@ -9,12 +9,12 @@ namespace TradeUnionCommittee.BLL.Interfaces.Dashboard
     public interface IDashboardService : IDisposable
     {
         Task<ChartResult<IEnumerable<IEnumerable<double>>>> CorrelationAnalysisBetweenTeacherAgeAndTypeOfEvent();
-        Task<ChartResult<BasicColumnChart>> CheckingSignificanceAgeTeacherAndTypeOfEvent();
-        Task<ChartResult<IEnumerable<BubbleChart>>> ClusterAnalysisAgeTeacherAndTypeOfEvent(TypeEvents type);
+        Task<ChartResult<BarChart<Series>>> CheckingSignificanceAgeTeacherAndTypeOfEvent();
+        Task<ChartResult<IEnumerable<BubbleChart<Bubble>>>> ClusterAnalysisAgeTeacherAndTypeOfEvent(TypeEvents type);
         Task<ChartResult<BarChart<int>>> GetEmployeeAgeGroup();
 
         Task<ChartResult<BarChart<double>>> MultiCorrelationBetweenTypeOfEventAndDependents(TypeEvents type);
-        Task<ChartResult<IEnumerable<BubbleChart>>> ClusterAnalysisSignHavingChildrenAndTypeOfEvent(TypeEvents type);
+        Task<ChartResult<IEnumerable<BubbleChart<Bubble>>>> ClusterAnalysisSignHavingChildrenAndTypeOfEvent(TypeEvents type);
         Task<ChartResult<PieChart<int>>> GetPercentageRatioHavingDependents();
 
         PieChart<double> PieData_Test();
@@ -22,6 +22,6 @@ namespace TradeUnionCommittee.BLL.Interfaces.Dashboard
         AreaChart<double> AreaData_Test();
         RadarChart<double> RadarData_Test();
         LineChart<double> LineData_Test();
-        IEnumerable<BubbleChart> BubbleData_Test();
+        IEnumerable<BubbleChart<Bubble>> BubbleData_Test();
     }
 }

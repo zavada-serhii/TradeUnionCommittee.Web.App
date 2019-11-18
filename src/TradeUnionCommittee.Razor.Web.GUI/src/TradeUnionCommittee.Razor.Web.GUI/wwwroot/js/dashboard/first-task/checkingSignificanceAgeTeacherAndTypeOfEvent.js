@@ -21,7 +21,7 @@ $('#basicColumnChart-1-2').ready(function () {
                 text: 'Task 1.2'
             },
             xAxis: {
-                categories: result.chart.categories,
+                categories: result.chart.labels,
                 crosshair: true
             },
             yAxis: {
@@ -44,7 +44,7 @@ $('#basicColumnChart-1-2').ready(function () {
                     borderWidth: 0
                 }
             },
-            series: result.chart.series
+            series: result.chart.data
         });
     });
 });
