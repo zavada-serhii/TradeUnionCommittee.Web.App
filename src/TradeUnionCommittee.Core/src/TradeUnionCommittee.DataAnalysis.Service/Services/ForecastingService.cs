@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Net;
 using TradeUnionCommittee.DataAnalysis.Service.Exceptions;
 using TradeUnionCommittee.DataAnalysis.Service.Interfaces;
+using TradeUnionCommittee.DataAnalysis.Service.Models;
+using TradeUnionCommittee.DataAnalysis.Service.ViewModels;
 
 namespace TradeUnionCommittee.DataAnalysis.Service.Services
 {
@@ -24,7 +26,7 @@ namespace TradeUnionCommittee.DataAnalysis.Service.Services
         /// </summary>
         /// <param name="data"></param>
         /// <returns></returns>
-        public IEnumerable<IEnumerable<double>> CorrelationAnalysis(IEnumerable<Task11Model> data)
+        public IEnumerable<IEnumerable<double>> CorrelationAnalysis(IEnumerable<ForecastingCorrelationModel> data)
         {
             var request = new RestRequest("api/Forecasting/ActualingTrips/CorrelationAnalysis", Method.POST) { RequestFormat = DataFormat.Json };
             var csv = CsvSerializer.SerializeToString(data);
@@ -37,7 +39,7 @@ namespace TradeUnionCommittee.DataAnalysis.Service.Services
                 return JsonSerializer.DeserializeFromString<IEnumerable<IEnumerable<double>>>(response.Content);
             }
 
-            throw new ServiceUnavailableException();
+            throw new AnalysisServiceUnavailableException();
         }
 
         /// <summary>
@@ -45,7 +47,7 @@ namespace TradeUnionCommittee.DataAnalysis.Service.Services
         /// </summary>
         /// <param name="data"></param>
         /// <returns></returns>
-        public IEnumerable<Task13Model> CheckingSignificanceCoefficients(IEnumerable<Task11Model> data)
+        public IEnumerable<ForecastingSignificanceViewModel> CheckingSignificanceCoefficients(IEnumerable<ForecastingCorrelationModel> data)
         {
             var request = new RestRequest("api/Forecasting/ActualingTrips/CheckingSignificanceCoefficients", Method.POST) { RequestFormat = DataFormat.Json };
             var csv = CsvSerializer.SerializeToString(data);
@@ -55,10 +57,10 @@ namespace TradeUnionCommittee.DataAnalysis.Service.Services
 
             if (response.StatusCode == HttpStatusCode.OK)
             {
-                return JsonSerializer.DeserializeFromString<IEnumerable<Task13Model>>(response.Content);
+                return JsonSerializer.DeserializeFromString<IEnumerable<ForecastingSignificanceViewModel>>(response.Content);
             }
 
-            throw new ServiceUnavailableException();
+            throw new AnalysisServiceUnavailableException();
         }
 
         /// <summary>
@@ -67,7 +69,7 @@ namespace TradeUnionCommittee.DataAnalysis.Service.Services
         /// <param name="data"></param>
         /// <param name="countClusters"></param>
         /// <returns></returns>
-        public ClusterModel ClusterAnalysis(IEnumerable<Task14Model> data, int countClusters)
+        public ForecastingClusterViewModel ClusterAnalysis(IEnumerable<ForecastingClusterModel> data, int countClusters)
         {
             var request = new RestRequest("api/Forecasting/ActualingTrips/ClusterAnalysis", Method.POST) { RequestFormat = DataFormat.Json };
             var json = JsonSerializer.SerializeToString(new
@@ -81,44 +83,10 @@ namespace TradeUnionCommittee.DataAnalysis.Service.Services
 
             if (response.StatusCode == HttpStatusCode.OK)
             {
-                return JsonSerializer.DeserializeFromString<ClusterModel>(response.Content);
+                return JsonSerializer.DeserializeFromString<ForecastingClusterViewModel>(response.Content);
             }
 
-            throw new ServiceUnavailableException();
+            throw new AnalysisServiceUnavailableException();
         }
-    }
-
-    //------------------------------------------------------
-
-    public class Task11Model
-    {
-        public int Age { get; set; }
-        public int TravelCount { get; set; }
-        public int WellnessCount { get; set; }
-        public int TourCount { get; set; }
-    }
-
-    public class Task14Model
-    {
-        public double X { get; set; }
-        public double Y { get; set; }
-    }
-
-    //------------------------------------------------------
-
-    public class Task13Model
-    {
-        public string FirstCriterion { get; set; }
-        public string SecondCriterion { get; set; }
-        public double TCriteria { get; set; }
-        public double TStatistics { get; set; }
-        public bool Differs { get; set; }
-    }
-
-    public class ClusterModel
-    {
-        public IEnumerable<IEnumerable<double>> X { get; set; }
-        public IEnumerable<IEnumerable<double>> Y { get; set; }
-        public IEnumerable<IEnumerable<double>> Centers { get; set; }
     }
 }

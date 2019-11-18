@@ -12,7 +12,7 @@ using TradeUnionCommittee.BLL.Interfaces.Dashboard;
 using TradeUnionCommittee.DAL.EF;
 using TradeUnionCommittee.DAL.Enums;
 using TradeUnionCommittee.DataAnalysis.Service.Interfaces;
-using TradeUnionCommittee.DataAnalysis.Service.Services;
+using TradeUnionCommittee.DataAnalysis.Service.Models;
 
 namespace TradeUnionCommittee.BLL.Services.Dashboard
 {
@@ -47,7 +47,7 @@ namespace TradeUnionCommittee.BLL.Services.Dashboard
                     .Employee
                     .Include(x => x.EventEmployees)
                     .ThenInclude(x => x.IdEventNavigation)
-                    .Select(x => new Task11Model
+                    .Select(x => new ForecastingCorrelationModel
                     {
                         Age = x.BirthDate.CalculateAge(),
                         TravelCount = x.EventEmployees.Count(c => c.IdEventNavigation.Type == TypeEvent.Travel),
@@ -88,7 +88,7 @@ namespace TradeUnionCommittee.BLL.Services.Dashboard
                     .Employee
                     .Include(x => x.EventEmployees)
                     .ThenInclude(x => x.IdEventNavigation)
-                    .Select(x => new Task11Model
+                    .Select(x => new ForecastingCorrelationModel
                     {
                         Age = x.BirthDate.CalculateAge(),
                         TravelCount = x.EventEmployees.Count(c => c.IdEventNavigation.Type == TypeEvent.Travel),
@@ -140,7 +140,7 @@ namespace TradeUnionCommittee.BLL.Services.Dashboard
                     .Employee
                     .Include(x => x.EventEmployees)
                     .ThenInclude(x => x.IdEventNavigation)
-                    .Select(x => new Task14Model
+                    .Select(x => new ForecastingClusterModel
                     {
                         X = x.BirthDate.CalculateAge(),
                         Y = x.EventEmployees.Count(c => c.IdEventNavigation.Type == (TypeEvent)type),
@@ -258,7 +258,7 @@ namespace TradeUnionCommittee.BLL.Services.Dashboard
                 .ThenInclude(x => x.IdEventNavigation)
                 .Include(x => x.Children)
                 .Include(x => x.GrandChildren)
-                .Select(x => new Task21Model
+                .Select(x => new DeterminingMultiCorrelationModel
                 {
                     Y = x.EventEmployees.Count(c => c.IdEventNavigation.Type == (TypeEvent)type),
                     X1 = x.Children.Count,
@@ -290,7 +290,7 @@ namespace TradeUnionCommittee.BLL.Services.Dashboard
                 .Include(x => x.EventEmployees)
                 .ThenInclude(x => x.IdEventNavigation)
                 .Include(x => x.Children)
-                .Select(x => new Task14Model
+                .Select(x => new ForecastingClusterModel
                 {
                     X = x.EventEmployees.Count(c => c.IdEventNavigation.Type == (TypeEvent)type),
                     Y = x.Children.Count
@@ -383,7 +383,7 @@ namespace TradeUnionCommittee.BLL.Services.Dashboard
                 .Include(x => x.MaterialAidEmployees)
                 .Include(x => x.Children)
                 .Include(x => x.GrandChildren)
-                .Select(x => new Task24Model
+                .Select(x => new DeterminingMultiFactorModel
                 {
                     Y = x.EventEmployees.Count(c => c.IdEventNavigation.Type == firstTypeEvent),
                     X1 = x.EventEmployees.Count(c => c.IdEventNavigation.Type == typeEventValues.ElementAt(0)),
@@ -417,7 +417,7 @@ namespace TradeUnionCommittee.BLL.Services.Dashboard
                 .ThenInclude(x => x.IdEventNavigation)
                 .Include(x => x.Children)
                 .Include(x => x.GrandChildren)
-                .Select(x => new Task27Model
+                .Select(x => new DeterminingPrincipalComponentModel
                 {
                     X1 = x.EventEmployees.Count(c => c.IdEventNavigation.Type == firstTypeEvent),
                     X2 = x.EventEmployees.Count(c => c.IdEventNavigation.Type == typeEventValues.ElementAt(0)),

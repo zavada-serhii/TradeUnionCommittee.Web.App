@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Net;
 using TradeUnionCommittee.DataAnalysis.Service.Exceptions;
 using TradeUnionCommittee.DataAnalysis.Service.Interfaces;
+using TradeUnionCommittee.DataAnalysis.Service.Models;
+using TradeUnionCommittee.DataAnalysis.Service.ViewModels;
 
 namespace TradeUnionCommittee.DataAnalysis.Service.Services
 {
@@ -24,7 +26,7 @@ namespace TradeUnionCommittee.DataAnalysis.Service.Services
         /// </summary>
         /// <param name="data"></param>
         /// <returns></returns>
-        public double MultiCorrelationCoefficient(IEnumerable<Task21Model> data)
+        public double MultiCorrelationCoefficient(IEnumerable<DeterminingMultiCorrelationModel> data)
         {
             var request = new RestRequest("/api/Determining/ProbablePastime/MultiCorrelationCoefficient", Method.POST) { RequestFormat = DataFormat.Json };
             var csv = CsvSerializer.SerializeToString(data);
@@ -37,7 +39,7 @@ namespace TradeUnionCommittee.DataAnalysis.Service.Services
                 return JsonSerializer.DeserializeFromString<double>(response.Content);
             }
 
-            throw new ServiceUnavailableException();
+            throw new AnalysisServiceUnavailableException();
         }
 
         /// <summary>
@@ -45,7 +47,7 @@ namespace TradeUnionCommittee.DataAnalysis.Service.Services
         /// </summary>
         /// <param name="data"></param>
         /// <returns></returns>
-        public MultiFactorModel MultiFactorModel(IEnumerable<Task24Model> data)
+        public DeterminingMultiFactorViewModel MultiFactorModel(IEnumerable<DeterminingMultiFactorModel> data)
         {
             var request = new RestRequest("/api/Determining/ProbablePastime/MultiFactorModel", Method.POST) { RequestFormat = DataFormat.Json };
             var csv = CsvSerializer.SerializeToString(data);
@@ -55,10 +57,10 @@ namespace TradeUnionCommittee.DataAnalysis.Service.Services
 
             if (response.StatusCode == HttpStatusCode.OK)
             {
-                return JsonSerializer.DeserializeFromString<MultiFactorModel>(response.Content);
+                return JsonSerializer.DeserializeFromString<DeterminingMultiFactorViewModel>(response.Content);
             }
 
-            throw new ServiceUnavailableException();
+            throw new AnalysisServiceUnavailableException();
         }
 
         /// <summary>
@@ -67,7 +69,7 @@ namespace TradeUnionCommittee.DataAnalysis.Service.Services
         /// <param name="data"></param>
         /// <param name="countComponents"></param>
         /// <returns></returns>
-        public IEnumerable<IEnumerable<double>> PrincipalComponentAnalysis(IEnumerable<Task27Model> data, int countComponents)
+        public IEnumerable<IEnumerable<double>> PrincipalComponentAnalysis(IEnumerable<DeterminingPrincipalComponentModel> data, int countComponents)
         {
             var request = new RestRequest("/api/Determining/ProbablePastime/PrincipalComponentAnalysis", Method.POST) { RequestFormat = DataFormat.Json };
             var json = JsonSerializer.SerializeToString(new
@@ -84,43 +86,7 @@ namespace TradeUnionCommittee.DataAnalysis.Service.Services
                 return JsonSerializer.DeserializeFromString<IEnumerable<IEnumerable<double>>>(response.Content);
             }
 
-            throw new ServiceUnavailableException();
+            throw new AnalysisServiceUnavailableException();
         }
-    }
-
-    //------------------------------------------------------
-
-    public class Task21Model
-    {
-        public int Y { get; set; }
-        public int X1 { get; set; }
-        public int X2 { get; set; }
-    }
-
-    public class Task24Model : Task21Model
-    {
-        public int X3 { get; set; }
-        public int X4 { get; set; }
-        public int X5 { get; set; }
-        public int X6 { get; set; }
-    }
-
-    public class Task27Model
-    {
-        public int X1 { get; set; }
-        public int X2 { get; set; }
-        public int X3 { get; set; }
-        public int X4 { get; set; }
-        public int X5 { get; set; }
-    }
-
-    //------------------------------------------------------
-
-    public class MultiFactorModel
-    {
-        public IEnumerable<double> RegressionModel { get; set; }
-        public IEnumerable<double> Standardization { get; set; }
-        public IEnumerable<double> SignificanceTest { get; set; }
-        public IEnumerable<double> ConfidenceInterval { get; set; }
     }
 }

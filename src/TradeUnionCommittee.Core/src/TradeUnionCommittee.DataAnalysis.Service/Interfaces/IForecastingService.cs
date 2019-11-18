@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
-using TradeUnionCommittee.DataAnalysis.Service.Services;
+using TradeUnionCommittee.DataAnalysis.Service.Models;
+using TradeUnionCommittee.DataAnalysis.Service.ViewModels;
 
 namespace TradeUnionCommittee.DataAnalysis.Service.Interfaces
 {
@@ -8,8 +9,8 @@ namespace TradeUnionCommittee.DataAnalysis.Service.Interfaces
     /// </summary>
     public interface IForecastingService
     {
-        IEnumerable<IEnumerable<double>> CorrelationAnalysis(IEnumerable<Task11Model> data);
-        IEnumerable<Task13Model> CheckingSignificanceCoefficients(IEnumerable<Task11Model> data);
-        ClusterModel ClusterAnalysis(IEnumerable<Task14Model> data, int countClusters);
+        IEnumerable<IEnumerable<double>> CorrelationAnalysis(IEnumerable<ForecastingCorrelationModel> data);
+        IEnumerable<ForecastingSignificanceViewModel> CheckingSignificanceCoefficients(IEnumerable<ForecastingCorrelationModel> data);
+        ForecastingClusterViewModel ClusterAnalysis(IEnumerable<ForecastingClusterModel> data, int countClusters);
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
-using TradeUnionCommittee.DataAnalysis.Service.Services;
+using TradeUnionCommittee.DataAnalysis.Service.Models;
+using TradeUnionCommittee.DataAnalysis.Service.ViewModels;
 
 namespace TradeUnionCommittee.DataAnalysis.Service.Interfaces
 {
@@ -8,8 +9,8 @@ namespace TradeUnionCommittee.DataAnalysis.Service.Interfaces
     /// </summary>
     public interface IDeterminingService
     {
-        double MultiCorrelationCoefficient(IEnumerable<Task21Model> data);
-        MultiFactorModel MultiFactorModel(IEnumerable<Task24Model> data);
-        IEnumerable<IEnumerable<double>> PrincipalComponentAnalysis(IEnumerable<Task27Model> data, int countComponents);
+        double MultiCorrelationCoefficient(IEnumerable<DeterminingMultiCorrelationModel> data);
+        DeterminingMultiFactorViewModel MultiFactorModel(IEnumerable<DeterminingMultiFactorModel> data);
+        IEnumerable<IEnumerable<double>> PrincipalComponentAnalysis(IEnumerable<DeterminingPrincipalComponentModel> data, int countComponents);
     }
 }

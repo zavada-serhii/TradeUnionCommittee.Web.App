@@ -2,5 +2,5 @@
 
 namespace TradeUnionCommittee.DataAnalysis.Service.Exceptions
 {
-    public class ServiceUnavailableException : Exception { }
+    public class AnalysisServiceUnavailableException : Exception { }
 }
