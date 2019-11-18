@@ -88,14 +88,14 @@ namespace TradeUnionCommittee.DataAnalysis.Service.Services
         }
     }
 
+    //------------------------------------------------------
+
     public class Task21Model
     {
         public int Y { get; set; }
         public int X1 { get; set; }
         public int X2 { get; set; }
     }
-
-    //------------------------------------------------------
 
     public class Task24Model : Task21Model
     {
@@ -105,16 +105,6 @@ namespace TradeUnionCommittee.DataAnalysis.Service.Services
         public int X6 { get; set; }
     }
 
-    public class MultiFactorModel
-    {
-        public IEnumerable<double> RegressionModel { get; set; }
-        public IEnumerable<double> Standardization { get; set; }
-        public IEnumerable<double> SignificanceTest { get; set; }
-        public IEnumerable<double> ConfidenceInterval { get; set; }
-    }
-
-    //------------------------------------------------------
-
     public class Task27Model
     {
         public int X1 { get; set; }
@@ -122,5 +112,15 @@ namespace TradeUnionCommittee.DataAnalysis.Service.Services
         public int X3 { get; set; }
         public int X4 { get; set; }
         public int X5 { get; set; }
+    }
+
+    //------------------------------------------------------
+
+    public class MultiFactorModel
+    {
+        public IEnumerable<double> RegressionModel { get; set; }
+        public IEnumerable<double> Standardization { get; set; }
+        public IEnumerable<double> SignificanceTest { get; set; }
+        public IEnumerable<double> ConfidenceInterval { get; set; }
     }
 }

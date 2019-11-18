@@ -88,6 +88,8 @@ namespace TradeUnionCommittee.DataAnalysis.Service.Services
         }
     }
 
+    //------------------------------------------------------
+
     public class Task11Model
     {
         public int Age { get; set; }
@@ -96,6 +98,14 @@ namespace TradeUnionCommittee.DataAnalysis.Service.Services
         public int TourCount { get; set; }
     }
 
+    public class Task14Model
+    {
+        public double X { get; set; }
+        public double Y { get; set; }
+    }
+
+    //------------------------------------------------------
+
     public class Task13Model
     {
         public string FirstCriterion { get; set; }
@@ -103,14 +113,6 @@ namespace TradeUnionCommittee.DataAnalysis.Service.Services
         public double TCriteria { get; set; }
         public double TStatistics { get; set; }
         public bool Differs { get; set; }
-    }
-
-    //------------------------------------------------------
-
-    public class Task14Model
-    {
-        public double X { get; set; }
-        public double Y { get; set; }
     }
 
     public class ClusterModel
