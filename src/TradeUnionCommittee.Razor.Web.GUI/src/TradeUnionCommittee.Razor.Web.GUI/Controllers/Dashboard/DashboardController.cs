@@ -1,6 +1,9 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
+using System.Threading.Tasks;
+using TradeUnionCommittee.BLL.Enums;
 using TradeUnionCommittee.BLL.Interfaces.Dashboard;
 
 namespace TradeUnionCommittee.Razor.Web.GUI.Controllers.Dashboard
@@ -16,7 +19,7 @@ namespace TradeUnionCommittee.Razor.Web.GUI.Controllers.Dashboard
             _mapper = mapper;
         }
 
-        //------------------------------------------------------------------------------------------------------------------------------------------
+        //----------------------------------------------------------------------------------------------------
 
         [HttpGet]
         [Authorize(Roles = "Admin")]
@@ -25,7 +28,60 @@ namespace TradeUnionCommittee.Razor.Web.GUI.Controllers.Dashboard
             return View();
         }
 
-        //------------------------------------------------------------------------------------------------------------------------------------------
+        //----------------------------------------------------------------------------------------------------
+
+        [HttpGet]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> CorrelationAnalysisBetweenTeacherAgeAndTypeOfEvent()
+        {
+            return Json(await _services.CorrelationAnalysisBetweenTeacherAgeAndTypeOfEvent());
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> CheckingSignificanceAgeTeacherAndTypeOfEvent()
+        {
+            return Json(await _services.CheckingSignificanceAgeTeacherAndTypeOfEvent());
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> ClusterAnalysisAgeTeacherAndTypeOfEvent([Required] int id)
+        {
+            return Json(await _services.ClusterAnalysisAgeTeacherAndTypeOfEvent((TypeEvents)id));
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> EmployeeAgeGroup()
+        {
+            return Json(await _services.GetEmployeeAgeGroup());
+        }
+
+        //----------------------------------------------------------------------------------------------------
+
+        [HttpGet]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> MultiCorrelationBetweenTypeOfEventAndDependents([Required] int id)
+        {
+            return Json(await _services.MultiCorrelationBetweenTypeOfEventAndDependents((TypeEvents)id));
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> ClusterAnalysisSignHavingChildrenAndTypeOfEvent([Required] int id)
+        {
+            return Json(await _services.ClusterAnalysisSignHavingChildrenAndTypeOfEvent((TypeEvents)id));
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> PercentageRatioHavingDependents()
+        {
+            return Json(await _services.GetPercentageRatioHavingDependents());
+        }
+
+        //----------------------------------------------------------------------------------------------------
 
         [HttpGet]
         [Authorize(Roles = "Admin")]
@@ -69,7 +125,7 @@ namespace TradeUnionCommittee.Razor.Web.GUI.Controllers.Dashboard
             return Json(_services.BubbleData_Test());
         }
 
-        //------------------------------------------------------------------------------------------------------------------------------------------
+        //----------------------------------------------------------------------------------------------------
 
         protected override void Dispose(bool disposing)
         {
