@@ -621,6 +621,14 @@ namespace TradeUnionCommittee.BLL.Configurations
                 .ForMember(x => x.DateFrom, opt => opt.MapFrom(c => c.StartDate))
                 .ForMember(x => x.DateTo, opt => opt.MapFrom(c => c.EndDate));
 
+            CreateMap<(string FileName, byte[] Data), FileModel>()
+                .ForMember(x => x.FileName, opt => opt.MapFrom(c => c.FileName))
+                .ForMember(x => x.Data, opt => opt.MapFrom(c => c.Data));
+
+            CreateMap<(string FileName, byte[] Data), FileDTO>()
+                .ForMember(x => x.FileName, opt => opt.MapFrom(c => c.FileName))
+                .ForMember(x => x.Data, opt => opt.MapFrom(c => c.Data));
+
             CreateMap<ReportPdfDTO, ReportModel>();
 
             #endregion

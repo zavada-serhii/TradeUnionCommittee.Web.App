@@ -36,7 +36,7 @@ namespace TradeUnionCommittee.BLL.Services.PDF
 
         //------------------------------------------------------------------------------------------
 
-        public async Task<ActualResult<(string FileName, byte[] Data)>> CreateReport(ReportPdfDTO dto)
+        public async Task<ActualResult<FileDTO>> CreateReport(ReportPdfDTO dto)
         {
             try
             {
@@ -44,14 +44,14 @@ namespace TradeUnionCommittee.BLL.Services.PDF
                 var pdf = _reportGeneratorService.Generate(model);
 
                 var reportBucketModel = _mapper.Map<ReportPdfBucketModel>(dto);
-                reportBucketModel.Pdf = pdf;
+                reportBucketModel.Pdf = _mapper.Map<FileModel>(pdf);
                 await _pdfBucketService.PutPdfObject(reportBucketModel);
 
-                return new ActualResult<(string FileName, byte[] Data)> { Result = pdf };
+                return new ActualResult<FileDTO> { Result = _mapper.Map<FileDTO>(pdf) };
             }
             catch (Exception exception)
             {
-                return new ActualResult<(string FileName, byte[] Data)>(DescriptionExceptionHelper.GetDescriptionError(exception));
+                return new ActualResult<FileDTO>(DescriptionExceptionHelper.GetDescriptionError(exception));
             }
         }
 

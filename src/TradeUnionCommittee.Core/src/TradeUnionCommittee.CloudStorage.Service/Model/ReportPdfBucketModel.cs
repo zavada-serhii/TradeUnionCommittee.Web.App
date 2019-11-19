@@ -10,6 +10,6 @@ namespace TradeUnionCommittee.CloudStorage.Service.Model
         public int TypeReport { get; set; }
         public DateTime DateFrom { get; set; }
         public DateTime DateTo { get; set; }
-        public (string FileName, byte[] Data) Pdf { get; set; }
+        public FileModel Pdf { get; set; }
     }
 }
