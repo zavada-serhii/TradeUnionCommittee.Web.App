@@ -26,6 +26,7 @@ namespace TradeUnionCommittee.BLL.Interfaces.Account
         Task SignOut();
 
         Task<ActualResult<IEnumerable<AccountDTO>>> GetAllAccountsAsync();
+        Task<ActualResult<Dictionary<string, string>>> GetAllEmailsAsync();
         Task<ActualResult<AccountDTO>> GetAccountAsync(string hashId);
         Task<ActualResult<AccountDTO>> GetAccountRoleAsync(string hashId);
         Task<ActualResult<IEnumerable<RolesDTO>>> GetRoles();

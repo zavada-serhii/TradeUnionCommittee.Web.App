@@ -104,6 +104,22 @@ namespace TradeUnionCommittee.BLL.Services.Account
             }
         }
 
+        public async Task<ActualResult<Dictionary<string, string>>> GetAllEmailsAsync()
+        {
+            try
+            {
+                var users = await _userManager
+                    .Users
+                    .Select(x => new {x.Id, x.Email})
+                    .ToDictionaryAsync(x => x.Id, c => c.Email);
+                return new ActualResult<Dictionary<string, string>> { Result = users };
+            }
+            catch (Exception exception)
+            {
+                return new ActualResult<Dictionary<string, string>>(DescriptionExceptionHelper.GetDescriptionError(exception));
+            }
+        }
+
         public async Task<ActualResult<AccountDTO>> GetAccountAsync(string hashId)
         {
             try
