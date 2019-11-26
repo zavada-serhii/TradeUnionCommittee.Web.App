@@ -20,34 +20,41 @@ $('#getJournalDataClick').click(() => {
 
     $.post('/Journal/Filter/', viewModel)
         .done(function (result) {
-            $('#journal-content').empty();
-            $('#journal-content').append(`<div class="row main-block">
-                                          <table class="table text-left">
-                                              <thead>
-                                                  <tr>
-                                                      <th>
-                                                          Email
-                                                      </th>
-                                                      <th>
-                                                          Дата та час
-                                                      </th>
-                                                      <th>
-                                                          Операція
-                                                      </th>
-                                                      <th>
-                                                          Дані
-                                                      </th>
-                                                      <th></th>
-                                                  </tr>
-                                              </thead>
-                                              <tbody>
-                                                    ${getHtmlData(result)}
-                                              </tbody>
-                                          </table>
-                                      </div>`);
+
+            if (result.length === 0) {
+                showModalDialog(['Дані відсутні.']);
+                 $('#journal-content').empty();
+            }
+            else {
+                $('#journal-content').empty();
+                $('#journal-content').append(`<div class="row main-block">
+                                                <table class="table text-left">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>
+                                                                Email
+                                                            </th>
+                                                            <th>
+                                                                Дата та час
+                                                            </th>
+                                                            <th>
+                                                                Операція
+                                                            </th>
+                                                            <th>
+                                                                Дані
+                                                            </th>
+                                                            <th></th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                          ${getHtmlData(result)}
+                                                    </tbody>
+                                                </table>
+                                              </div>`);
+            }
         })
         .fail(function (xhr, textStatus, errorThrown) {
-            alert(xhr.responseJSON);
+            showModalDialog(xhr.responseJSON);
             $('#journal-content').empty();
         });
 });
