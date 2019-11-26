@@ -64,8 +64,8 @@ namespace TradeUnionCommittee.Razor.Web.GUI.Controllers.Directory
 
         public async Task<SelectList> GetEmails()
         {
-            var users = await _accountService.GetAllAccountsAsync();
-            return users.IsValid ? new SelectList(users.Result.Select(account => account.Email)) : null;
+            var users = await _accountService.GetAllEmailsAsync();
+            return users.IsValid ? new SelectList(users.Result.Select(account => account.Value)) : null;
         }
 
         public async Task<SelectList> GetRoles()

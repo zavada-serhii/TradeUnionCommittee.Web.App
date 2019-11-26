@@ -1,10 +1,10 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.Interfaces.SystemAudit;
 using TradeUnionCommittee.Razor.Web.GUI.Controllers.Directory;
+using TradeUnionCommittee.Razor.Web.GUI.Extensions;
+using TradeUnionCommittee.ViewModels.ViewModels;
 
 namespace TradeUnionCommittee.Razor.Web.GUI.Controllers.Journal
 {
@@ -27,18 +27,20 @@ namespace TradeUnionCommittee.Razor.Web.GUI.Controllers.Journal
             return View();
         }
 
-        [HttpPost]
+        [HttpPost, ActionName("Filter")]
         [Authorize(Roles = "Admin")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Filter([Required] string email, [Required] DateTime startDate, [Required] DateTime endDate)
+        public async Task<IActionResult> Filter(JournalViewModel vm)
         {
-            var result = await _systemAuditService.FilterAsync(email, startDate, endDate);
-            if (result.IsValid)
+            if (ModelState.IsValid)
             {
-                ViewBag.Emails = await _directories.GetEmails();
-                return View("Index", result.Result);
+                var result = await _systemAuditService.FilterAsync(vm.Email, vm.StartDate, vm.EndDate);
+                if (result.IsValid)
+                {
+                    return Json(result.Result);
+                }
+                return BadRequest(result.ErrorsList);
             }
-            return BadRequest();
+            return BadRequest(ModelState.GetErrors());
         }
     }
 }
