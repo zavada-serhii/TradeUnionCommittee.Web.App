@@ -1,0 +1,128 @@
+[
+  {
+    "outputFileName": "wwwroot/js/main.min.js",
+    "inputFiles": [
+      "wwwroot/js/main.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/js/modalDialog.min.js",
+    "inputFiles": [
+      "wwwroot/js/modalDialog.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/js/delete.min.js",
+    "inputFiles": [
+      "wwwroot/js/delete.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/js/currency.min.js",
+    "inputFiles": [
+      "wwwroot/js/currency.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/js/views/create-employee.min.js",
+    "inputFiles": [
+      "wwwroot/js/views/create-employee.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/js/views/update-employee.min.js",
+    "inputFiles": [
+      "wwwroot/js/views/update-employee.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/js/views/search.min.js",
+    "inputFiles": [
+      "wwwroot/js/views/search.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/js/views/journal.min.js",
+    "inputFiles": [
+      "wwwroot/js/views/journal.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/js/dashboard/first-task/checkingSignificanceAgeTeacherAndTypeOfEvent.min.js",
+    "inputFiles": [
+      "wwwroot/js/dashboard/first-task/checkingSignificanceAgeTeacherAndTypeOfEvent.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/js/dashboard/first-task/clusterAnalysisAgeTeacherAndTypeOfEvent.min.js",
+    "inputFiles": [
+      "wwwroot/js/dashboard/first-task/clusterAnalysisAgeTeacherAndTypeOfEvent.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/js/dashboard/first-task/correlationAnalysisBetweenTeacherAgeAndTypeOfEvent.min.js",
+    "inputFiles": [
+      "wwwroot/js/dashboard/first-task/correlationAnalysisBetweenTeacherAgeAndTypeOfEvent.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/js/dashboard/first-task/employeeAgeGroup.min.js",
+    "inputFiles": [
+      "wwwroot/js/dashboard/first-task/employeeAgeGroup.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/js/dashboard/second-task/clusterAnalysisSignHavingChildrenAndTypeOfEvent.min.js",
+    "inputFiles": [
+      "wwwroot/js/dashboard/second-task/clusterAnalysisSignHavingChildrenAndTypeOfEvent.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/js/dashboard/second-task/multiCorrelationBetweenTypeOfEventAndDependents.min.js",
+    "inputFiles": [
+      "wwwroot/js/dashboard/second-task/multiCorrelationBetweenTypeOfEventAndDependents.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/js/dashboard/second-task/percentageRatioHavingDependents.min.js",
+    "inputFiles": [
+      "wwwroot/js/dashboard/second-task/percentageRatioHavingDependents.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/js/dashboard/chart-area-demo.min.js",
+    "inputFiles": [
+      "wwwroot/js/dashboard/chart-area-demo.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/js/dashboard/chart-bar-demo.min.js",
+    "inputFiles": [
+      "wwwroot/js/dashboard/chart-bar-demo.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/js/dashboard/chart-bubble-demo.min.js",
+    "inputFiles": [
+      "wwwroot/js/dashboard/chart-bubble-demo.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/js/dashboard/chart-line-demo.min.js",
+    "inputFiles": [
+      "wwwroot/js/dashboard/chart-line-demo.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/js/dashboard/chart-pie-demo.min.js",
+    "inputFiles": [
+      "wwwroot/js/dashboard/chart-pie-demo.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/js/dashboard/chart-radar-demo.min.js",
+    "inputFiles": [
+      "wwwroot/js/dashboard/chart-radar-demo.js"
+    ]
+  }
+]
