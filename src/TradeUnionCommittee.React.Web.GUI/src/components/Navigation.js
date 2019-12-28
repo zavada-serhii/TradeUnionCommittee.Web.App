@@ -13,6 +13,7 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import Collapse from '@material-ui/core/Collapse';
+import { Link } from "react-router-dom";
 
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
@@ -40,6 +41,7 @@ import DashboardIcon from '@material-ui/icons/Dashboard';
 import StorageIcon from '@material-ui/icons/Storage';
 import SearchIcon from '@material-ui/icons/Search';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+
 
 const drawerWidth = 280;
 
@@ -175,14 +177,14 @@ export default function MiniDrawer() {
 
         <List>
 
-          <ListItem button>
+          <ListItem button component={Link} to="/create-employee" title="Create new employee">
             <ListItemIcon>
               <PersonAddIcon />
             </ListItemIcon>
             <ListItemText primary="Create new employee" />
           </ListItem>
 
-          <ListItem button onClick={handleClickDirectories}>
+          <ListItem button onClick={handleClickDirectories} title="Directories">
             <ListItemIcon>
               <CategoryIcon />
             </ListItemIcon>
@@ -193,98 +195,98 @@ export default function MiniDrawer() {
           <Collapse in={openDirectories} timeout="auto" unmountOnExit>
             <List component="div" disablePadding>
 
-              <ListItem button className={classes.nested}>
+              <ListItem button className={classes.nested} component={Link} to="/position">
                 <ListItemIcon>
                   <BarChartIcon />
                 </ListItemIcon>
                 <ListItemText primary="Position" />
               </ListItem>
 
-              <ListItem button className={classes.nested}>
+              <ListItem button className={classes.nested} component={Link} to="/social-position">
                 <ListItemIcon>
                   <AssessmentIcon />
                 </ListItemIcon>
                 <ListItemText primary="Social position" />
               </ListItem>
 
-              <ListItem button className={classes.nested}>
+              <ListItem button className={classes.nested} component={Link} to="/privileges">
                 <ListItemIcon>
                   <AccessibleIcon />
                 </ListItemIcon>
                 <ListItemText primary="Privileges" />
               </ListItem>
 
-              <ListItem button className={classes.nested}>
+              <ListItem button className={classes.nested} component={Link} to="/award">
                 <ListItemIcon>
                   <AttachMoneyIcon />
                 </ListItemIcon>
                 <ListItemText primary="Award" />
               </ListItem>
 
-              <ListItem button className={classes.nested}>
+              <ListItem button className={classes.nested} component={Link} to="/material-aid">
                 <ListItemIcon>
                   <AccessibilityIcon />
                 </ListItemIcon>
                 <ListItemText primary="Material Aid" />
               </ListItem>
 
-              <ListItem button className={classes.nested}>
+              <ListItem button className={classes.nested} component={Link} to="/hobby">
                 <ListItemIcon>
                   <GolfCourseIcon />
                 </ListItemIcon>
                 <ListItemText primary="Hobby" />
               </ListItem>
 
-              <ListItem button className={classes.nested}>
+              <ListItem button className={classes.nested} component={Link} to="/travel">
                 <ListItemIcon>
                   <TodayIcon />
                 </ListItemIcon>
                 <ListItemText primary="Travel" />
               </ListItem>
 
-              <ListItem button className={classes.nested}>
+              <ListItem button className={classes.nested} component={Link} to="/wellness">
                 <ListItemIcon>
                   <EventIcon />
                 </ListItemIcon>
                 <ListItemText primary="Wellness" />
               </ListItem>
 
-              <ListItem button className={classes.nested}>
+              <ListItem button className={classes.nested} component={Link} to="/tour">
                 <ListItemIcon>
                   <EventAvailableIcon />
                 </ListItemIcon>
                 <ListItemText primary="Tour" />
               </ListItem>
 
-              <ListItem button className={classes.nested}>
+              <ListItem button className={classes.nested} component={Link} to="/activities">
                 <ListItemIcon>
                   <EventNoteIcon />
                 </ListItemIcon>
                 <ListItemText primary="Activities" />
               </ListItem>
 
-              <ListItem button className={classes.nested}>
+              <ListItem button className={classes.nested} component={Link} to="/cultural-activities">
                 <ListItemIcon>
                   <DateRangeIcon />
                 </ListItemIcon>
                 <ListItemText primary="Cultural activities" />
               </ListItem>
 
-              <ListItem button className={classes.nested}>
+              <ListItem button className={classes.nested} component={Link} to="/subdivisions">
                 <ListItemIcon>
                   <SubdirectoryArrowRightIcon />
                 </ListItemIcon>
                 <ListItemText primary="Subdivisions" />
               </ListItem>
 
-              <ListItem button className={classes.nested}>
+              <ListItem button className={classes.nested} component={Link} to="/departmental-housing">
                 <ListItemIcon>
                   <HomeWorkIcon />
                 </ListItemIcon>
                 <ListItemText primary="Departmental housing" />
               </ListItem>
 
-              <ListItem button className={classes.nested}>
+              <ListItem button className={classes.nested} component={Link} to="/dormitory">
                 <ListItemIcon>
                   <HotelIcon />
                 </ListItemIcon>
@@ -294,28 +296,28 @@ export default function MiniDrawer() {
             </List>
           </Collapse>
 
-          <ListItem button>
+          <ListItem button component={Link} to="/users" title="Users">
             <ListItemIcon>
               <PeopleIcon />
             </ListItemIcon>
             <ListItemText primary="Users" />
           </ListItem>
 
-          <ListItem button>
+          <ListItem button component={Link} to="/dashboard" title="Dashboard">
             <ListItemIcon>
               <DashboardIcon />
             </ListItemIcon>
             <ListItemText primary="Dashboard" />
           </ListItem>
 
-          <ListItem button>
+          <ListItem button component={Link} to="/action-log" title="Action log">
             <ListItemIcon>
               <StorageIcon />
             </ListItemIcon>
             <ListItemText primary="Action log" />
           </ListItem>
 
-          <ListItem button>
+          <ListItem button component={Link} to="/search" title="Search">
             <ListItemIcon>
               <SearchIcon />
             </ListItemIcon>
@@ -324,11 +326,11 @@ export default function MiniDrawer() {
 
           <Divider />
 
-          <ListItem button>
+          <ListItem button component={Link} to="/logout" title="Logout">
             <ListItemIcon>
               <ExitToAppIcon />
             </ListItemIcon>
-            <ListItemText primary="Exit" />
+            <ListItemText primary="Logout" />
           </ListItem>
 
         </List>
