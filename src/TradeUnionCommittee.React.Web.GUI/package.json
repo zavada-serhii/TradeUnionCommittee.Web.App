@@ -3,6 +3,7 @@
   "description": "null/undefined",
   "version": "0.1.0",
   "author": "Zavada Serhii",
+  "license" : "MIT",
   "dependencies": {
     "@emotion/core": "^10.0.22",
     "@emotion/styled": "^10.0.22",
