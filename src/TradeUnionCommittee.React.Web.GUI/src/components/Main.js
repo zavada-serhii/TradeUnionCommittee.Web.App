@@ -11,7 +11,7 @@ export const history = createBrowserHistory()
 function Main() {
     return (
         <Router history={history}>
-            <div style={{ display: 'flex', backgroundColor: 'white' }}>
+            <div style={{ display: 'flex', backgroundColor: '#ffffff' , backgroundImage: 'linear-gradient(315deg, #ffffff 0%, #d7e1ec 74%)'}}>
                 <CssBaseline />
                 <Navigation />
                 <Content />
