@@ -11,7 +11,7 @@ export const history = createBrowserHistory()
 function Main() {
     return (
         <Router history={history}>
-            <div style={{ display: 'flex' }}>
+            <div style={{ display: 'flex', backgroundColor: 'white' }}>
                 <CssBaseline />
                 <Navigation />
                 <Content />

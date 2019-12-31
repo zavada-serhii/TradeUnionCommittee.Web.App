@@ -1,13 +1,14 @@
 // https://auth0.com/blog/creating-a-splash-screen-for-your-react-apps/ 
 
-import React, {Component} from 'react';
-import './index.css';
+import React, { Component } from 'react';
+import './SplashScreen.css';
 
 function LoadingMessage() {
   return (
-    <div className="splash-screen">
-      Wait a moment while we load your app.
-      <div className="loading-dot">.</div>
+    <div className="loader">
+      <div className="inner one"></div>
+      <div className="inner two"></div>
+      <div className="inner three"></div>
     </div>
   );
 }
@@ -51,6 +52,7 @@ function SplashScreen(WrappedComponent) {
       if (this.state.loading) return LoadingMessage();
 
       // otherwise, show the desired route
+      document.body.style.backgroundImage = '';
       return <WrappedComponent {...this.props} />;
     }
   };
