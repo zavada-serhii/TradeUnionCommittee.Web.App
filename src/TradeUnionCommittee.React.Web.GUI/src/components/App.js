@@ -1,5 +1,6 @@
 import React from 'react'
 import Main from './Main'
+import SplashScreen from './SplashScreen'
 
 function App() {
     return (
@@ -7,4 +8,4 @@ function App() {
     )
 }
 
-export default App
+export default SplashScreen(App);
