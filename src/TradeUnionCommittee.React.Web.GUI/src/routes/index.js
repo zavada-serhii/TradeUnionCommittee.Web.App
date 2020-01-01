@@ -2,11 +2,12 @@ import React from 'react'
 import { Route, Switch } from 'react-router-dom';
 
 import CounterContainer from '../containers/CounterContainer'
+import CheckoutContainer from '../components/Checkout.Component/Checkout'
 
 function Routes() {
   return (
     <Switch>
-      <Route path="/create-employee" component={CounterContainer} />
+      <Route path="/create-employee" component={CheckoutContainer} />
       <Route path="/position" render={() => <div>Here will be page for Position</div>} />
       <Route path="/social-position" render={() => <div>Here will be page for social-position</div>} />
       <Route path="/privileges" render={() => <div>Here will be page for privileges</div>} />
