@@ -1,5 +1,7 @@
 import React from 'react'
 import { makeStyles } from '@material-ui/core/styles';
+import Box from '@material-ui/core/Box';
+import Paper from '@material-ui/core/Paper';
 
 import Routes from '../routes'
 
@@ -12,11 +14,21 @@ const useStyles = makeStyles(theme => ({
     appBarSpacer: theme.mixins.toolbar,
     container: {
         textAlign: 'center',
-        paddingTop: theme.spacing(7),
-        paddingBottom: theme.spacing(7),
-        margin: theme.spacing(5),
         maxWidth: 'lg'
-    }
+    },
+    layout: {
+        width: 'auto',
+        margin: theme.spacing(3),
+        [theme.breakpoints.up(800 + theme.spacing(3) * 2)]: {
+            margin: theme.spacing(5),
+        },
+      },
+      paper: {
+        padding: theme.spacing(2),
+        [theme.breakpoints.up(800 + theme.spacing(3) * 2)]: {
+          padding: theme.spacing(3),
+        }
+      },
 }));
 
 function Content() {
@@ -27,7 +39,13 @@ function Content() {
         <main className={classes.content}>
             <div className={classes.appBarSpacer} />
             <div className={classes.container}>
-                <Routes />
+                <React.Fragment>
+                    <Box className={classes.layout}>
+                        <Paper className={classes.paper}>
+                            <Routes />
+                        </Paper>
+                    </Box>
+                </React.Fragment>
             </div>
         </main>
     )
