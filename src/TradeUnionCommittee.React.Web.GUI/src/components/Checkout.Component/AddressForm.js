@@ -62,7 +62,7 @@ export default function AddressForm() {
           />
         </Grid>
         <Grid item xs={12} sm={6}>
-          <TextField id="state" name="state" label="State/Province/Region" fullWidth />
+          <TextField id="state" name="state" label="State / Province / Region" fullWidth />
         </Grid>
         <Grid item xs={12} sm={6}>
           <TextField
