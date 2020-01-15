@@ -16,6 +16,22 @@ services:
      POSTGRES_USER: postgres
 
 
+  pgAdmin4:
+   image: dpage/pgadmin4:latest
+   container_name: pgAdmin4
+   restart: always
+   networks:
+            tools_network:
+                ipv4_address: 172.25.1.2
+   ports:
+    - "16543:80"
+   depends_on:
+    - postgres
+   environment:
+    PGADMIN_DEFAULT_EMAIL: "admin@sandbox.com"
+    PGADMIN_DEFAULT_PASSWORD: "postgres"
+
+
 
 
 
@@ -25,7 +41,7 @@ services:
    restart: always
    networks:
             tools_network:
-                ipv4_address: 172.25.1.2
+                ipv4_address: 172.25.1.3
    ports:
     - "9200:9200"
    volumes:
@@ -38,7 +54,7 @@ services:
    restart: always
    networks:
             tools_network:
-                ipv4_address: 172.25.1.3
+                ipv4_address: 172.25.1.4
    ports:
     - "5601:5601"
    depends_on:
@@ -54,7 +70,7 @@ services:
    restart: always
    networks:
             tools_network:
-                ipv4_address: 172.25.1.4
+                ipv4_address: 172.25.1.5
    ports:
     - "9001:9000"
    volumes:
@@ -62,7 +78,7 @@ services:
    environment:
     MINIO_ACCESS_KEY: minio
     MINIO_SECRET_KEY: minio123
-   command: server http://172.25.1.4/data http://172.25.1.5/data http://172.25.1.6/data http://172.25.1.7/data 
+   command: server http://172.25.1.5/data http://172.25.1.6/data http://172.25.1.7/data http://172.25.1.8/data 
  
 
   minio-node-2:
@@ -71,7 +87,7 @@ services:
    restart: always
    networks:
             tools_network:
-                ipv4_address: 172.25.1.5
+                ipv4_address: 172.25.1.6
    ports:
     - "9002:9000"
    volumes:
@@ -79,7 +95,7 @@ services:
    environment:
     MINIO_ACCESS_KEY: minio
     MINIO_SECRET_KEY: minio123
-   command: server http://172.25.1.4/data http://172.25.1.5/data http://172.25.1.6/data http://172.25.1.7/data 
+   command: server http://172.25.1.5/data http://172.25.1.6/data http://172.25.1.7/data http://172.25.1.8/data
  
 
   minio-node-3:
@@ -88,7 +104,7 @@ services:
    restart: always
    networks:
             tools_network:
-                ipv4_address: 172.25.1.6
+                ipv4_address: 172.25.1.7
    ports:
     - "9003:9000"
    volumes:
@@ -96,7 +112,7 @@ services:
    environment:
     MINIO_ACCESS_KEY: minio
     MINIO_SECRET_KEY: minio123
-   command: server http://172.25.1.4/data http://172.25.1.5/data http://172.25.1.6/data http://172.25.1.7/data 
+   command: server http://172.25.1.5/data http://172.25.1.6/data http://172.25.1.7/data http://172.25.1.8/data 
  
 
   minio-node-4:
@@ -105,7 +121,7 @@ services:
    restart: always
    networks:
             tools_network:
-                ipv4_address: 172.25.1.7
+                ipv4_address: 172.25.1.8
    ports:
     - "9004:9000"
    volumes:
@@ -113,7 +129,7 @@ services:
    environment:
     MINIO_ACCESS_KEY: minio
     MINIO_SECRET_KEY: minio123
-   command: server http://172.25.1.4/data http://172.25.1.5/data http://172.25.1.6/data http://172.25.1.7/data 
+   command: server http://172.25.1.5/data http://172.25.1.6/data http://172.25.1.7/data http://172.25.1.8/data
 
 
 
