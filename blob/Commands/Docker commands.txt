@@ -42,3 +42,29 @@ docker volume rm --force $(docker volume ls -q)
 
 -- Docker Compose --
 docker-compose -f docker-compose.yml up --build
+
+----------------------------------------------------------------------------------------
+
+-- Edit Postgres pg_hba file
+docker exec -it [Container ID] bash
+apt-get update
+apt-get install nano
+nano usr/share/postgresql/12/pg_hba.conf.sample
+
+SELECT pg_reload_conf();
+
+----------------------------------------------------------------------------------------
+
+-- Path to storage [pgAdmin4]
+docker exec -it [Container ID] /bin/sh
+cd ../var/lib/pgadmin/storage/[Email]/
+
+----------------------------------------------------------------------------------------
+
+-- Copy file from container to host machine [pgAdmin4]
+docker cp [Container ID]:/path_to_source_file.txt path_to_destination_file.txt
+
+-- Example
+docker cp [Container ID]:/var/lib/pgadmin/storage/[Email]/src.backup dest.backup
+
+----------------------------------------------------------------------------------------
