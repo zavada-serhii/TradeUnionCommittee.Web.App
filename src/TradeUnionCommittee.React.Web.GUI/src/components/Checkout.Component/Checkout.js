@@ -27,6 +27,10 @@ const useStyles = makeStyles(theme => ({
   resetContainer: {
     padding: theme.spacing(3),
   },
+  stepperRoot: {
+    display: 'flex',
+    padding: theme.spacing(0)
+  }
 }));
 
 function getSteps() {
@@ -65,7 +69,7 @@ export default function VerticalLinearStepper() {
 
   return (
     <div className={classes.root}>
-      <Stepper activeStep={activeStep} orientation="vertical">
+      <Stepper activeStep={activeStep} orientation="vertical" classes={{root: classes.stepperRoot}}>
         {steps.map((label, index) => (
           <Step key={label}>
             <StepLabel>{label}</StepLabel>
@@ -75,6 +79,8 @@ export default function VerticalLinearStepper() {
                 <div>
                   {activeStep !== 0 &&
                     <Button
+                      variant="outlined" 
+                      color="secondary"
                       onClick={handleBack}
                       className={classes.button}>
                       Back
@@ -96,7 +102,10 @@ export default function VerticalLinearStepper() {
       {activeStep === steps.length && (
         <Paper square elevation={0} className={classes.resetContainer}>
           <Typography>All steps completed - you&apos;re finished</Typography>
-          <Button onClick={handleReset} className={classes.button}>
+          <Button variant="outlined" 
+                  color="secondary"
+                  onClick={handleReset} 
+                  className={classes.button}>
             Reset
           </Button>
         </Paper>
