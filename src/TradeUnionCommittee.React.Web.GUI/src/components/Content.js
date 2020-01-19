@@ -2,10 +2,9 @@ import React from 'react'
 import { makeStyles } from '@material-ui/core/styles';
 import Box from '@material-ui/core/Box';
 import Paper from '@material-ui/core/Paper';
-import Link from '@material-ui/core/Link';
-import Typography from '@material-ui/core/Typography';
 
 import Routes from '../routes'
+import Copyright from '../components/Copyright.Component/Copyright'
 
 const useStyles = makeStyles(theme => ({
     content: {
@@ -31,25 +30,7 @@ const useStyles = makeStyles(theme => ({
             padding: theme.spacing(3),
         }
     },
-    copyright: {
-        paddingTop: theme.spacing(3)
-    },
 }));
-
-function Copyright(props) {
-    return (
-        <div className={props.style.copyright}>
-            <Typography variant="body2" color="textSecondary" align="center">
-                {'Copyright © '}
-                <Link color="inherit" href="/">
-                    Trade Union Committee React Web GUI - 
-                </Link>{' '}
-                {new Date().getFullYear()}
-                {'.'}
-            </Typography>
-        </div>
-    );
-}
 
 function Content() {
 
@@ -64,7 +45,7 @@ function Content() {
                         <Paper className={classes.paper}>
                             <Routes />
                         </Paper>
-                        <Copyright style={classes}/>
+                        <Copyright />
                     </Box>
                 </React.Fragment>
             </div>
