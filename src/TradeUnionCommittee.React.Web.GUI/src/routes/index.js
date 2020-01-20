@@ -7,6 +7,7 @@ import CheckoutContainer from '../components/Checkout.Component/Checkout'
 function Routes() {
   return (
     <Switch>
+      <Route exact path="/" render={() => <div>Home Page</div>} />
       <Route path="/create-employee" component={CheckoutContainer} />
       <Route path="/position" render={() => <div>Here will be page for Position</div>} />
       <Route path="/social-position" render={() => <div>Here will be page for social-position</div>} />

@@ -1,6 +1,6 @@
 import React from 'react'
 import { makeStyles } from '@material-ui/core/styles';
-import Link from '@material-ui/core/Link';
+import { Link } from 'react-router-dom'
 import Typography from '@material-ui/core/Typography';
 
 const useStyles = makeStyles(theme => ({
@@ -17,9 +17,10 @@ function Copyright() {
         <div className={classes.root}>
             <Typography variant="body2" color="textSecondary" align="center">
                 {'Copyright © '}
-                <Link color="inherit" href="/">
-                    Trade Union Committee React Web GUI - 
-                </Link>{' '}
+                <Link to="/">
+                    Trade Union Committee React Web GUI
+                </Link>
+                {' '}
                 {new Date().getFullYear()}
                 {'.'}
             </Typography>
