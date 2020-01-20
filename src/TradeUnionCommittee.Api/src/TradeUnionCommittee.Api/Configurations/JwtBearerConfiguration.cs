@@ -132,7 +132,7 @@ namespace TradeUnionCommittee.Api.Configurations
             {
                 AccessToken = new JwtSecurityTokenHandler().WriteToken(jwt),
                 RefreshToken = refreshToken,
-                AccessTokenExpires = expires,
+                AccessTokenExpires = ((DateTimeOffset) expires).ToUnixTimeSeconds(),
                 Email = identity.Name,
                 Role = identity.Claims.Single(x => x.Type == ClaimsIdentity.DefaultRoleClaimType).Value
             };
