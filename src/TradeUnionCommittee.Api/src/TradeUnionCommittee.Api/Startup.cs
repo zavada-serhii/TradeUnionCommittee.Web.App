@@ -55,6 +55,8 @@ namespace TradeUnionCommittee.Api
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors();
+
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
             {
                 var authOptions = Configuration.GetSection("AuthOptions").Get<AuthModel>();
@@ -108,6 +110,12 @@ namespace TradeUnionCommittee.Api
             {
                 app.UseHsts();
             }
+
+            app.UseCors(builder => builder
+                .AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader()
+            );
 
             app.UseHttpsRedirection();
             app.UseRouting();

@@ -35,10 +35,8 @@ class CounterContainer extends React.Component {
   }
 }
 
-function mapStateToProps(state) {
-  return {
-    counter: state.counter,
-  }
-}
+const mapStateToProps = state => ({
+  counter: state.counter,
+})
 
 export default connect(mapStateToProps)(CounterContainer)

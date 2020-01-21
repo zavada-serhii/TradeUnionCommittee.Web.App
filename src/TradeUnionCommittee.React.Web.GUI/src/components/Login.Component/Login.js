@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types'
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -33,8 +34,8 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export default function Login() {
-  
+function Login({ state, handleChange, handleSubmit }) {
+
   const classes = useStyles();
 
   return (
@@ -47,17 +48,18 @@ export default function Login() {
         <Typography component="h1" variant="h5">
           Sign in
         </Typography>
-        <form className={classes.form} noValidate>
+        <form className={classes.form} onSubmit={handleSubmit} noValidate>
           <TextField
             variant="outlined"
             margin="normal"
             required
             fullWidth
-            id="email"
             label="Email Address"
             name="email"
             autoComplete="email"
-            autoFocus/>
+            autoFocus 
+            value={state.username}
+            onChange={handleChange} />
           <TextField
             variant="outlined"
             margin="normal"
@@ -66,11 +68,12 @@ export default function Login() {
             name="password"
             label="Password"
             type="password"
-            id="password"
-            autoComplete="current-password"/>
+            autoComplete="current-password" 
+            value={state.password}
+            onChange={handleChange} />
           <FormControlLabel
             control={<Checkbox value="remember" color="primary" />}
-            label="Remember me"/>
+            label="Remember me" />
           <Button
             type="submit"
             fullWidth
@@ -87,3 +90,11 @@ export default function Login() {
     </Container>
   );
 }
+
+Login.propTypes = {
+  state: PropTypes.object.isRequired,
+  handleChange: PropTypes.func.isRequired,
+  handleSubmit: PropTypes.func.isRequired,
+}
+
+export default Login
