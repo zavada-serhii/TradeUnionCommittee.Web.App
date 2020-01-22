@@ -1,8 +1,8 @@
-import ActionTypes from '../constants/actionTypes'
+import ActionTypes from '../../constants/actionTypes'
 
 const initialState = 0
 
-export default function counter(state = initialState, action) {
+export default function counterReducer(state = initialState, action) {
   switch (action.type) {
     case ActionTypes.INCREMENT_COUNTER:
       return state + 1

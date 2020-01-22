@@ -1,14 +1,14 @@
 import React from 'react'
 import { Route, Switch } from 'react-router-dom';
 
-import LoginContainer from '../containers/LoginContainer'
+import AuthContainer from '../containers/AuthContainer'
 import CheckoutContainer from '../components/Checkout.Component/Checkout'
 
 function Routes() {
   return (
     <Switch>
       <Route exact path="/" render={() => <div>Home Page</div>} />
-      <Route path="/login" component={LoginContainer} />
+      <Route path="/login" component={AuthContainer} />
       <Route path="/create-employee" component={CheckoutContainer} />
       <Route path="/position" render={() => <div>Here will be page for Position</div>} />
       <Route path="/social-position" render={() => <div>Here will be page for social-position</div>} />
