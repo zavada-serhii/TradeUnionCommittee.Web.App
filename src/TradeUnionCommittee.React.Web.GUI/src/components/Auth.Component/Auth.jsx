@@ -37,27 +37,22 @@ class Auth extends React.Component {
 
     constructor(props) {
         super(props);
-        this.onEmailChange = this.onEmailChange.bind(this);
-        this.onPasswordChange = this.onPasswordChange.bind(this);
-        this.onRememberMeChange = this.onRememberMeChange.bind(this);
+        this.onInputTextChange = this.onInputTextChange.bind(this);
+        this.onInputCheckboxChange = this.onInputCheckboxChange.bind(this);
     }
 
-    onEmailChange(event) {
-        this.props.setEmailText(event.target.value)
+    onInputTextChange(event) {
+        this.props.setInputValue({key: event.target.name, value: event.target.value})
     }
 
-    onPasswordChange(event) {
-        this.props.setPasswordText(event.target.value)
-    }
-
-    onRememberMeChange(event) {
-        this.props.setRememberMeCheckbox(event.target.checked)
+    onInputCheckboxChange(event) {
+        this.props.setInputValue({key: event.target.name, value: event.target.checked})
     }
 
     render() {
 
         const { classes } = this.props;
-        
+
         return (
             <Container component="main" maxWidth="xs">
                 <CssBaseline />
@@ -79,7 +74,7 @@ class Auth extends React.Component {
                             autoComplete="email"
                             autoFocus
                             value={this.props.email}
-                            onChange={this.onEmailChange} />
+                            onChange={this.onInputTextChange} />
                         <TextField
                             variant="outlined"
                             margin="normal"
@@ -90,9 +85,9 @@ class Auth extends React.Component {
                             type="password"
                             autoComplete="current-password"
                             value={this.props.password}
-                            onChange={this.onPasswordChange} />
+                            onChange={this.onInputTextChange} />
                         <FormControlLabel
-                            control={<Checkbox color="primary" defaultChecked={this.props.rememberMe} onChange={this.onRememberMeChange} />}
+                            control={<Checkbox name="rememberMe" color="primary" defaultChecked={this.props.rememberMe} onChange={this.onInputCheckboxChange} />}
                             label="Remember me" />
                         <Button
                             type="submit"
