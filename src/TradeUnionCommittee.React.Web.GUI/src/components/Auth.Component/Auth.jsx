@@ -51,7 +51,7 @@ class Auth extends React.Component {
 
     render() {
 
-        const { classes } = this.props;
+        const { classes, email, password, rememberMe } = this.props;
 
         return (
             <Container component="main" maxWidth="xs">
@@ -73,7 +73,7 @@ class Auth extends React.Component {
                             name="email"
                             autoComplete="email"
                             autoFocus
-                            value={this.props.email}
+                            value={email}
                             onChange={this.onInputTextChange} />
                         <TextField
                             variant="outlined"
@@ -84,10 +84,10 @@ class Auth extends React.Component {
                             label="Password"
                             type="password"
                             autoComplete="current-password"
-                            value={this.props.password}
+                            value={password}
                             onChange={this.onInputTextChange} />
                         <FormControlLabel
-                            control={<Checkbox name="rememberMe" color="primary" defaultChecked={this.props.rememberMe} onChange={this.onInputCheckboxChange} />}
+                            control={<Checkbox name="rememberMe" color="primary" defaultChecked={rememberMe} onChange={this.onInputCheckboxChange} />}
                             label="Remember me" />
                         <Button
                             type="submit"

@@ -7,17 +7,20 @@ import { setInputValue } from '../actions/Auth/actions'
 class AuthContainer extends React.Component {
 
     render() {
+
+        const { email, password, rememberMe, setInputValue } = this.props;
+
         return (
            <Auth
-                email={this.props.email}
-                password={this.props.password}
-                rememberMe={this.props.rememberMe} 
-                setInputValue={this.props.setInputValue} />
+                email={email}
+                password={password}
+                rememberMe={rememberMe} 
+                setInputValue={setInputValue} />
         );
     }
 }
 
-const mapStateToProps = state => {
+const putStateToProps = state => {
     return {
         email: state.auth.email,
         password: state.auth.password,
@@ -25,8 +28,8 @@ const mapStateToProps = state => {
     };
 }
 
-const mapDispatchToProps = {
+const putActionsToProps = {
     setInputValue
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(AuthContainer);
+export default connect(putStateToProps, putActionsToProps)(AuthContainer);
