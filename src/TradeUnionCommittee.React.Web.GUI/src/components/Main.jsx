@@ -4,8 +4,8 @@ import { createBrowserHistory } from 'history'
 import { makeStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 
-import Navigation from '../components/Navigation.Component/Navigation'
-import Content from '../components/Content.Component/Content'
+import Navigation from './Navigation.Component/Navigation'
+import Content from './Content.Component/Content'
 
 export const history = createBrowserHistory()
 
