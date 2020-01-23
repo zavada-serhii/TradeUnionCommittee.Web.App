@@ -39,6 +39,7 @@ class Auth extends React.Component {
         super(props);
         this.onInputTextChange = this.onInputTextChange.bind(this);
         this.onInputCheckboxChange = this.onInputCheckboxChange.bind(this);
+        this.onFormSubmit = this.onFormSubmit.bind(this);
     }
 
     onInputTextChange(event) {
@@ -47,6 +48,10 @@ class Auth extends React.Component {
 
     onInputCheckboxChange(event) {
         this.props.setInputValue({key: event.target.name, value: event.target.checked})
+    }
+
+    onFormSubmit(event) {
+        event.preventDefault()
     }
 
     render() {
@@ -63,7 +68,7 @@ class Auth extends React.Component {
                     <Typography component="h1" variant="h5">
                         Sign in
                     </Typography>
-                    <form className={classes.form} noValidate>
+                    <form className={classes.form} onSubmit={this.onFormSubmit} noValidate>
                         <TextField
                             variant="outlined"
                             margin="normal"
