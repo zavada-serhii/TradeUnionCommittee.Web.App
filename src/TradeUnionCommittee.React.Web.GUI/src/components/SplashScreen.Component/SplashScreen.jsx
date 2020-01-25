@@ -51,8 +51,10 @@ function SplashScreen(WrappedComponent) {
       // while checking user session, show "loading" message
       if (this.state.loading) return LoadingMessage();
 
+      var element = document.querySelector('style');
+      element.parentNode.removeChild(element);
+
       // otherwise, show the desired route
-      document.body.style.backgroundImage = '';
       return <WrappedComponent {...this.props} />;
     }
   };
