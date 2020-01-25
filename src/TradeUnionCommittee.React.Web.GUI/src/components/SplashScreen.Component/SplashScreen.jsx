@@ -3,16 +3,6 @@
 import React, { Component } from 'react';
 import './SplashScreen.css';
 
-function LoadingMessage() {
-  return (
-    <div className="loader">
-      <div className="inner one"></div>
-      <div className="inner two"></div>
-      <div className="inner three"></div>
-    </div>
-  );
-}
-
 function SplashScreen(WrappedComponent) {
   return class extends Component {
     constructor(props) {
@@ -30,7 +20,7 @@ function SplashScreen(WrappedComponent) {
         // -----------------------------------------------------------------
 
         // await auth0Client.loadSession();
-        await sleeper(1000);
+        await this.sleeper(1000);
 
         // -----------------------------------------------------------------
 
@@ -49,7 +39,7 @@ function SplashScreen(WrappedComponent) {
 
     render() {
       // while checking user session, show "loading" message
-      if (this.state.loading) return LoadingMessage();
+      if (this.state.loading) return this.LoadingMessage();
 
       var element = document.querySelector('style');
       element.parentNode.removeChild(element);
@@ -57,11 +47,21 @@ function SplashScreen(WrappedComponent) {
       // otherwise, show the desired route
       return <WrappedComponent {...this.props} />;
     }
-  };
-}
 
-function sleeper(ms) {
-  return new Promise(resolve => setTimeout(() => resolve(), ms));
+    LoadingMessage() {
+      return (
+        <div className="loader">
+          <div className="inner one"></div>
+          <div className="inner two"></div>
+          <div className="inner three"></div>
+        </div>
+      );
+    }
+
+    sleeper(ms) {
+      return new Promise(resolve => setTimeout(() => resolve(), ms));
+    }
+  };
 }
 
 export default SplashScreen;
