@@ -71,8 +71,6 @@ const useStyles = makeStyles(theme => ({
     whiteSpace: 'nowrap',
   },
   drawerOpen: {
-    backgroundColor: '#ffffff' , 
-    backgroundImage: 'linear-gradient(315deg, #ffffff 0%, #d7e1ec 74%)',
     width: drawerWidth,
     transition: theme.transitions.create('width', {
       easing: theme.transitions.easing.sharp,
@@ -80,8 +78,6 @@ const useStyles = makeStyles(theme => ({
     }),
   },
   drawerClose: {
-    backgroundColor: '#ffffff' , 
-    backgroundImage: 'linear-gradient(315deg, #ffffff 0%, #d7e1ec 74%)',
     transition: theme.transitions.create('width', {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen,
