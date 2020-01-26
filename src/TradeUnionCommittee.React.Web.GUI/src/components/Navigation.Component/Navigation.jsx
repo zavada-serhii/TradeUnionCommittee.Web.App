@@ -153,7 +153,7 @@ export default function Navigation() {
 
         <List>
 
-          <ListItem button component={Link} to="/create-employee" title="Create new employee">
+          <ListItem button component={Link} to="/app/create-employee" title="Create new employee">
             <ListItemIcon>
               <PersonAddIcon />
             </ListItemIcon>
@@ -171,98 +171,98 @@ export default function Navigation() {
           <Collapse in={openDirectories} timeout="auto" unmountOnExit>
             <List component="div" disablePadding>
 
-              <ListItem button className={classes.nested} component={Link} to="/position">
+              <ListItem button className={classes.nested} component={Link} to="/app/position">
                 <ListItemIcon>
                   <BarChartIcon />
                 </ListItemIcon>
                 <ListItemText primary="Position" />
               </ListItem>
 
-              <ListItem button className={classes.nested} component={Link} to="/social-position">
+              <ListItem button className={classes.nested} component={Link} to="/app/social-position">
                 <ListItemIcon>
                   <AssessmentIcon />
                 </ListItemIcon>
                 <ListItemText primary="Social position" />
               </ListItem>
 
-              <ListItem button className={classes.nested} component={Link} to="/privileges">
+              <ListItem button className={classes.nested} component={Link} to="/app/privileges">
                 <ListItemIcon>
                   <AccessibleIcon />
                 </ListItemIcon>
                 <ListItemText primary="Privileges" />
               </ListItem>
 
-              <ListItem button className={classes.nested} component={Link} to="/award">
+              <ListItem button className={classes.nested} component={Link} to="/app/award">
                 <ListItemIcon>
                   <AttachMoneyIcon />
                 </ListItemIcon>
                 <ListItemText primary="Award" />
               </ListItem>
 
-              <ListItem button className={classes.nested} component={Link} to="/material-aid">
+              <ListItem button className={classes.nested} component={Link} to="/app/material-aid">
                 <ListItemIcon>
                   <AccessibilityIcon />
                 </ListItemIcon>
                 <ListItemText primary="Material Aid" />
               </ListItem>
 
-              <ListItem button className={classes.nested} component={Link} to="/hobby">
+              <ListItem button className={classes.nested} component={Link} to="/app/hobby">
                 <ListItemIcon>
                   <GolfCourseIcon />
                 </ListItemIcon>
                 <ListItemText primary="Hobby" />
               </ListItem>
 
-              <ListItem button className={classes.nested} component={Link} to="/travel">
+              <ListItem button className={classes.nested} component={Link} to="/app/travel">
                 <ListItemIcon>
                   <TodayIcon />
                 </ListItemIcon>
                 <ListItemText primary="Travel" />
               </ListItem>
 
-              <ListItem button className={classes.nested} component={Link} to="/wellness">
+              <ListItem button className={classes.nested} component={Link} to="/app/wellness">
                 <ListItemIcon>
                   <EventIcon />
                 </ListItemIcon>
                 <ListItemText primary="Wellness" />
               </ListItem>
 
-              <ListItem button className={classes.nested} component={Link} to="/tour">
+              <ListItem button className={classes.nested} component={Link} to="/app/tour">
                 <ListItemIcon>
                   <EventAvailableIcon />
                 </ListItemIcon>
                 <ListItemText primary="Tour" />
               </ListItem>
 
-              <ListItem button className={classes.nested} component={Link} to="/activities">
+              <ListItem button className={classes.nested} component={Link} to="/app/activities">
                 <ListItemIcon>
                   <EventNoteIcon />
                 </ListItemIcon>
                 <ListItemText primary="Activities" />
               </ListItem>
 
-              <ListItem button className={classes.nested} component={Link} to="/cultural-activities">
+              <ListItem button className={classes.nested} component={Link} to="/app/cultural-activities">
                 <ListItemIcon>
                   <DateRangeIcon />
                 </ListItemIcon>
                 <ListItemText primary="Cultural activities" />
               </ListItem>
 
-              <ListItem button className={classes.nested} component={Link} to="/subdivisions">
+              <ListItem button className={classes.nested} component={Link} to="/app/subdivisions">
                 <ListItemIcon>
                   <SubdirectoryArrowRightIcon />
                 </ListItemIcon>
                 <ListItemText primary="Subdivisions" />
               </ListItem>
 
-              <ListItem button className={classes.nested} component={Link} to="/departmental-housing">
+              <ListItem button className={classes.nested} component={Link} to="/app/departmental-housing">
                 <ListItemIcon>
                   <HomeWorkIcon />
                 </ListItemIcon>
                 <ListItemText primary="Departmental housing" />
               </ListItem>
 
-              <ListItem button className={classes.nested} component={Link} to="/dormitory">
+              <ListItem button className={classes.nested} component={Link} to="/app/dormitory">
                 <ListItemIcon>
                   <HotelIcon />
                 </ListItemIcon>
@@ -272,28 +272,28 @@ export default function Navigation() {
             </List>
           </Collapse>
 
-          <ListItem button component={Link} to="/users" title="Users">
+          <ListItem button component={Link} to="/app/users" title="Users">
             <ListItemIcon>
               <PeopleIcon />
             </ListItemIcon>
             <ListItemText primary="Users" />
           </ListItem>
 
-          <ListItem button component={Link} to="/dashboard" title="Dashboard">
+          <ListItem button component={Link} to="/app/dashboard" title="Dashboard">
             <ListItemIcon>
               <DashboardIcon />
             </ListItemIcon>
             <ListItemText primary="Dashboard" />
           </ListItem>
 
-          <ListItem button component={Link} to="/action-log" title="Action log">
+          <ListItem button component={Link} to="/app/action-log" title="Action log">
             <ListItemIcon>
               <StorageIcon />
             </ListItemIcon>
             <ListItemText primary="Action log" />
           </ListItem>
 
-          <ListItem button component={Link} to="/search" title="Search">
+          <ListItem button component={Link} to="/app/search" title="Search">
             <ListItemIcon>
               <SearchIcon />
             </ListItemIcon>
@@ -302,7 +302,7 @@ export default function Navigation() {
 
           <Divider />
 
-          <ListItem button component={Link} to="/logout" title="Logout">
+          <ListItem button component={Link} to="/app/logout" title="Logout">
             <ListItemIcon>
               <ExitToAppIcon />
             </ListItemIcon>
