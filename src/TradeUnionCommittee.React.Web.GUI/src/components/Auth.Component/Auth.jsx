@@ -3,13 +3,12 @@ import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
 import Box from '@material-ui/core/Box';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
 import { withStyles } from '@material-ui/core/styles';
+import { withRouter } from "react-router-dom";
 
 import Copyright from '../Copyright.Component/Copyright'
 
@@ -37,26 +36,34 @@ class Auth extends React.Component {
 
     constructor(props) {
         super(props);
-        this.onInputTextChange = this.onInputTextChange.bind(this);
-        this.onInputCheckboxChange = this.onInputCheckboxChange.bind(this);
+
+        this.state = {
+            email: '',
+            password: '',
+            clientType: 'WEB-APPLICATION'
+        };
+
+        this.onTextChange = this.onTextChange.bind(this);
         this.onFormSubmit = this.onFormSubmit.bind(this);
     }
 
-    onInputTextChange(event) {
-        this.props.setInputValue({key: event.target.name, value: event.target.value})
-    }
-
-    onInputCheckboxChange(event) {
-        this.props.setInputValue({key: event.target.name, value: event.target.checked})
+    onTextChange(event) {
+        this.setState({ [event.target.name]: event.target.value });
     }
 
     onFormSubmit(event) {
         event.preventDefault()
+
+        this.props.token(this.state).then(
+            (result) => this.props.history.push("/"),
+            (error) => alert(`Wrong login or pawword`)
+        );
     }
 
     render() {
 
-        const { classes, email, password, rememberMe } = this.props;
+        const { classes } = this.props;
+        const { email, password } = this.state;
 
         return (
             <Container component="main" maxWidth="xs">
@@ -79,7 +86,7 @@ class Auth extends React.Component {
                             autoComplete="email"
                             autoFocus
                             value={email}
-                            onChange={this.onInputTextChange} />
+                            onChange={this.onTextChange} />
                         <TextField
                             variant="outlined"
                             margin="normal"
@@ -90,10 +97,7 @@ class Auth extends React.Component {
                             type="password"
                             autoComplete="current-password"
                             value={password}
-                            onChange={this.onInputTextChange} />
-                        <FormControlLabel
-                            control={<Checkbox name="rememberMe" color="primary" defaultChecked={rememberMe} onChange={this.onInputCheckboxChange} />}
-                            label="Remember me" />
+                            onChange={this.onTextChange} />
                         <Button
                             type="submit"
                             fullWidth
@@ -112,4 +116,4 @@ class Auth extends React.Component {
     }
 }
 
-export default withStyles(useStyles)(Auth);
+export default withStyles(useStyles)(withRouter(Auth))

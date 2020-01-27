@@ -2,34 +2,28 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import Auth from '../components/Auth.Component/Auth'
-import { setInputValue } from '../actions/Auth/actions'
+import { token } from '../actions/Auth/actions'
 
 class AuthContainer extends React.Component {
 
     render() {
-
-        const { email, password, rememberMe, setInputValue } = this.props;
-
+        const { token } = this.props;
         return (
-           <Auth
-                email={email}
-                password={password}
-                rememberMe={rememberMe} 
-                setInputValue={setInputValue} />
+           <Auth token={token}/>
         );
     }
 }
 
-const putStateToProps = state => {
-    return {
-        email: state.auth.email,
-        password: state.auth.password,
-        rememberMe: state.auth.rememberMe,
-    };
-}
+// const putStateToProps = state => {
+//     return {
+//         email: state.auth.email,
+//         password: state.auth.password,
+//         rememberMe: state.auth.rememberMe,
+//     };
+// }
 
 const putActionsToProps = {
-    setInputValue
+    token
 }
 
-export default connect(putStateToProps, putActionsToProps)(AuthContainer);
+export default connect(null, putActionsToProps)(AuthContainer);

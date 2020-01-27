@@ -78,10 +78,7 @@ namespace TradeUnionCommittee.Api.Controllers.Account
             {
                 access_token = model.AccessToken,
                 refresh_token = model.RefreshToken,
-                expires_in = model.AccessTokenExpires,
-                token_type = model.TokenType,
-                user_name = model.Email,
-                user_role = model.Role
+                token_type = model.TokenType
             });
         }
     }

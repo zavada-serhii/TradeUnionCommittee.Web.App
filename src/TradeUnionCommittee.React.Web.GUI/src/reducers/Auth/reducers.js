@@ -1,17 +1,18 @@
 import ActionTypes from '../../constants/actionTypes'
+import isEmpty from 'lodash/isEmpty';
 
 const initialState = {
-    email: '',
-    password: '',
-    rememberMe: false,
-    clientType: 'WEB-APPLICATION'
-}
+  isAuthenticated: false,
+  user: {}
+};
 
 export default function authReducer(state = initialState, action) {
-    switch (action.type) {
-        case ActionTypes.AUTH_CHANGE_INPUT_VALUE:
-            return { ...state, [action.payload.key]: action.payload.value }
-        default:
-            return state
-    }
+  switch (action.type) {
+    case ActionTypes.SET_CURRENT_USER:
+      return {
+        isAuthenticated: !isEmpty(action.payload),
+        user: action.payload
+      };
+    default: return state;
+  }
 }
