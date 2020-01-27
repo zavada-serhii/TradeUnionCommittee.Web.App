@@ -1,7 +1,8 @@
 import React from 'react';
 import { Link } from "react-router-dom";
 import clsx from 'clsx';
-import { makeStyles } from '@material-ui/core/styles';
+import { withStyles } from '@material-ui/core/styles';
+import { withRouter } from "react-router-dom";
 import Drawer from '@material-ui/core/Drawer';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -43,7 +44,7 @@ import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 
 const drawerWidth = 280;
 
-const useStyles = makeStyles(theme => ({
+const useStyles = theme => ({
   appBar: {
     zIndex: theme.zIndex.drawer + 1,
     transition: theme.transitions.create(['width', 'margin'], {
@@ -98,221 +99,245 @@ const useStyles = makeStyles(theme => ({
   nested: {
     paddingLeft: theme.spacing(4),
   }
-}));
+});
 
-export default function Navigation() {
-  const classes = useStyles();
-  const [openPanel, setOpenPanel] = React.useState(false);
-  const [openDirectories, setOpenDirectories] = React.useState(false);
+class Navigation extends React.Component {
 
-  const handleDrawerOpen = () => {
-    setOpenPanel(true);
-  };
+  constructor(props) {
+    super(props);
 
-  const handleDrawerClose = () => {
-    setOpenPanel(false);
-    setOpenDirectories(false);
-  };
+    this.state = {
+      openPanel: false,
+      openDirectories: false
+    };
 
-  const handleClickDirectories = () => {
-    if (openPanel) {
-      setOpenDirectories(!openDirectories);
+    this.handleDrawerOpen = this.handleDrawerOpen.bind(this);
+    this.handleDrawerClose = this.handleDrawerClose.bind(this);
+    this.handleClickDirectories = this.handleClickDirectories.bind(this);
+    this.logout = this.logout.bind(this);
+  }
+
+  handleDrawerOpen() {
+    this.setState({ openPanel: true });
+  }
+
+  handleDrawerClose() {
+    this.setState({ openPanel: false, openDirectories: false });
+  }
+
+  handleClickDirectories() {
+    if (this.state.openPanel) {
+      this.setState({ openDirectories: !this.state.openDirectories });
     }
-  };
+  }
 
-  return (
-    <div>
-      {/* --- Header start --- */}
-      <AppBar position="fixed" className={clsx(classes.appBar, { [classes.appBarShift]: openPanel })}>
-        <Toolbar>
-          <IconButton edge="start"
-            color="inherit"
-            aria-label="openPanel drawer"
-            onClick={handleDrawerOpen}
-            className={clsx(classes.menuButton, { [classes.hide]: openPanel })}>
-            <MenuIcon />
-          </IconButton>
-          <Typography variant="h6" noWrap>
-            TradeUnionCommittee.React.Web.GUI
+  logout(event) {
+    event.preventDefault();
+    this.props.logout();
+    this.props.history.push("/auth");
+  }
+
+  render() {
+
+    const { classes } = this.props;
+    const { openPanel, openDirectories } = this.state;
+
+    return (
+      <div>
+        {/* --- Header start --- */}
+        <AppBar position="fixed" className={clsx(classes.appBar, { [classes.appBarShift]: openPanel })}>
+          <Toolbar>
+            <IconButton edge="start"
+              color="inherit"
+              aria-label="openPanel drawer"
+              onClick={this.handleDrawerOpen}
+              className={clsx(classes.menuButton, { [classes.hide]: openPanel })}>
+              <MenuIcon />
+            </IconButton>
+            <Typography variant="h6" noWrap>
+              TradeUnionCommittee.React.Web.GUI
           </Typography>
-        </Toolbar>
-      </AppBar>
-      {/* --- Header end --- */}
+          </Toolbar>
+        </AppBar>
+        {/* --- Header end --- */}
 
 
-      {/* --- Menu start --- */}
-      <Drawer variant="permanent"
-        className={clsx(classes.drawer, { [classes.drawerOpen]: openPanel, [classes.drawerClose]: !openPanel })}
-        classes={{ paper: clsx({ [classes.drawerOpen]: openPanel, [classes.drawerClose]: !openPanel }) }}>
-        <div className={classes.toolbar}>
-          <IconButton onClick={handleDrawerClose}>
-            <ChevronLeftIcon />
-          </IconButton>
-        </div>
-        <Divider />
-
-        <List>
-
-          <ListItem button component={Link} to="/app/create-employee" title="Create new employee">
-            <ListItemIcon>
-              <PersonAddIcon />
-            </ListItemIcon>
-            <ListItemText primary="Create new employee" />
-          </ListItem>
-
-          <ListItem button onClick={handleClickDirectories} title="Directories">
-            <ListItemIcon>
-              <CategoryIcon />
-            </ListItemIcon>
-            <ListItemText primary="Directories" />
-            {openDirectories ? <ExpandLess /> : <ExpandMore />}
-          </ListItem>
-
-          <Collapse in={openDirectories} timeout="auto" unmountOnExit>
-            <List component="div" disablePadding>
-
-              <ListItem button className={classes.nested} component={Link} to="/app/position">
-                <ListItemIcon>
-                  <BarChartIcon />
-                </ListItemIcon>
-                <ListItemText primary="Position" />
-              </ListItem>
-
-              <ListItem button className={classes.nested} component={Link} to="/app/social-position">
-                <ListItemIcon>
-                  <AssessmentIcon />
-                </ListItemIcon>
-                <ListItemText primary="Social position" />
-              </ListItem>
-
-              <ListItem button className={classes.nested} component={Link} to="/app/privileges">
-                <ListItemIcon>
-                  <AccessibleIcon />
-                </ListItemIcon>
-                <ListItemText primary="Privileges" />
-              </ListItem>
-
-              <ListItem button className={classes.nested} component={Link} to="/app/award">
-                <ListItemIcon>
-                  <AttachMoneyIcon />
-                </ListItemIcon>
-                <ListItemText primary="Award" />
-              </ListItem>
-
-              <ListItem button className={classes.nested} component={Link} to="/app/material-aid">
-                <ListItemIcon>
-                  <AccessibilityIcon />
-                </ListItemIcon>
-                <ListItemText primary="Material Aid" />
-              </ListItem>
-
-              <ListItem button className={classes.nested} component={Link} to="/app/hobby">
-                <ListItemIcon>
-                  <GolfCourseIcon />
-                </ListItemIcon>
-                <ListItemText primary="Hobby" />
-              </ListItem>
-
-              <ListItem button className={classes.nested} component={Link} to="/app/travel">
-                <ListItemIcon>
-                  <TodayIcon />
-                </ListItemIcon>
-                <ListItemText primary="Travel" />
-              </ListItem>
-
-              <ListItem button className={classes.nested} component={Link} to="/app/wellness">
-                <ListItemIcon>
-                  <EventIcon />
-                </ListItemIcon>
-                <ListItemText primary="Wellness" />
-              </ListItem>
-
-              <ListItem button className={classes.nested} component={Link} to="/app/tour">
-                <ListItemIcon>
-                  <EventAvailableIcon />
-                </ListItemIcon>
-                <ListItemText primary="Tour" />
-              </ListItem>
-
-              <ListItem button className={classes.nested} component={Link} to="/app/activities">
-                <ListItemIcon>
-                  <EventNoteIcon />
-                </ListItemIcon>
-                <ListItemText primary="Activities" />
-              </ListItem>
-
-              <ListItem button className={classes.nested} component={Link} to="/app/cultural-activities">
-                <ListItemIcon>
-                  <DateRangeIcon />
-                </ListItemIcon>
-                <ListItemText primary="Cultural activities" />
-              </ListItem>
-
-              <ListItem button className={classes.nested} component={Link} to="/app/subdivisions">
-                <ListItemIcon>
-                  <SubdirectoryArrowRightIcon />
-                </ListItemIcon>
-                <ListItemText primary="Subdivisions" />
-              </ListItem>
-
-              <ListItem button className={classes.nested} component={Link} to="/app/departmental-housing">
-                <ListItemIcon>
-                  <HomeWorkIcon />
-                </ListItemIcon>
-                <ListItemText primary="Departmental housing" />
-              </ListItem>
-
-              <ListItem button className={classes.nested} component={Link} to="/app/dormitory">
-                <ListItemIcon>
-                  <HotelIcon />
-                </ListItemIcon>
-                <ListItemText primary="Dormitory" />
-              </ListItem>
-
-            </List>
-          </Collapse>
-
-          <ListItem button component={Link} to="/app/users" title="Users">
-            <ListItemIcon>
-              <PeopleIcon />
-            </ListItemIcon>
-            <ListItemText primary="Users" />
-          </ListItem>
-
-          <ListItem button component={Link} to="/app/dashboard" title="Dashboard">
-            <ListItemIcon>
-              <DashboardIcon />
-            </ListItemIcon>
-            <ListItemText primary="Dashboard" />
-          </ListItem>
-
-          <ListItem button component={Link} to="/app/action-log" title="Action log">
-            <ListItemIcon>
-              <StorageIcon />
-            </ListItemIcon>
-            <ListItemText primary="Action log" />
-          </ListItem>
-
-          <ListItem button component={Link} to="/app/search" title="Search">
-            <ListItemIcon>
-              <SearchIcon />
-            </ListItemIcon>
-            <ListItemText primary="Search" />
-          </ListItem>
-
+        {/* --- Menu start --- */}
+        <Drawer variant="permanent"
+          className={clsx(classes.drawer, { [classes.drawerOpen]: openPanel, [classes.drawerClose]: !openPanel })}
+          classes={{ paper: clsx({ [classes.drawerOpen]: openPanel, [classes.drawerClose]: !openPanel }) }}>
+          <div className={classes.toolbar}>
+            <IconButton onClick={this.handleDrawerClose}>
+              <ChevronLeftIcon />
+            </IconButton>
+          </div>
           <Divider />
 
-          <ListItem button component={Link} to="/app/logout" title="Logout">
-            <ListItemIcon>
-              <ExitToAppIcon />
-            </ListItemIcon>
-            <ListItemText primary="Logout" />
-          </ListItem>
+          <List>
 
-        </List>
+            <ListItem button component={Link} to="/app/create-employee" title="Create new employee">
+              <ListItemIcon>
+                <PersonAddIcon />
+              </ListItemIcon>
+              <ListItemText primary="Create new employee" />
+            </ListItem>
 
-      </Drawer>
-      {/* --- Menu end --- */}
-    </div>
-  );
+            <ListItem button onClick={this.handleClickDirectories} title="Directories">
+              <ListItemIcon>
+                <CategoryIcon />
+              </ListItemIcon>
+              <ListItemText primary="Directories" />
+              {openDirectories ? <ExpandLess /> : <ExpandMore />}
+            </ListItem>
+
+            <Collapse in={openDirectories} timeout="auto" unmountOnExit>
+              <List component="div" disablePadding>
+
+                <ListItem button className={classes.nested} component={Link} to="/app/position">
+                  <ListItemIcon>
+                    <BarChartIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="Position" />
+                </ListItem>
+
+                <ListItem button className={classes.nested} component={Link} to="/app/social-position">
+                  <ListItemIcon>
+                    <AssessmentIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="Social position" />
+                </ListItem>
+
+                <ListItem button className={classes.nested} component={Link} to="/app/privileges">
+                  <ListItemIcon>
+                    <AccessibleIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="Privileges" />
+                </ListItem>
+
+                <ListItem button className={classes.nested} component={Link} to="/app/award">
+                  <ListItemIcon>
+                    <AttachMoneyIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="Award" />
+                </ListItem>
+
+                <ListItem button className={classes.nested} component={Link} to="/app/material-aid">
+                  <ListItemIcon>
+                    <AccessibilityIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="Material Aid" />
+                </ListItem>
+
+                <ListItem button className={classes.nested} component={Link} to="/app/hobby">
+                  <ListItemIcon>
+                    <GolfCourseIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="Hobby" />
+                </ListItem>
+
+                <ListItem button className={classes.nested} component={Link} to="/app/travel">
+                  <ListItemIcon>
+                    <TodayIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="Travel" />
+                </ListItem>
+
+                <ListItem button className={classes.nested} component={Link} to="/app/wellness">
+                  <ListItemIcon>
+                    <EventIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="Wellness" />
+                </ListItem>
+
+                <ListItem button className={classes.nested} component={Link} to="/app/tour">
+                  <ListItemIcon>
+                    <EventAvailableIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="Tour" />
+                </ListItem>
+
+                <ListItem button className={classes.nested} component={Link} to="/app/activities">
+                  <ListItemIcon>
+                    <EventNoteIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="Activities" />
+                </ListItem>
+
+                <ListItem button className={classes.nested} component={Link} to="/app/cultural-activities">
+                  <ListItemIcon>
+                    <DateRangeIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="Cultural activities" />
+                </ListItem>
+
+                <ListItem button className={classes.nested} component={Link} to="/app/subdivisions">
+                  <ListItemIcon>
+                    <SubdirectoryArrowRightIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="Subdivisions" />
+                </ListItem>
+
+                <ListItem button className={classes.nested} component={Link} to="/app/departmental-housing">
+                  <ListItemIcon>
+                    <HomeWorkIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="Departmental housing" />
+                </ListItem>
+
+                <ListItem button className={classes.nested} component={Link} to="/app/dormitory">
+                  <ListItemIcon>
+                    <HotelIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="Dormitory" />
+                </ListItem>
+
+              </List>
+            </Collapse>
+
+            <ListItem button component={Link} to="/app/users" title="Users">
+              <ListItemIcon>
+                <PeopleIcon />
+              </ListItemIcon>
+              <ListItemText primary="Users" />
+            </ListItem>
+
+            <ListItem button component={Link} to="/app/dashboard" title="Dashboard">
+              <ListItemIcon>
+                <DashboardIcon />
+              </ListItemIcon>
+              <ListItemText primary="Dashboard" />
+            </ListItem>
+
+            <ListItem button component={Link} to="/app/action-log" title="Action log">
+              <ListItemIcon>
+                <StorageIcon />
+              </ListItemIcon>
+              <ListItemText primary="Action log" />
+            </ListItem>
+
+            <ListItem button component={Link} to="/app/search" title="Search">
+              <ListItemIcon>
+                <SearchIcon />
+              </ListItemIcon>
+              <ListItemText primary="Search" />
+            </ListItem>
+
+            <Divider />
+
+            <ListItem button title="Logout" onClick={this.logout}>
+              <ListItemIcon>
+                <ExitToAppIcon />
+              </ListItemIcon>
+              <ListItemText primary="Logout" />
+            </ListItem>
+
+          </List>
+
+        </Drawer>
+        {/* --- Menu end --- */}
+      </div>
+    )
+  }
 }
+
+export default withStyles(useStyles)(withRouter(Navigation))

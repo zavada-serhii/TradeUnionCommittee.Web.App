@@ -2,7 +2,7 @@ import React from 'react'
 import { makeStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 
-import Navigation from './Navigation.Component/Navigation'
+import NavigationContainer from '../containers/NavigationContainer'
 import Content from './Content.Component/Content'
 
 const useStyles = makeStyles(theme => ({
@@ -18,7 +18,7 @@ function App() {
     return (
         <div className={classes.markup}>
             <CssBaseline />
-            <Navigation />
+            <NavigationContainer />
             <Content />
         </div>
     )
