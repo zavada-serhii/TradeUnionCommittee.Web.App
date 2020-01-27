@@ -7,13 +7,15 @@ import NotFound from '../components/NotFound.Component/NotFound'
 import SplashScreen from '../components/SplashScreen.Component/SplashScreen'
 import requireAuth from '../utils/requireAuth';
 
+import { ROOT, APP, AUTH, NOT_FOUND } from '../constants/routes'
+
 function Root() {
     return (
         <Switch>
-            <Redirect exact from="/" to="/app" />
-            <Route path="/app" component={requireAuth(App)} />
-            <Route path="/auth" component={AuthContainer} />
-            <Route path="*" component={NotFound} />
+            <Redirect exact from={ROOT} to={APP} />
+            <Route path={APP} component={requireAuth(App)} />
+            <Route path={AUTH} component={AuthContainer} />
+            <Route path={NOT_FOUND} component={NotFound} />
         </Switch>
     )
 }

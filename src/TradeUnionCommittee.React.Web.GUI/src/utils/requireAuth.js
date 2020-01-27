@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from "react-router-dom";
+import { APP, AUTH } from '../constants/routes'
 
 export default function (ComposedComponent) {
 
@@ -8,13 +9,13 @@ export default function (ComposedComponent) {
 
         componentWillMount() {
             if (!this.props.isAuthenticated) {
-                this.props.history.push("/auth")
+                this.props.history.push(AUTH)
             }
         }
 
         componentWillUpdate(nextProps) {
             if (!nextProps.isAuthenticated) {
-                this.props.history.push("/app")
+                this.props.history.push(APP)
             }
         }
 

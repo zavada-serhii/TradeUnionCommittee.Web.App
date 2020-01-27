@@ -42,6 +42,29 @@ import StorageIcon from '@material-ui/icons/Storage';
 import SearchIcon from '@material-ui/icons/Search';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 
+import {
+  AUTH,
+  APP_CREATE_EMPLOYEE,
+  APP_POSITION,
+  APP_SOCIAL_POSITION,
+  APP_PRIVILEGES,
+  APP_AWARD,
+  APP_MATERIAL_AID,
+  APP_HOBBY,
+  APP_TRAVEL,
+  APP_WELLNESS,
+  APP_TOUR,
+  APP_ACTIVITIES,
+  APP_CULTURAL_ACTIVITIES,
+  APP_SUBDIVISIONS,
+  APP_DEPARTMENRAL_HOUSING,
+  APP_DORMIRTORY,
+  APP_USERS,
+  APP_DASHBOARD,
+  APP_ACTION_LOG,
+  APP_SEARCH
+} from '../../constants/routes'
+
 const drawerWidth = 280;
 
 const useStyles = theme => ({
@@ -134,7 +157,7 @@ class Navigation extends React.Component {
   logout(event) {
     event.preventDefault();
     this.props.logout();
-    this.props.history.push("/auth");
+    this.props.history.push(AUTH);
   }
 
   render() {
@@ -175,7 +198,7 @@ class Navigation extends React.Component {
 
           <List>
 
-            <ListItem button component={Link} to="/app/create-employee" title="Create new employee">
+            <ListItem button component={Link} to={APP_CREATE_EMPLOYEE} title="Create new employee">
               <ListItemIcon>
                 <PersonAddIcon />
               </ListItemIcon>
@@ -193,98 +216,98 @@ class Navigation extends React.Component {
             <Collapse in={openDirectories} timeout="auto" unmountOnExit>
               <List component="div" disablePadding>
 
-                <ListItem button className={classes.nested} component={Link} to="/app/position">
+                <ListItem button className={classes.nested} component={Link} to={APP_POSITION}>
                   <ListItemIcon>
                     <BarChartIcon />
                   </ListItemIcon>
                   <ListItemText primary="Position" />
                 </ListItem>
 
-                <ListItem button className={classes.nested} component={Link} to="/app/social-position">
+                <ListItem button className={classes.nested} component={Link} to={APP_SOCIAL_POSITION}>
                   <ListItemIcon>
                     <AssessmentIcon />
                   </ListItemIcon>
                   <ListItemText primary="Social position" />
                 </ListItem>
 
-                <ListItem button className={classes.nested} component={Link} to="/app/privileges">
+                <ListItem button className={classes.nested} component={Link} to={APP_PRIVILEGES}>
                   <ListItemIcon>
                     <AccessibleIcon />
                   </ListItemIcon>
                   <ListItemText primary="Privileges" />
                 </ListItem>
 
-                <ListItem button className={classes.nested} component={Link} to="/app/award">
+                <ListItem button className={classes.nested} component={Link} to={APP_AWARD}>
                   <ListItemIcon>
                     <AttachMoneyIcon />
                   </ListItemIcon>
                   <ListItemText primary="Award" />
                 </ListItem>
 
-                <ListItem button className={classes.nested} component={Link} to="/app/material-aid">
+                <ListItem button className={classes.nested} component={Link} to={APP_MATERIAL_AID}>
                   <ListItemIcon>
                     <AccessibilityIcon />
                   </ListItemIcon>
                   <ListItemText primary="Material Aid" />
                 </ListItem>
 
-                <ListItem button className={classes.nested} component={Link} to="/app/hobby">
+                <ListItem button className={classes.nested} component={Link} to={APP_HOBBY}>
                   <ListItemIcon>
                     <GolfCourseIcon />
                   </ListItemIcon>
                   <ListItemText primary="Hobby" />
                 </ListItem>
 
-                <ListItem button className={classes.nested} component={Link} to="/app/travel">
+                <ListItem button className={classes.nested} component={Link} to={APP_TRAVEL}>
                   <ListItemIcon>
                     <TodayIcon />
                   </ListItemIcon>
                   <ListItemText primary="Travel" />
                 </ListItem>
 
-                <ListItem button className={classes.nested} component={Link} to="/app/wellness">
+                <ListItem button className={classes.nested} component={Link} to={APP_WELLNESS}>
                   <ListItemIcon>
                     <EventIcon />
                   </ListItemIcon>
                   <ListItemText primary="Wellness" />
                 </ListItem>
 
-                <ListItem button className={classes.nested} component={Link} to="/app/tour">
+                <ListItem button className={classes.nested} component={Link} to={APP_TOUR}>
                   <ListItemIcon>
                     <EventAvailableIcon />
                   </ListItemIcon>
                   <ListItemText primary="Tour" />
                 </ListItem>
 
-                <ListItem button className={classes.nested} component={Link} to="/app/activities">
+                <ListItem button className={classes.nested} component={Link} to={APP_ACTIVITIES}>
                   <ListItemIcon>
                     <EventNoteIcon />
                   </ListItemIcon>
                   <ListItemText primary="Activities" />
                 </ListItem>
 
-                <ListItem button className={classes.nested} component={Link} to="/app/cultural-activities">
+                <ListItem button className={classes.nested} component={Link} to={APP_CULTURAL_ACTIVITIES}>
                   <ListItemIcon>
                     <DateRangeIcon />
                   </ListItemIcon>
                   <ListItemText primary="Cultural activities" />
                 </ListItem>
 
-                <ListItem button className={classes.nested} component={Link} to="/app/subdivisions">
+                <ListItem button className={classes.nested} component={Link} to={APP_SUBDIVISIONS}>
                   <ListItemIcon>
                     <SubdirectoryArrowRightIcon />
                   </ListItemIcon>
                   <ListItemText primary="Subdivisions" />
                 </ListItem>
 
-                <ListItem button className={classes.nested} component={Link} to="/app/departmental-housing">
+                <ListItem button className={classes.nested} component={Link} to={APP_DEPARTMENRAL_HOUSING}>
                   <ListItemIcon>
                     <HomeWorkIcon />
                   </ListItemIcon>
                   <ListItemText primary="Departmental housing" />
                 </ListItem>
 
-                <ListItem button className={classes.nested} component={Link} to="/app/dormitory">
+                <ListItem button className={classes.nested} component={Link} to={APP_DORMIRTORY}>
                   <ListItemIcon>
                     <HotelIcon />
                   </ListItemIcon>
@@ -294,28 +317,28 @@ class Navigation extends React.Component {
               </List>
             </Collapse>
 
-            <ListItem button component={Link} to="/app/users" title="Users">
+            <ListItem button component={Link} to={APP_USERS} title="Users">
               <ListItemIcon>
                 <PeopleIcon />
               </ListItemIcon>
               <ListItemText primary="Users" />
             </ListItem>
 
-            <ListItem button component={Link} to="/app/dashboard" title="Dashboard">
+            <ListItem button component={Link} to={APP_DASHBOARD} title="Dashboard">
               <ListItemIcon>
                 <DashboardIcon />
               </ListItemIcon>
               <ListItemText primary="Dashboard" />
             </ListItem>
 
-            <ListItem button component={Link} to="/app/action-log" title="Action log">
+            <ListItem button component={Link} to={APP_ACTION_LOG} title="Action log">
               <ListItemIcon>
                 <StorageIcon />
               </ListItemIcon>
               <ListItemText primary="Action log" />
             </ListItem>
 
-            <ListItem button component={Link} to="/app/search" title="Search">
+            <ListItem button component={Link} to={APP_SEARCH} title="Search">
               <ListItemIcon>
                 <SearchIcon />
               </ListItemIcon>
