@@ -4,6 +4,7 @@ import React, { Component } from 'react';
 import './SplashScreen.css';
 
 function SplashScreen(WrappedComponent) {
+  document.body.style.backgroundImage = 'radial-gradient(circle farthest-corner at center, #3C4B57 0%, #1C262B 100%)'
   return class extends Component {
     constructor(props) {
       super(props);
@@ -40,10 +41,8 @@ function SplashScreen(WrappedComponent) {
     render() {
       // while checking user session, show "loading" message
       if (this.state.loading) return this.LoadingMessage();
-
-      var element = document.querySelector('style');
-      element.parentNode.removeChild(element);
-
+      
+      document.body.style.backgroundImage = null;
       // otherwise, show the desired route
       return <WrappedComponent {...this.props} />;
     }
