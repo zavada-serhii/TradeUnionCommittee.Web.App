@@ -21,7 +21,7 @@ function SplashScreen(WrappedComponent) {
         // -----------------------------------------------------------------
 
         // await auth0Client.loadSession();
-        await this.sleeper(1000);
+        // await this.sleeper(1000);
 
         // -----------------------------------------------------------------
 
@@ -30,6 +30,7 @@ function SplashScreen(WrappedComponent) {
             loading: false,
           });
         }, 1500)
+        
       } catch (err) {
         console.log(err);
         this.setState({
