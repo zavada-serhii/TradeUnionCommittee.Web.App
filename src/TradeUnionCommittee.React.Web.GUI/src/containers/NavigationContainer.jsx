@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import Navigation from '../components/Navigation.Component/Navigation'
-import { logout } from '../actions/Auth/actions'
+import { logout } from '../actions/auth'
 
 class NavigationContainer extends React.Component {
 

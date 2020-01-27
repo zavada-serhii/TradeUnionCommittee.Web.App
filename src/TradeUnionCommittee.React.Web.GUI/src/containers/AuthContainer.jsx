@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import Auth from '../components/Auth.Component/Auth'
-import { token } from '../actions/Auth/actions'
+import { token } from '../actions/auth'
 
 class AuthContainer extends React.Component {
 

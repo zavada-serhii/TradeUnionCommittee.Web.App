@@ -7,7 +7,7 @@ import store from './store'
 import Root from './components/Root'
 import * as serviceWorker from './utils/serviceWorker'
 
-import { setCurrentUser } from './actions/Auth/actions';
+import { setCurrentUser } from './actions/auth';
 import setAuthorizationToken from './utils/setAuthorizationToken';
 import jwtDecode from 'jwt-decode';
 

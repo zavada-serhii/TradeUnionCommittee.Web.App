@@ -1,8 +1,8 @@
 import axios from 'axios';
 import jwtDecode from 'jwt-decode';
-import ActionTypes from '../../constants/actionTypes'
-import { TOKEN } from '../../constants/api'
-import setAuthorizationToken from '../../utils/setAuthorizationToken';
+import ActionTypes from '../constants/actionTypes'
+import { TOKEN } from '../constants/api'
+import setAuthorizationToken from '../utils/setAuthorizationToken';
 
 export const setCurrentUser = user => ({
   type: ActionTypes.SET_CURRENT_USER,
