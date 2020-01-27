@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from "react-router-dom";
 import { APP } from '../../constants/routes'
+import './NotFound.css'
 
 class NotFound extends Component {
     render() {
