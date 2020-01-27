@@ -2,6 +2,7 @@ import React from 'react'
 import { makeStyles } from '@material-ui/core/styles';
 import { Link } from 'react-router-dom'
 import Typography from '@material-ui/core/Typography';
+import { APP } from '../../constants/routes'
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -17,7 +18,7 @@ function Copyright() {
         <div className={classes.root}>
             <Typography variant="body2" color="textSecondary" align="center">
                 {'Copyright © '}
-                <Link to="/">
+                <Link to={APP}>
                     Trade Union Committee React Web GUI
                 </Link>
                 {' '}
