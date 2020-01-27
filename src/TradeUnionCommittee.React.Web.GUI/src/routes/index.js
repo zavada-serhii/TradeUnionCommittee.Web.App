@@ -2,7 +2,7 @@ import React from 'react'
 import { Route, Switch } from 'react-router-dom';
 
 import CheckoutContainer from '../components/Checkout.Component/Checkout'
-import NotFound from '../components/NotFound.Component/NotFound'
+import NotFoundContainer from '../containers/NotFoundContainer'
 
 import {
   NOT_FOUND,
@@ -51,7 +51,7 @@ function Routes() {
       <Route path={APP_DASHBOARD} render={() => <div>Here will be page for dashboard</div>} />
       <Route path={APP_ACTION_LOG} render={() => <div>Here will be page for action-log</div>} />
       <Route path={APP_SEARCH} render={() => <div>Here will be page for search</div>} />
-      <Route path={NOT_FOUND} component={NotFound} />
+      <Route path={NOT_FOUND} component={NotFoundContainer} />
     </Switch>
   )
 }

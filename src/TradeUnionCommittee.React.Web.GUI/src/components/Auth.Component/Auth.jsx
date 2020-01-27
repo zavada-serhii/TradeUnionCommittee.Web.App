@@ -10,7 +10,7 @@ import Container from '@material-ui/core/Container';
 import { withStyles } from '@material-ui/core/styles';
 import { withRouter } from "react-router-dom";
 
-import Copyright from '../Copyright.Component/Copyright'
+import CopyrightContainer from '../../containers/CopyrightContainer'
 
 const useStyles = theme => ({
     paper: {
@@ -109,7 +109,7 @@ class Auth extends React.Component {
                     </form>
                 </div>
                 <Box mt={8}>
-                    <Copyright />
+                    <CopyrightContainer />
                 </Box>
             </Container>
         );

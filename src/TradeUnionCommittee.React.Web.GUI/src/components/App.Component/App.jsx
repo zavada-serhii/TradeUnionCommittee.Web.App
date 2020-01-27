@@ -2,8 +2,8 @@ import React from 'react'
 import { makeStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 
-import NavigationContainer from '../containers/NavigationContainer'
-import Content from './Content.Component/Content'
+import NavigationContainer from '../../containers/NavigationContainer'
+import ContentContainer from '../../containers/ContentContainer'
 
 const useStyles = makeStyles(theme => ({
     markup: {
@@ -19,7 +19,7 @@ function App() {
         <div className={classes.markup}>
             <CssBaseline />
             <NavigationContainer />
-            <Content />
+            <ContentContainer />
         </div>
     )
 }

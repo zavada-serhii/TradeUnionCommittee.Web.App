@@ -1,9 +1,9 @@
 import React from 'react'
 import { Route, Switch, Redirect } from 'react-router-dom';
 
-import App from '../components/App'
+import AppContainer from '../containers/AppContainer'
 import AuthContainer from '../containers/AuthContainer'
-import NotFound from '../components/NotFound.Component/NotFound'
+import NotFoundContainer from '../containers/NotFoundContainer'
 import SplashScreen from '../components/SplashScreen.Component/SplashScreen'
 import requireAuth from '../utils/requireAuth';
 
@@ -13,9 +13,9 @@ function Root() {
     return (
         <Switch>
             <Redirect exact from={ROOT} to={APP} />
-            <Route path={APP} component={requireAuth(App)} />
+            <Route path={APP} component={requireAuth(AppContainer)} />
             <Route path={AUTH} component={AuthContainer} />
-            <Route path={NOT_FOUND} component={NotFound} />
+            <Route path={NOT_FOUND} component={NotFoundContainer} />
         </Switch>
     )
 }

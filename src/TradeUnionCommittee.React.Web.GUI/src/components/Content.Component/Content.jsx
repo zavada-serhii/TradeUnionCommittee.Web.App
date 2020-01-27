@@ -4,7 +4,7 @@ import Box from '@material-ui/core/Box';
 import Paper from '@material-ui/core/Paper';
 
 import Routes from '../../routes'
-import Copyright from '../Copyright.Component/Copyright'
+import CopyrightContainer from '../../containers/CopyrightContainer'
 
 const useStyles = makeStyles(theme => ({
     content: {
@@ -45,7 +45,7 @@ function Content() {
                         <Paper className={classes.paper}>
                             <Routes />
                         </Paper>
-                        <Copyright />
+                        <CopyrightContainer />
                     </Box>
                 </React.Fragment>
             </div>
