@@ -9,7 +9,7 @@ import requireAuth from '../utils/requireAuth';
 
 import { ROOT, APP, AUTH, NOT_FOUND } from '../constants/routes'
 
-function Root() {
+function RootContainer() {
     return (
         <Switch>
             <Redirect exact from={ROOT} to={APP} />
@@ -20,4 +20,4 @@ function Root() {
     )
 }
 
-export default SplashScreen(Root);
+export default SplashScreen(RootContainer);

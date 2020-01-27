@@ -6,17 +6,9 @@ import { Provider } from 'react-redux'
 import store from './store'
 import RootContainer from './containers/RootContainer'
 import * as serviceWorker from './utils/serviceWorker'
-import { setCurrentUser } from './actions/auth';
-import setAuthorizationToken from './utils/setAuthorizationToken';
-import jwtDecode from 'jwt-decode';
 import './styles/globalStyles.css'
 
 export const history = createBrowserHistory()
-
-if (localStorage.access_token && localStorage.token_type) {
-  setAuthorizationToken(localStorage.access_token, localStorage.token_type);
-  store.dispatch(setCurrentUser(jwtDecode(localStorage.access_token)));
-}
 
 render(
   <Provider store={store}>
