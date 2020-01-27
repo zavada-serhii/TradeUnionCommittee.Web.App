@@ -10,6 +10,7 @@ import Container from '@material-ui/core/Container';
 import { withStyles } from '@material-ui/core/styles';
 import { withRouter } from "react-router-dom";
 
+import { APP } from '../../constants/routes'
 import CopyrightContainer from '../../containers/CopyrightContainer'
 
 const useStyles = theme => ({
@@ -55,7 +56,7 @@ class Auth extends React.Component {
         event.preventDefault()
 
         this.props.token(this.state).then(
-            (result) => this.props.history.push("/"),
+            (result) => this.props.history.push(APP),
             (error) => alert(`Wrong login or pawword`)
         );
     }
