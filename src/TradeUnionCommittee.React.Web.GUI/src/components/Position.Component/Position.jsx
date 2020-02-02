@@ -8,6 +8,8 @@ import TableRow from '@material-ui/core/TableRow';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Button from '@material-ui/core/Button';
 import AddIcon from '@material-ui/icons/Add';
+import { withRouter } from "react-router-dom";
+import { APP_CREATE_POSITION } from '../../constants/routes'
 
 import MenuContainer from '../../containers/MenuContainer'
 
@@ -19,12 +21,19 @@ class Position extends React.Component {
     this.state = {
       isLoaded: false
     };
+
+    this.redirectToCreatePosition = this.redirectToCreatePosition.bind(this);
   }
 
   componentDidMount() {
     this.props.getAllPositions().then((result) => {
       this.setState({ isLoaded: true });
     });
+  }
+
+  redirectToCreatePosition(event) {
+    event.preventDefault()
+    this.props.history.push(APP_CREATE_POSITION)
   }
 
   render() {
@@ -42,8 +51,9 @@ class Position extends React.Component {
                 <Button
                   variant="contained"
                   color="primary"
+                  onClick={this.redirectToCreatePosition}
                   endIcon={<AddIcon />}>
-                  Add
+                  Create
                 </Button>
               </TableCell>
             </TableRow>
@@ -86,4 +96,4 @@ class Position extends React.Component {
   }
 }
 
-export default Position
+export default withRouter(Position)

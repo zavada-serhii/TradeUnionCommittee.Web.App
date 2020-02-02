@@ -4,7 +4,10 @@ export const APP = "/app";
 export const AUTH = "/auth";
 
 export const APP_CREATE_EMPLOYEE = "/app/create-employee";
+
 export const APP_POSITION = "/app/position";
+export const APP_CREATE_POSITION = "/app/create-position";
+
 export const APP_SOCIAL_POSITION = "/app/social-position";
 export const APP_PRIVILEGES = "/app/privileges";
 export const APP_AWARD = "/app/award";

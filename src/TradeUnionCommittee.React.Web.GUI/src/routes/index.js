@@ -10,6 +10,7 @@ import {
   APP,
   APP_CREATE_EMPLOYEE,
   APP_POSITION,
+  APP_CREATE_POSITION,
   APP_SOCIAL_POSITION,
   APP_PRIVILEGES,
   APP_AWARD,
@@ -35,6 +36,7 @@ function Routes() {
       <Route exact path={APP} render={() => <div>Home Page</div>} />
       <Route path={APP_CREATE_EMPLOYEE} component={CheckoutContainer} />
       <Route path={APP_POSITION} component={PositionContainer} />
+      <Route path={APP_CREATE_POSITION} render={() => <div>Create position</div>} />
       <Route path={APP_SOCIAL_POSITION} render={() => <div>Here will be page for social-position</div>} />
       <Route path={APP_PRIVILEGES} render={() => <div>Here will be page for privileges</div>} />
       <Route path={APP_AWARD} render={() => <div>Here will be page for award</div>} />
