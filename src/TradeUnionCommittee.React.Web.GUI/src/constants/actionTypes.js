@@ -5,5 +5,9 @@ export default {
 
   //Auth
   SET_CURRENT_USER: 'SET_CURRENT_USER',
+
+  //Position
+  SET_ALL_POSITIONS: 'SET_ALL_POSITIONS',
+  SET_POSITION: 'SET_POSITION'
 }
 

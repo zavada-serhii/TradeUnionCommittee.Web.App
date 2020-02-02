@@ -5,45 +5,85 @@ import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import Button from '@material-ui/core/Button';
+import AddIcon from '@material-ui/icons/Add';
 
 import MenuContainer from '../../containers/MenuContainer'
 
-function createData(name) {
-  return { name };
-}
+class Position extends React.Component {
 
-const rows = [
-  createData('Frozen yoghurt'),
-  createData('Ice cream sandwich'),
-  createData('Eclair'),
-  createData('Cupcake'),
-  createData('Gingerbread'),
-];
+  constructor(props) {
+    super(props);
 
-export default function SimpleTable() {
+    this.state = {
+      isLoaded: false
+    };
+  }
 
-  return (
-    <TableContainer>
-      <Table>
-        <TableHead>
-          <TableRow>
-            <TableCell><strong>Name</strong></TableCell>
-            <TableCell align="right"></TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {rows.map(row => (
-            <TableRow key={row.name}>
-              <TableCell component="th" scope="row">
-                {row.name}
-              </TableCell>
+  componentDidMount() {
+    this.props.getAllPositions().then((result) => {
+      this.setState({ isLoaded: true });
+    });
+  }
+
+  render() {
+
+    const { positions } = this.props;
+    const { isLoaded } = this.state;
+
+    return (
+      <TableContainer>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell><strong>Name</strong></TableCell>
               <TableCell align="right">
-                  <MenuContainer />
+                <Button
+                  variant="contained"
+                  color="primary"
+                  endIcon={<AddIcon />}>
+                  Add
+                </Button>
               </TableCell>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
-  );
+          </TableHead>
+          <TableBody>
+
+            {!isLoaded &&
+              <TableRow>
+                <TableCell colSpan="2" align="center">
+                  <CircularProgress />
+                </TableCell>
+              </TableRow>
+            }
+
+            {isLoaded && positions.length !== 0 &&
+              positions.map(row => (
+                <TableRow key={row.name}>
+                  <TableCell component="th" scope="row">
+                    {row.name}
+                  </TableCell>
+                  <TableCell align="right">
+                    <MenuContainer />
+                  </TableCell>
+                </TableRow>
+              ))
+            }
+
+            {isLoaded && positions.length === 0 &&
+              <TableRow>
+                <TableCell colSpan="2" align="center">
+                  Positions are empty
+                </TableCell>
+              </TableRow>
+            }
+
+          </TableBody>
+        </Table>
+      </TableContainer>
+    );
+  }
 }
+
+export default Position
