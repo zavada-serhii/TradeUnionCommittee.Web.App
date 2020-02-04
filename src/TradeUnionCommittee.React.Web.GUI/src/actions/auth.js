@@ -12,11 +12,12 @@ export const setCurrentUser = user => ({
 })
 
 export function logout() {
-  return dispatch => {
-    localStorage.removeItem('access_token');
-    localStorage.removeItem('refresh_token');
-    localStorage.removeItem('token_type');
 
+  localStorage.removeItem('access_token');
+  localStorage.removeItem('refresh_token');
+  localStorage.removeItem('token_type');
+
+  return dispatch => {
     setAuthorizationToken(false, false);
     dispatch(setCurrentUser({}));
   }
