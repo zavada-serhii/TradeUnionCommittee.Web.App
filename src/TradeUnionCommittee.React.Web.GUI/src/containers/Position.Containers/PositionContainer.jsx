@@ -1,8 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { getAllPositions } from '../actions/position'
+import { getAllPositions } from '../../actions/position'
 
-import Position from '../components/Position.Component/Position'
+import Position from '../../components/Position.Component/Position'
 
 class PositionContainer extends React.Component {
 

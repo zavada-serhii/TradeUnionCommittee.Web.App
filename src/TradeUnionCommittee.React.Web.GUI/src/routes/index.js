@@ -2,7 +2,8 @@ import React from 'react'
 import { Route, Switch } from 'react-router-dom';
 
 import CheckoutContainer from '../components/Checkout.Component/Checkout'
-import PositionContainer from '../containers/PositionContainer'
+import PositionContainer from '../containers/Position.Containers/PositionContainer'
+import CreatePositionContainer from '../containers/Position.Containers/CreatePositionContainer'
 import NotFoundContainer from '../containers/NotFoundContainer'
 
 import {
@@ -36,7 +37,7 @@ function Routes() {
       <Route exact path={APP} render={() => <div>Home Page</div>} />
       <Route path={APP_CREATE_EMPLOYEE} component={CheckoutContainer} />
       <Route path={APP_POSITION} component={PositionContainer} />
-      <Route path={APP_CREATE_POSITION} render={() => <div>Create position</div>} />
+      <Route path={APP_CREATE_POSITION} component={CreatePositionContainer} />
       <Route path={APP_SOCIAL_POSITION} render={() => <div>Here will be page for social-position</div>} />
       <Route path={APP_PRIVILEGES} render={() => <div>Here will be page for privileges</div>} />
       <Route path={APP_AWARD} render={() => <div>Here will be page for award</div>} />
