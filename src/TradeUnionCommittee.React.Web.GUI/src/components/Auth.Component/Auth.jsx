@@ -40,8 +40,7 @@ class Auth extends React.Component {
 
         this.state = {
             email: '',
-            password: '',
-            clientType: 'WEB-APPLICATION'
+            password: ''
         };
 
         this.onTextChange = this.onTextChange.bind(this);
