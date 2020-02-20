@@ -115,15 +115,13 @@ services:
     restart: always
     networks:
             tradeunioncommittee_network:
-                ipv4_address: 172.28.1.13
-    ports:
-      - "9001:9000"
+                ipv4_address: 172.28.1.12
     volumes:
       - minio-node-1-data:/data
     environment:
       MINIO_ACCESS_KEY: minio
       MINIO_SECRET_KEY: minio123
-    command: server http://172.28.1.13/data http://172.28.1.14/data http://172.28.1.15/data http://172.28.1.16/data
+    command: server http://172.28.1.12/data http://172.28.1.13/data http://172.28.1.14/data http://172.28.1.15/data
 
 
 
@@ -133,15 +131,13 @@ services:
     restart: always
     networks:
             tradeunioncommittee_network:
-                ipv4_address: 172.28.1.14
-    ports:
-      - "9002:9000"
+                ipv4_address: 172.28.1.13
     volumes:
       - minio-node-2-data:/data
     environment:
       MINIO_ACCESS_KEY: minio
       MINIO_SECRET_KEY: minio123
-    command: server http://172.28.1.13/data http://172.28.1.14/data http://172.28.1.15/data http://172.28.1.16/data
+    command: server http://172.28.1.12/data http://172.28.1.13/data http://172.28.1.14/data http://172.28.1.15/data
 
 
 
@@ -151,15 +147,13 @@ services:
     restart: always
     networks:
             tradeunioncommittee_network:
-                ipv4_address: 172.28.1.15
-    ports:
-      - "9003:9000"
+                ipv4_address: 172.28.1.14
     volumes:
       - minio-node-3-data:/data
     environment:
       MINIO_ACCESS_KEY: minio
       MINIO_SECRET_KEY: minio123
-    command: server http://172.28.1.13/data http://172.28.1.14/data http://172.28.1.15/data http://172.28.1.16/data
+    command: server http://172.28.1.12/data http://172.28.1.13/data http://172.28.1.14/data http://172.28.1.15/data
 
 
 
@@ -169,15 +163,33 @@ services:
     restart: always
     networks:
             tradeunioncommittee_network:
-                ipv4_address: 172.28.1.16
-    ports:
-      - "9004:9000"
+                ipv4_address: 172.28.1.15
     volumes:
       - minio-node-4-data:/data
     environment:
       MINIO_ACCESS_KEY: minio
       MINIO_SECRET_KEY: minio123
-    command: server http://172.28.1.13/data http://172.28.1.14/data http://172.28.1.15/data http://172.28.1.16/data
+    command: server http://172.28.1.12/data http://172.28.1.13/data http://172.28.1.14/data http://172.28.1.15/data
+
+
+
+  haproxy:
+    image: haproxy:latest
+    container_name: haproxy
+    restart: always
+    networks:
+            tradeunioncommittee_network:
+                ipv4_address: 172.28.1.16
+    ports:
+      - "8080:8080"   # Frontend HAProxy
+      - "9000:9000"   # Frontend and Backend MinIO
+    links:
+      - minio-node-1
+      - minio-node-2
+      - minio-node-3
+      - minio-node-4
+    volumes:
+      - ./haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg
 
 
 
