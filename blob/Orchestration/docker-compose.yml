@@ -71,8 +71,6 @@ services:
    networks:
             tools_network:
                 ipv4_address: 172.25.1.5
-   ports:
-    - "9001:9000"
    volumes:
     - minio-node-1-data:/data
    environment:
@@ -88,8 +86,6 @@ services:
    networks:
             tools_network:
                 ipv4_address: 172.25.1.6
-   ports:
-    - "9002:9000"
    volumes:
     - minio-node-2-data:/data
    environment:
@@ -105,8 +101,6 @@ services:
    networks:
             tools_network:
                 ipv4_address: 172.25.1.7
-   ports:
-    - "9003:9000"
    volumes:
     - minio-node-3-data:/data
    environment:
@@ -122,8 +116,6 @@ services:
    networks:
             tools_network:
                 ipv4_address: 172.25.1.8
-   ports:
-    - "9004:9000"
    volumes:
     - minio-node-4-data:/data
    environment:
@@ -131,6 +123,27 @@ services:
     MINIO_SECRET_KEY: minio123
    command: server http://172.25.1.5/data http://172.25.1.6/data http://172.25.1.7/data http://172.25.1.8/data
 
+
+
+
+
+  haproxy:
+    image: haproxy:latest
+    container_name: haproxy
+    restart: always
+    networks:
+            tools_network:
+                ipv4_address: 172.25.1.9
+    ports:
+      - "8080:8080"   # Frontend HAProxy
+      - "9000:9000"   # Frontend and Backend MinIO
+    links:
+      - minio-node-1
+      - minio-node-2
+      - minio-node-3
+      - minio-node-4
+    volumes:
+      - ./haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg
 
 
 networks:
