@@ -43,6 +43,8 @@ docker volume rm --force $(docker volume ls -q)
 -- Docker Compose --
 docker-compose -f docker-compose.yml up --build
 
+docker-compose -f docker-compose.yml -p <project_name> up --build
+
 ----------------------------------------------------------------------------------------
 
 -- Edit Postgres pg_hba file
