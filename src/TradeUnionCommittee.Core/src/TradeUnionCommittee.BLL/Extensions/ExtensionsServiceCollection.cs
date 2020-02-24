@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using AutoMapper;
+using Microsoft.Extensions.DependencyInjection;
+using System;
 using TradeUnionCommittee.BLL.Configurations;
 using TradeUnionCommittee.BLL.Helpers;
 using TradeUnionCommittee.BLL.Interfaces.Account;
@@ -36,7 +38,8 @@ namespace TradeUnionCommittee.BLL.Extensions
                                                                                   ConnectionStrings connectionStrings,
                                                                                   CloudStorageConnection cloudStorageConnection,
                                                                                   RestConnection restConnection,
-                                                                                  HashIdConfiguration setting)
+                                                                                  HashIdConfiguration setting,
+                                                                                  Type autoMapperProfile = null)
         {
             // Injection => Main, Identity, Audit contexts,
             //              Cloud Storage, Data Analysis, PDF services
@@ -53,6 +56,11 @@ namespace TradeUnionCommittee.BLL.Extensions
             }, connectionStrings.CloudStorageConnection);
             services.AddDataAnalysisService(restConnection.DataAnalysisUrl);
             services.AddPdfService();
+
+            if (autoMapperProfile == null)
+                services.AddAutoMapper(typeof(AutoMapperProfile));
+            else
+                services.AddAutoMapper(autoMapperProfile, typeof(AutoMapperProfile));
 
             HashHelper.Initialize(setting);
 

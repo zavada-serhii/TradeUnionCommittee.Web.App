@@ -1,4 +1,3 @@
-using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -24,8 +23,6 @@ using TradeUnionCommittee.Api.Models;
 using TradeUnionCommittee.BLL.Configurations;
 using TradeUnionCommittee.BLL.Extensions;
 using TradeUnionCommittee.ViewModels.Extensions;
-using BllAutoMapperProfile = TradeUnionCommittee.BLL.Configurations.AutoMapperProfile;
-using MainAutoMapperProfile = TradeUnionCommittee.Api.Configurations.AutoMapperProfile;
 
 namespace TradeUnionCommittee.Api
 {
@@ -81,7 +78,8 @@ namespace TradeUnionCommittee.Api
                     Configuration.GetSection("ConnectionStrings").Get<ConnectionStrings>(),
                     Configuration.GetSection("CloudStorageConnection").Get<CloudStorageConnection>(),
                     Configuration.GetSection("RestConnection").Get<RestConnection>(),
-                    Configuration.GetSection("HashIdConfiguration").Get<HashIdConfiguration>())
+                    Configuration.GetSection("HashIdConfiguration").Get<HashIdConfiguration>(),
+                    typeof(Configurations.AutoMapperProfile))
                 .AddTradeUnionCommitteeViewModelsModule();
 
             services.AddResponseCompression()
@@ -145,7 +143,6 @@ namespace TradeUnionCommittee.Api
         {
             services.AddOptions();
             services.Configure<AuthModel>(Configuration.GetSection("AuthOptions"));
-            services.AddAutoMapper(typeof(MainAutoMapperProfile), typeof(BllAutoMapperProfile));
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddTransient<IJwtBearerConfiguration, JwtBearerConfiguration>();
             services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
