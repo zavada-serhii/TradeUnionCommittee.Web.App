@@ -1,5 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using TradeUnionCommittee.PDF.Service.Interfaces;
+using TradeUnionCommittee.PDF.Service.Contracts;
 using TradeUnionCommittee.PDF.Service.Services;
 
 namespace TradeUnionCommittee.PDF.Service.Extensions

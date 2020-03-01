@@ -2,9 +2,9 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using TradeUnionCommittee.BLL.Contracts.Account;
+using TradeUnionCommittee.BLL.Contracts.Directory;
 using TradeUnionCommittee.BLL.DTO;
-using TradeUnionCommittee.BLL.Interfaces.Account;
-using TradeUnionCommittee.BLL.Interfaces.Directory;
 
 namespace TradeUnionCommittee.Razor.Web.GUI.Controllers.Directory
 {

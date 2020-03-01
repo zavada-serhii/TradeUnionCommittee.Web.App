@@ -3,8 +3,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
+using TradeUnionCommittee.BLL.Contracts.PDF;
 using TradeUnionCommittee.BLL.DTO;
-using TradeUnionCommittee.BLL.Interfaces.PDF;
 using TradeUnionCommittee.Razor.Web.GUI.Extensions;
 using TradeUnionCommittee.ViewModels.ViewModels;
 

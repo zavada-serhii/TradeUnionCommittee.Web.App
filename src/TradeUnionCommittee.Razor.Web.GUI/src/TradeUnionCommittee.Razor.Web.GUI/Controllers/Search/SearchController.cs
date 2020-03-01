@@ -4,8 +4,8 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using TradeUnionCommittee.BLL.Contracts.Search;
 using TradeUnionCommittee.BLL.Enums;
-using TradeUnionCommittee.BLL.Interfaces.Search;
 using TradeUnionCommittee.Razor.Web.GUI.Controllers.Directory;
 
 namespace TradeUnionCommittee.Razor.Web.GUI.Controllers.Search

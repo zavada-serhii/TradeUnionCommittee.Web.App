@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
-using TradeUnionCommittee.BLL.Interfaces.SystemAudit;
+using TradeUnionCommittee.BLL.Contracts.SystemAudit;
 using TradeUnionCommittee.Razor.Web.GUI.Controllers.Directory;
 using TradeUnionCommittee.Razor.Web.GUI.Extensions;
 using TradeUnionCommittee.ViewModels.ViewModels;

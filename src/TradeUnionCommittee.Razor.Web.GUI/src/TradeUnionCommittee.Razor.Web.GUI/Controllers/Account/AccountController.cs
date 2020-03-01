@@ -3,8 +3,8 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using TradeUnionCommittee.BLL.Contracts.Account;
 using TradeUnionCommittee.BLL.DTO;
-using TradeUnionCommittee.BLL.Interfaces.Account;
 using TradeUnionCommittee.Razor.Web.GUI.Controllers.Directory;
 using TradeUnionCommittee.ViewModels.ViewModels;
 

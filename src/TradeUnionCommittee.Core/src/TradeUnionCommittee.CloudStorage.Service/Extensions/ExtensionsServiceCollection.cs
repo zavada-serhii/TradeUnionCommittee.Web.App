@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Minio;
-using TradeUnionCommittee.CloudStorage.Service.Interfaces;
+using TradeUnionCommittee.CloudStorage.Service.Contracts;
 using TradeUnionCommittee.CloudStorage.Service.Model;
 using TradeUnionCommittee.CloudStorage.Service.Services;
 using TradeUnionCommittee.DAL.CloudStorage.Extensions;

@@ -2,8 +2,8 @@
 using System;
 using System.IO;
 using System.Threading.Tasks;
+using TradeUnionCommittee.CloudStorage.Service.Contracts;
 using TradeUnionCommittee.CloudStorage.Service.Extensions;
-using TradeUnionCommittee.CloudStorage.Service.Interfaces;
 using TradeUnionCommittee.CloudStorage.Service.Model;
 using TradeUnionCommittee.DAL.CloudStorage.EF;
 using TradeUnionCommittee.DAL.CloudStorage.Entities;

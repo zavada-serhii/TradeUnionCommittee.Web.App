@@ -1,5 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using TradeUnionCommittee.DataAnalysis.Service.Interfaces;
+using TradeUnionCommittee.DataAnalysis.Service.Contracts;
 using TradeUnionCommittee.DataAnalysis.Service.Services;
 
 namespace TradeUnionCommittee.DataAnalysis.Service.Extensions
