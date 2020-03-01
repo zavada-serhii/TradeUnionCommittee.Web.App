@@ -4,10 +4,10 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
+using TradeUnionCommittee.BLL.Contracts.Lists.Children;
+using TradeUnionCommittee.BLL.Contracts.SystemAudit;
 using TradeUnionCommittee.BLL.DTO.Children;
 using TradeUnionCommittee.BLL.Enums;
-using TradeUnionCommittee.BLL.Interfaces.Lists.Children;
-using TradeUnionCommittee.BLL.Interfaces.SystemAudit;
 using TradeUnionCommittee.Razor.Web.GUI.Extensions;
 using TradeUnionCommittee.ViewModels.ViewModels.Children;
 

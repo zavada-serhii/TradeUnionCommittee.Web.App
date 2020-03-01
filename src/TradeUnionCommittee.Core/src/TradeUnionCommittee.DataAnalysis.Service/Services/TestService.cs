@@ -3,7 +3,7 @@ using ServiceStack.Text;
 using System;
 using System.Collections.Generic;
 using System.Net;
-using TradeUnionCommittee.DataAnalysis.Service.Interfaces;
+using TradeUnionCommittee.DataAnalysis.Service.Contracts;
 using TradeUnionCommittee.DataAnalysis.Service.Models;
 
 namespace TradeUnionCommittee.DataAnalysis.Service.Services

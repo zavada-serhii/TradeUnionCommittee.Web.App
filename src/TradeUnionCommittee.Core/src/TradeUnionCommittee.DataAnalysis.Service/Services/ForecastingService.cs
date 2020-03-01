@@ -2,8 +2,8 @@
 using ServiceStack.Text;
 using System.Collections.Generic;
 using System.Net;
+using TradeUnionCommittee.DataAnalysis.Service.Contracts;
 using TradeUnionCommittee.DataAnalysis.Service.Exceptions;
-using TradeUnionCommittee.DataAnalysis.Service.Interfaces;
 using TradeUnionCommittee.DataAnalysis.Service.Models;
 using TradeUnionCommittee.DataAnalysis.Service.ViewModels;
 

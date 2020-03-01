@@ -6,10 +6,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.ActualResults;
+using TradeUnionCommittee.BLL.Contracts.Account;
 using TradeUnionCommittee.BLL.DTO;
 using TradeUnionCommittee.BLL.Enums;
 using TradeUnionCommittee.BLL.Helpers;
-using TradeUnionCommittee.BLL.Interfaces.Account;
 using TradeUnionCommittee.DAL.Identity.EF;
 using TradeUnionCommittee.DAL.Identity.Entities;
 

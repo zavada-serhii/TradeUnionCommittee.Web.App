@@ -5,16 +5,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.ActualResults;
+using TradeUnionCommittee.BLL.Contracts.PDF;
 using TradeUnionCommittee.BLL.DTO;
 using TradeUnionCommittee.BLL.Enums;
 using TradeUnionCommittee.BLL.Helpers;
-using TradeUnionCommittee.BLL.Interfaces.PDF;
-using TradeUnionCommittee.CloudStorage.Service.Interfaces;
+using TradeUnionCommittee.CloudStorage.Service.Contracts;
 using TradeUnionCommittee.CloudStorage.Service.Model;
 using TradeUnionCommittee.DAL.EF;
 using TradeUnionCommittee.DAL.Enums;
+using TradeUnionCommittee.PDF.Service.Contracts;
 using TradeUnionCommittee.PDF.Service.Entities;
-using TradeUnionCommittee.PDF.Service.Interfaces;
 using TradeUnionCommittee.PDF.Service.Models;
 
 namespace TradeUnionCommittee.BLL.Services.PDF

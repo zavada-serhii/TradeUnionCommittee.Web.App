@@ -5,13 +5,13 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Threading.Tasks;
+using TradeUnionCommittee.BLL.Contracts.Dashboard;
 using TradeUnionCommittee.BLL.DTO;
 using TradeUnionCommittee.BLL.Enums;
 using TradeUnionCommittee.BLL.Extensions;
-using TradeUnionCommittee.BLL.Interfaces.Dashboard;
 using TradeUnionCommittee.DAL.EF;
 using TradeUnionCommittee.DAL.Enums;
-using TradeUnionCommittee.DataAnalysis.Service.Interfaces;
+using TradeUnionCommittee.DataAnalysis.Service.Contracts;
 using TradeUnionCommittee.DataAnalysis.Service.Models;
 
 namespace TradeUnionCommittee.BLL.Services.Dashboard

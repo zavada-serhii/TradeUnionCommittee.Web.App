@@ -5,10 +5,10 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using TradeUnionCommittee.BLL.Contracts.Directory;
+using TradeUnionCommittee.BLL.Contracts.SystemAudit;
 using TradeUnionCommittee.BLL.DTO;
 using TradeUnionCommittee.BLL.Enums;
-using TradeUnionCommittee.BLL.Interfaces.Directory;
-using TradeUnionCommittee.BLL.Interfaces.SystemAudit;
 using TradeUnionCommittee.Razor.Web.GUI.Extensions;
 using TradeUnionCommittee.ViewModels.ViewModels;
 

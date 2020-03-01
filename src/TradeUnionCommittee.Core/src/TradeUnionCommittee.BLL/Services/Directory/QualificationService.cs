@@ -4,8 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TradeUnionCommittee.BLL.ActualResults;
+using TradeUnionCommittee.BLL.Contracts.Directory;
 using TradeUnionCommittee.BLL.Helpers;
-using TradeUnionCommittee.BLL.Interfaces.Directory;
 using TradeUnionCommittee.DAL.EF;
 
 namespace TradeUnionCommittee.BLL.Services.Directory

@@ -1,4 +1,4 @@
-﻿using TradeUnionCommittee.DataAnalysis.Service.Interfaces;
+﻿using TradeUnionCommittee.DataAnalysis.Service.Contracts;
 
 namespace TradeUnionCommittee.DataAnalysis.Service.Services
 {

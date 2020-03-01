@@ -3,8 +3,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
+using TradeUnionCommittee.BLL.Contracts.Dashboard;
 using TradeUnionCommittee.BLL.Enums;
-using TradeUnionCommittee.BLL.Interfaces.Dashboard;
 
 namespace TradeUnionCommittee.Razor.Web.GUI.Controllers.Dashboard
 {
