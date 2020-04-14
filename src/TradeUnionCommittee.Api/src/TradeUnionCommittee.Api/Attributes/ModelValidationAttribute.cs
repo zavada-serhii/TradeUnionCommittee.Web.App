@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using System.Linq;
 
 namespace TradeUnionCommittee.Api.Attributes
 {
@@ -7,10 +8,9 @@ namespace TradeUnionCommittee.Api.Attributes
     {
         public override void OnActionExecuting(ActionExecutingContext context)
         {
-            if (!context.ModelState.IsValid)
-            {
-                context.Result = new BadRequestObjectResult(context.ModelState);
-            }
+            if (context.ModelState.IsValid) return;
+            var errors = context.ModelState.Values.SelectMany(v => v.Errors).Select(x => x.ErrorMessage);
+            context.Result = new BadRequestObjectResult(errors);
         }
     }
 }

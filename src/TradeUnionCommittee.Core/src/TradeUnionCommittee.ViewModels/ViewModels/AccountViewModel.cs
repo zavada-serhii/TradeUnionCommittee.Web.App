@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.ComponentModel;
+using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 using TradeUnionCommittee.ViewModels.Attributes;
 
@@ -8,10 +9,12 @@ namespace TradeUnionCommittee.ViewModels.ViewModels
     {
         [Required(ErrorMessage = "Email не може бути порожнім")]
         [EmailAddress(ErrorMessage = "Некоректний Email")]
+        [DefaultValue("stewie.griffin@test.com")]
         public string Email { get; set; }
 
         [DataType(DataType.Password)]
         [Required(ErrorMessage = "Пароль не може бути порожнім")]
+        [DefaultValue("P@ssw0rd_admin")]
         public string Password { get; set; }
     }
 
@@ -26,6 +29,7 @@ namespace TradeUnionCommittee.ViewModels.ViewModels
         [Required]
         [StringRange(AllowableValues = new[] { "WEB-APPLICATION", "DESKTOP-APPLICATION", "MOBILE-APPLICATION" }, 
             ErrorMessage = "Client Type must be either 'Web-Application', 'Desktop-Application' or 'Mobile-Application'.")]
+        [DefaultValue("WEB-APPLICATION")]
         public string ClientType { get; set; }
     }
 
@@ -36,6 +40,7 @@ namespace TradeUnionCommittee.ViewModels.ViewModels
             ErrorMessage = "ClientType must be either 'Web-Application', 'Desktop-Application' or 'Mobile-Application'.")]
         public string ClientType { get; set; }
         [Required(ErrorMessage = "Refresh Token не може бути порожнім")]
+        [DefaultValue("WEB-APPLICATION")]
         public string RefreshToken { get; set; }
     }
 

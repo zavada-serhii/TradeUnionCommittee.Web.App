@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.Extensions.Configuration;
@@ -19,6 +20,7 @@ using System;
 using System.IO.Compression;
 using TradeUnionCommittee.Api.Configurations;
 using TradeUnionCommittee.Api.Extensions;
+using TradeUnionCommittee.Api.Filters;
 using TradeUnionCommittee.Api.Models;
 using TradeUnionCommittee.BLL.Configurations;
 using TradeUnionCommittee.BLL.Extensions;
@@ -88,7 +90,16 @@ namespace TradeUnionCommittee.Api
 
             services.AddApiVersioning(options => options.ReportApiVersions = true)
                     .AddVersionedApiExplorer(options => { options.GroupNameFormat = "'v'VVV"; options.SubstituteApiVersionInUrl = true; })
-                    .AddSwaggerGen();
+                    .AddSwaggerGen(x =>
+                    {
+                        x.SchemaFilter<DefaultValueSchemaFilter>();
+                        x.UseAllOfToExtendReferenceSchemas();
+                    });
+
+            services.Configure<ApiBehaviorOptions>(options =>
+            {
+                options.SuppressModelStateInvalidFilter = true;
+            });
 
             services.AddControllers()
                     .AddTradeUnionCommitteeValidationModule();
