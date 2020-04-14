@@ -1,8 +1,8 @@
-﻿using System;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using System;
+using System.Threading.Tasks;
 
 namespace TradeUnionCommittee.Api.Middleware
 {
@@ -10,6 +10,7 @@ namespace TradeUnionCommittee.Api.Middleware
     {
         private readonly RequestDelegate _next;
         private readonly ILogger<ExceptionMiddleware> _logger;
+        private const string MESSAGE = "Service Trade Union Committee API temporarily unavailable. Please try again later.";
 
         public ExceptionMiddleware(RequestDelegate next, ILogger<ExceptionMiddleware> logger)
         {
@@ -34,12 +35,7 @@ namespace TradeUnionCommittee.Api.Middleware
         {
             context.Response.ContentType = "application/json";
             context.Response.StatusCode = StatusCodes.Status500InternalServerError;
-
-            return context.Response.WriteAsync(JsonConvert.SerializeObject(new
-            {
-                context.Response.StatusCode,
-                Message = "Internal Server Error"
-            }));
+            return context.Response.WriteAsync(JsonConvert.SerializeObject(MESSAGE));
         }
     }
 }

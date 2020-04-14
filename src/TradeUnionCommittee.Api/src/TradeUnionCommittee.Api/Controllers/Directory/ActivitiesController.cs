@@ -40,10 +40,10 @@ namespace TradeUnionCommittee.Api.Controllers.Directory
         [HttpGet]
         [Route("GetAll")]
         [MapToApiVersion("1.0")]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(typeof(IEnumerable<DirectoryDTO>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(IEnumerable<string>), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(object), StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
         [Authorize(Roles = "Admin,Accountant,Deputy", AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> GetAll()
         {
@@ -58,10 +58,10 @@ namespace TradeUnionCommittee.Api.Controllers.Directory
         [HttpGet]
         [Route("Get/{id}", Name = "GetActivities")]
         [MapToApiVersion("1.0")]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(typeof(DirectoryDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(IEnumerable<string>), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(object),StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
         [Authorize(Roles = "Admin,Accountant,Deputy", AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> Get([Required] string id)
         {
@@ -77,10 +77,11 @@ namespace TradeUnionCommittee.Api.Controllers.Directory
         [Route("Create")]
         [ModelValidation]
         [MapToApiVersion("1.0")]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(typeof(CreateActivitiesViewModel), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(IEnumerable<string>), StatusCodes.Status422UnprocessableEntity)]
+        [ProducesResponseType(typeof(IEnumerable<string>), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(object),StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
         [Authorize(Roles = "Admin,Accountant,Deputy", AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> Create([FromBody] CreateActivitiesViewModel vm)
         {
@@ -98,9 +99,9 @@ namespace TradeUnionCommittee.Api.Controllers.Directory
         [ModelValidation]
         [MapToApiVersion("1.0")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(typeof(IEnumerable<string>), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(object),StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
         [Authorize(Roles = "Admin,Accountant,Deputy", AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> Update([FromBody] UpdateActivitiesViewModel vm)
         {
@@ -117,10 +118,10 @@ namespace TradeUnionCommittee.Api.Controllers.Directory
         [Route("Delete/{id}")]
         [MapToApiVersion("1.0")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(typeof(IEnumerable<string>), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(object), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(object),StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
         [Authorize(Roles = "Admin", AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> Delete([Required] string id)
         {

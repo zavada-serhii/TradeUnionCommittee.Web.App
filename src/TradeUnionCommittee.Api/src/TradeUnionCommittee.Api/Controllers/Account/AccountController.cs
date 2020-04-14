@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using TradeUnionCommittee.Api.Attributes;
 using TradeUnionCommittee.Api.Configurations;
 using TradeUnionCommittee.Api.Models;
@@ -35,8 +35,8 @@ namespace TradeUnionCommittee.Api.Controllers.Account
         [ModelValidation]
         [MapToApiVersion("1.0")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(typeof(IEnumerable<string>), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Token([FromBody] TokenViewModel viewModel)
         {
             var account = await _jwtBearer.SignInByPassword(viewModel);
@@ -58,8 +58,8 @@ namespace TradeUnionCommittee.Api.Controllers.Account
         [ModelValidation]
         [MapToApiVersion("1.0")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(typeof(IEnumerable<string>), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenViewModel viewModel)
         {
             var account = await _jwtBearer.SignInByRefreshToken(viewModel);
