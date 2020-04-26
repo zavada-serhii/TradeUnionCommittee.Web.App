@@ -29,7 +29,7 @@ namespace TradeUnionCommittee.DataAnalysis.Service.Services
         public IEnumerable<TestModel> TestPostJson()
         {
             var request = new RestRequest("api/Home/PostJson", Method.POST) { RequestFormat = DataFormat.Json };
-            request.AddBody(GetTestData);
+            request.AddJsonBody(GetTestData);
 
             var response = _client.Execute(request);
             return response.StatusCode == HttpStatusCode.OK 
@@ -41,7 +41,7 @@ namespace TradeUnionCommittee.DataAnalysis.Service.Services
         {
             var request = new RestRequest("api/Home/PostCsv", Method.POST) { RequestFormat = DataFormat.Json };
             var csv = CsvSerializer.SerializeToString(GetTestData);
-            request.AddBody(csv);
+            request.AddJsonBody(csv);
 
             var response = _client.Execute(request);
             return response.StatusCode == HttpStatusCode.OK
@@ -142,7 +142,7 @@ namespace TradeUnionCommittee.DataAnalysis.Service.Services
             {
                 var request = new RestRequest(action, Method.POST) { RequestFormat = DataFormat.Json };
                 var csv = CsvSerializer.SerializeToString(testData);
-                request.AddBody(csv);
+                request.AddJsonBody(csv);
 
                 var response = _client.Execute(request);
                 result.Add($"Task {taskNumber} | {action}", response.StatusCode == HttpStatusCode.OK);

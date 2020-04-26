@@ -15,14 +15,6 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
-    "TradeUnionCommittee.Razor.Web.GUI": {
-      "commandName": "Project",
-      "launchBrowser": true,
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
-      },
-      "applicationUrl": "https://localhost:5002;http://localhost:5001"
-    },
     "Docker": {
       "commandName": "Docker",
       "launchBrowser": true,
@@ -32,8 +24,16 @@
         "ASPNETCORE_HTTPS_PORT": "44373"
       },
       "httpPort": 53027,
-      "useSSL": true,
-      "sslPort": 44373
+      "sslPort": 44373,
+      "useSSL": true
+    },
+    "TradeUnionCommittee.Razor.Web.GUI": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "applicationUrl": "https://localhost:5002;http://localhost:5001"
     }
   }
 }

@@ -30,7 +30,7 @@ namespace TradeUnionCommittee.DataAnalysis.Service.Services
         {
             var request = new RestRequest("/api/Determining/ProbablePastime/MultiCorrelationCoefficient", Method.POST) { RequestFormat = DataFormat.Json };
             var csv = CsvSerializer.SerializeToString(data);
-            request.AddBody(csv);
+            request.AddJsonBody(csv);
 
             var response = _client.Execute(request);
 
@@ -51,7 +51,7 @@ namespace TradeUnionCommittee.DataAnalysis.Service.Services
         {
             var request = new RestRequest("/api/Determining/ProbablePastime/MultiFactorModel", Method.POST) { RequestFormat = DataFormat.Json };
             var csv = CsvSerializer.SerializeToString(data);
-            request.AddBody(csv);
+            request.AddJsonBody(csv);
 
             var response = _client.Execute(request);
 
@@ -77,7 +77,7 @@ namespace TradeUnionCommittee.DataAnalysis.Service.Services
                 Csv = CsvSerializer.SerializeToString(data),
                 CountComponents = countComponents
             });
-            request.AddBody(json);
+            request.AddJsonBody(json);
 
             var response = _client.Execute(request);
 
