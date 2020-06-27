@@ -57,7 +57,7 @@ def test_for_paired(c, data):
 #------------------------------------------------------------------------------
 def cluster_analysis(input_json):
 
-    json = loads(input_json, preserve_order=True)
+    json = input_json
 
     csv = pd.read_csv(StringIO(json['Csv'])) 
     countCluster = json['CountCluster']
