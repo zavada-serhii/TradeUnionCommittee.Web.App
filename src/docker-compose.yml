@@ -15,6 +15,9 @@ services:
     build:
       context: .
       dockerfile: TradeUnionCommittee.Api/src/TradeUnionCommittee.Api/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=http://+:80
 
 
 
@@ -46,6 +49,9 @@ services:
     build:
       context: .
       dockerfile: TradeUnionCommittee.Razor.Web.GUI/src/TradeUnionCommittee.Razor.Web.GUI/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=http://+:80
 
 
 
