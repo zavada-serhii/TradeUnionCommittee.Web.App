@@ -38,9 +38,10 @@ namespace TradeUnionCommittee.ViewModels.ViewModels
         [Required]
         [StringRange(AllowableValues = new[] { "WEB-APPLICATION", "DESKTOP-APPLICATION", "MOBILE-APPLICATION" },
             ErrorMessage = "ClientType must be either 'Web-Application', 'Desktop-Application' or 'Mobile-Application'.")]
+        [DefaultValue("WEB-APPLICATION")]
         public string ClientType { get; set; }
         [Required(ErrorMessage = "Refresh Token не може бути порожнім")]
-        [DefaultValue("WEB-APPLICATION")]
+        [DefaultValue("value")]
         public string RefreshToken { get; set; }
     }
 
