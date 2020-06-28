@@ -47,7 +47,6 @@ namespace TradeUnionCommittee.Api.Controllers.Directory
         [Authorize(Roles = "Admin,Accountant,Deputy", AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> GetAll()
         {
-            
             var result = await _services.GetAllAsync();
             if (result.IsValid)
             {
