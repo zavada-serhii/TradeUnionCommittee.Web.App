@@ -47,10 +47,11 @@ namespace TradeUnionCommittee.Api.Controllers.Directory
         [Authorize(Roles = "Admin,Accountant,Deputy", AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> GetAll()
         {
-            //_logger.LogInformation($"Test Position API Controller: {JsonConvert.SerializeObject(await _services.GetAllAsync())}");
+            
             var result = await _services.GetAllAsync();
             if (result.IsValid)
             {
+                //_logger.LogInformation($"Test Position API Controller: {JsonConvert.SerializeObject(result)}");
                 return Ok(result.Result);
             }
             return BadRequest(result.ErrorsList);
