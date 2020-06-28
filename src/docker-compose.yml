@@ -115,15 +115,15 @@ services:
 
 
 
-  minio-node-1:
+  minio-n01:
     image: minio/minio:RELEASE.2020-05-16T01-33-21Z
-    container_name: minio-node-1
+    container_name: minio-n01
     restart: always
     networks:
             tradeunioncommittee_network:
                 ipv4_address: 172.28.1.12
     volumes:
-      - minio-node-1-data:/data
+      - minio-n01-data:/data
     environment:
       MINIO_ACCESS_KEY: minio
       MINIO_SECRET_KEY: minio123
@@ -131,15 +131,15 @@ services:
 
 
 
-  minio-node-2:
+  minio-n02:
     image: minio/minio:RELEASE.2020-05-16T01-33-21Z
-    container_name: minio-node-2
+    container_name: minio-n02
     restart: always
     networks:
             tradeunioncommittee_network:
                 ipv4_address: 172.28.1.13
     volumes:
-      - minio-node-2-data:/data
+      - minio-n02-data:/data
     environment:
       MINIO_ACCESS_KEY: minio
       MINIO_SECRET_KEY: minio123
@@ -147,15 +147,15 @@ services:
 
 
 
-  minio-node-3:
+  minio-n03:
     image: minio/minio:RELEASE.2020-05-16T01-33-21Z
-    container_name: minio-node-3
+    container_name: minio-n03
     restart: always
     networks:
             tradeunioncommittee_network:
                 ipv4_address: 172.28.1.14
     volumes:
-      - minio-node-3-data:/data
+      - minio-n03-data:/data
     environment:
       MINIO_ACCESS_KEY: minio
       MINIO_SECRET_KEY: minio123
@@ -163,15 +163,15 @@ services:
 
 
 
-  minio-node-4:
+  minio-n04:
     image: minio/minio:RELEASE.2020-05-16T01-33-21Z
-    container_name: minio-node-4
+    container_name: minio-n04
     restart: always
     networks:
             tradeunioncommittee_network:
                 ipv4_address: 172.28.1.15
     volumes:
-      - minio-node-4-data:/data
+      - minio-n04-data:/data
     environment:
       MINIO_ACCESS_KEY: minio
       MINIO_SECRET_KEY: minio123
@@ -190,10 +190,10 @@ services:
       - "8080:8080"   # Frontend HAProxy
       - "9000:9000"   # Frontend and Backend MinIO
     links:
-      - minio-node-1
-      - minio-node-2
-      - minio-node-3
-      - minio-node-4
+      - minio-n01
+      - minio-n02
+      - minio-n03
+      - minio-n04
     volumes:
       - ./haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg
 
@@ -211,7 +211,7 @@ networks:
 
 volumes:
   elasticsearch-data:
-  minio-node-1-data:
-  minio-node-2-data:
-  minio-node-3-data:
-  minio-node-4-data:
+  minio-n01-data:
+  minio-n02-data:
+  minio-n03-data:
+  minio-n04-data:
