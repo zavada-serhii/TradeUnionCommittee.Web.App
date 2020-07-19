@@ -2,6 +2,24 @@ version: '3.7'
 
 services:
 
+  tradeunioncommittee.react.web.gui:
+    image: ${DOCKER_REGISTRY-}tradeunioncommittee_react_web_gui
+    container_name: tradeunioncommittee_react_web_gui
+    restart: always
+    networks:
+            tradeunioncommittee_network:
+                ipv4_address: 172.28.1.1
+    ports:
+      - "8500:3000"
+    build:
+      context: ./TradeUnionCommittee.React.Web.GUI
+      dockerfile: Dockerfile
+    environment:
+      - NODE_ENV=production
+      - REACT_APP_MAIN_API_URL=https://api.tuc.onionficus.site/api/
+
+
+
   tradeunioncommittee.api:
     image: ${DOCKER_REGISTRY-}tradeunioncommittee_api
     container_name: tradeunioncommittee_api
