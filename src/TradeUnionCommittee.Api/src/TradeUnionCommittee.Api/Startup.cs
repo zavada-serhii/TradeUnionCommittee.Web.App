@@ -34,6 +34,8 @@ namespace TradeUnionCommittee.Api
 
         public Startup(IHostEnvironment hostingEnvironment)
         {
+            //System.Net.ServicePointManager.ServerCertificateValidationCallback = (sender, certificate, chain, errors) => true;
+
             var builder = new ConfigurationBuilder()
                 .SetBasePath(hostingEnvironment.ContentRootPath)
                 .AddJsonFile("appsettings.json", true, true)
@@ -46,7 +48,13 @@ namespace TradeUnionCommittee.Api
                 .Enrich.FromLogContext()
                 .WriteTo.Elasticsearch(new ElasticsearchSinkOptions(new Uri(Configuration["RestConnection:ElasticUrl"]))
                 {
-                    AutoRegisterTemplate = true
+                    AutoRegisterTemplate = true,
+                    //ModifyConnectionSettings = x =>
+                    //{
+                    //    x.BasicAuthentication("elasticsearch", "elasticsearch");
+                    //    x.ServerCertificateValidationCallback((sender, certificate, chain, errors) => true);
+                    //    return x;
+                    //}
                 })
                 .WriteTo.Console(LogEventLevel.Information)
                 .CreateLogger();
