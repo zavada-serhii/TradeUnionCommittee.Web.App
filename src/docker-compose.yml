@@ -3,7 +3,7 @@ version: '3.7'
 services:
 
   tradeunioncommittee.react.web.gui:
-    image: ${DOCKER_REGISTRY-}tradeunioncommittee_react_web_gui
+    image: tradeunioncommittee_react_web_gui
     container_name: tradeunioncommittee_react_web_gui
     restart: always
     networks:
@@ -12,16 +12,16 @@ services:
     ports:
       - "8500:3000"
     build:
-      context: ./TradeUnionCommittee.React.Web.GUI
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: Dockerfile.React.Web.GUI
     environment:
       - NODE_ENV=production
-      - REACT_APP_MAIN_API_URL=https://api.tuc.onionficus.site/api/
+      - REACT_APP_MAIN_API_URL=http://localhost:8510/api/
 
 
 
   tradeunioncommittee.api:
-    image: ${DOCKER_REGISTRY-}tradeunioncommittee_api
+    image: tradeunioncommittee_api
     container_name: tradeunioncommittee_api
     restart: always
     networks:
@@ -30,9 +30,11 @@ services:
     ports:
       - "8510:80"
       - "8515:443"
+    volumes:
+      - ./settings/api.appsettings.json:/app/appsettings.json
     build:
       context: .
-      dockerfile: TradeUnionCommittee.Api/src/TradeUnionCommittee.Api/Dockerfile
+      dockerfile: Dockerfile.Api
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
       - ASPNETCORE_URLS=http://+:80
@@ -40,7 +42,7 @@ services:
 
 
   tradeunioncommittee.data.analysis.api:
-    image: ${DOCKER_REGISTRY-}tradeunioncommittee_data_analysis_api
+    image: tradeunioncommittee_data_analysis_api
     container_name: tradeunioncommittee_data_analysis_api
     restart: always
     networks:
@@ -50,12 +52,12 @@ services:
       - "8520:5000"
     build:
       context: .
-      dockerfile: TradeUnionCommittee.DataAnalysis.Api/src/TradeUnionCommittee.DataAnalysis.Api/Dockerfile
+      dockerfile: Dockerfile.DataAnalysis.Api
 
 
 
   tradeunioncommittee.razor.web.gui:
-    image: ${DOCKER_REGISTRY-}tradeunioncommittee_razor_web_gui
+    image: tradeunioncommittee_razor_web_gui
     container_name: tradeunioncommittee_razor_web_gui
     restart: always
     networks:
@@ -64,9 +66,11 @@ services:
     ports:
       - "8530:80"
       - "8535:443"
+    volumes:
+      - ./settings/razor.web.gui.appsettings.json:/app/appsettings.json
     build:
       context: .
-      dockerfile: TradeUnionCommittee.Razor.Web.GUI/src/TradeUnionCommittee.Razor.Web.GUI/Dockerfile
+      dockerfile: Dockerfile.Razor.Web.GUI
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
       - ASPNETCORE_URLS=http://+:80
