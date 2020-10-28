@@ -9,7 +9,7 @@ Information system for the primary trade union organization of the Odessa Nation
 - [ ] Logging
 - [ ] Unit Tests
 
-# Docker launch instructions
+# Docker - build images and run containers.
 1. Go to the folder **src**.
 2. If you are using **Windows OS**, execute **docker_deploy.bat** script, if you are using **Linux/macOS OS**, execute **docker_deploy.sh** script.
 3. After that applications will be available at the following links.
