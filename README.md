@@ -11,7 +11,7 @@ Information system for the primary trade union organization of the Odessa Nation
 
 # Docker launch instructions
 1. Go to the folder **src**.
-2. If you are using **Windows OS**, execute **docker_deploy.bat** script, if you are using **Linux/macOS OS** execute **docker_deploy.sh** script.
+2. If you are using **Windows OS**, execute **docker_deploy.bat** script, if you are using **Linux/macOS OS**, execute **docker_deploy.sh** script.
 3. After that applications will be available at the following links.
     - React WEB GUI
         - URL - http://localhost:8500
