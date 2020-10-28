@@ -13,17 +13,17 @@ Information system for the primary trade union organization of the Odessa Nation
 1. Go to the folder **src**.
 2. If you are using **Windows OS**, execute **docker_deploy.bat** script, if you are using **Linux/macOS OS**, execute **docker_deploy.sh** script.
 3. After that applications will be available at the following links.
-    - React WEB GUI
+    - React WEB GUI - 1% completed.
         - URL - http://localhost:8500
         - Login - stewie.griffin@test.com
         - Password - P@ssw0rd_admin
-    - Swagger WEB API
+    - Swagger WEB API - 10% completed.
         - URL - http://localhost:8510/swagger/index.html
         - Login - stewie.griffin@test.com
         - Password - P@ssw0rd_admin
-    - Data Analysis API
+    - Data Analysis API - 100% completed.
         - URL - http://localhost:8520
-    - Razor WEB GUI
+    - Razor WEB GUI - 100% completed. (Obsolete).
         - URL - http://localhost:8530
         - Login - stewie.griffin@test.com
         - Password - P@ssw0rd_admin
