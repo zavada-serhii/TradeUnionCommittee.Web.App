@@ -27,7 +27,6 @@ Information system for the primary trade union organization of the Odessa Nation
         - URL - http://localhost:8530
         - Login - stewie.griffin@test.com
         - Password - P@ssw0rd_admin
-    
     - PostgreSQL
         - URL - localhost:5432
         - Login - postgres
