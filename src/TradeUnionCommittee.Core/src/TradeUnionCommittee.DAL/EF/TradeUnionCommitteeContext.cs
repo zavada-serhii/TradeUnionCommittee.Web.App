@@ -64,7 +64,7 @@ namespace TradeUnionCommittee.DAL.EF
             modelBuilder.Entity<Activities>(entity =>
             {
                 entity.HasIndex(e => e.Name)
-                    .HasName("Activities_Name_key")
+                    .HasDatabaseName("Activities_Name_key")
                     .IsUnique();
 
                 entity.Property(e => e.Name)
@@ -77,7 +77,7 @@ namespace TradeUnionCommittee.DAL.EF
                 entity.HasIndex(e => e.IdActivities);
 
                 entity.HasIndex(e => new { e.IdChildren, e.IdActivities, e.DateEvent })
-                    .HasName("ActivityChildrens_IdChildren_IdActivities_DateEvent_key")
+                    .HasDatabaseName("ActivityChildrens_IdChildren_IdActivities_DateEvent_key")
                     .IsUnique();
 
                 entity.Property(e => e.DateEvent).HasColumnType("date");
@@ -99,7 +99,7 @@ namespace TradeUnionCommittee.DAL.EF
                 entity.HasIndex(e => e.IdActivities);
 
                 entity.HasIndex(e => new { e.IdEmployee, e.IdActivities, e.DateEvent })
-                    .HasName("ActivityEmployees_IdEmployee_IdActivities_DateEvent_key")
+                    .HasDatabaseName("ActivityEmployees_IdEmployee_IdActivities_DateEvent_key")
                     .IsUnique();
 
                 entity.Property(e => e.DateEvent).HasColumnType("date");
@@ -121,7 +121,7 @@ namespace TradeUnionCommittee.DAL.EF
                 entity.HasIndex(e => e.IdActivities);
 
                 entity.HasIndex(e => new { e.IdFamily, e.IdActivities, e.DateEvent })
-                    .HasName("ActivityFamily_IdFamily_IdActivities_DateEvent_key")
+                    .HasDatabaseName("ActivityFamily_IdFamily_IdActivities_DateEvent_key")
                     .IsUnique();
 
                 entity.Property(e => e.DateEvent).HasColumnType("date");
@@ -143,7 +143,7 @@ namespace TradeUnionCommittee.DAL.EF
                 entity.HasIndex(e => e.IdActivities);
 
                 entity.HasIndex(e => new { e.IdGrandChildren, e.IdActivities, e.DateEvent })
-                    .HasName("ActivityGrandChildrens_IdGrandChildren_IdActivities_DateEve_key")
+                    .HasDatabaseName("ActivityGrandChildrens_IdGrandChildren_IdActivities_DateEve_key")
                     .IsUnique();
 
                 entity.Property(e => e.DateEvent).HasColumnType("date");
@@ -163,7 +163,7 @@ namespace TradeUnionCommittee.DAL.EF
             modelBuilder.Entity<AddressPublicHouse>(entity =>
             {
                 entity.HasIndex(e => new { e.City, e.Street, e.NumberHouse, e.Type })
-                    .HasName("AddressPublicHouse_City_Street_NumberHouse_Type_key")
+                    .HasDatabaseName("AddressPublicHouse_City_Street_NumberHouse_Type_key")
                     .IsUnique();
 
                 entity.Property(e => e.City)
@@ -184,7 +184,7 @@ namespace TradeUnionCommittee.DAL.EF
             modelBuilder.Entity<ApartmentAccountingEmployees>(entity =>
             {
                 entity.HasIndex(e => new { e.IdEmployee, e.FamilyComposition, e.NameAdministration, e.PriorityType, e.DateAdoption, e.Position, e.StartYearWork })
-                    .HasName("ApartmentAccountingEmployees_IdEmployee_FamilyComposition_N_key")
+                    .HasDatabaseName("ApartmentAccountingEmployees_IdEmployee_FamilyComposition_N_key")
                     .IsUnique();
 
                 entity.Property(e => e.DateAdoption).HasColumnType("date");
@@ -212,7 +212,7 @@ namespace TradeUnionCommittee.DAL.EF
             modelBuilder.Entity<Award>(entity =>
             {
                 entity.HasIndex(e => e.Name)
-                    .HasName("Award_Name_key")
+                    .HasDatabaseName("Award_Name_key")
                     .IsUnique();
 
                 entity.Property(e => e.Name)
@@ -225,7 +225,7 @@ namespace TradeUnionCommittee.DAL.EF
                 entity.HasIndex(e => e.IdAward);
 
                 entity.HasIndex(e => new { e.IdEmployee, e.IdAward, e.DateIssue })
-                    .HasName("AwardEmployees_IdEmployee_IdAward_DateIssue_key")
+                    .HasDatabaseName("AwardEmployees_IdEmployee_IdAward_DateIssue_key")
                     .IsUnique();
 
                 entity.Property(e => e.Amount).HasColumnType("money");
@@ -269,7 +269,7 @@ namespace TradeUnionCommittee.DAL.EF
             modelBuilder.Entity<Cultural>(entity =>
             {
                 entity.HasIndex(e => e.Name)
-                    .HasName("Cultural_Name_key")
+                    .HasDatabaseName("Cultural_Name_key")
                     .IsUnique();
 
                 entity.Property(e => e.Name)
@@ -282,7 +282,7 @@ namespace TradeUnionCommittee.DAL.EF
                 entity.HasIndex(e => e.IdCultural);
 
                 entity.HasIndex(e => new { e.IdChildren, e.IdCultural, e.DateVisit })
-                    .HasName("CulturalChildrens_IdChildren_IdCultural_DateVisit_key")
+                    .HasDatabaseName("CulturalChildrens_IdChildren_IdCultural_DateVisit_key")
                     .IsUnique();
 
                 entity.Property(e => e.Amount).HasColumnType("money");
@@ -308,7 +308,7 @@ namespace TradeUnionCommittee.DAL.EF
                 entity.HasIndex(e => e.IdCultural);
 
                 entity.HasIndex(e => new { e.IdEmployee, e.IdCultural, e.DateVisit })
-                    .HasName("CulturalEmployees_IdEmployee_IdCultural_DateVisit_key")
+                    .HasDatabaseName("CulturalEmployees_IdEmployee_IdCultural_DateVisit_key")
                     .IsUnique();
 
                 entity.Property(e => e.Amount).HasColumnType("money");
@@ -334,7 +334,7 @@ namespace TradeUnionCommittee.DAL.EF
                 entity.HasIndex(e => e.IdCultural);
 
                 entity.HasIndex(e => new { e.IdFamily, e.IdCultural, e.DateVisit })
-                    .HasName("CulturalFamily_IdFamily_IdCultural_DateVisit_key")
+                    .HasDatabaseName("CulturalFamily_IdFamily_IdCultural_DateVisit_key")
                     .IsUnique();
 
                 entity.Property(e => e.Amount).HasColumnType("money");
@@ -360,7 +360,7 @@ namespace TradeUnionCommittee.DAL.EF
                 entity.HasIndex(e => e.IdCultural);
 
                 entity.HasIndex(e => new { e.IdGrandChildren, e.IdCultural, e.DateVisit })
-                    .HasName("CulturalGrandChildrens_IdGrandChildren_IdCultural_DateVisit_key")
+                    .HasDatabaseName("CulturalGrandChildrens_IdGrandChildren_IdCultural_DateVisit_key")
                     .IsUnique();
 
                 entity.Property(e => e.Amount).HasColumnType("money");
@@ -384,11 +384,11 @@ namespace TradeUnionCommittee.DAL.EF
             modelBuilder.Entity<Employee>(entity =>
             {
                 entity.HasIndex(e => e.IdentificationCode)
-                    .HasName("Employee_IdentificationCode_key")
+                    .HasDatabaseName("Employee_IdentificationCode_key")
                     .IsUnique();
 
                 entity.HasIndex(e => e.MechnikovCard)
-                    .HasName("Employee_MechnikovCard_key")
+                    .HasDatabaseName("Employee_MechnikovCard_key")
                     .IsUnique();
 
                 entity.Property(e => e.BasicProfession)
@@ -443,7 +443,7 @@ namespace TradeUnionCommittee.DAL.EF
             modelBuilder.Entity<Event>(entity =>
             {
                 entity.HasIndex(e => new { e.Name, e.Type })
-                    .HasName("Event_Name_Type_key")
+                    .HasDatabaseName("Event_Name_Type_key")
                     .IsUnique();
 
                 entity.Property(e => e.Name)
@@ -456,7 +456,7 @@ namespace TradeUnionCommittee.DAL.EF
                 entity.HasIndex(e => e.IdEvent);
 
                 entity.HasIndex(e => new { e.IdChildren, e.IdEvent, e.StartDate })
-                    .HasName("EventChildrens_IdChildren_IdEvent_StartDate_key")
+                    .HasDatabaseName("EventChildrens_IdChildren_IdEvent_StartDate_key")
                     .IsUnique();
 
                 entity.Property(e => e.Amount).HasColumnType("money");
@@ -484,7 +484,7 @@ namespace TradeUnionCommittee.DAL.EF
                 entity.HasIndex(e => e.IdEvent);
 
                 entity.HasIndex(e => new { e.IdEmployee, e.IdEvent, e.StartDate })
-                    .HasName("EventEmployees_IdEmployee_IdEvent_StartDate_key")
+                    .HasDatabaseName("EventEmployees_IdEmployee_IdEvent_StartDate_key")
                     .IsUnique();
 
                 entity.Property(e => e.Amount).HasColumnType("money");
@@ -512,7 +512,7 @@ namespace TradeUnionCommittee.DAL.EF
                 entity.HasIndex(e => e.IdEvent);
 
                 entity.HasIndex(e => new { e.IdFamily, e.IdEvent, e.StartDate })
-                    .HasName("EventFamily_IdFamily_IdEvent_StartDate_key")
+                    .HasDatabaseName("EventFamily_IdFamily_IdEvent_StartDate_key")
                     .IsUnique();
 
                 entity.Property(e => e.Amount).HasColumnType("money");
@@ -540,7 +540,7 @@ namespace TradeUnionCommittee.DAL.EF
                 entity.HasIndex(e => e.IdEvent);
 
                 entity.HasIndex(e => new { e.IdGrandChildren, e.IdEvent, e.StartDate })
-                    .HasName("EventGrandChildrens_IdGrandChildren_IdEvent_StartDate_key")
+                    .HasDatabaseName("EventGrandChildrens_IdGrandChildren_IdEvent_StartDate_key")
                     .IsUnique();
 
                 entity.Property(e => e.Amount).HasColumnType("money");
@@ -588,7 +588,7 @@ namespace TradeUnionCommittee.DAL.EF
             modelBuilder.Entity<FluorographyEmployees>(entity =>
             {
                 entity.HasIndex(e => new { e.IdEmployee, e.Result, e.DatePassage })
-                    .HasName("FluorographyEmployees_IdEmployee_Result_DatePassage_key")
+                    .HasDatabaseName("FluorographyEmployees_IdEmployee_Result_DatePassage_key")
                     .IsUnique();
 
                 entity.Property(e => e.DatePassage).HasColumnType("date");
@@ -610,7 +610,7 @@ namespace TradeUnionCommittee.DAL.EF
             modelBuilder.Entity<GiftChildrens>(entity =>
             {
                 entity.HasIndex(e => new { e.IdChildren, e.NameEvent, e.NameGift, e.DateGift })
-                    .HasName("GiftChildrens_IdChildren_NameEvent_NameGift_DateGift_key")
+                    .HasDatabaseName("GiftChildrens_IdChildren_NameEvent_NameGift_DateGift_key")
                     .IsUnique();
 
                 entity.Property(e => e.DateGift).HasColumnType("date");
@@ -636,7 +636,7 @@ namespace TradeUnionCommittee.DAL.EF
             modelBuilder.Entity<GiftEmployees>(entity =>
             {
                 entity.HasIndex(e => new { e.IdEmployee, e.NameEvent, e.NameGift, e.DateGift })
-                    .HasName("GiftEmployees_IdEmployee_NameEvent_NameGift_DateGift_key")
+                    .HasDatabaseName("GiftEmployees_IdEmployee_NameEvent_NameGift_DateGift_key")
                     .IsUnique();
 
                 entity.Property(e => e.DateGift).HasColumnType("date");
@@ -662,7 +662,7 @@ namespace TradeUnionCommittee.DAL.EF
             modelBuilder.Entity<GiftGrandChildrens>(entity =>
             {
                 entity.HasIndex(e => new { e.IdGrandChildren, e.NameEvent, e.NameGift, e.DateGift })
-                    .HasName("GiftGrandChildrens_IdGrandChildren_NameEvent_NameGifts_Date_key")
+                    .HasDatabaseName("GiftGrandChildrens_IdGrandChildren_NameEvent_NameGifts_Date_key")
                     .IsUnique();
 
                 entity.Property(e => e.DateGift).HasColumnType("date");
@@ -710,7 +710,7 @@ namespace TradeUnionCommittee.DAL.EF
             modelBuilder.Entity<Hobby>(entity =>
             {
                 entity.HasIndex(e => e.Name)
-                    .HasName("Hobby_Name_key")
+                    .HasDatabaseName("Hobby_Name_key")
                     .IsUnique();
 
                 entity.Property(e => e.Name)
@@ -723,7 +723,7 @@ namespace TradeUnionCommittee.DAL.EF
                 entity.HasIndex(e => e.IdHobby);
 
                 entity.HasIndex(e => new { e.IdChildren, e.IdHobby })
-                    .HasName("HobbyChildrens_IdChildren_IdHobby_key")
+                    .HasDatabaseName("HobbyChildrens_IdChildren_IdHobby_key")
                     .IsUnique();
 
                 entity.HasOne(d => d.IdChildrenNavigation)
@@ -743,7 +743,7 @@ namespace TradeUnionCommittee.DAL.EF
                 entity.HasIndex(e => e.IdHobby);
 
                 entity.HasIndex(e => new { e.IdEmployee, e.IdHobby })
-                    .HasName("HobbyEmployees_IdEmployee_IdHobby_key")
+                    .HasDatabaseName("HobbyEmployees_IdEmployee_IdHobby_key")
                     .IsUnique();
 
                 entity.HasOne(d => d.IdEmployeeNavigation)
@@ -763,7 +763,7 @@ namespace TradeUnionCommittee.DAL.EF
                 entity.HasIndex(e => e.IdHobby);
 
                 entity.HasIndex(e => new { e.IdGrandChildren, e.IdHobby })
-                    .HasName("HobbyGrandChildrens_IdGrandChildren_IdHobby_key")
+                    .HasDatabaseName("HobbyGrandChildrens_IdGrandChildren_IdHobby_key")
                     .IsUnique();
 
                 entity.HasOne(d => d.IdGrandChildrenNavigation)
@@ -781,7 +781,7 @@ namespace TradeUnionCommittee.DAL.EF
             modelBuilder.Entity<MaterialAid>(entity =>
             {
                 entity.HasIndex(e => e.Name)
-                    .HasName("MaterialAid_Name_key")
+                    .HasDatabaseName("MaterialAid_Name_key")
                     .IsUnique();
 
                 entity.Property(e => e.Name)
@@ -794,7 +794,7 @@ namespace TradeUnionCommittee.DAL.EF
                 entity.HasIndex(e => e.IdMaterialAid);
 
                 entity.HasIndex(e => new { e.IdEmployee, e.IdMaterialAid, e.DateIssue })
-                    .HasName("MaterialAidEmployees_IdEmployee_IdMaterialAid_DateIssue_key")
+                    .HasDatabaseName("MaterialAidEmployees_IdEmployee_IdMaterialAid_DateIssue_key")
                     .IsUnique();
 
                 entity.Property(e => e.Amount).HasColumnType("money");
@@ -816,7 +816,7 @@ namespace TradeUnionCommittee.DAL.EF
             modelBuilder.Entity<Position>(entity =>
             {
                 entity.HasIndex(e => e.Name)
-                    .HasName("Position_Name_key")
+                    .HasDatabaseName("Position_Name_key")
                     .IsUnique();
 
                 entity.Property(e => e.Name)
@@ -827,7 +827,7 @@ namespace TradeUnionCommittee.DAL.EF
             modelBuilder.Entity<PositionEmployees>(entity =>
             {
                 entity.HasIndex(e => e.IdEmployee)
-                    .HasName("PositionEmployees_IdEmployee_key")
+                    .HasDatabaseName("PositionEmployees_IdEmployee_key")
                     .IsUnique();
 
                 entity.HasIndex(e => e.IdPosition);
@@ -883,7 +883,7 @@ namespace TradeUnionCommittee.DAL.EF
             modelBuilder.Entity<PrivilegeEmployees>(entity =>
             {
                 entity.HasIndex(e => e.IdEmployee)
-                    .HasName("PrivilegeEmployees_IdEmployee_key")
+                    .HasDatabaseName("PrivilegeEmployees_IdEmployee_key")
                     .IsUnique();
 
                 entity.HasIndex(e => e.IdPrivileges);
@@ -903,7 +903,7 @@ namespace TradeUnionCommittee.DAL.EF
             modelBuilder.Entity<Privileges>(entity =>
             {
                 entity.HasIndex(e => e.Name)
-                    .HasName("Privileges_Name_key")
+                    .HasDatabaseName("Privileges_Name_key")
                     .IsUnique();
 
                 entity.Property(e => e.Name)
@@ -916,7 +916,7 @@ namespace TradeUnionCommittee.DAL.EF
                 entity.HasIndex(e => e.IdEmployee);
 
                 entity.HasIndex(e => new { e.IdAddressPublicHouse, e.IdEmployee })
-                    .HasName("PublicHouseEmployees_IdAddressPublicHouse_IdEmployee_key")
+                    .HasDatabaseName("PublicHouseEmployees_IdAddressPublicHouse_IdEmployee_key")
                     .IsUnique();
 
                 entity.Property(e => e.NumberRoom).HasColumnType("character varying");
@@ -936,7 +936,7 @@ namespace TradeUnionCommittee.DAL.EF
             modelBuilder.Entity<SocialActivity>(entity =>
             {
                 entity.HasIndex(e => e.Name)
-                    .HasName("SocialActivity_Name_key")
+                    .HasDatabaseName("SocialActivity_Name_key")
                     .IsUnique();
 
                 entity.Property(e => e.Name)
@@ -947,7 +947,7 @@ namespace TradeUnionCommittee.DAL.EF
             modelBuilder.Entity<SocialActivityEmployees>(entity =>
             {
                 entity.HasIndex(e => e.IdEmployee)
-                    .HasName("SocialActivityEmployees_IdEmployee_key")
+                    .HasDatabaseName("SocialActivityEmployees_IdEmployee_key")
                     .IsUnique();
 
                 entity.HasIndex(e => e.IdSocialActivity);
@@ -967,13 +967,13 @@ namespace TradeUnionCommittee.DAL.EF
             modelBuilder.Entity<Subdivisions>(entity =>
             {
                 entity.HasIndex(e => e.Abbreviation)
-                    .HasName("Subdivisions_Abbreviation_key")
+                    .HasDatabaseName("Subdivisions_Abbreviation_key")
                     .IsUnique();
 
                 entity.HasIndex(e => e.IdSubordinate);
 
                 entity.HasIndex(e => e.Name)
-                    .HasName("Subdivisions_Name_key")
+                    .HasDatabaseName("Subdivisions_Name_key")
                     .IsUnique();
 
                 entity.Property(e => e.Abbreviation)

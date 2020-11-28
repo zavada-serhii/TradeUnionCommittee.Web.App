@@ -53,7 +53,7 @@ namespace TradeUnionCommittee.Razor.Web.GUI.Controllers.Account
 
         [HttpGet]
         [Authorize(Roles = "Admin,Accountant,Deputy")]
-        public async Task<IActionResult> SignOut()
+        public async Task<IActionResult> Logout()
         {
             await _accountService.SignOut();
             return RedirectToAction("Login", "Account");
