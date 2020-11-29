@@ -75,7 +75,7 @@
         @RenderBody()
         <hr />
         <footer>
-            <p>&copy; ППО ОНУ ім. І.І. Мечникова - @DateTime.Now.Year</p>
+            <p>&copy; ППО ОНУ ім. І.І. Мечникова - @DateTime.Now.Year | OS version - @Environment.OSVersion | CLR version - @Environment.Version | Build version - @System.Reflection.Assembly.GetEntryAssembly()?.GetName().Version</p>
         </footer>
     </div>
 

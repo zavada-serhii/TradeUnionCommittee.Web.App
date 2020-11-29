@@ -27,7 +27,7 @@ namespace TradeUnionCommittee.Api.Configurations
                 {
                     Version = description.ApiVersion.ToString(),
                     Title = $"Trade Union Committee API {description.ApiVersion}",
-                    Description = "Swagger Trade Union Committee API"
+                    Description = $"Swagger Trade Union Committee API | OS version - {Environment.OSVersion} | CLR version - {Environment.Version} | Build version - {System.Reflection.Assembly.GetEntryAssembly()?.GetName().Version}"
                 });
             }
 
