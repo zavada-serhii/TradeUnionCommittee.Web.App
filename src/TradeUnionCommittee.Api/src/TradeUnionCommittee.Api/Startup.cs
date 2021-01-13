@@ -146,6 +146,7 @@ namespace TradeUnionCommittee.Api
             {
                 foreach (var description in provider.ApiVersionDescriptions)
                 {
+                    c.RoutePrefix = string.Empty;
                     c.SwaggerEndpoint($"/swagger/{description.GroupName}/swagger.json", description.GroupName.ToUpperInvariant());
                 }
                 c.DocExpansion(DocExpansion.None);

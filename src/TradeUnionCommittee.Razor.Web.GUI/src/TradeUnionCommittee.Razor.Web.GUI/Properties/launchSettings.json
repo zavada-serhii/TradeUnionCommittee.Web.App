@@ -15,18 +15,6 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
-    "Docker": {
-      "commandName": "Docker",
-      "launchBrowser": true,
-      "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}",
-      "environmentVariables": {
-        "ASPNETCORE_URLS": "https://+:443;http://+:80",
-        "ASPNETCORE_HTTPS_PORT": "44373"
-      },
-      "httpPort": 53027,
-      "sslPort": 44373,
-      "useSSL": true
-    },
     "TradeUnionCommittee.Razor.Web.GUI": {
       "commandName": "Project",
       "launchBrowser": true,
