@@ -25,8 +25,6 @@ namespace TradeUnionCommittee.Razor.Web.GUI
 
         public Startup(IHostEnvironment hostEnvironment)
         {
-            //System.Net.ServicePointManager.ServerCertificateValidationCallback = (sender, certificate, chain, errors) => true;
-
             var builder = new ConfigurationBuilder()
                 .SetBasePath(hostEnvironment.ContentRootPath)
                 .AddJsonFile("appsettings.json", true, true)
@@ -35,17 +33,20 @@ namespace TradeUnionCommittee.Razor.Web.GUI
 
             Configuration = builder.Build();
 
+            var elk = Configuration.GetSection("ElkConnection").Get<ElkConnection>();
+
             Log.Logger = new LoggerConfiguration()
                 .Enrich.FromLogContext()
-                .WriteTo.Elasticsearch(new ElasticsearchSinkOptions(new Uri(Configuration["RestConnection:ElasticUrl"]))
+                .WriteTo.Elasticsearch(new ElasticsearchSinkOptions(new Uri(elk.Url))
                 {
                     AutoRegisterTemplate = true,
-                    //ModifyConnectionSettings = x =>
-                    //{
-                    //    x.BasicAuthentication("elasticsearch", "elasticsearch");
-                    //    x.ServerCertificateValidationCallback((sender, certificate, chain, errors) => true);
-                    //    return x;
-                    //}
+                    ModifyConnectionSettings = x =>
+                    {
+                        if (elk.UseBasicAuthentication)
+                            x.BasicAuthentication(elk.UserName, elk.Password);
+                        x.ServerCertificateValidationCallback((sender, certificate, chain, errors) => elk.IgnoreCertificateValidation);
+                        return x;
+                    }
                 })
                 .WriteTo.Console(LogEventLevel.Information)
                 .CreateLogger();
@@ -74,7 +75,7 @@ namespace TradeUnionCommittee.Razor.Web.GUI
                 .AddTradeUnionCommitteeServiceModule(
                     Configuration.GetSection("ConnectionStrings").Get<ConnectionStrings>(),
                     Configuration.GetSection("CloudStorageConnection").Get<CloudStorageConnection>(),
-                    Configuration.GetSection("RestConnection").Get<RestConnection>(),
+                    Configuration["DataAnalysisUrl"],
                     Configuration.GetSection("HashIdConfiguration").Get<HashIdConfiguration>(),
                     typeof(Configurations.AutoMapperProfile))
                 .AddTradeUnionCommitteeViewModelsModule();
@@ -126,6 +127,15 @@ namespace TradeUnionCommittee.Razor.Web.GUI
         {
             services.AddTransient<IDirectories, Directories>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+        }
+
+        private class ElkConnection
+        {
+            public string Url { get; set; }
+            public bool UseBasicAuthentication { get; set; }
+            public string UserName { get; set; }
+            public string Password { get; set; }
+            public bool IgnoreCertificateValidation { get; set; }
         }
     }
 }

@@ -7,6 +7,7 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 
 namespace TradeUnionCommittee.Api.Configurations
 {
@@ -21,13 +22,25 @@ namespace TradeUnionCommittee.Api.Configurations
 
         public void Configure(SwaggerGenOptions options)
         {
+            var version = Assembly.GetEntryAssembly()?.GetName().Version;
+            var os = Environment.OSVersion;
+            var clr = Environment.Version;
+            var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+            var project = Assembly.GetEntryAssembly()?.GetName().Name;
+            var repository = "https://github.com/zavada-serhii/TradeUnionCommittee.Web.App";
+
             foreach (var description in _provider.ApiVersionDescriptions)
             {
                 options.SwaggerDoc(description.GroupName, new OpenApiInfo
                 {
                     Version = description.ApiVersion.ToString(),
-                    Title = $"Trade Union Committee API {description.ApiVersion}",
-                    Description = $"Swagger Trade Union Committee API | OS version - {Environment.OSVersion} | CLR version - {Environment.Version} | Build version - {System.Reflection.Assembly.GetEntryAssembly()?.GetName().Version}"
+                    Title = $"Trade Union Committee API - v{description.ApiVersion}",
+                    Description = $"Build - `{version}` | OS - `{os}` | CLR - `{clr}` | Environment - `{environment}` <br> <br> [Repository]({repository})",
+                    Contact = new OpenApiContact
+                    {
+                        Name = "Support",
+                        Email = $"s.zavada@bankvostok.com.ua?subject={project}"
+                    }
                 });
             }
 

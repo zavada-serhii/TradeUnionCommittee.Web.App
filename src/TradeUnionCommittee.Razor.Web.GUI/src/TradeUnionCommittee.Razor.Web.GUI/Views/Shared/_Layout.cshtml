@@ -75,7 +75,7 @@
         @RenderBody()
         <hr />
         <footer>
-            <p>&copy; ППО ОНУ ім. І.І. Мечникова - @DateTime.Now.Year | OS version - @Environment.OSVersion | CLR version - @Environment.Version | Build version - @System.Reflection.Assembly.GetEntryAssembly()?.GetName().Version</p>
+            <p align="center">Build - @System.Reflection.Assembly.GetEntryAssembly()?.GetName().Version | OS - @Environment.OSVersion | CLR - @Environment.Version | Environment - @Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")</p>
         </footer>
     </div>
 

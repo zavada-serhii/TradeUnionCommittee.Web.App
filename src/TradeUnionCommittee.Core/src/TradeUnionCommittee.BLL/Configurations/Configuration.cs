@@ -16,12 +16,6 @@
         public string SecretKey { get; set; }
     }
 
-    public class RestConnection
-    {
-        public string DataAnalysisUrl { get; set; }
-        public string ElasticUrl { get; set; }
-    }
-
     public class HashIdConfiguration
     {
         public string Salt { get; set; }

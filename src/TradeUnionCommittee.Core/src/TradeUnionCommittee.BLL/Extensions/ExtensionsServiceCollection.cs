@@ -37,24 +37,22 @@ namespace TradeUnionCommittee.BLL.Extensions
         public static IServiceCollection AddTradeUnionCommitteeServiceModule(this IServiceCollection services,
                                                                                   ConnectionStrings connectionStrings,
                                                                                   CloudStorageConnection cloudStorageConnection,
-                                                                                  RestConnection restConnection,
+                                                                                  string dataAnalysisUrl,
                                                                                   HashIdConfiguration setting,
                                                                                   Type autoMapperProfile = null)
         {
             // Injection => Main, Identity, Audit contexts,
             //              Cloud Storage, Data Analysis, PDF services
 
+            
+            var mapper = new Mapper(new MapperConfiguration(cfg => cfg.CreateMap<CloudStorageConnection, CloudStorage.Service.Model.CloudStorageConnection>()));
+            var mapping = mapper.Map<CloudStorageConnection, CloudStorage.Service.Model.CloudStorageConnection>(cloudStorageConnection);
+
             services.AddDbContext(connectionStrings.DefaultConnection);
             services.AddIdentityContext(connectionStrings.IdentityConnection);
             services.AddAuditDbContext(connectionStrings.AuditConnection);
-            services.AddCloudStorageService(new CloudStorage.Service.Model.CloudStorageConnection
-            {
-                UseSsl = cloudStorageConnection.UseSsl,
-                Url = cloudStorageConnection.Url,
-                AccessKey = cloudStorageConnection.AccessKey,
-                SecretKey = cloudStorageConnection.SecretKey,
-            }, connectionStrings.CloudStorageConnection);
-            services.AddDataAnalysisService(restConnection.DataAnalysisUrl);
+            services.AddCloudStorageService(mapping, connectionStrings.CloudStorageConnection);
+            services.AddDataAnalysisService(dataAnalysisUrl);
             services.AddPdfService();
 
             if (autoMapperProfile == null)
