@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -90,6 +91,13 @@ namespace TradeUnionCommittee.Razor.Web.GUI
             services.AddControllersWithViews()
                     .AddTradeUnionCommitteeValidationModule();
 
+            services.Configure<ForwardedHeadersOptions>(options =>
+            {
+                options.ForwardedHeaders = ForwardedHeaders.All;
+                options.KnownNetworks.Clear();
+                options.KnownProxies.Clear();
+            });
+
             DependencyInjectionSystem(services);
         }
 
@@ -109,6 +117,13 @@ namespace TradeUnionCommittee.Razor.Web.GUI
 
             app.UseHttpsRedirection();
             app.UseRouting();
+
+            app.UseCors(builder => builder
+                .AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader()
+            );
+
             app.UseResponseCompression();
             app.UseStaticFiles();
             app.UseAuthentication();

@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.AspNetCore.ResponseCompression;
@@ -113,6 +114,13 @@ namespace TradeUnionCommittee.Api
             services.AddControllers()
                     .AddTradeUnionCommitteeValidationModule();
 
+            services.Configure<ForwardedHeadersOptions>(options =>
+            {
+                options.ForwardedHeaders = ForwardedHeaders.All;
+                options.KnownNetworks.Clear();
+                options.KnownProxies.Clear();
+            });
+
             DependencyInjectionSystem(services);
         }
 
@@ -129,14 +137,15 @@ namespace TradeUnionCommittee.Api
                 app.UseHsts();
             }
 
+            app.UseHttpsRedirection();
+            app.UseRouting();
+
             app.UseCors(builder => builder
                 .AllowAnyOrigin()
                 .AllowAnyMethod()
                 .AllowAnyHeader()
             );
 
-            app.UseHttpsRedirection();
-            app.UseRouting();
             app.UseResponseCompression();
             app.UseCustomMiddlewares();
             app.UseAuthentication();
