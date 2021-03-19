@@ -9,11 +9,10 @@ namespace TradeUnionCommittee.DataAnalysis.Service
         public DataAnalysisClient(DataAnalysisConnection connection) : base(connection.Url)
         {
             if (connection.UseBasicAuthentication)
-            {
                 Authenticator = new HttpBasicAuthenticator(connection.UserName, connection.Password);
-            }
-
-            RemoteCertificateValidationCallback = ((sender, certificate, chain, errors) => connection.IgnoreCertificateValidation);
+            
+            if (connection.IgnoreCertificateValidation)
+                RemoteCertificateValidationCallback = ((sender, certificate, chain, errors) => true);
         }
     }
 }

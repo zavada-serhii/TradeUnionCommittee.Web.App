@@ -50,12 +50,15 @@ namespace TradeUnionCommittee.Api
                 .WriteTo.Elasticsearch(new ElasticsearchSinkOptions(new Uri(elk.Url))
                 {
                     AutoRegisterTemplate = true,
-                    ModifyConnectionSettings = x =>
+                    ModifyConnectionSettings = settings =>
                     {
                         if (elk.UseBasicAuthentication)
-                            x.BasicAuthentication(elk.UserName, elk.Password);
-                        x.ServerCertificateValidationCallback((sender, certificate, chain, errors) => elk.IgnoreCertificateValidation);
-                        return x;
+                            settings.BasicAuthentication(elk.UserName, elk.Password);
+
+                        if (elk.IgnoreCertificateValidation)
+                            settings.ServerCertificateValidationCallback((sender, certificate, chain, errors) => true);
+
+                        return settings;
                     }
                 })
                 .WriteTo.Console(LogEventLevel.Information)
