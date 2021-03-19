@@ -37,7 +37,7 @@ namespace TradeUnionCommittee.BLL.Extensions
         public static IServiceCollection AddTradeUnionCommitteeServiceModule(this IServiceCollection services,
                                                                                   ConnectionStrings connectionStrings,
                                                                                   CloudStorageConnection cloudStorageConnection,
-                                                                                  string dataAnalysisUrl,
+                                                                                  DataAnalysisConnection dataAnalysisConnection,
                                                                                   HashIdConfiguration setting,
                                                                                   Type autoMapperProfile = null)
         {
@@ -45,14 +45,16 @@ namespace TradeUnionCommittee.BLL.Extensions
             //              Cloud Storage, Data Analysis, PDF services
 
             
-            var mapper = new Mapper(new MapperConfiguration(cfg => cfg.CreateMap<CloudStorageConnection, CloudStorage.Service.Model.CloudStorageConnection>()));
-            var mapping = mapper.Map<CloudStorageConnection, CloudStorage.Service.Model.CloudStorageConnection>(cloudStorageConnection);
+            var mapper = new Mapper(new MapperConfiguration(cfg => cfg.AddProfile(typeof(ConnectionProfile))));
+
+            var cloudStorageMap = mapper.Map<CloudStorageConnection, CloudStorage.Service.Model.CloudStorageConnection>(cloudStorageConnection);
+            var dataAnalysisMap = mapper.Map<DataAnalysisConnection, DataAnalysis.Service.Models.DataAnalysisConnection>(dataAnalysisConnection);
 
             services.AddDbContext(connectionStrings.DefaultConnection);
             services.AddIdentityContext(connectionStrings.IdentityConnection);
             services.AddAuditDbContext(connectionStrings.AuditConnection);
-            services.AddCloudStorageService(mapping, connectionStrings.CloudStorageConnection);
-            services.AddDataAnalysisService(dataAnalysisUrl);
+            services.AddCloudStorageService(cloudStorageMap, connectionStrings.CloudStorageConnection);
+            services.AddDataAnalysisService(dataAnalysisMap);
             services.AddPdfService();
 
             if (autoMapperProfile == null)
@@ -133,6 +135,15 @@ namespace TradeUnionCommittee.BLL.Extensions
             //---------------------------------------------------------------------------------------------
 
             return services;
+        }
+
+        private class ConnectionProfile : Profile
+        {
+            public ConnectionProfile()
+            {
+                CreateMap<CloudStorageConnection, CloudStorage.Service.Model.CloudStorageConnection>();
+                CreateMap<DataAnalysisConnection, DataAnalysis.Service.Models.DataAnalysisConnection>();
+            }
         }
     }
 }

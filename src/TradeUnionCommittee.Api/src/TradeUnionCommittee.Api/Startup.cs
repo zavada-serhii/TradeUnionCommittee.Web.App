@@ -89,7 +89,7 @@ namespace TradeUnionCommittee.Api
                 .AddTradeUnionCommitteeServiceModule(
                     Configuration.GetSection("ConnectionStrings").Get<ConnectionStrings>(),
                     Configuration.GetSection("CloudStorageConnection").Get<CloudStorageConnection>(),
-                    Configuration["DataAnalysisUrl"],
+                    Configuration.GetSection("DataAnalysisConnection").Get<DataAnalysisConnection>(),
                     Configuration.GetSection("HashIdConfiguration").Get<HashIdConfiguration>(),
                     typeof(Configurations.AutoMapperProfile))
                 .AddTradeUnionCommitteeViewModelsModule();
