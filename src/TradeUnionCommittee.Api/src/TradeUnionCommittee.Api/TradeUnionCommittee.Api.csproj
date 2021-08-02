@@ -9,6 +9,9 @@
     <UserSecretsId>e3de0ad1-b0f0-4d87-819d-7d27da912911</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <DockerfileContext>..\..</DockerfileContext>
+    <AssemblyVersion>1.0.0.1</AssemblyVersion>
+    <PackageVersion>1.0.0.1</PackageVersion>
+    <Version>1.0.0.1</Version>
   </PropertyGroup>
 
   <PropertyGroup>
