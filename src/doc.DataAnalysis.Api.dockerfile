@@ -26,6 +26,7 @@ RUN pip install Flask uWSGI
 COPY ./TradeUnionCommittee.DataAnalysis.Api/src/TradeUnionCommittee.DataAnalysis.Api/Controllers ./Controllers
 COPY ./TradeUnionCommittee.DataAnalysis.Api/src/TradeUnionCommittee.DataAnalysis.Api/Models ./Models
 COPY ./TradeUnionCommittee.DataAnalysis.Api/src/TradeUnionCommittee.DataAnalysis.Api/Services ./Services
+COPY ./TradeUnionCommittee.DataAnalysis.Api/src/TradeUnionCommittee.DataAnalysis.Api/static ./static
 COPY ./TradeUnionCommittee.DataAnalysis.Api/src/TradeUnionCommittee.DataAnalysis.Api/requirements.txt ./
 COPY ./TradeUnionCommittee.DataAnalysis.Api/src/TradeUnionCommittee.DataAnalysis.Api/runserver.py .
 

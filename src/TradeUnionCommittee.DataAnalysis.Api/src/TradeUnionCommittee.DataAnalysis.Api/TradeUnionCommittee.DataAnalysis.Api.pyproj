@@ -17,6 +17,7 @@
     <Name>TradeUnionCommittee.DataAnalysis.Api</Name>
     <RootNamespace>TradeUnionCommittee.DataAnalysis.Api</RootNamespace>
     <InterpreterId>MSBuild|env|$(MSBuildProjectFullPath)</InterpreterId>
+    <WebBrowserPort>5000</WebBrowserPort>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>
