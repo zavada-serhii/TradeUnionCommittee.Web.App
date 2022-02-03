@@ -49,7 +49,7 @@ namespace TradeUnionCommittee.CloudStorage.Service.Services
             {
                 HashIdEmployee = model.HashIdEmployee,
                 FileName = model.Pdf.FileName,
-                DateCreated = DateTime.Now,
+                DateCreated = DateTime.UtcNow,
                 EmailUser = model.EmailUser,
                 IpUser = model.IpUser,
                 TypeReport = model.TypeReport,

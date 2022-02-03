@@ -192,7 +192,7 @@ namespace TradeUnionCommittee.BLL.Configurations
                 .ReverseMap()
                 .ForMember(d => d.Id, c => c.MapFrom(x => HashHelper.DecryptLong(x.HashIdEmployee)))
                 .ForMember(d => d.CityPhone, c => c.MapFrom(x => x.CityPhone.AddMaskForCityPhone()))
-                .ForMember(d => d.DateAdded, c => c.MapFrom(x => DateTime.Now))
+                .ForMember(d => d.DateAdded, c => c.MapFrom(x => DateTime.UtcNow))
                 .ForMember(d => d.EndYearWork, c => c.MapFrom(x => x.EndYearWork == 0 ? null : x.EndYearWork))
                 .ForMember(d => d.EndDateTradeUnion, c => c.MapFrom(x => x.EndDateTradeUnion == null || x.EndDateTradeUnion == DateTime.MinValue ? null : x.EndYearWork));
 
