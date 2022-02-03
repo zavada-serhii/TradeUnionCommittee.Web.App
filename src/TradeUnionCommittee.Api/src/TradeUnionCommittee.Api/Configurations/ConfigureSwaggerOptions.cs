@@ -1,12 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
-using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Reflection;
 
 namespace TradeUnionCommittee.Api.Configurations
@@ -23,6 +19,7 @@ namespace TradeUnionCommittee.Api.Configurations
         public void Configure(SwaggerGenOptions options)
         {
             var version = Assembly.GetEntryAssembly()?.GetName().Version;
+            var hostname = Environment.GetEnvironmentVariable("NODE_HOSTNAME") ?? System.Net.Dns.GetHostName();
             var os = Environment.OSVersion;
             var clr = Environment.Version;
             var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
@@ -35,7 +32,7 @@ namespace TradeUnionCommittee.Api.Configurations
                 {
                     Version = description.ApiVersion.ToString(),
                     Title = $"Trade Union Committee API - v{description.ApiVersion}",
-                    Description = $"Build - `{version}` | OS - `{os}` | CLR - `{clr}` | Environment - `{environment}` <br> <br> [Repository]({repository})",
+                    Description = $"Build - `{version}` | Hostname - `{hostname}` | OS - `{os}` | CLR - `{clr}` | Environment - `{environment}` <br> <br> [Repository]({repository})",
                     Contact = new OpenApiContact
                     {
                         Name = "Support",
