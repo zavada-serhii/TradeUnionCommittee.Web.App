@@ -11,9 +11,9 @@ using TradeUnionCommittee.Razor.Web.GUI.Configurations;
 using TradeUnionCommittee.Razor.Web.GUI.Controllers.Directory;
 using TradeUnionCommittee.ViewModels.Extensions;
 
-#region Builder
-
 var builder = WebApplication.CreateBuilder(args);
+
+#region Configuration
 
 builder.Configuration
                .SetBasePath(builder.Environment.ContentRootPath)

@@ -19,9 +19,9 @@ using TradeUnionCommittee.BLL.Configurations;
 using TradeUnionCommittee.BLL.Extensions;
 using TradeUnionCommittee.ViewModels.Extensions;
 
-#region Builder
-
 var builder = WebApplication.CreateBuilder(args);
+
+#region Configuration
 
 builder.Configuration
                .SetBasePath(builder.Environment.ContentRootPath)
