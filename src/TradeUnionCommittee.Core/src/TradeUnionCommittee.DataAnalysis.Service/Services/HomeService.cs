@@ -1,23 +1,27 @@
-﻿using RestSharp;
-using System.Net;
-using TradeUnionCommittee.DataAnalysis.Service.Contracts;
+﻿using TradeUnionCommittee.DataAnalysis.Service.Contracts;
 
 namespace TradeUnionCommittee.DataAnalysis.Service.Services
 {
     public class HomeService : IHomeService
     {
-        private readonly DataAnalysisClient _client;
+        private readonly HttpClient _dataAnalysisClient;
 
-        public HomeService(DataAnalysisClient client)
+        public HomeService(IHttpClientFactory clientFactory)
         {
-            _client = client;
+            _dataAnalysisClient = clientFactory.CreateClient("DataAnalysis");
         }
 
-        public bool HealthCheck()
+        public async Task<bool> HealthCheck()
         {
-            var request = new RestRequest("api/Home/HealtCheck", Method.GET);
-            var response = _client.Execute(request);
-            return response.StatusCode == HttpStatusCode.OK;
+            HttpRequestMessage requestMessage = new()
+            {
+                Method = HttpMethod.Get,
+                RequestUri = new Uri(_dataAnalysisClient.BaseAddress, "/health/live"),
+            };
+
+            HttpResponseMessage response = await _dataAnalysisClient.SendAsync(requestMessage, CancellationToken.None);
+
+            return response.IsSuccessStatusCode && (await response.Content.ReadAsStringAsync()).ToUpper() == "HEALTHY";
         }
     }
 }

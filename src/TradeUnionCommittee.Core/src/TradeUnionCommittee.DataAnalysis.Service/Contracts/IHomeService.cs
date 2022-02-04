@@ -2,6 +2,6 @@
 {
     public interface IHomeService
     {
-        bool HealthCheck();
+        Task<bool> HealthCheck();
     }
 }

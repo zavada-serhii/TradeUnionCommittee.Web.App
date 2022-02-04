@@ -1,55 +1,67 @@
-﻿using RestSharp;
-using ServiceStack.Text;
-using System;
-using System.Collections.Generic;
-using System.Net;
+﻿using System.Text.Json;
 using TradeUnionCommittee.DataAnalysis.Service.Contracts;
+using TradeUnionCommittee.DataAnalysis.Service.Exceptions;
 using TradeUnionCommittee.DataAnalysis.Service.Models;
 
 namespace TradeUnionCommittee.DataAnalysis.Service.Services
 {
     public class TestService : ITestService
     {
-        private readonly DataAnalysisClient _client;
+        private readonly HttpClient _dataAnalysisClient;
 
-        public TestService(DataAnalysisClient client)
+        public TestService(IHttpClientFactory clientFactory)
         {
-            _client = client;
+            _dataAnalysisClient = clientFactory.CreateClient("DataAnalysis");
         }
 
-        #region Test Actions
-
-        public bool HealthCheck()
+        public async Task<IEnumerable<TestResponseModel>> PostJson()
         {
-            var request = new RestRequest("api/Home/HealtCheck", Method.GET);
-            var response = _client.Execute(request);
-            return response.StatusCode == HttpStatusCode.OK;
+            HttpRequestMessage requestMessage = new()
+            {
+                Method = HttpMethod.Post,
+                RequestUri = new Uri(_dataAnalysisClient.BaseAddress, "api/Home/PostJson"),
+                Content = new StringContent(JsonSerializer.Serialize(TestData))
+            };
+
+            HttpResponseMessage response = await _dataAnalysisClient.SendAsync(requestMessage, CancellationToken.None);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var responseString = await response.Content.ReadAsStringAsync();
+                return JsonSerializer.Deserialize<List<TestResponseModel>>(responseString);
+            }
+            else
+            {
+                var responseString = await response.Content.ReadAsStringAsync();
+                throw new AnalysisServiceUnavailableException(responseString);
+            }
         }
 
-        public IEnumerable<TestModel> TestPostJson()
+        public async Task<string> PostCsv()
         {
-            var request = new RestRequest("api/Home/PostJson", Method.POST) { RequestFormat = DataFormat.Json };
-            request.AddJsonBody(GetTestData);
+            var body = JsonSerializer.Serialize(ServiceStack.Text.CsvSerializer.SerializeToString(TestData));
 
-            var response = _client.Execute(request);
-            return response.StatusCode == HttpStatusCode.OK 
-                ? JsonSerializer.DeserializeFromString<List<TestModel>>(response.Content)
-                : null;
+            HttpRequestMessage requestMessage = new()
+            {
+                Method = HttpMethod.Post,
+                RequestUri = new Uri(_dataAnalysisClient.BaseAddress, "api/Home/PostCsv"),
+                Content = new StringContent(body)
+            };
+
+            HttpResponseMessage response = await _dataAnalysisClient.SendAsync(requestMessage, CancellationToken.None);
+
+            if (response.IsSuccessStatusCode)
+            {
+                return await response.Content.ReadAsStringAsync();
+            }
+            else
+            {
+                var responseString = await response.Content.ReadAsStringAsync();
+                throw new AnalysisServiceUnavailableException(responseString);
+            }
         }
 
-        public string TestPostCsv()
-        {
-            var request = new RestRequest("api/Home/PostCsv", Method.POST) { RequestFormat = DataFormat.Json };
-            var csv = CsvSerializer.SerializeToString(GetTestData);
-            request.AddJsonBody(csv);
-
-            var response = _client.Execute(request);
-            return response.StatusCode == HttpStatusCode.OK
-                ? response.Content
-                : null;
-        }
-
-        private IEnumerable<TestModel> GetTestData => new List<TestModel>
+        private static IEnumerable<TestModel> TestData => new List<TestModel>
         {
             new TestModel
             {
@@ -82,77 +94,5 @@ namespace TradeUnionCommittee.DataAnalysis.Service.Services
                 Email = "everett.wood@test.com"
             }
         };
-
-        #endregion
-
-        //--------------------------------------------------------------------------------
-
-        #region Run tests
-
-        public Dictionary<string, bool> RunAllTasks()
-        {
-            var allData = new Dictionary<string, bool>();
-
-            var data = new List<Dictionary<string, bool>>
-            {
-                TestTasks_3_4_5()
-            };
-
-            foreach (var tmp in data)
-            {
-                foreach (var (key, value) in tmp)
-                {
-                    allData.Add(key, value);
-                }
-            }
-
-            return allData;
-        }
-
-        #endregion
-
-        #region Task 3, 4, 5
-
-        public Dictionary<string, bool> TestTasks_3_4_5()
-        {
-            var random = new Random();
-            var testData = new List<object>();
-            var result = new Dictionary<string, bool>();
-            var taskNumber = 3;
-
-            IEnumerable<string> actions = new List<string>
-            {
-                "api/Determining/UnpopularPastime/Task1",
-                "api/Optimization/Premiums/Task1",
-                "api/Checking/RelevanceWellnessTrips/Task1",
-            };
-
-            for (var i = 0; i < 1000; i++)
-            {
-                testData.Add(new
-                {
-                    Age = random.Next(25, 95),
-                    Travel_Count = random.Next(0, 10),
-                    Wellness_Count = random.Next(0, 10),
-                    Tour_Count = random.Next(0, 10)
-                });
-            }
-
-            foreach (var action in actions)
-            {
-                var request = new RestRequest(action, Method.POST) { RequestFormat = DataFormat.Json };
-                var csv = CsvSerializer.SerializeToString(testData);
-                request.AddJsonBody(csv);
-
-                var response = _client.Execute(request);
-                result.Add($"Task {taskNumber} | {action}", response.StatusCode == HttpStatusCode.OK);
-
-                taskNumber++;
-            }
-
-            return result;
-        }
-
-        #endregion
     }
 }

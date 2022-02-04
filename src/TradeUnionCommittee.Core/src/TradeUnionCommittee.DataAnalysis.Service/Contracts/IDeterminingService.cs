@@ -9,8 +9,8 @@ namespace TradeUnionCommittee.DataAnalysis.Service.Contracts
     /// </summary>
     public interface IDeterminingService
     {
-        double MultiCorrelationCoefficient(IEnumerable<DeterminingMultiCorrelationModel> data);
-        DeterminingMultiFactorViewModel MultiFactorModel(IEnumerable<DeterminingMultiFactorModel> data);
-        IEnumerable<IEnumerable<double>> PrincipalComponentAnalysis(IEnumerable<DeterminingPrincipalComponentModel> data, int countComponents);
+        Task<double> MultiCorrelationCoefficient(IEnumerable<DeterminingMultiCorrelationModel> data);
+        Task<DeterminingMultiFactorViewModel> MultiFactorModel(IEnumerable<DeterminingMultiFactorModel> data);
+        Task<IEnumerable<IEnumerable<double>>> PrincipalComponentAnalysis(IEnumerable<DeterminingPrincipalComponentModel> data, int countComponents);
     }
 }
