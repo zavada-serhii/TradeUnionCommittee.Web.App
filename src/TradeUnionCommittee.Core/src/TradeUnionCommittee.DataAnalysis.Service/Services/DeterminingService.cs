@@ -79,7 +79,7 @@ namespace TradeUnionCommittee.DataAnalysis.Service.Services
         }
 
         /// <summary>
-        /// Task 2.7 - NEED FIX PYTHON API METHOD
+        /// Task 2.7
         /// </summary>
         /// <param name="data"></param>
         /// <param name="countComponents"></param>
