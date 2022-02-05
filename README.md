@@ -1,5 +1,5 @@
 # Trade Union Committee Web App
-Information system for the primary trade union organization of the Odessa National Mechnikov University. The application is developed using technologies ReactJS with Redux, ASP.NET Core 5.0 MVC &amp; Api, Python/Flask, ELK Stack, Amazon S3 compatible storage (MinIO) and database management system PostgreSQL 12.
+Information system for the primary trade union organization of the Odessa National Mechnikov University. The application is developed using technologies ReactJS with Redux, ASP.NET Core 6.0 MVC &amp; Api, Python/Flask, ELK Stack, Amazon S3 compatible storage (MinIO) and database management system PostgreSQL 12.
 
 # System architecture
 ![](https://github.com/zavada-sergey/TradeUnionCommittee.Web.App/blob/master/blob/Architecture.png)
