@@ -7,11 +7,11 @@ namespace TradeUnionCommittee.DataAnalysis.Service.Services
     /// </summary>
     public class OptimizationService : IOptimizationService
     {
-        private readonly DataAnalysisClient _client;
+        private readonly HttpClient _dataAnalysisClient;
 
-        public OptimizationService(DataAnalysisClient client)
+        public OptimizationService(IHttpClientFactory clientFactory)
         {
-            _client = client;
+            _dataAnalysisClient = clientFactory.CreateClient("DataAnalysis");
         }
     }
 }

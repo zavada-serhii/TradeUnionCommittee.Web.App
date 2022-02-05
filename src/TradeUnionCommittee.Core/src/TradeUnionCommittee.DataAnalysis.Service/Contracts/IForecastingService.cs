@@ -9,8 +9,8 @@ namespace TradeUnionCommittee.DataAnalysis.Service.Contracts
     /// </summary>
     public interface IForecastingService
     {
-        IEnumerable<IEnumerable<double>> CorrelationAnalysis(IEnumerable<ForecastingCorrelationModel> data);
-        IEnumerable<ForecastingSignificanceViewModel> CheckingSignificanceCoefficients(IEnumerable<ForecastingCorrelationModel> data);
-        ForecastingClusterViewModel ClusterAnalysis(IEnumerable<ForecastingClusterModel> data, int countClusters);
+        Task<IEnumerable<IEnumerable<double>>> CorrelationAnalysis(IEnumerable<ForecastingCorrelationModel> data);
+        Task<IEnumerable<ForecastingSignificanceViewModel>> CheckingSignificanceCoefficients(IEnumerable<ForecastingCorrelationModel> data);
+        Task<ForecastingClusterViewModel> ClusterAnalysis(IEnumerable<ForecastingClusterModel> data, int countClusters);
     }
 }

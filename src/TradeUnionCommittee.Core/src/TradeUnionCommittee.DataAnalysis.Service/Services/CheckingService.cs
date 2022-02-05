@@ -7,11 +7,11 @@ namespace TradeUnionCommittee.DataAnalysis.Service.Services
     /// </summary>
     public class CheckingService : ICheckingService
     {
-        private readonly DataAnalysisClient _client;
+        private readonly HttpClient _dataAnalysisClient;
 
-        public CheckingService(DataAnalysisClient client)
+        public CheckingService(IHttpClientFactory clientFactory)
         {
-            _client = client;
+            _dataAnalysisClient = clientFactory.CreateClient("DataAnalysis");
         }
     }
 }

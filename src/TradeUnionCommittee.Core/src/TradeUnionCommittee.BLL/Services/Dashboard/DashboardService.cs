@@ -54,10 +54,10 @@ namespace TradeUnionCommittee.BLL.Services.Dashboard
                     })
                     .ToListAsync();
 
-                var apiData = _forecastingService.CorrelationAnalysis(dbData).ToList();
+                var apiData = await _forecastingService.CorrelationAnalysis(dbData);
 
                 var result = new List<List<double>>();
-                for (var i = 0; i < apiData.Count; i++)
+                for (var i = 0; i < apiData.Count(); i++)
                 {
                     for (var j = 0; j < apiData.ElementAt(i).Count(); j++)
                     {
@@ -95,7 +95,7 @@ namespace TradeUnionCommittee.BLL.Services.Dashboard
                     })
                     .ToListAsync();
 
-                var apiData = _forecastingService.CheckingSignificanceCoefficients(dbData).ToList();
+                var apiData = await _forecastingService.CheckingSignificanceCoefficients(dbData);
 
                 var result = new BarChart<Series>
                 {
@@ -146,7 +146,7 @@ namespace TradeUnionCommittee.BLL.Services.Dashboard
                     .ToListAsync();
 
                 const int countClusters = 6;
-                var apiData = _forecastingService.ClusterAnalysis(dbData, countClusters);
+                var apiData = await _forecastingService.ClusterAnalysis(dbData, countClusters);
                 var clusterColors = GetRandomBubbleColors(countClusters * 2).ToList();
 
                 var result = new List<BubbleChart<Bubble>>();
@@ -260,7 +260,7 @@ namespace TradeUnionCommittee.BLL.Services.Dashboard
                 })
                 .ToListAsync();
 
-            var apiData = _determiningService.MultiCorrelationCoefficient(dbData);
+            var apiData = await _determiningService.MultiCorrelationCoefficient(dbData);
 
             return new ChartResult<BarChart<double>>
             {
@@ -292,7 +292,7 @@ namespace TradeUnionCommittee.BLL.Services.Dashboard
                 .ToListAsync();
 
             const int countClusters = 3;
-            var apiData = _forecastingService.ClusterAnalysis(dbData, countClusters);
+            var apiData = await _forecastingService.ClusterAnalysis(dbData, countClusters);
             var clusterColors = GetRandomBubbleColors(countClusters * 2).ToList();
 
             var result = new List<BubbleChart<Bubble>>();
@@ -389,7 +389,7 @@ namespace TradeUnionCommittee.BLL.Services.Dashboard
                 })
                 .ToListAsync();
 
-            var apiData = _determiningService.MultiFactorModel(dbData);
+            var apiData = await _determiningService.MultiFactorModel(dbData);
         }
 
         /// <summary>
@@ -421,7 +421,7 @@ namespace TradeUnionCommittee.BLL.Services.Dashboard
                 })
                 .ToListAsync();
 
-            var apiData = _determiningService.PrincipalComponentAnalysis(dbData, 2).ToList();
+            var apiData = await _determiningService.PrincipalComponentAnalysis(dbData, 2);
         }
 
         public PieChart<double> PieData_Test()

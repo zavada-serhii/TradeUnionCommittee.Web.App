@@ -1,12 +1,9 @@
 ﻿using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
-using System.Threading.Tasks;
 using TradeUnionCommittee.Api.Models;
 using TradeUnionCommittee.BLL.ActualResults;
 using TradeUnionCommittee.BLL.Contracts.Account;
@@ -159,15 +156,15 @@ namespace TradeUnionCommittee.Api.Configurations
 
         private string GetHash(string input)
         {
-            using HashAlgorithm hashAlgorithm = new SHA512CryptoServiceProvider();
+            using HashAlgorithm hashAlgorithm = SHA512.Create();
             var byteValue = Encoding.UTF8.GetBytes(input + _authOptions.Value.HashRefreshToken);
             var byteHash = hashAlgorithm.ComputeHash(byteValue);
             return Convert.ToBase64String(byteHash);
         }
 
-        private string GenerateRandomCryptographicKey(int keyLength)
+        private static string GenerateRandomCryptographicKey(int keyLength)
         {
-            using var rngCryptoServiceProvider = new RNGCryptoServiceProvider();
+            using var rngCryptoServiceProvider = RandomNumberGenerator.Create();
             var randomBytes = new byte[keyLength];
             rngCryptoServiceProvider.GetBytes(randomBytes);
             return Convert.ToBase64String(randomBytes);

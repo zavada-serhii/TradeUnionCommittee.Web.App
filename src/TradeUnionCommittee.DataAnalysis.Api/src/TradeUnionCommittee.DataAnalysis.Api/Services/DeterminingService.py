@@ -175,11 +175,11 @@ def confidence_interval(beta_st, test):
 #------------------------------------------------------------------------------
 def pca(input_json):
 
-    json = loads(input_json, preserve_order=True)
+    json = input_json
 
     csv = pd.read_csv(StringIO(json['Csv'])) 
     countComponents = json['CountComponents']
-
+    
     pca = decomposition.PCA(n_components=countComponents)
     csv = pca.fit(csv).transform(csv)
     

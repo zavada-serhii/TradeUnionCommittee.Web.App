@@ -1,7 +1,4 @@
-﻿using RestSharp;
-using ServiceStack.Text;
-using System.Collections.Generic;
-using System.Net;
+﻿using System.Text.Json;
 using TradeUnionCommittee.DataAnalysis.Service.Contracts;
 using TradeUnionCommittee.DataAnalysis.Service.Exceptions;
 using TradeUnionCommittee.DataAnalysis.Service.Models;
@@ -14,11 +11,11 @@ namespace TradeUnionCommittee.DataAnalysis.Service.Services
     /// </summary>
     public class ForecastingService : IForecastingService
     {
-        private readonly DataAnalysisClient _client;
+        private readonly HttpClient _dataAnalysisClient;
 
-        public ForecastingService(DataAnalysisClient client)
+        public ForecastingService(IHttpClientFactory clientFactory)
         {
-            _client = client;
+            _dataAnalysisClient = clientFactory.CreateClient("DataAnalysis");
         }
 
         /// <summary>
@@ -26,20 +23,30 @@ namespace TradeUnionCommittee.DataAnalysis.Service.Services
         /// </summary>
         /// <param name="data"></param>
         /// <returns></returns>
-        public IEnumerable<IEnumerable<double>> CorrelationAnalysis(IEnumerable<ForecastingCorrelationModel> data)
+        public async Task<IEnumerable<IEnumerable<double>>> CorrelationAnalysis(IEnumerable<ForecastingCorrelationModel> data)
         {
-            var request = new RestRequest("api/Forecasting/ActualingTrips/CorrelationAnalysis", Method.POST) { RequestFormat = DataFormat.Json };
-            var csv = CsvSerializer.SerializeToString(data);
-            request.AddJsonBody(csv);
+            var body = JsonSerializer.Serialize(ServiceStack.Text.CsvSerializer.SerializeToString(data));
 
-            var response = _client.Execute(request);
-
-            if (response.StatusCode == HttpStatusCode.OK)
+            HttpRequestMessage requestMessage = new()
             {
-                return JsonSerializer.DeserializeFromString<IEnumerable<IEnumerable<double>>>(response.Content);
-            }
+                Method = HttpMethod.Post,
+                RequestUri = new Uri(_dataAnalysisClient.BaseAddress, "api/Forecasting/ActualingTrips/CorrelationAnalysis"),
+                Content = new StringContent(body)
+            };
 
-            throw new AnalysisServiceUnavailableException();
+            HttpResponseMessage response = await _dataAnalysisClient.SendAsync(requestMessage, CancellationToken.None);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var responseString = await response.Content.ReadAsStringAsync();
+                var result = JsonSerializer.Deserialize<IEnumerable<IEnumerable<double>>>(responseString);
+                return result;
+            }
+            else
+            {
+                var responseString = await response.Content.ReadAsStringAsync();
+                throw new AnalysisServiceUnavailableException(responseString);
+            }
         }
 
         /// <summary>
@@ -47,20 +54,30 @@ namespace TradeUnionCommittee.DataAnalysis.Service.Services
         /// </summary>
         /// <param name="data"></param>
         /// <returns></returns>
-        public IEnumerable<ForecastingSignificanceViewModel> CheckingSignificanceCoefficients(IEnumerable<ForecastingCorrelationModel> data)
+        public async Task<IEnumerable<ForecastingSignificanceViewModel>> CheckingSignificanceCoefficients(IEnumerable<ForecastingCorrelationModel> data)
         {
-            var request = new RestRequest("api/Forecasting/ActualingTrips/CheckingSignificanceCoefficients", Method.POST) { RequestFormat = DataFormat.Json };
-            var csv = CsvSerializer.SerializeToString(data);
-            request.AddJsonBody(csv);
+            var body = JsonSerializer.Serialize(ServiceStack.Text.CsvSerializer.SerializeToString(data));
 
-            var response = _client.Execute(request);
-
-            if (response.StatusCode == HttpStatusCode.OK)
+            HttpRequestMessage requestMessage = new()
             {
-                return JsonSerializer.DeserializeFromString<IEnumerable<ForecastingSignificanceViewModel>>(response.Content);
-            }
+                Method = HttpMethod.Post,
+                RequestUri = new Uri(_dataAnalysisClient.BaseAddress, "api/Forecasting/ActualingTrips/CheckingSignificanceCoefficients"),
+                Content = new StringContent(body)
+            };
 
-            throw new AnalysisServiceUnavailableException();
+            HttpResponseMessage response = await _dataAnalysisClient.SendAsync(requestMessage, CancellationToken.None);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var responseString = await response.Content.ReadAsStringAsync();
+                var result = JsonSerializer.Deserialize<IEnumerable<ForecastingSignificanceViewModel>>(responseString);
+                return result;
+            }
+            else
+            {
+                var responseString = await response.Content.ReadAsStringAsync();
+                throw new AnalysisServiceUnavailableException(responseString);
+            }
         }
 
         /// <summary>
@@ -69,24 +86,34 @@ namespace TradeUnionCommittee.DataAnalysis.Service.Services
         /// <param name="data"></param>
         /// <param name="countClusters"></param>
         /// <returns></returns>
-        public ForecastingClusterViewModel ClusterAnalysis(IEnumerable<ForecastingClusterModel> data, int countClusters)
+        public async Task<ForecastingClusterViewModel> ClusterAnalysis(IEnumerable<ForecastingClusterModel> data, int countClusters)
         {
-            var request = new RestRequest("api/Forecasting/ActualingTrips/ClusterAnalysis", Method.POST) { RequestFormat = DataFormat.Json };
-            var json = JsonSerializer.SerializeToString(new
+            var body = JsonSerializer.Serialize(new 
             {
-                Csv = CsvSerializer.SerializeToString(data),
+                Csv = ServiceStack.Text.CsvSerializer.SerializeToString(data),
                 CountCluster = countClusters
             });
-            request.AddJsonBody(json);
 
-            var response = _client.Execute(request);
-
-            if (response.StatusCode == HttpStatusCode.OK)
+            HttpRequestMessage requestMessage = new()
             {
-                return JsonSerializer.DeserializeFromString<ForecastingClusterViewModel>(response.Content);
-            }
+                Method = HttpMethod.Post,
+                RequestUri = new Uri(_dataAnalysisClient.BaseAddress, "api/Forecasting/ActualingTrips/ClusterAnalysis"),
+                Content = new StringContent(body)
+            };
 
-            throw new AnalysisServiceUnavailableException();
+            HttpResponseMessage response = await _dataAnalysisClient.SendAsync(requestMessage, CancellationToken.None);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var responseString = await response.Content.ReadAsStringAsync();
+                var result = JsonSerializer.Deserialize<ForecastingClusterViewModel>(responseString);
+                return result;
+            }
+            else
+            {
+                var responseString = await response.Content.ReadAsStringAsync();
+                throw new AnalysisServiceUnavailableException(responseString);
+            }
         }
     }
 }

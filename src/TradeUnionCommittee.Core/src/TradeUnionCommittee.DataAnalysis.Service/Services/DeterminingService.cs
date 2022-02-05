@@ -1,7 +1,4 @@
-﻿using RestSharp;
-using ServiceStack.Text;
-using System.Collections.Generic;
-using System.Net;
+﻿using System.Text.Json;
 using TradeUnionCommittee.DataAnalysis.Service.Contracts;
 using TradeUnionCommittee.DataAnalysis.Service.Exceptions;
 using TradeUnionCommittee.DataAnalysis.Service.Models;
@@ -14,11 +11,11 @@ namespace TradeUnionCommittee.DataAnalysis.Service.Services
     /// </summary>
     public class DeterminingService : IDeterminingService
     {
-        private readonly DataAnalysisClient _client;
+        private readonly HttpClient _dataAnalysisClient;
 
-        public DeterminingService(DataAnalysisClient client)
+        public DeterminingService(IHttpClientFactory clientFactory)
         {
-            _client = client;
+            _dataAnalysisClient = clientFactory.CreateClient("DataAnalysis");
         }
 
         /// <summary>
@@ -26,20 +23,30 @@ namespace TradeUnionCommittee.DataAnalysis.Service.Services
         /// </summary>
         /// <param name="data"></param>
         /// <returns></returns>
-        public double MultiCorrelationCoefficient(IEnumerable<DeterminingMultiCorrelationModel> data)
+        public async Task<double> MultiCorrelationCoefficient(IEnumerable<DeterminingMultiCorrelationModel> data)
         {
-            var request = new RestRequest("/api/Determining/ProbablePastime/MultiCorrelationCoefficient", Method.POST) { RequestFormat = DataFormat.Json };
-            var csv = CsvSerializer.SerializeToString(data);
-            request.AddJsonBody(csv);
+            var body = JsonSerializer.Serialize(ServiceStack.Text.CsvSerializer.SerializeToString(data));
 
-            var response = _client.Execute(request);
-
-            if (response.StatusCode == HttpStatusCode.OK)
+            HttpRequestMessage requestMessage = new()
             {
-                return JsonSerializer.DeserializeFromString<double>(response.Content);
-            }
+                Method = HttpMethod.Post,
+                RequestUri = new Uri(_dataAnalysisClient.BaseAddress, "/api/Determining/ProbablePastime/MultiCorrelationCoefficient"),
+                Content = new StringContent(body)
+            };
 
-            throw new AnalysisServiceUnavailableException();
+            HttpResponseMessage response = await _dataAnalysisClient.SendAsync(requestMessage, CancellationToken.None);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var responseString = await response.Content.ReadAsStringAsync();
+                var result = JsonSerializer.Deserialize<double>(responseString);
+                return result;
+            }
+            else
+            {
+                var responseString = await response.Content.ReadAsStringAsync();
+                throw new AnalysisServiceUnavailableException(responseString);
+            }
         }
 
         /// <summary>
@@ -47,20 +54,30 @@ namespace TradeUnionCommittee.DataAnalysis.Service.Services
         /// </summary>
         /// <param name="data"></param>
         /// <returns></returns>
-        public DeterminingMultiFactorViewModel MultiFactorModel(IEnumerable<DeterminingMultiFactorModel> data)
+        public async Task<DeterminingMultiFactorViewModel> MultiFactorModel(IEnumerable<DeterminingMultiFactorModel> data)
         {
-            var request = new RestRequest("/api/Determining/ProbablePastime/MultiFactorModel", Method.POST) { RequestFormat = DataFormat.Json };
-            var csv = CsvSerializer.SerializeToString(data);
-            request.AddJsonBody(csv);
+            var body = JsonSerializer.Serialize(ServiceStack.Text.CsvSerializer.SerializeToString(data));
 
-            var response = _client.Execute(request);
-
-            if (response.StatusCode == HttpStatusCode.OK)
+            HttpRequestMessage requestMessage = new()
             {
-                return JsonSerializer.DeserializeFromString<DeterminingMultiFactorViewModel>(response.Content);
-            }
+                Method = HttpMethod.Post,
+                RequestUri = new Uri(_dataAnalysisClient.BaseAddress, "/api/Determining/ProbablePastime/MultiFactorModel"),
+                Content = new StringContent(body)
+            };
 
-            throw new AnalysisServiceUnavailableException();
+            HttpResponseMessage response = await _dataAnalysisClient.SendAsync(requestMessage, CancellationToken.None);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var responseString = await response.Content.ReadAsStringAsync();
+                var result = JsonSerializer.Deserialize<DeterminingMultiFactorViewModel>(responseString);
+                return result;
+            }
+            else
+            {
+                var responseString = await response.Content.ReadAsStringAsync();
+                throw new AnalysisServiceUnavailableException(responseString);
+            }
         }
 
         /// <summary>
@@ -69,24 +86,34 @@ namespace TradeUnionCommittee.DataAnalysis.Service.Services
         /// <param name="data"></param>
         /// <param name="countComponents"></param>
         /// <returns></returns>
-        public IEnumerable<IEnumerable<double>> PrincipalComponentAnalysis(IEnumerable<DeterminingPrincipalComponentModel> data, int countComponents)
+        public async Task<IEnumerable<IEnumerable<double>>> PrincipalComponentAnalysis(IEnumerable<DeterminingPrincipalComponentModel> data, int countComponents)
         {
-            var request = new RestRequest("/api/Determining/ProbablePastime/PrincipalComponentAnalysis", Method.POST) { RequestFormat = DataFormat.Json };
-            var json = JsonSerializer.SerializeToString(new
+            var body = JsonSerializer.Serialize(new
             {
-                Csv = CsvSerializer.SerializeToString(data),
+                Csv = ServiceStack.Text.CsvSerializer.SerializeToString(data),
                 CountComponents = countComponents
             });
-            request.AddJsonBody(json);
 
-            var response = _client.Execute(request);
-
-            if (response.StatusCode == HttpStatusCode.OK)
+            HttpRequestMessage requestMessage = new()
             {
-                return JsonSerializer.DeserializeFromString<IEnumerable<IEnumerable<double>>>(response.Content);
-            }
+                Method = HttpMethod.Post,
+                RequestUri = new Uri(_dataAnalysisClient.BaseAddress, "/api/Determining/ProbablePastime/PrincipalComponentAnalysis"),
+                Content = new StringContent(body, System.Text.Encoding.UTF8)
+            };
 
-            throw new AnalysisServiceUnavailableException();
+            HttpResponseMessage response = await _dataAnalysisClient.SendAsync(requestMessage, CancellationToken.None);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var responseString = await response.Content.ReadAsStringAsync();
+                var result = JsonSerializer.Deserialize<IEnumerable<IEnumerable<double>>>(responseString);
+                return result;
+            }
+            else
+            {
+                var responseString = await response.Content.ReadAsStringAsync();
+                throw new AnalysisServiceUnavailableException(responseString);
+            }
         }
     }
 }
