@@ -9,9 +9,9 @@
     <ConcurrentGarbageCollection>true</ConcurrentGarbageCollection>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <DockerfileContext>..\..</DockerfileContext>
-    <AssemblyVersion>1.0.0.5</AssemblyVersion>
-    <PackageVersion>1.0.0.5</PackageVersion>
-    <Version>1.0.0.5</Version>
+    <AssemblyVersion>1.0.0.6</AssemblyVersion>
+    <PackageVersion>1.0.0.6</PackageVersion>
+    <Version>1.0.0.6</Version>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -20,7 +20,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="AutoMapper" Version="11.0.0" />
+    <PackageReference Include="AutoMapper" Version="11.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning.ApiExplorer" Version="5.0.0" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.14.0" />

@@ -39,7 +39,8 @@ namespace TradeUnionCommittee.DataAnalysis.Service.Services
             if (response.IsSuccessStatusCode)
             {
                 var responseString = await response.Content.ReadAsStringAsync();
-                return ServiceStack.Text.JsonSerializer.DeserializeFromString<double>(responseString);
+                var result = JsonSerializer.Deserialize<double>(responseString);
+                return result;
             }
             else
             {
@@ -69,7 +70,8 @@ namespace TradeUnionCommittee.DataAnalysis.Service.Services
             if (response.IsSuccessStatusCode)
             {
                 var responseString = await response.Content.ReadAsStringAsync();
-                return ServiceStack.Text.JsonSerializer.DeserializeFromString<DeterminingMultiFactorViewModel>(responseString);
+                var result = JsonSerializer.Deserialize<DeterminingMultiFactorViewModel>(responseString);
+                return result;
             }
             else
             {
@@ -104,7 +106,8 @@ namespace TradeUnionCommittee.DataAnalysis.Service.Services
             if (response.IsSuccessStatusCode)
             {
                 var responseString = await response.Content.ReadAsStringAsync();
-                return ServiceStack.Text.JsonSerializer.DeserializeFromString<IEnumerable<IEnumerable<double>>>(responseString);
+                var result = JsonSerializer.Deserialize<IEnumerable<IEnumerable<double>>>(responseString);
+                return result;
             }
             else
             {
