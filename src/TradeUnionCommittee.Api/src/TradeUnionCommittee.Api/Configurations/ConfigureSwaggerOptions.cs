@@ -36,7 +36,7 @@ namespace TradeUnionCommittee.Api.Configurations
                     Contact = new OpenApiContact
                     {
                         Name = "Support",
-                        Email = $"s.zavada@bankvostok.com.ua?subject={project}"
+                        Email = $"zavadasergey@outlook.com?subject={project}"
                     }
                 });
             }
