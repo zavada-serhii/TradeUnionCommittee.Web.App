@@ -12,14 +12,21 @@ namespace TradeUnionCommittee.CloudStorage.Service.Extensions
         public static IServiceCollection AddCloudStorageService(this IServiceCollection services, CloudStorageConnection credentials, string dbConnection)
         {
             services.AddCloudStorageContext(dbConnection);
+
+            var client = new MinioClient()
+                .WithEndpoint(credentials.Url)
+                .WithCredentials(credentials.AccessKey, credentials.SecretKey);
+
             if (credentials.UseSsl)
-            {
-                services.AddSingleton(x => new MinioClient(credentials.Url, credentials.AccessKey, credentials.SecretKey).WithSSL());
-            }
-            else
-            {
-                services.AddSingleton(x => new MinioClient(credentials.Url, credentials.AccessKey, credentials.SecretKey));
-            }
+                client.WithSSL();
+
+            if (credentials.IgnoreCertificateValidation)
+                client.WithHttpClient(new HttpClient(new HttpClientHandler
+                {
+                    ServerCertificateCustomValidationCallback = (r, c, ch, policy) => true
+                }));
+
+            services.AddSingleton(x => client.Build());
             services.AddTransient<IReportPdfBucketService, ReportPdfBucketService>();
             return services;
         }

@@ -14,6 +14,7 @@
         public string Url { get; set; }
         public string AccessKey { get; set; }
         public string SecretKey { get; set; }
+        public bool IgnoreCertificateValidation { get; set; }
     }
 
     public class DataAnalysisConnection
