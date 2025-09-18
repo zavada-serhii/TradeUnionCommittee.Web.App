@@ -1,35 +1,31 @@
-#------------------------------
-# Backup
-#------------------------------
+# =====================
+# Stage 1: build deps
+# =====================
+FROM python:3.7-slim AS builder
 
-# FROM python:3.7.5
-
-# WORKDIR /app
-
-# ENV FLASK_APP ./runserver.py
-# ENV FLASK_RUN_HOST 0.0.0.0
-
-# COPY ./TradeUnionCommittee.DataAnalysis.Api/src/TradeUnionCommittee.DataAnalysis.Api ./
-# RUN pip install -r "./requirements.txt"
-
-# CMD ["flask", "run"]
-
-
-#------------------------------
-
-FROM python:3.7.5
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential gcc g++ \
+    && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 
-RUN pip install Flask uWSGI
-
-COPY ./TradeUnionCommittee.DataAnalysis.Api/src/TradeUnionCommittee.DataAnalysis.Api/Controllers ./Controllers
-COPY ./TradeUnionCommittee.DataAnalysis.Api/src/TradeUnionCommittee.DataAnalysis.Api/Models ./Models
-COPY ./TradeUnionCommittee.DataAnalysis.Api/src/TradeUnionCommittee.DataAnalysis.Api/Services ./Services
-COPY ./TradeUnionCommittee.DataAnalysis.Api/src/TradeUnionCommittee.DataAnalysis.Api/static ./static
 COPY ./TradeUnionCommittee.DataAnalysis.Api/src/TradeUnionCommittee.DataAnalysis.Api/requirements.txt ./
-COPY ./TradeUnionCommittee.DataAnalysis.Api/src/TradeUnionCommittee.DataAnalysis.Api/runserver.py .
+RUN pip install --no-cache-dir --prefix=/install -r requirements.txt
 
-RUN pip install --no-cache-dir -r requirements.txt
+# =====================
+# Stage 2: runtime
+# =====================
+FROM python:3.7-slim
 
-CMD ["uwsgi", "--http", "0.0.0.0:5000", "--wsgi-file", "/app/runserver.py", "--callable", "app", "--master",  "--processes", "10"]
+WORKDIR /app
+
+COPY --from=builder /install /usr/local
+
+COPY ./TradeUnionCommittee.DataAnalysis.Api/src/TradeUnionCommittee.DataAnalysis.Api ./
+
+RUN useradd -m flaskuser
+USER flaskuser
+
+EXPOSE 5000
+
+CMD ["gunicorn", "-b", "0.0.0.0:5000", "runserver:app"]
