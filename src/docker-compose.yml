@@ -13,7 +13,7 @@ services:
       - "8500:3000"
     build:
       context: .
-      dockerfile: doc.React.Web.GUI.dockerfile
+      dockerfile: Dockerfile.react-web
     environment:
       - NODE_ENV=production
       - REACT_APP_MAIN_API_URL=http://localhost:8510/api/
@@ -34,7 +34,7 @@ services:
       - ./appsettings.api.json:/app/appsettings.json
     build:
       context: .
-      dockerfile: doc.Api.dockerfile
+      dockerfile: Dockerfile.api
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
       - ASPNETCORE_URLS=http://+:80
@@ -52,7 +52,7 @@ services:
       - "8520:5000"
     build:
       context: .
-      dockerfile: doc.DataAnalysis.Api.dockerfile
+      dockerfile: Dockerfile.data-analysis-api
 
 
 
@@ -70,7 +70,7 @@ services:
       - ./appsettings.razor.web.gui.json:/app/appsettings.json
     build:
       context: .
-      dockerfile: doc.Razor.Web.GUI.dockerfile
+      dockerfile: Dockerfile.razor-web
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
       - ASPNETCORE_URLS=http://+:80
