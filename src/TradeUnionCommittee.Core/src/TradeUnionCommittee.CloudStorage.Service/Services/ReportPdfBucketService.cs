@@ -12,7 +12,7 @@ namespace TradeUnionCommittee.CloudStorage.Service.Services
 {
     public class ReportPdfBucketService : IReportPdfBucketService, IDisposable
     {
-        private const string BUCKET_NAME = "report-pdf-bucket";
+        private const string BUCKET_NAME = "tuc";
         private const string EXTENSION_FILE = ".pdf";
         private const string CONTENT_TYPE = "application/pdf";
 
